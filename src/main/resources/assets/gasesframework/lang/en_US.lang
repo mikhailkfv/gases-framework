@@ -1,0 +1,34 @@
+death.attack.gf_asphyxiation=%1$s asphyxiated
+
+item.gf_gasSamplerIncluder.name=Including Sampler
+item.gf_gasSamplerIncluder.name.filled=Including %1$s Sampler
+item.gf_gasSamplerExcluder.name=Excluding Sampler
+item.gf_gasSamplerExcluder.name.filled=Excluding %1$s Sampler
+item.gf_lanternEmpty.name=Lantern
+item.gf_gasBottle.name=Bottle
+item.gf_gasBottle.name.filled=%1$s Bottle
+
+gf_gas.air.name=Air
+gf_gas.smoke.name=Smoke
+gf_gas.fire.name=Ignited Gas
+
+tile.gf_gasSmoke.name=Smoke
+tile.gf_gasFire.name=Ignited Gas
+tile.gf_gasPipe.iron.name=Iron Gas Pipe
+tile.gf_gasPipe.glass.name=Glass Gas Pipe
+tile.gf_gasPump.name=Gas Pump
+tile.gf_gasTank.name=Gas Tank
+tile.gf_gasCollector.name=Gas Collector
+tile.gf_gasFurnace.name=Gas Furnace
+tile.gf_gasFurnaceWarm.name=Warm Gas Furnace
+tile.gf_lanternEmpty.name=Lantern
+tile.gf_lanternGasEmpty.name=Lantern with Bottle
+tile.gf_lanternGas1.name=Gas Lantern
+tile.gf_lanternGas2.name=Gas Lantern
+tile.gf_lanternGas3.name=Gas Lantern
+tile.gf_lanternGas4.name=Gas Lantern
+tile.gf_lanternGas5.name=Gas Lantern
+
+itemGroup.tabGases=Glenn's Gases
+
+container.gasFurnace.name=Gas Furnace
