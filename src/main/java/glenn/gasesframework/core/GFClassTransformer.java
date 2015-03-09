@@ -22,7 +22,7 @@ import org.objectweb.asm.tree.*;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 
-public class EDClassTransformer implements IClassTransformer
+public class GFClassTransformer implements IClassTransformer
 {
 	private Map<String, String> c = new HashMap<String, String>();
 	

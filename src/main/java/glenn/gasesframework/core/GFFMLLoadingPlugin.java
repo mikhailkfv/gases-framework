@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
 @TransformerExclusions({"glenn.gasesframework.core"})
-public class EDFMLLoadingPlugin implements IFMLLoadingPlugin
+public class GFFMLLoadingPlugin implements IFMLLoadingPlugin
 {
 	@Override
 	public String getAccessTransformerClass()
@@ -17,7 +17,7 @@ public class EDFMLLoadingPlugin implements IFMLLoadingPlugin
 	@Override
 	public String[] getASMTransformerClass()
 	{
-		return new String[]{EDClassTransformer.class.getName()};
+		return new String[]{GFClassTransformer.class.getName()};
 	}
 
 	@Override

@@ -65,7 +65,7 @@ processResources
 jar
 {
 	manifest {
-		attributes 'FMLCorePlugin': 'glenn.gasesframework.core.EDFMLLoadingPlugin'
+		attributes 'FMLCorePlugin': 'glenn.gasesframework.core.GFFMLLoadingPlugin'
 		attributes 'FMLCorePluginContainsFMLMod': 'true'
 	}
 }
