@@ -9,4 +9,4 @@ To use the Gases Framework in your mod, you must install the [Gases Framework AP
 * Download a forge distribution and copy the eclipse folder into this workspace.
 * Run *gradlew eclipse* in your workspace.
 * Open the workspace with Eclipse.
-* Open your run configurations and add the following program argument to both Client and Server: *-Dfml.coreMods.load=glenn.gasesframework.core.GFFMLLoadingPlugin*
+* Open your run configurations and add the following VM argument to both Client and Server: *-Dfml.coreMods.load=glenn.gasesframework.core.GFFMLLoadingPlugin*
