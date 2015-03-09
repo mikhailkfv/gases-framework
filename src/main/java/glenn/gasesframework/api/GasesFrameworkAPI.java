@@ -21,14 +21,17 @@ import net.minecraft.world.World;
 
 /**
  * <b>The Gases Framework API</b>
- * Use this API to interact with the Gases Framework.
- * The API must be installed in your source folder. It has been designed to work both with and without the Gases Framework mod installed.
+ * <br>
+ * <br>
+ * This piece of software is covered under the LGPL license. Redistribution and modification is permitted.
+ * But honestly, why would you want to modify it?
  * @author Glenn
+ * @author Trent
  */
 public class GasesFrameworkAPI
 {
 	public static final String OWNER = "gasesFramework";
-	public static final String VERSION = "1.0.0";
+	public static final String VERSION = "1.0.6";
 	public static final String TARGETVERSION = "1.7.10";
 	public static final String PROVIDES = "gasesFrameworkAPI";
 	

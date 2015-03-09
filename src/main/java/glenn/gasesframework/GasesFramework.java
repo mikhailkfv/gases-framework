@@ -80,12 +80,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * Gases Framework provides support for simplified implementation of gases in Minecraft.
  * <br>
  * <br>
- * This piece of software can be distributed freely without permission from the author. The software must be unaltered.
- * This software will sometimes be updated, so it is recommended to keep an eye on the official download/source.
- * Backwards compatibility will maintained in most cases, but it is recommended to check for changes at least on a monthly basis.
- * <br>
- * Copyright 2013 Erlend Amdal
+ * This piece of software is covered under the LGPL license. Redistribution and modification of this mod is permitted.
+ * It would be nice if you let us know if you do redistribute/modify it: 
+ * http://www.jamieswhiteshirt.com/minecraft/mods/gases/
  * @author Glenn
+ * @author Trent
  *
  */
 @Mod(modid = "gasesFramework", name = "Gases Framework", version = GasesFramework.VERSION, dependencies="required-after:gasesFrameworkCore", acceptedMinecraftVersions = "[" + GasesFramework.TARGETVERSION + "]")
