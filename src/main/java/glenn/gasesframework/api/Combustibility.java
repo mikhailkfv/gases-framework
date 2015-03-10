@@ -1,5 +1,6 @@
 package glenn.gasesframework.api;
 
+import glenn.gasesframework.api.lanterntype.LanternType;
 import net.minecraft.block.Block;
 
 /**
@@ -46,10 +47,6 @@ public enum Combustibility
 	 * How powerful the explosion of gases using this combustibility will be. Overall explosion power can be adjusted in the Gases Framework config.
 	 */
 	public final float explosionPower;
-	/**
-	 * The lantern block used for bottles of gas with this combustibility. Each combustibility needs an unique lantern block for technical reasons.
-	 */
-	public Block lanternBlock;
 	
 	Combustibility(int burnRate, int fireSpreadRate, float explosionPower)
 	{

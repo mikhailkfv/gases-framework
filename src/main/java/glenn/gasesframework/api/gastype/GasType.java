@@ -1,4 +1,4 @@
-package glenn.gasesframework.api.type;
+package glenn.gasesframework.api.gastype;
 
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.GasesFrameworkAPI;
@@ -28,13 +28,14 @@ public class GasType
 {
 	private static final GasType[] gasTypesByID = new GasType[256];
 	private static final HashMap<String, GasType> gasTypesByName = new HashMap<String, GasType>();
+	private static final HashMap<String, GasType> gasTypesByItem = new HashMap<String, GasType>();
 	
 	/**
 	 * Is this gas type {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}?
 	 */
 	public boolean isRegistered = false;
 	/**
-	 * The gas block associated with this gas type. Can be null if the gas type is {@link #isPhysical physical}.
+	 * The gas block associated with this gas type.
 	 * Is set when the gas type is {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
 	 */
 	public Block block;
@@ -169,16 +170,23 @@ public class GasType
 	private void map()
 	{
 		GasType prev = getGasTypeByID(gasID);
-		if(prev == null) prev = getGasTypeByName(name);
-		
 		if(prev == null)
 		{
 			gasTypesByID[gasID] = this;
+		}
+		else
+		{
+			throw new RuntimeException("A gas type with name " + name + " attempted to override a gas type with name " + prev.name + " with gasID " + gasID);
+		}
+		
+		prev = getGasTypeByName(name);
+		if(prev == null)
+		{
 			gasTypesByName.put(name, this);
 		}
 		else
 		{
-			throw new RuntimeException("A gas type named " + name + " attempted to override a gas type named " + prev.name);
+			throw new RuntimeException("A gas type with name " + name + " attempted to override a gas type with the same name");
 		}
 	}
 	

@@ -1,4 +1,4 @@
-package glenn.gasesframework.api.type;
+package glenn.gasesframework.api.gastype;
 
 import java.util.Random;
 

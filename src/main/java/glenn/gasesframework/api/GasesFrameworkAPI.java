@@ -1,10 +1,11 @@
 package glenn.gasesframework.api;
 
+import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.api.gastype.GasTypeAir;
+import glenn.gasesframework.api.gastype.GasTypeFire;
+import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.api.reaction.Reaction;
 import glenn.gasesframework.api.reaction.ReactionEmpty;
-import glenn.gasesframework.api.type.GasType;
-import glenn.gasesframework.api.type.GasTypeAir;
-import glenn.gasesframework.api.type.GasTypeFire;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,6 +14,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
@@ -59,17 +61,36 @@ public class GasesFrameworkAPI
 	public static final ResourceLocation emptyOverlayImage = new ResourceLocation("gasesframework:textures/misc/empty_overlay.png");
 
 	/**
-	 * The gas type for air.
+	 * The gas type for air. Do not register this!
 	 */
 	public static final GasType gasTypeAir = new GasTypeAir();
 	/**
-	 * The gas type for smoke.
+	 * The gas type for smoke. Do not register this!
 	 */
 	public static final GasType gasTypeSmoke = new GasType(true, 1, "smoke", 0x3F3F3F9F, 2, -16, Combustibility.NONE).setEffectRates(4, 4, 16);
 	/**
-	 * The gas type for ignited gas.
+	 * The gas type for ignited gas. Do not register this!
 	 */
 	public static final GasType gasTypeFire = new GasTypeFire();
+	
+	/**
+	 * The lantern type for empty lanterns. Do not register this!
+	 */
+	public static final LanternType lanternTypeEmpty = new LanternType("empty", 0.0f, "gasesframework:lantern_empty", new ItemKey(), null, 0).addItemIn(new ItemKey());
+	/**
+	 * The lantern type for lanterns containing bottles. Do not register this!
+	 */
+	public static final LanternType lanternTypeGasEmpty = new LanternType("gas_empty", 0.0f, "gasesframework:lantern_gas_empty", new ItemKey(Items.glass_bottle), lanternTypeEmpty, 0).addItemIn(new ItemKey(Items.glass_bottle));
+	/**
+	 * A list of lantern types for lanterns containing gas of varying {@link glenn.gasesframework.api.Combustibility#burnRate burn rates}. Do not register these!
+	 */
+	public static final LanternType[] lanternTypesGas = new LanternType[] {
+		lanternTypeGasEmpty,
+		new LanternType("gas_1", 1.0f, "gasesframework:lantern_gas_1", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 0),
+		new LanternType("gas_2", 1.0f, "gasesframework:lantern_gas_2", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 0),
+		new LanternType("gas_3", 1.0f, "gasesframework:lantern_gas_3", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 0),
+		new LanternType("gas_4", 1.0f, "gasesframework:lantern_gas_4", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 0)
+	};
 	
 	/**
 	 * The item used for glass bottles containing gas. These bottles are registered automatically for each gas type created, unless it is specified as non-industrial.
@@ -366,18 +387,15 @@ public class GasesFrameworkAPI
 	}
 	
 	/**
-	 * Register a non-expiring lantern that contains a certain item. This lantern can be created by right-clicking a lantern with the input in hand, or by crafting an empty lantern with the input.
-	 * @param input - The item contained by this lantern.
-	 * @param name - The block name for this lantern.
-	 * @param lightLevel - The level of light emitted by this lantern from 0.0f to 1.0f.
-	 * @param textureName - The texture name of the item displayed inside the lantern.
-	 * @return
+	 * Registers a lantern type. This involves creating and registering the blocks necessary for a lantern type.
+	 * @param type
+	 * @return The lantern block registered for this type, if any.
 	 */
-	public static Block registerLanternType(ItemStack input, String name, float lightLevel, String textureName)
+	public static Block registerLanternType(LanternType type)
 	{
 		if(isModInstalled())
 		{
-			return modInstance.registerLanternType(input, name, lightLevel, textureName);
+			return modInstance.registerLanternType(type);
 		}
 		else
 		{
@@ -386,21 +404,16 @@ public class GasesFrameworkAPI
 	}
 	
 	/**
-	 * Register an expiring lantern that contains a certain item. This lantern can be created by right-clicking a lantern with the input in hand, or by crafting an empty lantern with the input.
-	 * @param tickRate - The rate at which the lantern expires. Lower values will cause the lantern to expire more quickly.
-	 * @param input - The item contained by this lantern.
-	 * @param output - The item given when the item is removed.
-	 * @param expirationBlock - The block this lantern will transform into when it expires. Ideally, this is another lantern block.
-	 * @param name - The block name for this lantern.
-	 * @param lightLevel - The level of light emitted by this lantern from 0.0f to 1.0f.
-	 * @param textureName - The texture name of the item displayed inside the lantern.
-	 * @return
+	 * Registers a lantern type. This involves creating and registering the blocks necessary for a lantern type.
+	 * @param type
+	 * @param creativeTab
+	 * @return The lantern block registered for this type, if any.
 	 */
-	public static Block registerExpiringLanternType(int tickRate, ItemStack input, ItemStack output, Block expirationBlock, String name, float lightLevel, String textureName)
+	public static Block registerLanternType(LanternType type, CreativeTabs creativeTab)
 	{
 		if(isModInstalled())
 		{
-			return modInstance.registerExpiringLanternType(tickRate, input, output, expirationBlock, name, lightLevel, textureName);
+			return modInstance.registerLanternType(type, creativeTab);
 		}
 		else
 		{

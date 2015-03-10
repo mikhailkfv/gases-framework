@@ -12,6 +12,14 @@ gf_gas.air.name=Air
 gf_gas.smoke.name=Smoke
 gf_gas.fire.name=Ignited Gas
 
+gf_lantern.empty.name=Lantern
+gf_lantern.gas_empty.name=Lantern with Bottle
+gf_lantern.gas_1.name=Gas Lantern
+gf_lantern.gas_2.name=Gas Lantern
+gf_lantern.gas_3.name=Gas Lantern
+gf_lantern.gas_4.name=Gas Lantern
+gf_lantern.gas_5.name=Gas Lantern
+
 tile.gf_gasSmoke.name=Smoke
 tile.gf_gasFire.name=Ignited Gas
 tile.gf_gasPipe.iron.name=Iron Gas Pipe
@@ -21,13 +29,6 @@ tile.gf_gasTank.name=Gas Tank
 tile.gf_gasCollector.name=Gas Collector
 tile.gf_gasFurnace.name=Gas Furnace
 tile.gf_gasFurnaceWarm.name=Warm Gas Furnace
-tile.gf_lanternEmpty.name=Lantern
-tile.gf_lanternGasEmpty.name=Lantern with Bottle
-tile.gf_lanternGas1.name=Gas Lantern
-tile.gf_lanternGas2.name=Gas Lantern
-tile.gf_lanternGas3.name=Gas Lantern
-tile.gf_lanternGas4.name=Gas Lantern
-tile.gf_lanternGas5.name=Gas Lantern
 
 itemGroup.tabGases=Glenn's Gases
 

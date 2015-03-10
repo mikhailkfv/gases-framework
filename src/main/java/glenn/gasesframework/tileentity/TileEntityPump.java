@@ -4,7 +4,7 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasSource;
-import glenn.gasesframework.api.type.GasType;
+import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.block.BlockGas;
 import glenn.gasesframework.block.BlockGasPump;
 import glenn.moddingutils.DVec;

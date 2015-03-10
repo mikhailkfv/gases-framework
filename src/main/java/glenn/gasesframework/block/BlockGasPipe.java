@@ -4,7 +4,7 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasInterface;
 import glenn.gasesframework.api.block.IGasReceptor;
-import glenn.gasesframework.api.type.GasType;
+import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.client.render.RenderBlockGasPipe;
 import glenn.gasesframework.tileentity.TileEntityPump;
 import glenn.gasesframework.util.PipeBranch;

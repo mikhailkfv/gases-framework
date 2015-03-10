@@ -1,7 +1,7 @@
 package glenn.gasesframework.item;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.type.GasType;
+import glenn.gasesframework.api.gastype.GasType;
 
 import java.util.List;
 
