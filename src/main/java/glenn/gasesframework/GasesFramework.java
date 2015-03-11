@@ -602,12 +602,12 @@ public class GasesFramework implements IGasesFramework
 		if(type.isIndustrial)
 		{
 			type.pipeBlock = GameRegistry.registerBlock(type.tweakPipeBlock(new BlockGasPipe(type)), ItemGasPipe.class, "gasPipe_" + type.name);
-		}
 		
-		LanternType lanternType = GasesFrameworkAPI.lanternTypesGas[type.combustibility.burnRate];
-		if(lanternType != GasesFrameworkAPI.lanternTypeGasEmpty)
-		{
-			lanternType.addItemIn(new ItemKey(GasesFrameworkAPI.gasBottle, type.gasID));
+			LanternType lanternType = GasesFrameworkAPI.lanternTypesGas[type.combustibility.burnRate];
+			if(lanternType != GasesFrameworkAPI.lanternTypeGasEmpty)
+			{
+				lanternType.addItemIn(new ItemKey(GasesFrameworkAPI.gasBottle, type.gasID));
+			}
 		}
 		
 		type.isRegistered = true;
