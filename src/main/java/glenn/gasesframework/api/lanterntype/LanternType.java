@@ -125,6 +125,16 @@ public class LanternType
 	}
 	
 	/**
+	 * Sets the item to treat the item given from this lantern type as something used to create a lantern of this type.
+	 * This is common for non-gas lanterns.
+	 * @return
+	 */
+	public LanternType setInOut()
+	{
+		return addItemIn(itemOut);
+	}
+	
+	/**
 	 * Adds an item that can be inserted into a lantern to create a lantern of this type. Must be unique to all lantern types.
 	 * @param item
 	 * @return
