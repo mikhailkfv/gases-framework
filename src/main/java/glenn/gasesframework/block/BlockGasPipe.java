@@ -377,34 +377,36 @@ public class BlockGasPipe extends Block implements IGasReceptor
 		for(PipeSearch.PipeEnd propellor : pumpSearch.propellors)
 		{
 			IVec pipePos = propellor.branch.getPosition();
-			if(pipePos.x == x && pipePos.y == y && pipePos.z == z)
-			{
-				res[GasesFramework.reverseDirection(propellor.endDirection)] |= 2;
-			}
-			
 			PipeSearch.ReceptorSearch search = new PipeSearch.ReceptorSearch(world, pipePos.x, pipePos.y, pipePos.z, 15);
-			
 			ArrayList<PipeSearch.PipeEnd> listToSearch = search.looseEnds.isEmpty() ? search.ends : search.looseEnds;
 			
-			for(PipeSearch.PipeEnd end : listToSearch)
+			if(listToSearch.size() > 0)
 			{
-				PipeBranchIterator.DescendingPipeBranchIterator iterator = new PipeBranchIterator.DescendingPipeBranchIterator(end.branch);
-				PipeBranchIterator.Iteration iteration;
-				while((iteration = iterator.next()) != null)
+				if(pipePos.x == x && pipePos.y == y && pipePos.z == z)
 				{
-					if(iteration.currentPosition.equals(pipePosition))
-					{
-						res[GasesFramework.reverseDirection(iteration.direction)] |= 1;
-					}
-					else if(iteration.previousPosition.equals(pipePosition))
-					{
-						res[iteration.direction] |= 2;
-					}
+					res[GasesFramework.reverseDirection(propellor.endDirection)] |= 2;
 				}
 				
-				if(end.branch.getPosition().equals(pipePosition))
+				for(PipeSearch.PipeEnd end : listToSearch)
 				{
-					res[end.endDirection] |= 1;
+					PipeBranchIterator.DescendingPipeBranchIterator iterator = new PipeBranchIterator.DescendingPipeBranchIterator(end.branch);
+					PipeBranchIterator.Iteration iteration;
+					while((iteration = iterator.next()) != null)
+					{
+						if(iteration.currentPosition.equals(pipePosition))
+						{
+							res[GasesFramework.reverseDirection(iteration.direction)] |= 1;
+						}
+						else if(iteration.previousPosition.equals(pipePosition))
+						{
+							res[iteration.direction] |= 2;
+						}
+					}
+					
+					if(end.branch.getPosition().equals(pipePosition))
+					{
+						res[end.endDirection] |= 1;
+					}
 				}
 			}
 		}
