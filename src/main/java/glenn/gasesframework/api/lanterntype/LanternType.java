@@ -1,6 +1,7 @@
 package glenn.gasesframework.api.lanterntype;
 
 import glenn.gasesframework.api.ItemKey;
+import glenn.gasesframework.api.gastype.GasType;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,7 +22,7 @@ public class LanternType
 	public boolean isRegistered = false;
 	/**
 	 * The lantern block associated with this lantern type.
-	 * Is set when the gas type is {@link glenn.gasesframework.api.GasesFrameworkAPI#registerLanternType(LanternType) registered}.
+	 * Is set when the lantern type is {@link glenn.gasesframework.api.GasesFrameworkAPI#registerLanternType(LanternType) registered}.
 	 */
 	public Block block;
 	/**
@@ -51,7 +52,7 @@ public class LanternType
 	/**
 	 * The items that can be inserted into a lantern to create this type.
 	 */
-	public final HashSet<ItemKey> itemIn = new HashSet<ItemKey>();
+	private final HashSet<ItemKey> itemIn = new HashSet<ItemKey>();
 	
 	/**
 	 * Get a lantern type from an item inserted into the lantern.
@@ -89,6 +90,15 @@ public class LanternType
 		return res;
 	}
 	
+	/**
+	 * Creates a new lantern type. Lantern types must be {@link glenn.gasesframework.api.GasesFrameworkAPI#registerLanternType(LanternType) registered}.
+	 * @param name - An unique name for this lantern type.
+	 * @param lightLevel - The level of light emitted by this lantern type in an interval from 0.0f to 1.0f.
+	 * @param textureName - The name of the texture displayed inside the lantern.
+	 * @param itemOut - The item given from this lantern. NOTE: Not the necessarily same as the item placed in the lantern.
+	 * @param expirationLanternType - The lantern type this lantern will transform into if it expires. Can be null.
+	 * @param expirationRate - The rate at which this lantern will expire. Smaller numbers mean quicker expiration. If <= 0, this lantern type will never expire.
+	 */
 	public LanternType(String name, float lightLevel, String textureName, ItemKey itemOut, LanternType expirationLanternType, int expirationRate)
 	{
 		this.name = name;
@@ -115,7 +125,7 @@ public class LanternType
 	}
 	
 	/**
-	 * Adds an item that can be inserted into a lantern to create a lantern of this type.
+	 * Adds an item that can be inserted into a lantern to create a lantern of this type. Must be unique to all lantern types.
 	 * @param item
 	 * @return
 	 */
@@ -134,8 +144,42 @@ public class LanternType
 	}
 	
 	/**
-	 * Get the unlocalized name of the gas.
-	 * @return "gf_gas." + name;
+	 * Returns true if this item can be placed in a lantern to create this type.
+	 * @param item
+	 * @return
+	 */
+	public boolean accepts(ItemKey item)
+	{
+		return itemIn.contains(item);
+	}
+	
+	/**
+	 * Get a list of items that can be placed in a lantern to create a lantern of this type.
+	 * @return
+	 */
+	public ItemKey[] getAllAcceptedItems()
+	{
+		ItemKey[] res = new ItemKey[itemIn.size()];
+		int i = 0;
+		for(ItemKey item : itemIn)
+		{
+			res[i++] = item;
+		}
+		return res;
+	}
+	
+	/**
+	 * This method is called upon lantern block construction when the lantern type is {@link glenn.gasesframework.api.GasesFrameworkAPI#registerLanternType(LanternType) registered}.
+	 * @return
+	 */
+	public Block tweakLanternBlock(Block block)
+	{
+		return block;
+	}
+	
+	/**
+	 * Get the unlocalized name of the lantern.
+	 * @return "gf_lantern." + name;
 	 */
 	public String getUnlocalizedName()
 	{

@@ -1,7 +1,10 @@
 package glenn.gasesframework.block;
 
+import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.ItemKey;
+import glenn.gasesframework.api.block.IGasReceptor;
+import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.client.render.RenderBlockLantern;
 
@@ -20,7 +23,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockLantern extends Block
+public class BlockLantern extends Block implements IGasReceptor
 {
 	public IIcon topIcon;
 	public IIcon sideIcon;
@@ -107,7 +110,7 @@ public class BlockLantern extends Block
     	
     	if(!entityPlayer.capabilities.isCreativeMode && !itemIn.equals(type.itemOut))
     	{
-    		if(heldItem != null && replacementType.itemIn.contains(itemIn) && --heldItem.stackSize <= 0)
+    		if(heldItem != null && replacementType.accepts(itemIn) && --heldItem.stackSize <= 0)
     		{
     			entityPlayer.destroyCurrentEquippedItem();
     		}
@@ -117,13 +120,9 @@ public class BlockLantern extends Block
             {
                 this.dropBlockAsItem(world, x, y, z, itemStackOut);
             }
-    		
-    		return true;
     	}
-    	else
-    	{
-    		return false;
-    	}
+    	
+    	return true;
     }
 
     @Override
@@ -277,5 +276,31 @@ public class BlockLantern extends Block
 		}
 		
 		return topIcon;
+	}
+
+	@Override
+	public boolean connectToPipe()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean receiveGas(World world, int x, int y, int z, int side, GasType gasType)
+	{
+		if(canReceiveGas(world, x, y, z, side, gasType))
+		{
+			world.setBlock(x, y, z, GasesFrameworkAPI.lanternTypesGas[gasType.combustibility.burnRate].block);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	@Override
+	public boolean canReceiveGas(World world, int x, int y, int z, int side, GasType gasType)
+	{
+		return type == GasesFrameworkAPI.lanternTypeGasEmpty && gasType.combustibility != Combustibility.NONE;
 	}
 }

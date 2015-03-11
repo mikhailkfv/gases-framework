@@ -208,7 +208,7 @@ public class GasesFramework implements IGasesFramework
 		{
 			if(lanternType != GasesFrameworkAPI.lanternTypeEmpty)
 			{
-				for(ItemKey itemIn : lanternType.itemIn)
+				for(ItemKey itemIn : lanternType.getAllAcceptedItems())
 				{
 					if(itemIn.item != null)
 					{
@@ -644,7 +644,7 @@ public class GasesFramework implements IGasesFramework
 			throw new RuntimeException("Lantern type named " + type.name + " was attempted registered while it was already registered.");
 		}
 		
-		type.block = GameRegistry.registerBlock(new BlockLantern(type), "lantern_" + type.name);
+		type.block = GameRegistry.registerBlock(type.tweakLanternBlock(new BlockLantern(type)), "lantern_" + type.name);
 		
 		type.isRegistered = true;
 		

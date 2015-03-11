@@ -191,11 +191,11 @@ public class GasType
 	}
 	
 	/**
-	 * Creates a new industrial gas type. Gas types must be {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
+	 * Creates a new gas type. Gas types must be {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
 	 * @param isIndustrial - Can this gas be used in pipe systems?
 	 * @param gasID - An unique ID for the GasType. Consult the Gases Framework documentation for unoccupied gas IDs.
 	 * @param name - An unique name for the gas type.
-	 * @param color - An RGB representation of the color to be used by this gas.
+	 * @param color - An RGBA representation of the color to be used by this gas.
 	 * @param opacity - Higher values will increase the opacity of this gas. This will also affect how well light passes through it.
 	 * @param density - A value determining how dense the gas will be relative to air.
 	 * <ul><li><b>density > 0</b> Will produce a falling gas. Greater values means the gas will move faster.</li>
