@@ -116,7 +116,7 @@ public class BlockLantern extends Block implements IGasReceptor
     		}
     		
     		ItemStack itemStackOut = type.itemOut.itemStack();
-    		if(itemStackOut != null && !entityPlayer.inventory.addItemStackToInventory(itemStackOut))
+    		if(itemStackOut != null && !entityPlayer.inventory.addItemStackToInventory(itemStackOut) && !world.isRemote)
             {
                 this.dropBlockAsItem(world, x, y, z, itemStackOut);
             }
@@ -169,7 +169,7 @@ public class BlockLantern extends Block implements IGasReceptor
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block neighbor)
     {
-    	if(!this.canBlockStay(world, x, y, z))
+    	if(!world.isRemote && !this.canBlockStay(world, x, y, z))
         {
         	this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
             world.setBlockToAir(x, y, z);
@@ -228,22 +228,6 @@ public class BlockLantern extends Block implements IGasReceptor
     	}
     	
     	return ret;
-    }
-    
-    /**
-     * Returns the ID of the items to drop on destruction.
-     */
-    @Override
-    public Item getItemDropped(int par1, Random random, int par3)
-    {
-    	if(type.expirationLanternType != null)
-    	{
-    		return Item.getItemFromBlock(type.expirationLanternType.block);
-    	}
-    	else
-    	{
-    		return super.getItemDropped(par1, random, par3);
-    	}
     }
     
     @Override
