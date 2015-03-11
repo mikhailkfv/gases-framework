@@ -76,11 +76,11 @@ public class GasesFrameworkAPI
 	/**
 	 * The lantern type for empty lanterns. Do not register this!
 	 */
-	public static final LanternType lanternTypeEmpty = new LanternType("empty", 0.0f, "gasesframework:lantern_empty", new ItemKey(), null, 0).addItemIn(new ItemKey());
+	public static final LanternType lanternTypeEmpty = new LanternType("empty", 0.0f, "gasesframework:lantern_empty", new ItemKey(), null, 0).setInOut();
 	/**
 	 * The lantern type for lanterns containing bottles. Do not register this!
 	 */
-	public static final LanternType lanternTypeGasEmpty = new LanternType("gas_empty", 0.0f, "gasesframework:lantern_gas_empty", new ItemKey(Items.glass_bottle), lanternTypeEmpty, 0).addItemIn(new ItemKey(Items.glass_bottle));
+	public static final LanternType lanternTypeGasEmpty = new LanternType("gas_empty", 0.0f, "gasesframework:lantern_gas_empty", new ItemKey(Items.glass_bottle), lanternTypeEmpty, 0).setInOut();
 	/**
 	 * A list of lantern types for lanterns containing gas of varying {@link glenn.gasesframework.api.Combustibility#burnRate burn rates}. Do not register these!
 	 */
