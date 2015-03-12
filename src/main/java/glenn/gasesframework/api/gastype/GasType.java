@@ -1,4 +1,4 @@
-package glenn.gasesframework.api.type;
+package glenn.gasesframework.api.gastype;
 
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.GasesFrameworkAPI;
@@ -28,13 +28,14 @@ public class GasType
 {
 	private static final GasType[] gasTypesByID = new GasType[256];
 	private static final HashMap<String, GasType> gasTypesByName = new HashMap<String, GasType>();
+	private static final HashMap<String, GasType> gasTypesByItem = new HashMap<String, GasType>();
 	
 	/**
 	 * Is this gas type {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}?
 	 */
 	public boolean isRegistered = false;
 	/**
-	 * The gas block associated with this gas type. Can be null if the gas type is {@link #isPhysical physical}.
+	 * The gas block associated with this gas type.
 	 * Is set when the gas type is {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
 	 */
 	public Block block;
@@ -169,25 +170,32 @@ public class GasType
 	private void map()
 	{
 		GasType prev = getGasTypeByID(gasID);
-		if(prev == null) prev = getGasTypeByName(name);
-		
 		if(prev == null)
 		{
 			gasTypesByID[gasID] = this;
+		}
+		else
+		{
+			throw new RuntimeException("A gas type with name " + name + " attempted to override a gas type with name " + prev.name + " with gasID " + gasID);
+		}
+		
+		prev = getGasTypeByName(name);
+		if(prev == null)
+		{
 			gasTypesByName.put(name, this);
 		}
 		else
 		{
-			throw new RuntimeException("A gas type named " + name + " attempted to override a gas type named " + prev.name);
+			throw new RuntimeException("A gas type with name " + name + " attempted to override a gas type with the same name");
 		}
 	}
 	
 	/**
-	 * Creates a new industrial gas type. Gas types must be {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
+	 * Creates a new gas type. Gas types must be {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
 	 * @param isIndustrial - Can this gas be used in pipe systems?
 	 * @param gasID - An unique ID for the GasType. Consult the Gases Framework documentation for unoccupied gas IDs.
 	 * @param name - An unique name for the gas type.
-	 * @param color - An RGB representation of the color to be used by this gas.
+	 * @param color - An RGBA representation of the color to be used by this gas.
 	 * @param opacity - Higher values will increase the opacity of this gas. This will also affect how well light passes through it.
 	 * @param density - A value determining how dense the gas will be relative to air.
 	 * <ul><li><b>density > 0</b> Will produce a falling gas. Greater values means the gas will move faster.</li>

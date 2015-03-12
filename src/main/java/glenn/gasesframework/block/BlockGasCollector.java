@@ -1,6 +1,6 @@
 package glenn.gasesframework.block;
 
-import glenn.gasesframework.api.type.GasType;
+import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.tileentity.TileEntityGasCollector;
 
 import java.util.Random;

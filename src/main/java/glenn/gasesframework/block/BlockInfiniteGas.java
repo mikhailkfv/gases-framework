@@ -1,7 +1,7 @@
 package glenn.gasesframework.block;
 
+import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.item.ISample;
-import glenn.gasesframework.api.type.GasType;
 import glenn.gasesframework.tileentity.TileEntityInfiniteGas;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;

@@ -3,8 +3,8 @@ package glenn.gasesframework.block;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
+import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.item.ISample;
-import glenn.gasesframework.api.type.GasType;
 import glenn.gasesframework.client.render.RenderBlockGasPump;
 import glenn.gasesframework.tileentity.TileEntityPump;
 

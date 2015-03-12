@@ -63,15 +63,12 @@ public abstract class PipeSearch
 			if(IGasReceptor.class.isAssignableFrom(directionBlock.getClass()))
 			{
 				IGasReceptor gasReceptor = (IGasReceptor)directionBlock;
-				if(gasReceptor.connectToPipe())
+				if(gasReceptor.canReceiveGas(world, connectionPos.x, connectionPos.y, connectionPos.z, direction, pipeBlock.type))
 				{
-					if(gasReceptor.canReceiveGas(world, connectionPos.x, connectionPos.y, connectionPos.z, direction, pipeBlock.type))
-					{
-						ends.add(new PipeEnd(branch, connectionPos, direction));
-					}
-					
-					return true;
+					ends.add(new PipeEnd(branch, connectionPos, direction));
 				}
+				
+				return true;
 			}
 			
 			return false;

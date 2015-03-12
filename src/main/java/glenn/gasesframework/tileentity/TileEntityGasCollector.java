@@ -7,7 +7,7 @@ import java.util.Queue;
 
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.type.GasType;
+import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.block.BlockGas;
 import glenn.moddingutils.IVec;
 import glenn.moddingutils.KeyPair;

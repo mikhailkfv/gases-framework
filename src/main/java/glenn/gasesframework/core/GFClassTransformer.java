@@ -262,7 +262,7 @@ public class GFClassTransformer implements IClassTransformer
 						newInstructions.add(new InsnNode(DSUB));
 						newInstructions.add(new VarInsnNode(ALOAD, 7));
 						newInstructions.add(new TypeInsnNode(CHECKCAST, "glenn/gasesframework/block/BlockGas"));
-						newInstructions.add(new FieldInsnNode(GETFIELD, "glenn/gasesframework/block/BlockGas", "type", "Lglenn/gasesframework/api/type/GasType;"));
+						newInstructions.add(new FieldInsnNode(GETFIELD, "glenn/gasesframework/block/BlockGas", "type", "Lglenn/gasesframework/api/gastype/GasType;"));
 						newInstructions.add(new VarInsnNode(ALOAD, 0));
 						newInstructions.add(new FieldInsnNode(GETFIELD, classEntity, fieldWorldObj, "L" + classWorld + ";"));
 						newInstructions.add(new TypeInsnNode(CHECKCAST, interfaceBlockAccess));
@@ -275,7 +275,7 @@ public class GFClassTransformer implements IClassTransformer
 						newInstructions.add(new VarInsnNode(ILOAD, 5));
 						newInstructions.add(new VarInsnNode(ILOAD, 6));
 						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classWorld, methodGetBlockMetadata, "(III)I"));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/type/GasType", "getMinY", "(L" + interfaceBlockAccess + ";IIII)D"));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/gastype/GasType", "getMinY", "(L" + interfaceBlockAccess + ";IIII)D"));
 						newInstructions.add(new InsnNode(DCMPL));
 						newInstructions.add(new JumpInsnNode(IFLE, l8));
 						newInstructions.add(new VarInsnNode(DLOAD, 2));
@@ -284,7 +284,7 @@ public class GFClassTransformer implements IClassTransformer
 						newInstructions.add(new InsnNode(DSUB));
 						newInstructions.add(new VarInsnNode(ALOAD, 7));
 						newInstructions.add(new TypeInsnNode(CHECKCAST, "glenn/gasesframework/block/BlockGas"));
-						newInstructions.add(new FieldInsnNode(GETFIELD, "glenn/gasesframework/block/BlockGas", "type", "Lglenn/gasesframework/api/type/GasType;"));
+						newInstructions.add(new FieldInsnNode(GETFIELD, "glenn/gasesframework/block/BlockGas", "type", "Lglenn/gasesframework/api/gastype/GasType;"));
 						newInstructions.add(new VarInsnNode(ALOAD, 0));
 						newInstructions.add(new FieldInsnNode(GETFIELD, classEntity, fieldWorldObj, "L" + classWorld + ";"));
 						newInstructions.add(new TypeInsnNode(CHECKCAST, interfaceBlockAccess));
@@ -297,7 +297,7 @@ public class GFClassTransformer implements IClassTransformer
 						newInstructions.add(new VarInsnNode(ILOAD, 5));
 						newInstructions.add(new VarInsnNode(ILOAD, 6));
 						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classWorld, methodGetBlockMetadata, "(III)I"));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/type/GasType", "getMaxY", "(L" + interfaceBlockAccess + ";IIII)D"));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/gastype/GasType", "getMaxY", "(L" + interfaceBlockAccess + ";IIII)D"));
 						newInstructions.add(new InsnNode(DCMPG));
 						newInstructions.add(new JumpInsnNode(IFGE, l8));
 						newInstructions.add(new InsnNode(ICONST_1));
@@ -484,15 +484,15 @@ public class GFClassTransformer implements IClassTransformer
 			renderGasOverlay.visitLabel(l8);
 			renderGasOverlay.visitVarInsn(ALOAD, 7);
 			renderGasOverlay.visitTypeInsn(CHECKCAST, "glenn/gasesframework/block/BlockGas");
-			renderGasOverlay.visitFieldInsn(GETFIELD, "glenn/gasesframework/block/BlockGas", "type", "Lglenn/gasesframework/api/type/GasType;");
+			renderGasOverlay.visitFieldInsn(GETFIELD, "glenn/gasesframework/block/BlockGas", "type", "Lglenn/gasesframework/api/gastype/GasType;");
 			renderGasOverlay.visitInsn(DUP);
-			renderGasOverlay.visitMethodInsn(INVOKEVIRTUAL, "glenn/gasesframework/api/type/GasType", "getOverlayImage", "()L" + classResourceLocation + ";");
+			renderGasOverlay.visitMethodInsn(INVOKEVIRTUAL, "glenn/gasesframework/api/gastype/GasType", "getOverlayImage", "()L" + classResourceLocation + ";");
 			renderGasOverlay.visitVarInsn(ALOAD, 0);
 			renderGasOverlay.visitFieldInsn(GETFIELD, classItemRenderer, fieldMc, "L" + classMinecraft + ";");
 			renderGasOverlay.visitMethodInsn(INVOKEVIRTUAL, classMinecraft, methodGetTextureManager, "()L" + classTextureManager+ ";");
 			renderGasOverlay.visitInsn(SWAP);
 			renderGasOverlay.visitMethodInsn(INVOKEVIRTUAL, classTextureManager, methodBindTexture, "(L" + classResourceLocation + ";)V");
-			renderGasOverlay.visitFieldInsn(GETFIELD, "glenn/gasesframework/api/type/GasType", "color", "I");
+			renderGasOverlay.visitFieldInsn(GETFIELD, "glenn/gasesframework/api/gastype/GasType", "color", "I");
 			renderGasOverlay.visitVarInsn(ISTORE, 8);
 			Label l10 = new Label();
 			renderGasOverlay.visitLabel(l10);

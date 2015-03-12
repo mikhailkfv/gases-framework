@@ -1,6 +1,6 @@
 package glenn.gasesframework.api.item;
 
-import glenn.gasesframework.api.type.GasType;
+import glenn.gasesframework.api.gastype.GasType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 

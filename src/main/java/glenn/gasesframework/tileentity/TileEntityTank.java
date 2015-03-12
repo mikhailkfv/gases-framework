@@ -2,7 +2,7 @@ package glenn.gasesframework.tileentity;
 
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.type.GasType;
+import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.block.BlockGasTank;
 
 import java.util.Arrays;
