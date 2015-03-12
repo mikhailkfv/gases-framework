@@ -122,14 +122,6 @@ public class GasesFramework implements IGasesFramework
 		GasesFrameworkAPI.registerGasType(GasesFrameworkAPI.gasTypeAir);
 		GasesFrameworkAPI.registerGasType(GasesFrameworkAPI.gasTypeSmoke, GasesFrameworkAPI.creativeTab);
 		GasesFrameworkAPI.registerGasType(GasesFrameworkAPI.gasTypeFire, GasesFrameworkAPI.creativeTab);
-		
-		/*GameRegistry.registerBlock(lanternEmpty = (BlockLantern)(new BlockLanternEmpty()).setBlockName("gf_lanternEmpty").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:lantern_empty"), "lanternEmpty");
-		GameRegistry.registerBlock(lanternGasEmpty = (BlockLantern)(new BlockLanternGasEmpty()).setBlockName("gf_lanternGasEmpty").setBlockTextureName("gasesframework:lantern_gas0"), "lanternGasEmpty");
-		GameRegistry.registerBlock(lanternGas1 = (BlockLantern)(new BlockLanternGas(Combustibility.CONTROLLABLE)).setLightLevel(1.0F).setBlockName("gf_lanternGas1").setBlockTextureName("gasesframework:lantern_gas1"), "lanternGas1");
-		GameRegistry.registerBlock(lanternGas2 = (BlockLantern)(new BlockLanternGas(Combustibility.FLAMMABLE)).setLightLevel(1.0F).setBlockName("gf_lanternGas2").setBlockTextureName("gasesframework:lantern_gas2"), "lanternGas2");
-		GameRegistry.registerBlock(lanternGas3 = (BlockLantern)(new BlockLanternGas(Combustibility.HIGHLY_FLAMMABLE)).setLightLevel(1.0F).setBlockName("gf_lanternGas3").setBlockTextureName("gasesframework:lantern_gas3"), "lanternGas3");
-		GameRegistry.registerBlock(lanternGas4 = (BlockLantern)(new BlockLanternGas(Combustibility.EXPLOSIVE)).setLightLevel(1.0F).setBlockName("gf_lanternGas4").setBlockTextureName("gasesframework:lantern_gas4"), "lanternGas4");
-		GameRegistry.registerBlock(lanternGas5 = (BlockLantern)(new BlockLanternGas(Combustibility.HIGHLY_EXPLOSIVE)).setLightLevel(1.0F).setBlockName("gf_lanternGas5").setBlockTextureName("gasesframework:lantern_gas5"), "lanternGas5");*/
 	}
 	
 	@EventHandler
