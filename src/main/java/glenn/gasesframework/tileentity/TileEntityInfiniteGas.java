@@ -38,7 +38,6 @@ public class TileEntityInfiniteGas extends TileEntity
 			if(directional)
 			{
 				int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-				System.out.println(metadata);
 				int x1 = xCoord + xDirection[metadata];
 				int y1 = yCoord + yDirection[metadata];
 				int z1 = zCoord + zDirection[metadata];
