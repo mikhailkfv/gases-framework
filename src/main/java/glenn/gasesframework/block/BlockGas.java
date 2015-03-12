@@ -5,10 +5,10 @@ import glenn.gasesframework.ReactionIgnition;
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.MaterialGas;
+import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.item.ISample;
 import glenn.gasesframework.api.reaction.Reaction;
 import glenn.gasesframework.api.reaction.ReactionEmpty;
-import glenn.gasesframework.api.type.GasType;
 import glenn.gasesframework.client.render.RenderBlockGas;
 
 import java.util.Random;

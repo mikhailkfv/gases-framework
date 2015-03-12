@@ -1,7 +1,7 @@
 package glenn.gasesframework;
 
+import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.item.IGasEffectProtector;
-import glenn.gasesframework.api.type.GasType;
 import glenn.gasesframework.block.BlockGas;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;

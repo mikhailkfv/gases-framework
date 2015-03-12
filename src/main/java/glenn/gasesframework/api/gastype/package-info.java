@@ -3,7 +3,7 @@
 *	http://www.jamieswhiteshirt.com/minecraft/mods/gases/
 */
 @API(apiVersion = GasesFrameworkAPI.VERSION, owner = GasesFrameworkAPI.OWNER, provides = GasesFrameworkAPI.PROVIDES)
-package glenn.gasesframework.api.type;
+package glenn.gasesframework.api.gastype;
 
 import cpw.mods.fml.common.API;
 import glenn.gasesframework.api.GasesFrameworkAPI;

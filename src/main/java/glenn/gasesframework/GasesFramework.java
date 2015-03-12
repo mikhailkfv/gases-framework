@@ -1,13 +1,10 @@
 package glenn.gasesframework;
 
-import glenn.gasesframework.api.IGasesFramework;
-import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.reaction.Reaction;
-import glenn.gasesframework.api.reaction.ReactionEmpty;
-import glenn.gasesframework.api.type.GasType;
-import glenn.gasesframework.api.type.GasTypeAir;
-import glenn.gasesframework.api.type.GasTypeFire;
+import glenn.gasesframework.api.IGasesFramework;
+import glenn.gasesframework.api.ItemKey;
+import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.block.BlockGas;
 import glenn.gasesframework.block.BlockGasCollector;
 import glenn.gasesframework.block.BlockGasFurnace;
@@ -16,15 +13,6 @@ import glenn.gasesframework.block.BlockGasPump;
 import glenn.gasesframework.block.BlockGasTank;
 import glenn.gasesframework.block.BlockInfiniteGas;
 import glenn.gasesframework.block.BlockLantern;
-import glenn.gasesframework.block.BlockLanternEmpty;
-import glenn.gasesframework.block.BlockLanternGas;
-import glenn.gasesframework.block.BlockLanternGasEmpty;
-import glenn.gasesframework.block.BlockLanternSpecial;
-import glenn.gasesframework.client.render.RenderBlockGas;
-import glenn.gasesframework.client.render.RenderBlockGasPipe;
-import glenn.gasesframework.client.render.RenderBlockLantern;
-import glenn.gasesframework.client.render.RenderBlockGasPump;
-import glenn.gasesframework.client.render.RenderBlockGasTank;
 import glenn.gasesframework.item.ItemGasBottle;
 import glenn.gasesframework.item.ItemGasPipe;
 import glenn.gasesframework.item.ItemGasSampler;
@@ -34,7 +22,6 @@ import glenn.gasesframework.tileentity.TileEntityGasFurnace.SpecialFurnaceRecipe
 import glenn.gasesframework.tileentity.TileEntityInfiniteGas;
 import glenn.gasesframework.tileentity.TileEntityPump;
 import glenn.gasesframework.tileentity.TileEntityTank;
-import glenn.gasesframework.util.QueuedLanternRecipe;
 import glenn.moddingutils.Configurations.ItemRepresentation;
 
 import java.io.BufferedReader;
@@ -43,27 +30,21 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.config.Configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -105,8 +86,6 @@ public class GasesFramework implements IGasesFramework
 	
 	public static GasesFrameworkMainConfigurations configurations;
 	
-	private static ArrayList<QueuedLanternRecipe> queuedLanternRecipes = new ArrayList<QueuedLanternRecipe>();
-	
 	private static Configuration config;
 	
 	
@@ -116,14 +95,6 @@ public class GasesFramework implements IGasesFramework
 	public static Block gasFurnaceIdle;
 	public static Block gasFurnaceActive;
 	public static Block infGasBlock;
-	
-	public static BlockLantern lanternEmpty;
-	public static BlockLantern lanternGasEmpty;
-	public static BlockLantern lanternGas1;
-	public static BlockLantern lanternGas2;
-	public static BlockLantern lanternGas3;
-	public static BlockLantern lanternGas4;
-	public static BlockLantern lanternGas5;
 	
 	
 	
@@ -141,18 +112,24 @@ public class GasesFramework implements IGasesFramework
 		GameRegistry.registerBlock(gasCollector = new BlockGasCollector().setHardness(2.5F).setStepSound(Block.soundTypeStone).setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockName("gf_gasCollector").setBlockTextureName("gasesframework:collector"), "gasCollector");
 		GameRegistry.registerBlock(gasFurnaceIdle = new BlockGasFurnace(false).setHardness(3.5F).setStepSound(Block.soundTypeStone).setBlockName("gf_gasFurnace").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:gas_furnace"), "gasFurnaceIdle");
 		GameRegistry.registerBlock(gasFurnaceActive = new BlockGasFurnace(true).setHardness(3.5F).setStepSound(Block.soundTypeStone).setLightLevel(0.25F).setBlockName("gf_gasFurnaceWarm").setBlockTextureName("gasesframework:gas_furnace"), "gasFurnaceActive");
-
+		
+		GasesFrameworkAPI.registerLanternType(GasesFrameworkAPI.lanternTypeEmpty, GasesFrameworkAPI.creativeTab);
+		for(int i = 0; i < GasesFrameworkAPI.lanternTypesGas.length; i++)
+		{
+			GasesFrameworkAPI.registerLanternType(GasesFrameworkAPI.lanternTypesGas[i]);
+		}
+		
 		GasesFrameworkAPI.registerGasType(GasesFrameworkAPI.gasTypeAir);
 		GasesFrameworkAPI.registerGasType(GasesFrameworkAPI.gasTypeSmoke, GasesFrameworkAPI.creativeTab);
 		GasesFrameworkAPI.registerGasType(GasesFrameworkAPI.gasTypeFire, GasesFrameworkAPI.creativeTab);
 		
-		GameRegistry.registerBlock(lanternEmpty = (BlockLantern)(new BlockLanternEmpty()).setBlockName("gf_lanternEmpty").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:lantern_empty"), "lanternEmpty");
+		/*GameRegistry.registerBlock(lanternEmpty = (BlockLantern)(new BlockLanternEmpty()).setBlockName("gf_lanternEmpty").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:lantern_empty"), "lanternEmpty");
 		GameRegistry.registerBlock(lanternGasEmpty = (BlockLantern)(new BlockLanternGasEmpty()).setBlockName("gf_lanternGasEmpty").setBlockTextureName("gasesframework:lantern_gas0"), "lanternGasEmpty");
 		GameRegistry.registerBlock(lanternGas1 = (BlockLantern)(new BlockLanternGas(Combustibility.CONTROLLABLE)).setLightLevel(1.0F).setBlockName("gf_lanternGas1").setBlockTextureName("gasesframework:lantern_gas1"), "lanternGas1");
 		GameRegistry.registerBlock(lanternGas2 = (BlockLantern)(new BlockLanternGas(Combustibility.FLAMMABLE)).setLightLevel(1.0F).setBlockName("gf_lanternGas2").setBlockTextureName("gasesframework:lantern_gas2"), "lanternGas2");
 		GameRegistry.registerBlock(lanternGas3 = (BlockLantern)(new BlockLanternGas(Combustibility.HIGHLY_FLAMMABLE)).setLightLevel(1.0F).setBlockName("gf_lanternGas3").setBlockTextureName("gasesframework:lantern_gas3"), "lanternGas3");
 		GameRegistry.registerBlock(lanternGas4 = (BlockLantern)(new BlockLanternGas(Combustibility.EXPLOSIVE)).setLightLevel(1.0F).setBlockName("gf_lanternGas4").setBlockTextureName("gasesframework:lantern_gas4"), "lanternGas4");
-		GameRegistry.registerBlock(lanternGas5 = (BlockLantern)(new BlockLanternGas(Combustibility.HIGHLY_EXPLOSIVE)).setLightLevel(1.0F).setBlockName("gf_lanternGas5").setBlockTextureName("gasesframework:lantern_gas5"), "lanternGas5");
+		GameRegistry.registerBlock(lanternGas5 = (BlockLantern)(new BlockLanternGas(Combustibility.HIGHLY_EXPLOSIVE)).setLightLevel(1.0F).setBlockName("gf_lanternGas5").setBlockTextureName("gasesframework:lantern_gas5"), "lanternGas5");*/
 	}
 	
 	@EventHandler
@@ -164,7 +141,7 @@ public class GasesFramework implements IGasesFramework
 		{
 			public Item getTabIconItem()
 			{
-				return Item.getItemFromBlock(lanternEmpty);
+				return Item.getItemFromBlock(GasesFrameworkAPI.lanternTypeEmpty.block);
 			}
 		};
 		
@@ -216,7 +193,7 @@ public class GasesFramework implements IGasesFramework
 	{
 		proxy.registerRenderers();
 		
-		GameRegistry.addRecipe(new ItemStack(lanternEmpty, 4), "I", "G", 'I', Items.iron_ingot, 'G', Blocks.glass);
+		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.lanternTypeEmpty.block, 4), "I", "G", 'I', Items.iron_ingot, 'G', Blocks.glass);
 		
 		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.gasTypeAir.pipeBlock, 24), "III", 'I', Items.iron_ingot);
 		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.gasTypeAir.pipeBlock, 24, 1), "GGG", "III", "GGG", 'I', Items.iron_ingot, 'G', Blocks.glass_pane);
@@ -227,6 +204,20 @@ public class GasesFramework implements IGasesFramework
 		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.gasSamplerExcluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 0));
 		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.gasSamplerIncluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 15));
 		
+		for(LanternType lanternType : LanternType.getAllLanternTypes())
+		{
+			if(lanternType != GasesFrameworkAPI.lanternTypeEmpty)
+			{
+				for(ItemKey itemIn : lanternType.getAllAcceptedItems())
+				{
+					if(itemIn.item != null)
+					{
+						GameRegistry.addShapelessRecipe(new ItemStack(lanternType.block), new ItemStack(GasesFrameworkAPI.lanternTypeEmpty.block), new ItemStack(itemIn.item, 1, itemIn.damage));
+					}
+				}
+			}
+		}
+		
 		GameRegistry.registerTileEntity(TileEntityPump.class, "gasPump");
 		GameRegistry.registerTileEntity(TileEntityInfiniteGas.class, "infiniteGas");
 		GameRegistry.registerTileEntity(TileEntityGasCollector.class, "gasCollector");
@@ -236,11 +227,6 @@ public class GasesFramework implements IGasesFramework
 		GasesFrameworkAPI.registerReaction(new ReactionIgnition());
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
-		
-		for(QueuedLanternRecipe recipe : queuedLanternRecipes)
-		{
-			recipe.register();
-		}
 		
 		for(String s : configurations.other_removedIgnitionBlocks)
 		{
@@ -280,16 +266,6 @@ public class GasesFramework implements IGasesFramework
 	public void addSpecialFurnaceRecipe(ItemStack ingredient, ItemStack result, int cookTime, int exp)
 	{
 		TileEntityGasFurnace.specialFurnaceRecipes.add(new SpecialFurnaceRecipe(ingredient, result, cookTime));
-	}
-	
-	/**
-	 * Ignore, used by the Gases Framework only.
-	 * @param result
-	 * @param ingredient
-	 */
-	public static void queueLanternRecipe(BlockLantern result, ItemStack ingredient)
-	{
-		queuedLanternRecipes.add(new QueuedLanternRecipe(result, ingredient));
 	}
 	
 	/**
@@ -626,11 +602,12 @@ public class GasesFramework implements IGasesFramework
 		if(type.isIndustrial)
 		{
 			type.pipeBlock = GameRegistry.registerBlock(type.tweakPipeBlock(new BlockGasPipe(type)), ItemGasPipe.class, "gasPipe_" + type.name);
-		}
 		
-		if(type.combustibility.lanternBlock != null)
-		{
-			GameRegistry.addShapelessRecipe(new ItemStack(type.combustibility.lanternBlock), new Object[]{new ItemStack(GasesFramework.lanternEmpty), new ItemStack(GasesFrameworkAPI.gasBottle, 1, type.gasID)});
+			LanternType lanternType = GasesFrameworkAPI.lanternTypesGas[type.combustibility.burnRate];
+			if(lanternType != GasesFrameworkAPI.lanternTypeGasEmpty)
+			{
+				lanternType.addItemIn(new ItemKey(GasesFrameworkAPI.gasBottle, type.gasID));
+			}
 		}
 		
 		type.isRegistered = true;
@@ -655,34 +632,40 @@ public class GasesFramework implements IGasesFramework
 	}
 	
 	/**
-	 * Register a non-expiring lantern that contains a certain item. This lantern can be created by right-clicking a lantern with the input in hand, or by crafting an empty lantern with the input.
-	 * @param input - The item contained by this lantern.
-	 * @param name - The block name for this lantern.
-	 * @param lightLevel - The level of light emitted by this lantern from 0.0f to 1.0f.
-	 * @param textureName - The texture name of the item displayed inside the lantern.
-	 * @return
+	 * Registers a lantern type. This involves creating and registering the blocks necessary for a lantern type.
+	 * @param type
+	 * @return The lantern block registered for this type, if any.
 	 */
 	@Override
-	public Block registerLanternType(ItemStack input, String name, float lightLevel, String textureName)
+	public Block registerLanternType(LanternType type)
 	{
-		return registerExpiringLanternType(0, input, input, null, name, lightLevel, textureName);
+		if(type.isRegistered)
+		{
+			throw new RuntimeException("Lantern type named " + type.name + " was attempted registered while it was already registered.");
+		}
+		
+		type.block = GameRegistry.registerBlock(type.tweakLanternBlock(new BlockLantern(type)), "lantern_" + type.name);
+		
+		type.isRegistered = true;
+		
+		return type.block;
 	}
 	
 	/**
-	 * Register an expiring lantern that contains a certain item. This lantern can be created by right-clicking a lantern with the input in hand, or by crafting an empty lantern with the input.
-	 * @param tickRate - The rate at which the lantern expires. Lower values will cause the lantern to expire more quickly.
-	 * @param input - The item contained by this lantern.
-	 * @param output - The item given when the item is removed.
-	 * @param expirationBlock - The block this lantern will transform into when it expires. Ideally, this is another lantern block.
-	 * @param name - The block name for this lantern.
-	 * @param lightLevel - The level of light emitted by this lantern from 0.0f to 1.0f.
-	 * @param textureName - The texture name of the item displayed inside the lantern.
-	 * @return
+	 * Registers a lantern type and places the lantern block on a creative tab. This involves creating and registering the blocks necessary for a lantern type.
+	 * @param type
+	 * @param creativeTab
+	 * @return The lantern block registered for this type, if any.
 	 */
 	@Override
-	public Block registerExpiringLanternType(int tickRate, ItemStack input, ItemStack output, Block expirationBlock, String name, float lightLevel, String textureName)
+	public Block registerLanternType(LanternType type, CreativeTabs creativeTab)
 	{
-		return GameRegistry.registerBlock(new BlockLanternSpecial(tickRate, input, output, expirationBlock).setLightLevel(lightLevel).setBlockName("lantern_" + name).setBlockTextureName(textureName), "lantern_" + name);
+		Block result = registerLanternType(type);
+		if(result != null)
+		{
+			result.setCreativeTab(creativeTab);
+		}
+		return result;
 	}
 	
 	private class CustomGasFurnaceRecipe

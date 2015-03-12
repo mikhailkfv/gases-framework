@@ -2,7 +2,7 @@ package glenn.gasesframework;
 
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
 import glenn.gasesframework.api.block.MaterialGas;
-import glenn.gasesframework.api.type.GasType;
+import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.block.BlockGas;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;

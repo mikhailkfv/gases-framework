@@ -1,13 +1,13 @@
 package glenn.gasesframework.api;
 
-import glenn.gasesframework.api.type.GasType;
+import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.api.lanterntype.LanternType;
 
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 /**
@@ -130,25 +130,17 @@ public interface IGasesFramework
 	public Block registerGasType(GasType type, CreativeTabs creativeTab);
 	
 	/**
-	 * Register a non-expiring lantern that contains a certain item. This lantern can be created by right-clicking a lantern with the input in hand, or by crafting an empty lantern with the input.
-	 * @param input - The item contained by this lantern.
-	 * @param name - The block name for this lantern.
-	 * @param lightLevel - The level of light emitted by this lantern from 0.0f to 1.0f.
-	 * @param textureName - The texture name of the item displayed inside the lantern.
-	 * @return
+	 * Registers a lantern type. This involves creating and registering the blocks necessary for a lantern type.
+	 * @param type
+	 * @return The lantern block registered for this type, if any.
 	 */
-	public Block registerLanternType(ItemStack input, String name, float lightLevel, String textureName);
+	public Block registerLanternType(LanternType type);
 	
 	/**
-	 * Register an expiring lantern that contains a certain item. This lantern can be created by right-clicking a lantern with the input in hand, or by crafting an empty lantern with the input.
-	 * @param tickRate - The rate at which the lantern expires. Lower values will cause the lantern to expire more quickly.
-	 * @param input - The item contained by this lantern.
-	 * @param output - The item given when the item is removed.
-	 * @param expirationBlock - The block this lantern will transform into when it expires. Ideally, this is another lantern block.
-	 * @param name - The block name for this lantern.
-	 * @param lightLevel - The level of light emitted by this lantern from 0.0f to 1.0f.
-	 * @param textureName - The texture name of the item displayed inside the lantern.
-	 * @return
+	 * Registers a lantern type and places the lantern block on a creative tab. This involves creating and registering the blocks necessary for a lantern type.
+	 * @param type
+	 * @param creativeTab
+	 * @return The lantern block registered for this type, if any.
 	 */
-	public Block registerExpiringLanternType(int tickRate, ItemStack input, ItemStack output, Block expirationBlock, String name, float lightLevel, String textureName);
+	public Block registerLanternType(LanternType type, CreativeTabs creativeTab);
 }
