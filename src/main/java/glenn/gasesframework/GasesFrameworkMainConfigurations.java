@@ -38,9 +38,6 @@ public class GasesFrameworkMainConfigurations extends Configurations
 	@ConfigField(path="gases.Removed ignition items", comment="A list of item names for items that will be removed from the gas ignition item registry", defaultValue="")
 	public String[] other_removedIgnitionItems;
 	
-	@ConfigField(path="gases.stuff.Stuff", comment="Stuff", defaultValue="1\n2\n3")
-	public int[] stuff;
-	
 	public GasesFrameworkMainConfigurations(File configurationsFile)
 	{
 		super(configurationsFile);

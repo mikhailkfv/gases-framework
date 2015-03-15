@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 
 /**
  * An abstract class that uses java reflection to automate the configuration setting and getting.
@@ -71,7 +72,9 @@ public abstract class Configurations
 						{
 							throw new RuntimeException("Invalid default value for field " + fieldPath);
 						}
-						fieldValue = new Integer(config.get(category, name, def, comment).getInt(def));
+						Property property = config.get(category, name, def, comment);
+						fieldValue = new Integer(property.getInt(def));
+						if(configField.autoReset()) property.set(def);
 					}
 					else if(c == float.class)
 					{
@@ -84,7 +87,9 @@ public abstract class Configurations
 						{
 							throw new RuntimeException("Invalid default value for field " + fieldPath);
 						}
-						fieldValue = new Float(Float.parseFloat(config.get(category, name, def, comment).getString()));
+						Property property = config.get(category, name, def, comment);
+						fieldValue = new Float((float)property.getDouble(def));
+						if(configField.autoReset()) property.set(def);
 					}
 					else if(c == double.class)
 					{
@@ -97,7 +102,9 @@ public abstract class Configurations
 						{
 							throw new RuntimeException("Invalid default value for field " + fieldPath);
 						}
-						fieldValue = new Double(Double.parseDouble(config.get(category, name, def, comment).getString()));
+						Property property = config.get(category, name, def, comment);
+						fieldValue = new Double(property.getDouble(def));
+						if(configField.autoReset()) property.set(def);
 					}
 					else if(c == boolean.class)
 					{
@@ -110,11 +117,15 @@ public abstract class Configurations
 						{
 							throw new RuntimeException("Invalid default value for field " + fieldPath);
 						}
-						fieldValue = new Boolean(config.get(category, name, def, comment).getBoolean(def));
+						Property property = config.get(category, name, def, comment);
+						fieldValue = new Boolean(property.getBoolean(def));
+						if(configField.autoReset()) property.set(def);
 					}
 					else if(c == String.class)
 					{
+						Property property = config.get(category, name, defaultValue, comment);
 						fieldValue = config.get(category, name, defaultValue, comment).getString();
+						if(configField.autoReset()) property.set(defaultValue);
 					}
 					else if(c.isArray())
 					{
