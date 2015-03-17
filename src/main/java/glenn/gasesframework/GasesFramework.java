@@ -4,6 +4,7 @@ import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.IGasesFramework;
 import glenn.gasesframework.api.ItemKey;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.block.BlockGas;
 import glenn.gasesframework.block.BlockGasCollector;
@@ -13,6 +14,7 @@ import glenn.gasesframework.block.BlockGasPump;
 import glenn.gasesframework.block.BlockGasTank;
 import glenn.gasesframework.block.BlockInfiniteGas;
 import glenn.gasesframework.block.BlockLantern;
+import glenn.gasesframework.common.CommonProxy;
 import glenn.gasesframework.item.ItemGasBottle;
 import glenn.gasesframework.item.ItemGasPipe;
 import glenn.gasesframework.item.ItemGasSampler;
@@ -22,6 +24,7 @@ import glenn.gasesframework.tileentity.TileEntityGasFurnace.SpecialFurnaceRecipe
 import glenn.gasesframework.tileentity.TileEntityInfiniteGas;
 import glenn.gasesframework.tileentity.TileEntityPump;
 import glenn.gasesframework.tileentity.TileEntityTank;
+import glenn.gasesframework.worldgen.WorldGeneratorGasesFramework;
 import glenn.moddingutils.Configurations.ItemRepresentation;
 
 import java.io.BufferedReader;
@@ -30,6 +33,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -76,7 +80,7 @@ public class GasesFramework implements IGasesFramework
 	public static GasesFramework instance;
 	
 	// Says where the client and server 'proxy' code is loaded.
-	@SidedProxy(clientSide = "glenn.gasesframework.client.ClientProxy", serverSide = "glenn.gasesframework.CommonProxy")
+	@SidedProxy(clientSide = "glenn.gasesframework.client.ClientProxy", serverSide = "glenn.gasesframework.server.ServerProxy")
 	public static CommonProxy proxy;
 	public static final GuiHandler guiHandler = new GuiHandler();
 	
@@ -85,9 +89,9 @@ public class GasesFramework implements IGasesFramework
 	public static final String TARGETVERSION = GasesFrameworkAPI.TARGETVERSION;
 	
 	public static GasesFrameworkMainConfigurations configurations;
-	
 	private static Configuration config;
 	
+	public static final WorldGeneratorGasesFramework worldGenerator = new WorldGeneratorGasesFramework();
 	
 	public static Block gasPump;
 	public static Block gasTank;
@@ -95,8 +99,6 @@ public class GasesFramework implements IGasesFramework
 	public static Block gasFurnaceIdle;
 	public static Block gasFurnaceActive;
 	public static Block infGasBlock;
-	
-	
 	
 	private void initBlocksAndItems()
 	{
@@ -184,6 +186,8 @@ public class GasesFramework implements IGasesFramework
 	public void load(FMLInitializationEvent event)
 	{
 		proxy.registerRenderers();
+		
+		GameRegistry.registerWorldGenerator(worldGenerator, 10);
 		
 		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.lanternTypeEmpty.block, 4), "I", "G", 'I', Items.iron_ingot, 'G', Blocks.glass);
 		
@@ -658,6 +662,19 @@ public class GasesFramework implements IGasesFramework
 			result.setCreativeTab(creativeTab);
 		}
 		return result;
+	}
+	
+	/**
+	 * Registers a gas world generator for generation in certain dimensions.
+	 * @param type
+	 */
+	@Override
+	public void registerGasWorldGenType(GasWorldGenType type, String[] dimensionNames)
+	{
+		for(String dimensionName : dimensionNames)
+		{
+			worldGenerator.registerGasWorldGenType(type, dimensionName);
+		}
 	}
 	
 	private class CustomGasFurnaceRecipe

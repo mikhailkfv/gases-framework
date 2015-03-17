@@ -49,7 +49,7 @@ public class GasType
 	 */
 	public final boolean isIndustrial;
 	/**
-	 * The ID of this gas type. Must be unique.
+	 * The ID of this gas type. Must be unique. Limited to 0-255. Consult the Gases Framework documentation for unoccupied IDs.
 	 */
 	public final int gasID;
 	/**
@@ -193,7 +193,7 @@ public class GasType
 	/**
 	 * Creates a new gas type. Gas types must be {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
 	 * @param isIndustrial - Can this gas be used in pipe systems?
-	 * @param gasID - An unique ID for the GasType. Consult the Gases Framework documentation for unoccupied gas IDs.
+	 * @param gasID - The ID of this gas type. Must be unique. Limited to 0-255. Consult the Gases Framework documentation for unoccupied IDs.
 	 * @param name - An unique name for the gas type.
 	 * @param color - An RGBA representation of the color to be used by this gas.
 	 * @param opacity - Higher values will increase the opacity of this gas. This will also affect how well light passes through it.

@@ -26,7 +26,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class GasesFrameworkClientEvents
+public class ForgeClientEvents
 {
 	@SubscribeEvent
 	public void onFogDensity(FogDensity event)

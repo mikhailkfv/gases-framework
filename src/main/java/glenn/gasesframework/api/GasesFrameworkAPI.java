@@ -3,6 +3,7 @@ package glenn.gasesframework.api;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gastype.GasTypeAir;
 import glenn.gasesframework.api.gastype.GasTypeFire;
+import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.api.reaction.Reaction;
 import glenn.gasesframework.api.reaction.ReactionEmpty;
@@ -12,7 +13,6 @@ import java.util.HashSet;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -441,6 +441,18 @@ public class GasesFrameworkAPI
 		else
 		{
 			return null;
+		}
+	}
+	
+	/**
+	 * Registers a gas world generator for generation in certain dimensions.
+	 * @param type
+	 */
+	public static void registerGasWorldGenType(GasWorldGenType type, String ... dimensionNames)
+	{
+		if(isModInstalled())
+		{
+			modInstance.registerGasWorldGenType(type, dimensionNames);
 		}
 	}
 }
