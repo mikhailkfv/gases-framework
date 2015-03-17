@@ -35,6 +35,8 @@ import net.minecraft.world.World;
 public class BlockGas extends Block implements ISample
 {
 	public GasType type;
+	
+	public boolean disableUpdate = false;
 
 	//                                   Ring 0       Ring 1        Ring 2
 	private static final int[] ringsX = {1, 0, -1, 0, 1, -1, -1, 1, 2, 0, -2, 0};
@@ -906,6 +908,8 @@ public class BlockGas extends Block implements ISample
     @Override
     public void onBlockAdded(World par1World, int par2, int par3, int par4)
     {
+    	if(disableUpdate) return;
+    	
     	int delay = getDelayForUpdate(par1World, par2, par3, par4);
     	if(delay <= 0)
     	{

@@ -1,6 +1,7 @@
 package glenn.gasesframework.api;
 
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 
 import java.util.Random;
@@ -143,4 +144,10 @@ public interface IGasesFramework
 	 * @return The lantern block registered for this type, if any.
 	 */
 	public Block registerLanternType(LanternType type, CreativeTabs creativeTab);
+	
+	/**
+	 * Registers a gas world generator for generation in certain dimensions.
+	 * @param type
+	 */
+	public void registerGasWorldGenType(GasWorldGenType type, String[] dimensionNames);
 }

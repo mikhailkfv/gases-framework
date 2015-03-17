@@ -1,20 +1,16 @@
 package glenn.gasesframework.client;
 
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import net.minecraft.client.renderer.entity.RenderLightningBolt;
-import net.minecraft.entity.effect.EntityLightningBolt;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.MinecraftForge;
-import glenn.gasesframework.CommonProxy;
 import glenn.gasesframework.client.render.RenderBlockGas;
 import glenn.gasesframework.client.render.RenderBlockGasPipe;
 import glenn.gasesframework.client.render.RenderBlockGasPump;
 import glenn.gasesframework.client.render.RenderBlockGasTank;
 import glenn.gasesframework.client.render.RenderBlockLantern;
 import glenn.gasesframework.client.render.TileEntityTankRenderer;
+import glenn.gasesframework.common.CommonProxy;
 import glenn.gasesframework.tileentity.TileEntityTank;
+import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class ClientProxy extends CommonProxy
 {
@@ -30,9 +26,10 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerBlockHandler(RenderBlockGasTank.RENDER_ID, new RenderBlockGasTank());
 	}
 	
+	@Override
 	public void registerEventHandlers()
 	{
 		super.registerEventHandlers();
-		MinecraftForge.EVENT_BUS.register(new GasesFrameworkClientEvents());
+		MinecraftForge.EVENT_BUS.register(new ForgeClientEvents());
 	}
 }

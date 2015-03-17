@@ -4,6 +4,7 @@ import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.IGasesFramework;
 import glenn.gasesframework.api.ItemKey;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.block.BlockGas;
 import glenn.gasesframework.block.BlockGasCollector;
@@ -13,6 +14,7 @@ import glenn.gasesframework.block.BlockGasPump;
 import glenn.gasesframework.block.BlockGasTank;
 import glenn.gasesframework.block.BlockInfiniteGas;
 import glenn.gasesframework.block.BlockLantern;
+import glenn.gasesframework.common.CommonProxy;
 import glenn.gasesframework.item.ItemGasBottle;
 import glenn.gasesframework.item.ItemGasPipe;
 import glenn.gasesframework.item.ItemGasSampler;
@@ -22,6 +24,7 @@ import glenn.gasesframework.tileentity.TileEntityGasFurnace.SpecialFurnaceRecipe
 import glenn.gasesframework.tileentity.TileEntityInfiniteGas;
 import glenn.gasesframework.tileentity.TileEntityPump;
 import glenn.gasesframework.tileentity.TileEntityTank;
+import glenn.gasesframework.worldgen.WorldGeneratorGasesFramework;
 import glenn.moddingutils.Configurations.ItemRepresentation;
 
 import java.io.BufferedReader;
@@ -30,6 +33,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -76,7 +80,7 @@ public class GasesFramework implements IGasesFramework
 	public static GasesFramework instance;
 	
 	// Says where the client and server 'proxy' code is loaded.
-	@SidedProxy(clientSide = "glenn.gasesframework.client.ClientProxy", serverSide = "glenn.gasesframework.CommonProxy")
+	@SidedProxy(clientSide = "glenn.gasesframework.client.ClientProxy", serverSide = "glenn.gasesframework.server.ServerProxy")
 	public static CommonProxy proxy;
 	public static final GuiHandler guiHandler = new GuiHandler();
 	
@@ -85,9 +89,9 @@ public class GasesFramework implements IGasesFramework
 	public static final String TARGETVERSION = GasesFrameworkAPI.TARGETVERSION;
 	
 	public static GasesFrameworkMainConfigurations configurations;
-	
 	private static Configuration config;
 	
+	public static final WorldGeneratorGasesFramework worldGenerator = new WorldGeneratorGasesFramework();
 	
 	public static Block gasPump;
 	public static Block gasTank;
@@ -95,8 +99,6 @@ public class GasesFramework implements IGasesFramework
 	public static Block gasFurnaceIdle;
 	public static Block gasFurnaceActive;
 	public static Block infGasBlock;
-	
-	
 	
 	private void initBlocksAndItems()
 	{
@@ -122,14 +124,6 @@ public class GasesFramework implements IGasesFramework
 		GasesFrameworkAPI.registerGasType(GasesFrameworkAPI.gasTypeAir);
 		GasesFrameworkAPI.registerGasType(GasesFrameworkAPI.gasTypeSmoke, GasesFrameworkAPI.creativeTab);
 		GasesFrameworkAPI.registerGasType(GasesFrameworkAPI.gasTypeFire, GasesFrameworkAPI.creativeTab);
-		
-		/*GameRegistry.registerBlock(lanternEmpty = (BlockLantern)(new BlockLanternEmpty()).setBlockName("gf_lanternEmpty").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:lantern_empty"), "lanternEmpty");
-		GameRegistry.registerBlock(lanternGasEmpty = (BlockLantern)(new BlockLanternGasEmpty()).setBlockName("gf_lanternGasEmpty").setBlockTextureName("gasesframework:lantern_gas0"), "lanternGasEmpty");
-		GameRegistry.registerBlock(lanternGas1 = (BlockLantern)(new BlockLanternGas(Combustibility.CONTROLLABLE)).setLightLevel(1.0F).setBlockName("gf_lanternGas1").setBlockTextureName("gasesframework:lantern_gas1"), "lanternGas1");
-		GameRegistry.registerBlock(lanternGas2 = (BlockLantern)(new BlockLanternGas(Combustibility.FLAMMABLE)).setLightLevel(1.0F).setBlockName("gf_lanternGas2").setBlockTextureName("gasesframework:lantern_gas2"), "lanternGas2");
-		GameRegistry.registerBlock(lanternGas3 = (BlockLantern)(new BlockLanternGas(Combustibility.HIGHLY_FLAMMABLE)).setLightLevel(1.0F).setBlockName("gf_lanternGas3").setBlockTextureName("gasesframework:lantern_gas3"), "lanternGas3");
-		GameRegistry.registerBlock(lanternGas4 = (BlockLantern)(new BlockLanternGas(Combustibility.EXPLOSIVE)).setLightLevel(1.0F).setBlockName("gf_lanternGas4").setBlockTextureName("gasesframework:lantern_gas4"), "lanternGas4");
-		GameRegistry.registerBlock(lanternGas5 = (BlockLantern)(new BlockLanternGas(Combustibility.HIGHLY_EXPLOSIVE)).setLightLevel(1.0F).setBlockName("gf_lanternGas5").setBlockTextureName("gasesframework:lantern_gas5"), "lanternGas5");*/
 	}
 	
 	@EventHandler
@@ -192,6 +186,8 @@ public class GasesFramework implements IGasesFramework
 	public void load(FMLInitializationEvent event)
 	{
 		proxy.registerRenderers();
+		
+		GameRegistry.registerWorldGenerator(worldGenerator, 10);
 		
 		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.lanternTypeEmpty.block, 4), "I", "G", 'I', Items.iron_ingot, 'G', Blocks.glass);
 		
@@ -666,6 +662,19 @@ public class GasesFramework implements IGasesFramework
 			result.setCreativeTab(creativeTab);
 		}
 		return result;
+	}
+	
+	/**
+	 * Registers a gas world generator for generation in certain dimensions.
+	 * @param type
+	 */
+	@Override
+	public void registerGasWorldGenType(GasWorldGenType type, String[] dimensionNames)
+	{
+		for(String dimensionName : dimensionNames)
+		{
+			worldGenerator.registerGasWorldGenType(type, dimensionName);
+		}
 	}
 	
 	private class CustomGasFurnaceRecipe
