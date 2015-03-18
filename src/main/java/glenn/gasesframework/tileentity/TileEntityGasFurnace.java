@@ -30,6 +30,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
 {
@@ -330,7 +331,7 @@ public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
     			Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
     			if(IGasReceptor.class.isAssignableFrom(blockAbove.getClass()))
     			{
-    				if(((IGasReceptor)blockAbove).receiveGas(worldObj, xCoord, yCoord + 1, zCoord, 1, GasesFrameworkAPI.gasTypeSmoke)) smokeTimer = 0;
+    				if(((IGasReceptor)blockAbove).receiveGas(worldObj, xCoord, yCoord + 1, zCoord, ForgeDirection.UP, GasesFrameworkAPI.gasTypeSmoke)) smokeTimer = 0;
     			}
     		}
     	}

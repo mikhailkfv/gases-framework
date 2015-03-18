@@ -24,6 +24,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, ITileEntityProvider, ISample
 {
@@ -139,7 +140,7 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
     }
 
 	@Override
-	public boolean receiveGas(World world, int x, int y, int z, int side, GasType gasType)
+	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
 		if(canReceiveGas(world, x, y, z, side, gasType))
 		{
@@ -156,9 +157,9 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
 	}
 	
 	@Override
-	public boolean canReceiveGas(World world, int x, int y, int z, int side, GasType gasType)
+	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		if(world.getBlockMetadata(x, y, z) != GasesFramework.reverseDirection(side))
+		if(ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)) != side.getOpposite())
 		{
 			TileEntityPump tileEntity = (TileEntityPump)world.getTileEntity(x, y, z);
 			
@@ -171,9 +172,9 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
 	}
 	
 	@Override
-	public boolean canPropelGasFromSide(World world, int x, int y, int z, int side)
+	public boolean canPropelGasFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		return side == world.getBlockMetadata(x, y, z);
+		return side == ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z));
 	}
 	
 	@Override

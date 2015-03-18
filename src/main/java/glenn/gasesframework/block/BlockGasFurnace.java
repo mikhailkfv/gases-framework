@@ -28,6 +28,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGasPropellor
 {
@@ -356,7 +357,7 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 	}
     
     @Override
-    public boolean canReceiveGas(World world, int x, int y, int z, int side, GasType gasType)
+    public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
     {
     	TileEntityGasFurnace gasFurnace = (TileEntityGasFurnace)world.getTileEntity(x, y, z);
 		if(gasType == GasesFrameworkAPI.gasTypeAir)
@@ -376,7 +377,7 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
     }
 
 	@Override
-	public boolean receiveGas(World world, int x, int y, int z, int side, GasType gasType)
+	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
 		if(canReceiveGas(world, x, y, z, side, gasType))
 		{
@@ -391,9 +392,9 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 	}
 	
 	@Override
-	public boolean canPropelGasFromSide(World world, int x, int y, int z, int side)
+	public boolean canPropelGasFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		if(side == 0)
+		if(side == ForgeDirection.UP)
 		{
 			TileEntityGasFurnace gasFurnace = (TileEntityGasFurnace)world.getTileEntity(x, y, z);
 			return gasFurnace.isBurning();

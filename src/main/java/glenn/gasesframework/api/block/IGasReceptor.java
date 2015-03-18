@@ -5,6 +5,7 @@ import glenn.gasesframework.api.gastype.GasType;
 import java.util.Random;
 
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * An interface for interactivity with gas pipe systems. A gas receptor is able to receive gas from a pipe.
@@ -23,7 +24,7 @@ public interface IGasReceptor extends IGasInterface
 	 * @param gasType - The type of gas being received
 	 * @return
 	 */
-	boolean receiveGas(World world, int x, int y, int z, int side, GasType gasType);
+	boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType);
 	
 	/**
 	 * This method is called when it must be determined if a gas pipe can insert a type of gas into this receptor. This happens during pumping.
@@ -35,5 +36,5 @@ public interface IGasReceptor extends IGasInterface
 	 * @param gasType - The type of gas being that can be received
 	 * @return
 	 */
-	boolean canReceiveGas(World world, int x, int y, int z, int side, GasType gasType);
+	boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType);
 }

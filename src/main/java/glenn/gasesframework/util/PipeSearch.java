@@ -16,6 +16,7 @@ import java.util.HashMap;
 
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class PipeSearch
 {
@@ -36,9 +37,9 @@ public abstract class PipeSearch
 	{
 		public final PipeBranch branch;
 		public final IVec endPosition;
-		public final int endDirection;
+		public final ForgeDirection endDirection;
 		
-		protected PipeEnd(PipeBranch branch, IVec endPosition, int endDirection)
+		protected PipeEnd(PipeBranch branch, IVec endPosition, ForgeDirection endDirection)
 		{
 			this.branch = branch;
 			this.endPosition = endPosition;
@@ -57,7 +58,7 @@ public abstract class PipeSearch
 		}
 
 		@Override
-		protected boolean inspectConnection(PipeBranch branch, World world, IVec connectionPos, BlockGasPipe pipeBlock, int direction)
+		protected boolean inspectConnection(PipeBranch branch, World world, IVec connectionPos, BlockGasPipe pipeBlock, ForgeDirection direction)
 		{
 			Block directionBlock = world.getBlock(connectionPos.x, connectionPos.y, connectionPos.z);
 			if(IGasReceptor.class.isAssignableFrom(directionBlock.getClass()))
@@ -75,7 +76,7 @@ public abstract class PipeSearch
 		}
 
 		@Override
-		protected void inspectLooseEnd(PipeBranch branch, World world, IVec looseConnectionPos, BlockGasPipe pipeBlock, int direction)
+		protected void inspectLooseEnd(PipeBranch branch, World world, IVec looseConnectionPos, BlockGasPipe pipeBlock, ForgeDirection direction)
 		{
 			if(GasesFrameworkAPI.canFillWithGas(world, looseConnectionPos.x, looseConnectionPos.y, looseConnectionPos.z, pipeBlock.type))
 			{
@@ -94,7 +95,7 @@ public abstract class PipeSearch
 		}
 
 		@Override
-		protected boolean inspectConnection(PipeBranch branch, World world, IVec connectionPos, BlockGasPipe pipeBlock, int direction)
+		protected boolean inspectConnection(PipeBranch branch, World world, IVec connectionPos, BlockGasPipe pipeBlock, ForgeDirection direction)
 		{
 			Block directionBlock = world.getBlock(connectionPos.x, connectionPos.y, connectionPos.z);
 			
@@ -102,9 +103,9 @@ public abstract class PipeSearch
 			{
 				IGasPropellor gasPropellor = (IGasPropellor)directionBlock;
 				
-				if(gasPropellor.canPropelGasFromSide(world, connectionPos.x, connectionPos.y, connectionPos.z, GasesFramework.reverseDirection(direction)))
+				if(gasPropellor.canPropelGasFromSide(world, connectionPos.x, connectionPos.y, connectionPos.z, direction.getOpposite()))
 				{
-					propellors.add(new PipeEnd(branch, connectionPos, GasesFramework.reverseDirection(direction)));
+					propellors.add(new PipeEnd(branch, connectionPos, direction.getOpposite()));
 				}
 			}
 			
@@ -138,6 +139,7 @@ public abstract class PipeSearch
     			int lastConnection = -1;
     			for(int i = 0; i < 6; i++)
     			{
+    				ForgeDirection direction = ForgeDirection.getOrientation(i);
     				PipeBranch connection = branch.connections[i];
     				IVec connectionPos = pos.added(offsets[i]);
     				if(connection == null)
@@ -148,7 +150,7 @@ public abstract class PipeSearch
     						connection = new PipeBranch(depth, branchMap, connectionPos);
     						newTop.add(connection);
     					}
-    					else if(inspectConnection(branch, world, connectionPos, pipeBlock, i))
+    					else if(inspectConnection(branch, world, connectionPos, pipeBlock, direction))
     					{
     						connectionCount++;
     						lastConnection = i;
@@ -164,8 +166,8 @@ public abstract class PipeSearch
     			
     			if(connectionCount == 1)
     			{
-    				int direction = reverseIndices[lastConnection];
-    				IVec looseConnectionPos = pos.added(offsets[direction]);
+    				ForgeDirection direction = ForgeDirection.getOrientation(lastConnection).getOpposite();
+    				IVec looseConnectionPos = pos.added(new IVec(direction.offsetX, direction.offsetY, direction.offsetZ));
     				
     				inspectLooseEnd(branch, world, looseConnectionPos, pipeBlock, direction);
     			}
@@ -175,8 +177,8 @@ public abstract class PipeSearch
     	}
 	}
 	
-	protected abstract boolean inspectConnection(PipeBranch branch, World world, IVec connectionPos, BlockGasPipe pipeBlock, int direction);
-	protected void inspectLooseEnd(PipeBranch branch, World world, IVec looseConnectionPos, BlockGasPipe pipeBlock, int direction)
+	protected abstract boolean inspectConnection(PipeBranch branch, World world, IVec connectionPos, BlockGasPipe pipeBlock, ForgeDirection direction);
+	protected void inspectLooseEnd(PipeBranch branch, World world, IVec looseConnectionPos, BlockGasPipe pipeBlock, ForgeDirection direction)
 	{
 		
 	}

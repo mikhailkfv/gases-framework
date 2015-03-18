@@ -27,6 +27,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITileEntityProvider, ISample
 {
@@ -63,7 +64,7 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
 	}
 	
 	@Override
-	public GasType getGasTypeFromSide(World world, int x, int y, int z, int side)
+	public GasType getGasTypeFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
 		TileEntityTank tileEntity = (TileEntityTank)world.getTileEntity(x, y, z);
 		
@@ -71,7 +72,7 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
 	}
 
 	@Override
-	public GasType takeGasTypeFromSide(World world, int x, int y, int z, int side)
+	public GasType takeGasTypeFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
 		TileEntityTank tileEntity = (TileEntityTank)world.getTileEntity(x, y, z);
 		GasType gasType = tileEntity.containedType;
@@ -81,14 +82,14 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
 	}
 	
 	@Override
-	public boolean canReceiveGas(World world, int x, int y, int z, int side, GasType gasType)
+	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
 		TileEntityTank tileEntity = (TileEntityTank)world.getTileEntity(x, y, z);
 		return tileEntity.canIncrement(gasType);
 	}
 	
 	@Override
-	public boolean receiveGas(World world, int x, int y, int z, int side, GasType gasType)
+	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
 		TileEntityTank tileEntity = (TileEntityTank)world.getTileEntity(x, y, z);
 		return tileEntity.increment(gasType);

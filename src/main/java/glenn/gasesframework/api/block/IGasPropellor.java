@@ -1,6 +1,7 @@
 package glenn.gasesframework.api.block;
 
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * An interface for interactivity with gas pipe systems. A gas propellor is a block that can propel gas from one or more of its sides.
@@ -19,5 +20,5 @@ public interface IGasPropellor
 	 * @param side - The side gas can be propelled from.
 	 * @return
 	 */
-	boolean canPropelGasFromSide(World world, int x, int y, int z, int side);
+	boolean canPropelGasFromSide(World world, int x, int y, int z, ForgeDirection side);
 }

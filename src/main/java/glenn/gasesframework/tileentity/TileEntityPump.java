@@ -18,6 +18,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityPump extends TileEntity
 {
@@ -118,19 +119,20 @@ public class TileEntityPump extends TileEntity
 			{
 				continue;
 			}
+			ForgeDirection direction = ForgeDirection.getOrientation(index);
 			
-			int x1 = xCoord + xDirection[index];
-			int y1 = yCoord + yDirection[index];
-			int z1 = zCoord + zDirection[index];
+			int x1 = xCoord + direction.offsetX;
+			int y1 = yCoord + direction.offsetY;
+			int z1 = zCoord + direction.offsetZ;
 			
 			Block directionBlock = worldObj.getBlock(x1, y1, z1);
 			
 			if(directionBlock != Blocks.air && IGasSource.class.isAssignableFrom(directionBlock.getClass()))
 			{
 				IGasSource gasSource = (IGasSource)directionBlock;
-				if(acceptsType(gasSource.getGasTypeFromSide(worldObj, x1, y1, z1, index)))
+				if(acceptsType(gasSource.getGasTypeFromSide(worldObj, x1, y1, z1, direction.getOpposite())))
 				{
-					containedType = gasSource.takeGasTypeFromSide(worldObj, x1, y1, z1, index);
+					containedType = gasSource.takeGasTypeFromSide(worldObj, x1, y1, z1, direction.getOpposite());
 				}
 				return false;
 			}
@@ -181,7 +183,7 @@ public class TileEntityPump extends TileEntity
 					
 					if(IGasReceptor.class.isAssignableFrom(directionBlock.getClass()))
 					{
-						success = ((IGasReceptor)directionBlock).receiveGas(worldObj, x1, y1, z1, metadata < 2 ? (1 - metadata) : metadata, containedType);
+						success = ((IGasReceptor)directionBlock).receiveGas(worldObj, x1, y1, z1, ForgeDirection.getOrientation(metadata), containedType);
 					}
 					else if(GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, x1, y1, z1, containedType))
 					{

@@ -20,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -269,7 +270,7 @@ public class BlockLantern extends Block implements IGasReceptor
 	}
 
 	@Override
-	public boolean receiveGas(World world, int x, int y, int z, int side, GasType gasType)
+	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
 		if(canReceiveGas(world, x, y, z, side, gasType))
 		{
@@ -283,7 +284,7 @@ public class BlockLantern extends Block implements IGasReceptor
 	}
 
 	@Override
-	public boolean canReceiveGas(World world, int x, int y, int z, int side, GasType gasType)
+	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
 		return type == GasesFrameworkAPI.lanternTypeGasEmpty && gasType.combustibility != Combustibility.NONE;
 	}

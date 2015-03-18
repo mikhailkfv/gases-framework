@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockGasCollector extends BlockGasPump
 {
@@ -28,10 +29,6 @@ public class BlockGasCollector extends BlockGasPump
 	}
 	
 	@SideOnly(Side.CLIENT)
-
-    /**
-     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
-     */
     @Override
 	public IIcon getIcon(int par1, int par2)
     {
@@ -45,7 +42,7 @@ public class BlockGasCollector extends BlockGasPump
 	}
 
 	@Override
-	public boolean receiveGas(World world, int x, int y, int z, int side, GasType gasType)
+	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
 		return false;
 	}

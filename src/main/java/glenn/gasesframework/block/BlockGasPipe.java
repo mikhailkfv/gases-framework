@@ -38,6 +38,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockGasPipe extends Block implements IGasReceptor
 {
@@ -242,7 +243,7 @@ public class BlockGasPipe extends Block implements IGasReceptor
     }
 
     @Override
-	public boolean receiveGas(World world, int x, int y, int z, int side, GasType gasType)
+	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
 		PipeSearch.ReceptorSearch search = new PipeSearch.ReceptorSearch(world, x, y, z, 15);
     	
@@ -293,7 +294,7 @@ public class BlockGasPipe extends Block implements IGasReceptor
 	}
     
     @Override
-	public boolean canReceiveGas(World world, int x, int y, int z, int side, GasType gasType)
+	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
     	return true;
 	}
@@ -384,7 +385,7 @@ public class BlockGasPipe extends Block implements IGasReceptor
 			{
 				if(pipePos.x == x && pipePos.y == y && pipePos.z == z)
 				{
-					res[GasesFramework.reverseDirection(propellor.endDirection)] |= 2;
+					res[propellor.endDirection.getOpposite().ordinal()] |= 2;
 				}
 				
 				for(PipeSearch.PipeEnd end : listToSearch)
@@ -405,7 +406,7 @@ public class BlockGasPipe extends Block implements IGasReceptor
 					
 					if(end.branch.getPosition().equals(pipePosition))
 					{
-						res[end.endDirection] |= 1;
+						res[end.endDirection.ordinal()] |= 1;
 					}
 				}
 			}
