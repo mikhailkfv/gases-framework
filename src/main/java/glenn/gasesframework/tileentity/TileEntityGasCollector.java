@@ -14,6 +14,7 @@ import glenn.moddingutils.KeyPair;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityGasCollector extends TileEntityPump
 {
@@ -100,6 +101,31 @@ public class TileEntityGasCollector extends TileEntityPump
     	{
     		return super.extract();
     	}
+    }
+    
+    @Override
+    protected boolean pumpToBlock(int x, int y, int z, ForgeDirection direction)
+    {
+    	boolean result = super.pumpToBlock(x, y, z, direction);
+    	
+    	if(pendingGasType != null)
+    	{
+	    	Block block = worldObj.getBlock(x, y, z);
+	    	if(block == GasesFramework.gasCollector)
+	    	{
+	    		TileEntityGasCollector tileEntity = (TileEntityGasCollector)worldObj.getTileEntity(x, y, z);
+	    		
+	    		if(tileEntity.acceptsType(pendingGasType) && (tileEntity.pendingGasType == null || tileEntity.pendingGasType == pendingGasType))
+	    		{
+	    			tileEntity.pendingGasAmount += pendingGasAmount;
+	    			tileEntity.pendingGasType = pendingGasType;
+	    			pendingGasAmount = 0;
+	    			pendingGasType = null;
+	    		}
+	    	}
+    	}
+    	
+    	return result;
     }
 
     @Override

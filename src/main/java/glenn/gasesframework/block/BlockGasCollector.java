@@ -29,10 +29,4 @@ public class BlockGasCollector extends BlockGasPump
 	{
 	   return new TileEntityGasCollector();
 	}
-
-	@Override
-	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
-	{
-		return false;
-	}
 }

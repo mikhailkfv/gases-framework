@@ -148,6 +148,27 @@ public class TileEntityPump extends TileEntity
     }
     
     /**
+     * Pump to a specified block. If the contained gas type is consumed, return true.
+     * @param x
+     * @param y
+     * @param z
+     * @param direction
+     * @return
+     */
+    protected boolean pumpToBlock(int x, int y, int z, ForgeDirection direction)
+    {
+    	Block block = worldObj.getBlock(x, y, z);
+    	if(IGasReceptor.class.isAssignableFrom(block.getClass()))
+		{
+			return ((IGasReceptor)block).receiveGas(worldObj, x, y, z, direction, containedType);
+		}
+		else
+		{
+			return GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, x, y, z, containedType);
+		}
+    }
+    
+    /**
      * Attempt to pump the contained gas type to the specified direction. Returns whether or not it worked.
      * @return
      */
@@ -155,31 +176,16 @@ public class TileEntityPump extends TileEntity
     {
 		if(containedType != null)
 		{
-	    	BlockGasPump block = (BlockGasPump)worldObj.getBlock(xCoord, yCoord, zCoord);
 			ForgeDirection direction = ForgeDirection.getOrientation(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
-			
-			int x1 = xCoord + direction.offsetX;
-			int y1 = yCoord + direction.offsetY;
-			int z1 = zCoord + direction.offsetZ;
-			
-			Block directionBlock = worldObj.getBlock(x1, y1, z1);
-			boolean success = false;
-			
-			if(IGasReceptor.class.isAssignableFrom(directionBlock.getClass()))
-			{
-				success = ((IGasReceptor)directionBlock).receiveGas(worldObj, x1, y1, z1, direction, containedType);
-			}
-			else if(GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, x1, y1, z1, containedType))
-			{
-				success = true;
-			}
-			
-			if(success)
+			if(pumpToBlock(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, direction))
 			{
 				containedType = null;
+				return true;
 			}
-			
-			return success;
+			else
+			{
+				return false;
+			}
 		}
 		else
 		{
