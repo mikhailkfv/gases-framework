@@ -33,12 +33,12 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
 	};
 	
 	private boolean isBottomUnique;
-	public IIcon side;
-	public IIcon bottom;
-	public IIcon top;
-	public IIcon topIncluding;
-	public IIcon topExcluding;
-	public IIcon topIndicator;
+	public IIcon sideIcon;
+	public IIcon bottomIcon;
+	public IIcon topIcon;
+	public IIcon topIncludingIcon;
+	public IIcon topExcludingIcon;
+	public IIcon topIndicatorIcon;
 	
 	public BlockGasPump(boolean isBottomUnique)
 	{
@@ -68,16 +68,16 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
     		switch(side)
     		{
     		case 0:
-    			metadata = 5;
-    			break;
-    		case 1:
     			metadata = 2;
     			break;
+    		case 1:
+    			metadata = 5;
+    			break;
     		case 2:
-    			metadata = 4;
+    			metadata = 3;
     			break;
     		default:
-    			metadata = 3;
+    			metadata = 4;
     		}
     	}
     	
@@ -102,12 +102,12 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
     @Override
     public void registerBlockIcons(IIconRegister iconRegister)
     {
-        side = iconRegister.registerIcon(this.getTextureName() + "_side");
-        bottom = iconRegister.registerIcon(this.getTextureName() + (isBottomUnique ? "_bottom" : "_side"));
-        top = iconRegister.registerIcon(this.getTextureName() + "_top");
-        topIncluding = iconRegister.registerIcon(this.getTextureName() + "_top_including");
-        topExcluding = iconRegister.registerIcon(this.getTextureName() + "_top_excluding");
-        topIndicator = iconRegister.registerIcon(this.getTextureName() + "_top_indicator");
+        sideIcon = iconRegister.registerIcon(this.getTextureName() + "_side");
+        bottomIcon = iconRegister.registerIcon(this.getTextureName() + (isBottomUnique ? "_bottom" : "_side"));
+        topIcon = iconRegister.registerIcon(this.getTextureName() + "_top");
+        topIncludingIcon = iconRegister.registerIcon(this.getTextureName() + "_top_including");
+        topExcludingIcon = iconRegister.registerIcon(this.getTextureName() + "_top_excluding");
+        topIndicatorIcon = iconRegister.registerIcon(this.getTextureName() + "_top_indicator");
     }
 	
 	@SideOnly(Side.CLIENT)
@@ -116,27 +116,23 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
      * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
      */
     @Override
-	public IIcon getIcon(int par1, int par2)
+	public IIcon getIcon(int side, int metadata)
     {
-        boolean flag = true;
+        ForgeDirection blockDirection = ForgeDirection.UP;
+        ForgeDirection sideDirection = ForgeDirection.getOrientation(side);
         
-        switch(par1)
+        if(sideDirection == blockDirection)
         {
-        case 0:
-        case 1:
-        	flag = par2 == 0 | par2 == 1;
-        	break;
-        case 2:
-        case 3:
-        	flag = par2 == 5 | par2 == 4;
-        	break;
-        case 4:
-        case 5:
-        	flag = par2 == 3 | par2 == 2;
-        	break;
+        	return topIcon;
         }
-        
-        return flag ? top : side;
+        else if(sideDirection == blockDirection.getOpposite())
+        {
+        	return bottomIcon;
+        }
+        else
+        {
+        	return sideIcon;
+        }
     }
 
 	@Override

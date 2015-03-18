@@ -22,19 +22,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityPump extends TileEntity
 {
-	protected static final int[] xDirection = new int[]{
-		0, 0, 1, -1, 0, 0
-	};
-	protected static final int[] yDirection = new int[]{
-		1, -1, 0, 0, 0, 0
-	};
-	protected static final int[] zDirection = new int[]{
-		0, 0, 0, 0, 1, -1
-	};
+	public static final int SUCCESSFUL_PUMP = 1;
+	public static final int FAILED_PUMP = 0;
 	
 	public int pumpTime;
 	private int overload;
-	private int failedPumpings;
 	public boolean excludes;
 	public GasType containedType;
 	public GasType filterType;
@@ -47,27 +39,25 @@ public class TileEntityPump extends TileEntity
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
+	public void readFromNBT(NBTTagCompound tagCompound)
 	{
-		super.readFromNBT(par1NBTTagCompound);
-		pumpTime = par1NBTTagCompound.getInteger("pumpTime");
-		failedPumpings = par1NBTTagCompound.getInteger("failedPumpings");
-		excludes = par1NBTTagCompound.getBoolean("excludes");
-		containedType = GasType.getGasTypeByID(par1NBTTagCompound.getInteger("containedType"));
-		filterType = GasType.getGasTypeByID(par1NBTTagCompound.getInteger("filterType"));
-		overload = par1NBTTagCompound.getInteger("overload");
+		super.readFromNBT(tagCompound);
+		pumpTime = tagCompound.getInteger("pumpTime");
+		excludes = tagCompound.getBoolean("excludes");
+		containedType = GasType.getGasTypeByID(tagCompound.getInteger("containedType"));
+		filterType = GasType.getGasTypeByID(tagCompound.getInteger("filterType"));
+		overload = tagCompound.getInteger("overload");
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
+	public void writeToNBT(NBTTagCompound tagCompound)
 	{
-		super.writeToNBT(par1NBTTagCompound);
-		par1NBTTagCompound.setInteger("pumpTime", pumpTime);
-		par1NBTTagCompound.setInteger("overload", overload);
-		par1NBTTagCompound.setInteger("failedPumpings", failedPumpings);
-		par1NBTTagCompound.setBoolean("excludes", excludes);
-		par1NBTTagCompound.setInteger("containedType", containedType != null ? containedType.gasID : -1);
-		par1NBTTagCompound.setInteger("filterType", filterType != null ? filterType.gasID : -1);
+		super.writeToNBT(tagCompound);
+		tagCompound.setInteger("pumpTime", pumpTime);
+		tagCompound.setInteger("overload", overload);
+		tagCompound.setBoolean("excludes", excludes);
+		tagCompound.setInteger("containedType", containedType != null ? containedType.gasID : -1);
+		tagCompound.setInteger("filterType", filterType != null ? filterType.gasID : -1);
 	}
 	
 	/**
@@ -96,6 +86,11 @@ public class TileEntityPump extends TileEntity
     	readFromNBT(packet.func_148857_g());
     }
     
+	/**
+	 * Is this type accepted by the pump?
+	 * @param gasType
+	 * @return
+	 */
     public boolean acceptsType(GasType gasType)
     {
     	if(filterType == null)
@@ -107,19 +102,31 @@ public class TileEntityPump extends TileEntity
     		return (filterType == gasType ^ excludes) | gasType == GasesFrameworkAPI.gasTypeAir;
     	}
     }
-	
-    protected boolean extractFromSides()
+    
+    /**
+     * If true, the contents of the pump can be replaced by something else.
+     * @return
+     */
+    protected boolean canFill()
     {
-		int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+    	return containedType == null || containedType == GasesFrameworkAPI.gasTypeAir;
+    }
+	
+    /**
+     * Attempt to extract gas from surrounding blocks or whatever the subtype may do.
+     * @return
+     */
+    protected GasType extract()
+    {
+		ForgeDirection blockDirection = ForgeDirection.getOrientation(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
     	int[] indices = randomIndexArray(this.worldObj.rand);
 		for(int i = 0; i < 6 & containedType == null; i++)
 		{
-			int index = indices[i];
-			if(index == metadata)
+			ForgeDirection direction = ForgeDirection.getOrientation(indices[i]);
+			if(direction == blockDirection)
 			{
 				continue;
 			}
-			ForgeDirection direction = ForgeDirection.getOrientation(index);
 			
 			int x1 = xCoord + direction.offsetX;
 			int y1 = yCoord + direction.offsetY;
@@ -132,27 +139,71 @@ public class TileEntityPump extends TileEntity
 				IGasSource gasSource = (IGasSource)directionBlock;
 				if(acceptsType(gasSource.getGasTypeFromSide(worldObj, x1, y1, z1, direction.getOpposite())))
 				{
-					containedType = gasSource.takeGasTypeFromSide(worldObj, x1, y1, z1, direction.getOpposite());
+					return gasSource.takeGasTypeFromSide(worldObj, x1, y1, z1, direction.getOpposite());
 				}
-				return false;
 			}
 		}
 		
-		return true;
+		return GasesFrameworkAPI.gasTypeAir;
     }
     
-    protected void handleFailedPumpings()
+    /**
+     * Attempt to pump the contained gas type to the specified direction. Returns whether or not it worked.
+     * @return
+     */
+    protected boolean pump()
     {
-    	if(worldObj.isRemote && failedPumpings > 20 && worldObj.rand.nextInt(1000 / ((failedPumpings - 20) * (failedPumpings - 20)) + 1) == 0)
+		if(containedType != null)
 		{
-			DVec velocity = DVec.randomNormalizedVec(worldObj.rand).scale(0.25D);
-			worldObj.spawnParticle("largesmoke", xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, velocity.x, velocity.y, velocity.z);
+	    	BlockGasPump block = (BlockGasPump)worldObj.getBlock(xCoord, yCoord, zCoord);
+			ForgeDirection direction = ForgeDirection.getOrientation(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+			
+			int x1 = xCoord + direction.offsetX;
+			int y1 = yCoord + direction.offsetY;
+			int z1 = zCoord + direction.offsetZ;
+			
+			Block directionBlock = worldObj.getBlock(x1, y1, z1);
+			boolean success = false;
+			
+			if(IGasReceptor.class.isAssignableFrom(directionBlock.getClass()))
+			{
+				success = ((IGasReceptor)directionBlock).receiveGas(worldObj, x1, y1, z1, direction, containedType);
+			}
+			else if(GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, x1, y1, z1, containedType))
+			{
+				success = true;
+			}
+			
+			if(success)
+			{
+				containedType = null;
+			}
+			
+			return success;
 		}
-    	
-    	if(worldObj.isRemote && overload > 20 && worldObj.rand.nextInt(2000 / ((overload - 20) * (overload - 20)) + 1) == 0)
+		else
 		{
-			DVec velocity = DVec.randomNormalizedVec(worldObj.rand).scale(0.25D);
-			worldObj.spawnParticle("largesmoke", xCoord + 0.5D, yCoord + 0.5D, zCoord + 0.5D, velocity.x, velocity.y, velocity.z);
+			return false;
+		}
+    }
+    
+    /**
+     * Called on average every 25th tick.
+     */
+    protected void tick()
+    {
+    	if(canFill())
+		{
+			containedType = extract();
+		}
+		
+		if(pump())
+		{
+			worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 0, SUCCESSFUL_PUMP);
+		}
+		else
+		{
+			worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 0, FAILED_PUMP);
 		}
     }
 
@@ -163,53 +214,8 @@ public class TileEntityPump extends TileEntity
 		{
 			if(!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
 			{
-				BlockGasPump block = (BlockGasPump)worldObj.getBlock(xCoord, yCoord, zCoord);
-				int metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-				boolean canPumpAir = extractFromSides();
-				
-				if(containedType == null & canPumpAir)
-				{
-					containedType = GasesFrameworkAPI.gasTypeAir;
-				}
-				
-				if(containedType != null)
-				{
-					int x1 = xCoord + xDirection[metadata];
-					int y1 = yCoord + yDirection[metadata];
-					int z1 = zCoord + zDirection[metadata];
-					
-					Block directionBlock = worldObj.getBlock(x1, y1, z1);
-					boolean success = false;
-					
-					if(IGasReceptor.class.isAssignableFrom(directionBlock.getClass()))
-					{
-						success = ((IGasReceptor)directionBlock).receiveGas(worldObj, x1, y1, z1, ForgeDirection.getOrientation(metadata), containedType);
-					}
-					else if(GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, x1, y1, z1, containedType))
-					{
-						success = true;
-					}
-					
-					if(success)
-					{
-						containedType = null;
-						failedPumpings = 0;
-						overload += 10;
-						worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 0, 1);
-					}
-					else
-					{
-						failedPumpings++;
-						pumpTime += 2;
-						worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 0, 0);
-					}
-				}
+				tick();
 			}
-			else
-			{
-				failedPumpings = 0;
-			}
-			
 			
 			pumpTime = 25;
 		}
@@ -218,8 +224,6 @@ public class TileEntityPump extends TileEntity
 		{
 			overload = 0;
 		}
-		
-		handleFailedPumpings();
     }
 	
 	protected int[] randomIndexArray(Random random)
@@ -249,14 +253,13 @@ public class TileEntityPump extends TileEntity
 		switch(eventID)
 		{
 		case 0:
-			if(eventParam == 1)
+			if(eventParam == SUCCESSFUL_PUMP)
 			{
-				failedPumpings = 0;
 				overload += 10;
 			}
-			else if(eventParam == 0)
+			else if(eventParam == FAILED_PUMP)
 			{
-				failedPumpings++;
+				
 			}
 			break;
 		}

@@ -19,21 +19,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockGasCollector extends BlockGasPump
 {
-	private static final int[] reindex = new int[]{
-		1, 0, 5, 4, 3, 2
-	};
-	
 	public BlockGasCollector()
 	{
 		super(false);
 	}
-	
-	@SideOnly(Side.CLIENT)
-    @Override
-	public IIcon getIcon(int par1, int par2)
-    {
-        return par1 == reindex[par2] ? top : side;
-    }
 	
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata)

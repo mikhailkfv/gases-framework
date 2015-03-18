@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import glenn.gasesframework.GasesFramework;
@@ -18,25 +19,25 @@ public class RenderBlockGasPump implements ISimpleBlockRenderingHandler
 {
 	public static final int RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
 	
-	//          u  d  e  w  s  n
+	//          d  u  n  s  w  e
 	private int[][] rotations = new int[][]{
-			{ //UP +y
-				0, 0, 0, 0, 0, 0
-			},
 			{ //DOWN -y
 				0, 0, 2, 2, 2, 2
 			},
-			{ //EAST +x
-				1, 3, 0, 0, 1, 3
-			},
-			{ //WEST -x
-				3, 1, 0, 0, 3, 1
-			},
-			{ //SOUTH +z
-				2, 2, 3, 1, 0, 0
+			{ //UP +y
+				0, 0, 0, 0, 0, 0
 			},
 			{ //NORTH -z
-				0, 0, 1, 3, 0, 0
+				0, 0, 0, 0, 3, 1
+			},
+			{ //SOUTH +z
+				2, 2, 0, 0, 1, 3
+			},
+			{ //WEST -x
+				1, 3, 1, 3, 0, 0
+			},
+			{ //EAST +x
+				3, 1, 3, 1, 0, 0
 			}
 	};
 	
@@ -109,101 +110,103 @@ public class RenderBlockGasPump implements ISimpleBlockRenderingHandler
 		}
 	}
 	
-	private void renderUp(Tessellator tessellator, double[] us, double[] vs, int direction, IIcon icon, float r, float g, float b)
-	{
-		tessellator.setColorOpaque_F(1.0F * r, 1.0F * g, 1.0F * b);
-		getUVs(us, vs, rotations[direction][0], icon);
-		tessellator.addVertexWithUV(0.0D, 1.0D, 0.0D, us[1], vs[1]);
-		tessellator.addVertexWithUV(0.0D, 1.0D, 1.0D, us[2], vs[2]);
-		tessellator.addVertexWithUV(1.0D, 1.0D, 1.0D, us[3], vs[3]);
-		tessellator.addVertexWithUV(1.0D, 1.0D, 0.0D, us[0], vs[0]);
-	}
-	
-	private void renderDown(Tessellator tessellator, double[] us, double[] vs, int direction, IIcon icon, float r, float g, float b)
+	private void renderDown(Tessellator tessellator, double[] us, double[] vs, ForgeDirection blockDirection, IIcon icon, float r, float g, float b)
 	{
 		tessellator.setColorOpaque_F(0.6F * r, 0.6F * g, 0.6F * b);
-		getUVs(us, vs, rotations[direction][1], icon);
+		getUVs(us, vs, rotations[blockDirection.ordinal()][ForgeDirection.DOWN.ordinal()], icon);
 		tessellator.addVertexWithUV(1.0D, 0.0D, 0.0D, us[1], vs[1]);
 		tessellator.addVertexWithUV(1.0D, 0.0D, 1.0D, us[2], vs[2]);
 		tessellator.addVertexWithUV(0.0D, 0.0D, 1.0D, us[3], vs[3]);
 		tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, us[0], vs[0]);
 	}
 	
-	private void renderEast(Tessellator tessellator, double[] us, double[] vs, int direction, IIcon icon, float r, float g, float b)
+	private void renderUp(Tessellator tessellator, double[] us, double[] vs, ForgeDirection blockDirection, IIcon icon, float r, float g, float b)
 	{
-		tessellator.setColorOpaque_F(0.8F * r, 0.8F * g, 0.8F * b);
-		getUVs(us, vs, rotations[direction][2], icon);
-		tessellator.addVertexWithUV(1.0D, 0.0D, 0.0D, us[3], vs[3]);
-		tessellator.addVertexWithUV(1.0D, 1.0D, 0.0D, us[0], vs[0]);
-		tessellator.addVertexWithUV(1.0D, 1.0D, 1.0D, us[1], vs[1]);
-		tessellator.addVertexWithUV(1.0D, 0.0D, 1.0D, us[2], vs[2]);
-	}
-	
-	private void renderWest(Tessellator tessellator, double[] us, double[] vs, int direction, IIcon icon, float r, float g, float b)
-	{
-		tessellator.setColorOpaque_F(0.8F * r, 0.8F * g, 0.8F * b);
-		getUVs(us, vs, rotations[direction][3], icon);
-		tessellator.addVertexWithUV(0.0D, 0.0D, 1.0D, us[3], vs[3]);
-		tessellator.addVertexWithUV(0.0D, 1.0D, 1.0D, us[0], vs[0]);
+		tessellator.setColorOpaque_F(1.0F * r, 1.0F * g, 1.0F * b);
+		getUVs(us, vs, rotations[blockDirection.ordinal()][ForgeDirection.UP.ordinal()], icon);
 		tessellator.addVertexWithUV(0.0D, 1.0D, 0.0D, us[1], vs[1]);
-		tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, us[2], vs[2]);
+		tessellator.addVertexWithUV(0.0D, 1.0D, 1.0D, us[2], vs[2]);
+		tessellator.addVertexWithUV(1.0D, 1.0D, 1.0D, us[3], vs[3]);
+		tessellator.addVertexWithUV(1.0D, 1.0D, 0.0D, us[0], vs[0]);
 	}
 	
-	private void renderSouth(Tessellator tessellator, double[] us, double[] vs, int direction, IIcon icon, float r, float g, float b)
+	private void renderNorth(Tessellator tessellator, double[] us, double[] vs, ForgeDirection blockDirection, IIcon icon, float r, float g, float b)
 	{
 		tessellator.setColorOpaque_F(0.8F * r, 0.8F * g, 0.8F * b);
-		getUVs(us, vs, rotations[direction][4], icon);
-		tessellator.addVertexWithUV(0.0D, 0.0D, 1.0D, us[2], vs[2]);
-		tessellator.addVertexWithUV(1.0D, 0.0D, 1.0D, us[3], vs[3]);
-		tessellator.addVertexWithUV(1.0D, 1.0D, 1.0D, us[0], vs[0]);
-		tessellator.addVertexWithUV(0.0D, 1.0D, 1.0D, us[1], vs[1]);
-	}
-	
-	private void renderNorth(Tessellator tessellator, double[] us, double[] vs, int direction, IIcon icon, float r, float g, float b)
-	{
-		tessellator.setColorOpaque_F(0.8F * r, 0.8F * g, 0.8F * b);
-		getUVs(us, vs, rotations[direction][5], icon);
+		getUVs(us, vs, rotations[blockDirection.ordinal()][ForgeDirection.NORTH.ordinal()], icon);
 		tessellator.addVertexWithUV(0.0D, 1.0D, 0.0D, us[0], vs[0]);
 		tessellator.addVertexWithUV(1.0D, 1.0D, 0.0D, us[1], vs[1]);
 		tessellator.addVertexWithUV(1.0D, 0.0D, 0.0D, us[2], vs[2]);
 		tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, us[3], vs[3]);
 	}
 	
-	private void renderFace(BlockGasPump block, IBlockAccess blockAccess, int x, int y, int z, Tessellator tessellator, double[] us, double[] vs, int direction, int face, IIcon icon, float r, float g, float b)
+	private void renderSouth(Tessellator tessellator, double[] us, double[] vs, ForgeDirection blockDirection, IIcon icon, float r, float g, float b)
 	{
-		switch(face)
+		tessellator.setColorOpaque_F(0.8F * r, 0.8F * g, 0.8F * b);
+		getUVs(us, vs, rotations[blockDirection.ordinal()][ForgeDirection.SOUTH.ordinal()], icon);
+		tessellator.addVertexWithUV(0.0D, 0.0D, 1.0D, us[2], vs[2]);
+		tessellator.addVertexWithUV(1.0D, 0.0D, 1.0D, us[3], vs[3]);
+		tessellator.addVertexWithUV(1.0D, 1.0D, 1.0D, us[0], vs[0]);
+		tessellator.addVertexWithUV(0.0D, 1.0D, 1.0D, us[1], vs[1]);
+	}
+	
+	private void renderEast(Tessellator tessellator, double[] us, double[] vs, ForgeDirection blockDirection, IIcon icon, float r, float g, float b)
+	{
+		tessellator.setColorOpaque_F(0.8F * r, 0.8F * g, 0.8F * b);
+		getUVs(us, vs, rotations[blockDirection.ordinal()][ForgeDirection.EAST.ordinal()], icon);
+		tessellator.addVertexWithUV(1.0D, 0.0D, 0.0D, us[3], vs[3]);
+		tessellator.addVertexWithUV(1.0D, 1.0D, 0.0D, us[0], vs[0]);
+		tessellator.addVertexWithUV(1.0D, 1.0D, 1.0D, us[1], vs[1]);
+		tessellator.addVertexWithUV(1.0D, 0.0D, 1.0D, us[2], vs[2]);
+	}
+	
+	private void renderWest(Tessellator tessellator, double[] us, double[] vs, ForgeDirection blockDirection, IIcon icon, float r, float g, float b)
+	{
+		tessellator.setColorOpaque_F(0.8F * r, 0.8F * g, 0.8F * b);
+		getUVs(us, vs, rotations[blockDirection.ordinal()][ForgeDirection.WEST.ordinal()], icon);
+		tessellator.addVertexWithUV(0.0D, 0.0D, 1.0D, us[3], vs[3]);
+		tessellator.addVertexWithUV(0.0D, 1.0D, 1.0D, us[0], vs[0]);
+		tessellator.addVertexWithUV(0.0D, 1.0D, 0.0D, us[1], vs[1]);
+		tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, us[2], vs[2]);
+	}
+	
+	private void renderFace(BlockGasPump block, IBlockAccess blockAccess, int x, int y, int z, Tessellator tessellator, double[] us, double[] vs, ForgeDirection blockDirection, ForgeDirection faceDirection, IIcon icon, float r, float g, float b)
+	{
+		switch(faceDirection)
 		{
-		case 0:
-	    	tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, x, y + 1, z));
-			renderUp(tessellator, us, vs, direction, icon, r, g, b);
-			break;
-		case 1:
+		case DOWN:
 	    	tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, x, y - 1, z));
-			renderDown(tessellator, us, vs, direction, icon, r, g, b);
+			renderDown(tessellator, us, vs, blockDirection, icon, r, g, b);
 			break;
-		case 2:
-	    	tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, x + 1, y, z));
-			renderEast(tessellator, us, vs, direction, icon, r, g, b);
+		case UP:
+	    	tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, x, y + 1, z));
+			renderUp(tessellator, us, vs, blockDirection, icon, r, g, b);
 			break;
-		case 3:
-	    	tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, x - 1, y, z));
-			renderWest(tessellator, us, vs, direction, icon, r, g, b);
-			break;
-		case 4:
-	    	tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, x, y, z + 1));
-			renderSouth(tessellator, us, vs, direction, icon, r, g, b);
-			break;
-		case 5:
+		case NORTH:
 	    	tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, x, y, z - 1));
-			renderNorth(tessellator, us, vs, direction, icon, r, g, b);
+			renderNorth(tessellator, us, vs, blockDirection, icon, r, g, b);
 			break;
+		case SOUTH:
+	    	tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, x, y, z + 1));
+			renderSouth(tessellator, us, vs, blockDirection, icon, r, g, b);
+			break;
+		case WEST:
+	    	tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, x - 1, y, z));
+			renderWest(tessellator, us, vs, blockDirection, icon, r, g, b);
+			break;
+		case EAST:
+	    	tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, x + 1, y, z));
+			renderEast(tessellator, us, vs, blockDirection, icon, r, g, b);
+			break;
+		default:
+				
 		}
 	}
 	
 	@Override
 	public boolean renderWorldBlock(IBlockAccess blockAccess, int x, int y, int z, Block bblock, int modelId, RenderBlocks renderer)
 	{
-		int direction = blockAccess.getBlockMetadata(x, y, z);
+		ForgeDirection blockDirection = ForgeDirection.getOrientation(blockAccess.getBlockMetadata(x, y, z));
 		BlockGasPump block = (BlockGasPump)bblock;
 
 		Tessellator tessellator = Tessellator.instance;
@@ -213,43 +216,40 @@ public class RenderBlockGasPump implements ISimpleBlockRenderingHandler
 		double[] vs = new double[4];
 		
 		
-		for(int face = 0; face < 6; face++)
+		for(ForgeDirection faceDirection : ForgeDirection.VALID_DIRECTIONS)
 		{
 			IIcon icon;
 			
-			if(face / 2 != direction / 2)
+			if(faceDirection == blockDirection)
 			{
-				icon = block.side;
-			}
-			else
-			{
-				if(face == direction)
+				TileEntityPump tileEntity = (TileEntityPump)blockAccess.getTileEntity(x, y, z);
+				
+				if(tileEntity.filterType != null && tileEntity.filterType != GasesFrameworkAPI.gasTypeAir)
 				{
-					TileEntityPump tileEntity = (TileEntityPump)blockAccess.getTileEntity(x, y, z);
+					icon = tileEntity.excludes ? block.topExcludingIcon : block.topIncludingIcon;
 					
-					if(tileEntity.filterType != null && tileEntity.filterType != GasesFrameworkAPI.gasTypeAir)
-					{
-						icon = tileEntity.excludes ? block.topExcluding : block.topIncluding;
-						
-						int color = tileEntity.filterType.color;
-						float gasRed = 0.25F + (float)((color >> 24) & 0xFF) / 510.0F;
-						float gasGreen = 0.25F + (float)((color >> 16) & 0xFF) / 510.0F;
-						float gasBlue = 0.25F + (float)((color >> 8) & 0xFF) / 510.0F;
-						
-						renderFace(block, blockAccess, x, y, z, tessellator, us, vs, direction, face, block.topIndicator, gasRed, gasGreen, gasBlue);
-					}
-					else
-					{
-						icon = block.top;
-					}
+					int color = tileEntity.filterType.color;
+					float gasRed = 0.25F + (float)((color >> 24) & 0xFF) / 510.0F;
+					float gasGreen = 0.25F + (float)((color >> 16) & 0xFF) / 510.0F;
+					float gasBlue = 0.25F + (float)((color >> 8) & 0xFF) / 510.0F;
+					
+					renderFace(block, blockAccess, x, y, z, tessellator, us, vs, blockDirection, faceDirection, block.topIndicatorIcon, gasRed, gasGreen, gasBlue);
 				}
 				else
 				{
-					icon = block.bottom;
+					icon = block.topIcon;
 				}
 			}
+			else if(faceDirection == blockDirection.getOpposite())
+			{
+				icon = block.bottomIcon;
+			}
+			else
+			{
+				icon = block.sideIcon;
+			}
 			
-			renderFace(block, blockAccess, x, y, z, tessellator, us, vs, direction, face, icon, 1.0F, 1.0F, 1.0F);
+			renderFace(block, blockAccess, x, y, z, tessellator, us, vs, blockDirection, faceDirection, icon, 1.0F, 1.0F, 1.0F);
 		}
 		
 		tessellator.addTranslation(-x, -y, -z);

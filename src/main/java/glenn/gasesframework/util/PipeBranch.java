@@ -8,21 +8,21 @@ import glenn.moddingutils.KeyVec;
 public class PipeBranch
 {
 	private static final IVec[] offsets = new IVec[]{
-		new IVec(0, 1, 0),
 		new IVec(0, -1, 0),
-		new IVec(1, 0, 0),
-		new IVec(-1, 0, 0),
+		new IVec(0, 1, 0),
+		new IVec(0, 0, -1),
 		new IVec(0, 0, 1),
-		new IVec(0, 0, -1)
+		new IVec(-1, 0, 0),
+		new IVec(1, 0, 0)
 	};
 	
 	private static final IVec[] reverseOffsets = new IVec[]{
-		new IVec(0, -1, 0),
 		new IVec(0, 1, 0),
-		new IVec(-1, 0, 0),
-		new IVec(1, 0, 0),
+		new IVec(0, -1, 0),
+		new IVec(0, 0, 1),
 		new IVec(0, 0, -1),
-		new IVec(0, 0, 1)
+		new IVec(1, 0, 0),
+		new IVec(-1, 0, 0)
 	};
 	
 	private static final int[] reverseIndices = new int[]{

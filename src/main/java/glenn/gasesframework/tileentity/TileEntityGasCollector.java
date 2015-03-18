@@ -19,19 +19,13 @@ public class TileEntityGasCollector extends TileEntityPump
 {
 	private GasType pendingGasType;
 	private int pendingGasAmount;
-	private int collectionTime;
-
-    @Override
-	protected boolean extractFromSides()
-    {
-		return true;
-    }
-
-    @Override
-	protected void handleFailedPumpings()
-    {
-		
-    }
+	
+	public TileEntityGasCollector()
+	{
+		super();
+		pendingGasType = null;
+		pendingGasAmount = 0;
+	}
     
     private void getBranching(KeyPair<Integer, IVec> pos, Queue<KeyPair<Integer, IVec>> queue, HashSet<IVec> checked)
     {
@@ -51,81 +45,76 @@ public class TileEntityGasCollector extends TileEntityPump
 	    	checked.add(branchPos.second);
 		}
     }
-
+    
     @Override
-	public void updateEntity()
+    protected GasType extract()
     {
-		if(!worldObj.isRemote && collectionTime-- <= 0)
+    	if(pendingGasAmount < 16)
 		{
-			if(!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord) & (containedType == null | containedType == GasesFrameworkAPI.gasTypeAir))
-			{
-				if(pendingGasAmount < 16)
+			Queue<KeyPair<Integer, IVec>> queue = new LinkedList<KeyPair<Integer, IVec>>();
+			HashSet<IVec> checked = new HashSet<IVec>();
+			KeyPair<Integer, IVec> center = new KeyPair<Integer, IVec>(0, new IVec(xCoord, yCoord, zCoord));
+			checked.add(center.second);
+			
+			getBranching(center, queue, checked);
+			
+			while(!queue.isEmpty() && pendingGasAmount < 16)
+	    	{
+				KeyPair<Integer, IVec> pos = queue.remove();
+				
+				Block posBlock = worldObj.getBlock(pos.second.x, pos.second.y, pos.second.z);
+				if(posBlock instanceof BlockGas)
 				{
-					Queue<KeyPair<Integer, IVec>> queue = new LinkedList<KeyPair<Integer, IVec>>();
-					HashSet<IVec> checked = new HashSet<IVec>();
-					KeyPair<Integer, IVec> center = new KeyPair<Integer, IVec>(0, new IVec(xCoord, yCoord, zCoord));
-					checked.add(center.second);
-					
-					getBranching(center, queue, checked);
-					
-					while(!queue.isEmpty() && pendingGasAmount < 16)
-			    	{
-						KeyPair<Integer, IVec> pos = queue.remove();
-						
-						Block posBlock = worldObj.getBlock(pos.second.x, pos.second.y, pos.second.z);
-						if(posBlock instanceof BlockGas)
+					BlockGas gasBlock = (BlockGas)posBlock;
+					if(gasBlock.type.isIndustrial && acceptsType(gasBlock.type))
+					{
+						if(gasBlock.type != pendingGasType)
 						{
-							BlockGas gasBlock = (BlockGas)posBlock;
-							if(gasBlock.type.isIndustrial && acceptsType(gasBlock.type))
-							{
-								if(gasBlock.type != pendingGasType)
-								{
-									pendingGasAmount = 0;
-								}
-								
-								pendingGasAmount += 16 - worldObj.getBlockMetadata(pos.second.x, pos.second.y, pos.second.z);
-								pendingGasType = gasBlock.type;
-								
-								worldObj.setBlockToAir(pos.second.x, pos.second.y, pos.second.z);
-							}
+							pendingGasAmount = 0;
 						}
 						
-						if(pos.first <= 4)
-						{
-							getBranching(pos, queue, checked);
-						}
-			    	}
+						pendingGasAmount += 16 - worldObj.getBlockMetadata(pos.second.x, pos.second.y, pos.second.z);
+						pendingGasType = gasBlock.type;
+						
+						worldObj.setBlockToAir(pos.second.x, pos.second.y, pos.second.z);
+					}
 				}
 				
-				if(pendingGasAmount >= 16)
+				if(pos.first <= 4)
 				{
-					pendingGasAmount -= 16;
-					containedType = pendingGasType;
+					getBranching(pos, queue, checked);
 				}
-			}
-			
-			collectionTime = 5;
+	    	}
 		}
-		
-		
-		super.updateEntity();
+    	
+    	if(pendingGasAmount >= 16)
+		{
+			GasType temp = pendingGasType;
+			if((pendingGasAmount -= 16) == 0)
+			{
+				pendingGasType = null;
+			}
+			return temp;
+		}
+    	else
+    	{
+    		return super.extract();
+    	}
     }
 
     @Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
+	public void writeToNBT(NBTTagCompound tagCompound)
 	{
-		super.writeToNBT(par1NBTTagCompound);
-		par1NBTTagCompound.setInteger("pendingGasType", pendingGasType != null ? pendingGasType.gasID : -1);
-		par1NBTTagCompound.setInteger("pendingGasAmount", pendingGasAmount);
-		par1NBTTagCompound.setInteger("collectionTime", collectionTime);
+		super.writeToNBT(tagCompound);
+		tagCompound.setInteger("pendingGasType", pendingGasType != null ? pendingGasType.gasID : -1);
+		tagCompound.setInteger("pendingGasAmount", pendingGasAmount);
 	}
 
     @Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
+	public void readFromNBT(NBTTagCompound tagCompound)
 	{
-		super.readFromNBT(par1NBTTagCompound);
-		pendingGasAmount = par1NBTTagCompound.getInteger("pendingGasType");
-		collectionTime = par1NBTTagCompound.getInteger("collectionTime");
-		pendingGasType = GasType.getGasTypeByID(par1NBTTagCompound.getInteger("pendingGasType"));
+		super.readFromNBT(tagCompound);
+		pendingGasType = GasType.getGasTypeByID(tagCompound.getInteger("pendingGasType"));
+		pendingGasAmount = tagCompound.getInteger("pendingGasAmount");
 	}
 }

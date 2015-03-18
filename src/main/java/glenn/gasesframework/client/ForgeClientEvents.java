@@ -139,7 +139,7 @@ public class ForgeClientEvents
 			double offsetUV = sideConnections[side] ? 1.0D : uvd0;
 			double offset = sideConnections[side] ? 1.5D : d0;
 			
-			if((side & 1) == 0)
+			if((side & 1) == 1)
 			{
 				sideUVs[side] = offsetUV;
 				sides[side] = offset;
@@ -156,35 +156,35 @@ public class ForgeClientEvents
 		tessellator.setBrightness(15);
 		tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
 		
-		tessellator.addVertexWithUV(sides[3], sides[1], d0, sideUVs[3], sideUVs[1]);
-		tessellator.addVertexWithUV(sides[2], sides[1], d0, sideUVs[2], sideUVs[1]);
-		tessellator.addVertexWithUV(sides[2], sides[0], d0, sideUVs[2], sideUVs[0]);
-		tessellator.addVertexWithUV(sides[3], sides[0], d0, sideUVs[3], sideUVs[0]);
+		tessellator.addVertexWithUV(sides[4], sides[0], d0, sideUVs[4], sideUVs[0]);
+		tessellator.addVertexWithUV(sides[5], sides[0], d0, sideUVs[5], sideUVs[0]);
+		tessellator.addVertexWithUV(sides[5], sides[1], d0, sideUVs[5], sideUVs[1]);
+		tessellator.addVertexWithUV(sides[4], sides[1], d0, sideUVs[4], sideUVs[1]);
 
-		tessellator.addVertexWithUV(sides[3], sides[0], d1, sideUVs[3], sideUVs[0]);
-		tessellator.addVertexWithUV(sides[2], sides[0], d1, sideUVs[2], sideUVs[0]);
-		tessellator.addVertexWithUV(sides[2], sides[1], d1, sideUVs[2], sideUVs[1]);
-		tessellator.addVertexWithUV(sides[3], sides[1], d1, sideUVs[3], sideUVs[1]);
+		tessellator.addVertexWithUV(sides[4], sides[1], d1, sideUVs[4], sideUVs[1]);
+		tessellator.addVertexWithUV(sides[5], sides[1], d1, sideUVs[5], sideUVs[1]);
+		tessellator.addVertexWithUV(sides[5], sides[0], d1, sideUVs[5], sideUVs[0]);
+		tessellator.addVertexWithUV(sides[4], sides[0], d1, sideUVs[4], sideUVs[0]);
 		
-		tessellator.addVertexWithUV(d0, sides[1], sides[5], sideUVs[1], sideUVs[5]);
-		tessellator.addVertexWithUV(d0, sides[0], sides[5], sideUVs[0], sideUVs[5]);
-		tessellator.addVertexWithUV(d0, sides[0], sides[4], sideUVs[0], sideUVs[4]);
-		tessellator.addVertexWithUV(d0, sides[1], sides[4], sideUVs[1], sideUVs[4]);
+		tessellator.addVertexWithUV(d0, sides[0], sides[2], sideUVs[0], sideUVs[2]);
+		tessellator.addVertexWithUV(d0, sides[1], sides[2], sideUVs[1], sideUVs[2]);
+		tessellator.addVertexWithUV(d0, sides[1], sides[3], sideUVs[1], sideUVs[3]);
+		tessellator.addVertexWithUV(d0, sides[0], sides[3], sideUVs[0], sideUVs[3]);
 		
-		tessellator.addVertexWithUV(d1, sides[1], sides[4], sideUVs[1], sideUVs[4]);
-		tessellator.addVertexWithUV(d1, sides[0], sides[4], sideUVs[0], sideUVs[4]);
-		tessellator.addVertexWithUV(d1, sides[0], sides[5], sideUVs[0], sideUVs[5]);
-		tessellator.addVertexWithUV(d1, sides[1], sides[5], sideUVs[1], sideUVs[5]);
+		tessellator.addVertexWithUV(d1, sides[0], sides[3], sideUVs[0], sideUVs[3]);
+		tessellator.addVertexWithUV(d1, sides[1], sides[3], sideUVs[1], sideUVs[3]);
+		tessellator.addVertexWithUV(d1, sides[1], sides[2], sideUVs[1], sideUVs[2]);
+		tessellator.addVertexWithUV(d1, sides[0], sides[2], sideUVs[0], sideUVs[2]);
 		
-		tessellator.addVertexWithUV(sides[3], d0, sides[5], sideUVs[5], sideUVs[3]);
-		tessellator.addVertexWithUV(sides[3], d0, sides[4], sideUVs[4], sideUVs[3]);
-		tessellator.addVertexWithUV(sides[2], d0, sides[4], sideUVs[4], sideUVs[2]);
-		tessellator.addVertexWithUV(sides[2], d0, sides[5], sideUVs[5], sideUVs[2]);
+		tessellator.addVertexWithUV(sides[4], d0, sides[2], sideUVs[2], sideUVs[4]);
+		tessellator.addVertexWithUV(sides[4], d0, sides[3], sideUVs[3], sideUVs[4]);
+		tessellator.addVertexWithUV(sides[5], d0, sides[3], sideUVs[3], sideUVs[5]);
+		tessellator.addVertexWithUV(sides[5], d0, sides[2], sideUVs[2], sideUVs[5]);
 		
-		tessellator.addVertexWithUV(sides[2], d1, sides[5], sideUVs[5], sideUVs[2]);
-		tessellator.addVertexWithUV(sides[2], d1, sides[4], sideUVs[4], sideUVs[2]);
-		tessellator.addVertexWithUV(sides[3], d1, sides[4], sideUVs[4], sideUVs[3]);
-		tessellator.addVertexWithUV(sides[3], d1, sides[5], sideUVs[5], sideUVs[3]);
+		tessellator.addVertexWithUV(sides[5], d1, sides[2], sideUVs[2], sideUVs[5]);
+		tessellator.addVertexWithUV(sides[5], d1, sides[3], sideUVs[3], sideUVs[5]);
+		tessellator.addVertexWithUV(sides[4], d1, sides[3], sideUVs[3], sideUVs[4]);
+		tessellator.addVertexWithUV(sides[4], d1, sides[2], sideUVs[2], sideUVs[4]);
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		tessellator.draw();

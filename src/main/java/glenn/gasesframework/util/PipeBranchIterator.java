@@ -8,13 +8,13 @@ import java.util.Random;
 
 public abstract class PipeBranchIterator
 {
-	protected static final IVec[] offsets = new IVec[]{
-		new IVec(0, 1, 0),
+	private static final IVec[] offsets = new IVec[]{
 		new IVec(0, -1, 0),
-		new IVec(1, 0, 0),
-		new IVec(-1, 0, 0),
+		new IVec(0, 1, 0),
+		new IVec(0, 0, -1),
 		new IVec(0, 0, 1),
-		new IVec(0, 0, -1)
+		new IVec(-1, 0, 0),
+		new IVec(1, 0, 0)
 	};
 	
 	public static class AscendingPipeBranchIterator extends PipeBranchIterator
