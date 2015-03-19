@@ -359,7 +359,11 @@ public class WorldGeneratorGasesFramework implements IWorldGenerator
 	@Override
 	public synchronized void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider)
 	{
-		generate(chunkX, chunkZ, world, typesByDimension.get(world.provider.getDimensionName().toLowerCase()).values());
+		HashMap<String, TypeValues> typesMap = typesByDimension.get(world.provider.getDimensionName().toLowerCase());
+		if(typesMap != null)
+		{
+			generate(chunkX, chunkZ, world, typesMap.values());
+		}
 	}
 	
 	private void generate(int chunkX, int chunkZ, World world, Collection<TypeValues> types)
@@ -456,37 +460,41 @@ public class WorldGeneratorGasesFramework implements IWorldGenerator
 		if(!event.world.isRemote)
 		{
 			String dimensionKey = event.world.provider.getDimensionName().toLowerCase();
-			Collection<TypeValues> types = typesByDimension.get(dimensionKey).values();
-			if(types != null)
+			HashMap<String, TypeValues> typesMap = typesByDimension.get(dimensionKey);
+			if(typesMap != null)
 			{
-				Chunk chunk = event.getChunk();
-				HashMap<ChunkCoordIntPair, HashSet<String>> chunkRetrogenData = tryGetChunkRetrogenDataMap(chunk.worldObj);
-				if(chunkRetrogenData != null)
+				Collection<TypeValues> types = typesMap.values();
+				if(types != null)
 				{
-					ChunkCoordIntPair positionKey = chunk.getChunkCoordIntPair();
-					HashSet<String> retrogenData = chunkRetrogenData.get(positionKey);
-					if(retrogenData != null)
+					Chunk chunk = event.getChunk();
+					HashMap<ChunkCoordIntPair, HashSet<String>> chunkRetrogenData = tryGetChunkRetrogenDataMap(chunk.worldObj);
+					if(chunkRetrogenData != null)
 					{
-						NBTTagCompound data = event.getData();
-						NBTTagCompound gasWorldGenData = data.getCompoundTag("gasesFramework_worldGenData");
-						NBTTagList previouslyGeneratedTypesList = gasWorldGenData.getTagList("generatedTypes", 8);
-						
-						HashSet<String> previouslyGeneratedTypes = new HashSet<String>();
-						for(int i = 0; i < previouslyGeneratedTypesList.tagCount(); i++)
+						ChunkCoordIntPair positionKey = chunk.getChunkCoordIntPair();
+						HashSet<String> retrogenData = chunkRetrogenData.get(positionKey);
+						if(retrogenData != null)
 						{
-							previouslyGeneratedTypes.add(previouslyGeneratedTypesList.getStringTagAt(i));
-						}
-						
-						for(String typeName : retrogenData)
-						{
-							if(!previouslyGeneratedTypes.contains(typeName))
+							NBTTagCompound data = event.getData();
+							NBTTagCompound gasWorldGenData = data.getCompoundTag("gasesFramework_worldGenData");
+							NBTTagList previouslyGeneratedTypesList = gasWorldGenData.getTagList("generatedTypes", 8);
+							
+							HashSet<String> previouslyGeneratedTypes = new HashSet<String>();
+							for(int i = 0; i < previouslyGeneratedTypesList.tagCount(); i++)
 							{
-								previouslyGeneratedTypesList.appendTag(new NBTTagString(typeName));
+								previouslyGeneratedTypes.add(previouslyGeneratedTypesList.getStringTagAt(i));
 							}
+							
+							for(String typeName : retrogenData)
+							{
+								if(!previouslyGeneratedTypes.contains(typeName))
+								{
+									previouslyGeneratedTypesList.appendTag(new NBTTagString(typeName));
+								}
+							}
+							
+							gasWorldGenData.setTag("generatedTypes", previouslyGeneratedTypesList);
+							data.setTag("gasesFramework_worldGenData", gasWorldGenData);
 						}
-						
-						gasWorldGenData.setTag("generatedTypes", previouslyGeneratedTypesList);
-						data.setTag("gasesFramework_worldGenData", gasWorldGenData);
 					}
 				}
 			}
