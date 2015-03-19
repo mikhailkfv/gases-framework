@@ -75,11 +75,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * @author Trent
  *
  */
-@Mod(modid = "gasesFramework", name = "Gases Framework", version = GasesFramework.VERSION, dependencies="required-after:gasesFrameworkCore", acceptedMinecraftVersions = "[" + GasesFramework.TARGETVERSION + "]")
+@Mod(modid = GasesFramework.MODID, name = "Gases Framework", version = GasesFramework.VERSION, dependencies="required-after:gasesFrameworkCore", acceptedMinecraftVersions = "[" + GasesFramework.TARGETVERSION + "]")
 public class GasesFramework implements IGasesFramework
 {
 	// The instance of your mod that Forge uses.
-	@Instance("gasesFramework")
+	@Instance(GasesFramework.MODID)
 	public static GasesFramework instance;
 	
 	// Says where the client and server 'proxy' code is loaded.

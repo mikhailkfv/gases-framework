@@ -29,7 +29,7 @@ public class DummyContainerGasesFramework extends DummyModContainer
 		meta.authorList = Arrays.asList("Glenn");
 		meta.url = "http://www.minecraftforum.net/topic/1890587-/";
 		meta.screenshots = new String[0];
-		meta.parent = "gasesFramework";
+		meta.parent = GasesFramework.MODID;
 	}
 
 	@Override
