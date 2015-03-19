@@ -35,7 +35,7 @@ public class PipeProvider implements IWailaDataProvider
 	{
 		BlockGasPipe pipeBlock = (BlockGasPipe)accessor.getBlock();
 		String gasName = StatCollector.translateToLocal(pipeBlock.type.getUnlocalizedName() + ".name");
-		currenttip.add(StatCollector.translateToLocalFormatted("tile.gf_gasPipeEmpty.waila.body", gasName));
+		currenttip.add(StatCollector.translateToLocalFormatted("tile.gf_gasPipe.waila.body", gasName));
 		return currenttip;
 	}
 
