@@ -17,6 +17,9 @@ import net.minecraft.tileentity.TileEntity;
 
 public class TileEntityTank extends TileEntity
 {
+	public static final int SET_AMOUNT = 0;
+	public static final int SET_TYPE = 1;
+	
 	public GasType containedType;
 	public int amount;
 	
@@ -224,9 +227,11 @@ public class TileEntityTank extends TileEntity
 			containedType = gasType;
 			if(++amount <= getGasCap())
 			{
-				worldObj.addBlockEvent(xCoord, yCoord, zCoord, GasesFramework.gasTank, 0, amount);
-				if(prevGasType != containedType) worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 1, containedType.gasID);
-				
+				if(!worldObj.isRemote)
+				{
+					worldObj.addBlockEvent(xCoord, yCoord, zCoord, GasesFramework.gasTank, SET_AMOUNT, amount);
+					worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), SET_TYPE, containedType == null ? -1 : containedType.gasID);
+				}
 				return true;
 			}
 			else
@@ -256,8 +261,11 @@ public class TileEntityTank extends TileEntity
 				containedType = null;
 			}
 			
-			worldObj.addBlockEvent(xCoord, yCoord, zCoord, GasesFramework.gasTank, 0, amount);
-			if(prevGasType != containedType) worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 1, containedType == null ? -1 : containedType.gasID);
+			if(!worldObj.isRemote)
+			{
+				worldObj.addBlockEvent(xCoord, yCoord, zCoord, GasesFramework.gasTank, SET_AMOUNT, amount);
+				worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), SET_TYPE, containedType == null ? -1 : containedType.gasID);
+			}
 			
 			return true;
 		}
@@ -274,12 +282,12 @@ public class TileEntityTank extends TileEntity
 		
 		switch(eventID)
 		{
-		case 0:
+		case SET_AMOUNT:
 			if(amount < eventParam) wobble(true);
 			else if(amount > eventParam) wobble(false);
 			amount = eventParam;
 			break;
-		case 1:
+		case SET_TYPE:
 			containedType = GasType.getGasTypeByID(eventParam);
 			break;
 		}
