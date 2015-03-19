@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.block.IGasInterface;
 import glenn.gasesframework.api.block.IGasReceptor;
-import glenn.gasesframework.block.BlockGasPipe;
+import glenn.gasesframework.common.block.BlockGasPipe;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;

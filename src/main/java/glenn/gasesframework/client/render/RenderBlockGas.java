@@ -1,7 +1,7 @@
 package glenn.gasesframework.client.render;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.block.BlockGas;
+import glenn.gasesframework.common.block.BlockGas;
 
 import org.lwjgl.opengl.GL11;
 

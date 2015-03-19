@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.tileentity.TileEntityTank;
+import glenn.gasesframework.common.tileentity.TileEntityTank;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;

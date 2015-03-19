@@ -12,8 +12,8 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.block.BlockGasPump;
-import glenn.gasesframework.tileentity.TileEntityPump;
+import glenn.gasesframework.common.block.BlockGasPump;
+import glenn.gasesframework.common.tileentity.TileEntityPump;
 
 public class RenderBlockGasPump implements ISimpleBlockRenderingHandler
 {

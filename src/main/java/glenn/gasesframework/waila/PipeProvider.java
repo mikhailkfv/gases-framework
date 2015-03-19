@@ -2,7 +2,7 @@ package glenn.gasesframework.waila;
 
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.block.BlockGasPipe;
+import glenn.gasesframework.common.block.BlockGasPipe;
 
 import java.util.List;
 

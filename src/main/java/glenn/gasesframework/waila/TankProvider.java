@@ -1,7 +1,7 @@
 package glenn.gasesframework.waila;
 
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.tileentity.TileEntityTank;
+import glenn.gasesframework.common.tileentity.TileEntityTank;
 
 import java.util.List;
 

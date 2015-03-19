@@ -1,8 +1,8 @@
 package glenn.gasesframework.waila;
 
-import glenn.gasesframework.block.BlockGasPipe;
-import glenn.gasesframework.block.BlockGasPump;
-import glenn.gasesframework.block.BlockGasTank;
+import glenn.gasesframework.common.block.BlockGasPipe;
+import glenn.gasesframework.common.block.BlockGasPump;
+import glenn.gasesframework.common.block.BlockGasTank;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import mcp.mobius.waila.api.IWailaRegistrar;
 

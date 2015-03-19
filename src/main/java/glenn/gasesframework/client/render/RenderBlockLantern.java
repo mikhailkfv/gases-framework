@@ -1,8 +1,8 @@
 package glenn.gasesframework.client.render;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.block.BlockGasPipe;
-import glenn.gasesframework.block.BlockLantern;
+import glenn.gasesframework.common.block.BlockGasPipe;
+import glenn.gasesframework.common.block.BlockLantern;
 
 import org.lwjgl.opengl.GL11;
 

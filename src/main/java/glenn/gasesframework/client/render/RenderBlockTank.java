@@ -9,8 +9,8 @@ import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.block.BlockGasPump;
-import glenn.gasesframework.block.BlockGasTank;
+import glenn.gasesframework.common.block.BlockGasPump;
+import glenn.gasesframework.common.block.BlockGasTank;
 
 public class RenderBlockTank implements ISimpleBlockRenderingHandler
 {

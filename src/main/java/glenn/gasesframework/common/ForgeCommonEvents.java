@@ -1,6 +1,5 @@
 package glenn.gasesframework.common;
 
-import glenn.gasesframework.ExtendedGasEffects;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
 import net.minecraft.entity.EntityLivingBase;

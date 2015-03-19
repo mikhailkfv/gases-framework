@@ -4,7 +4,7 @@ import glenn.gasesframework.api.ExtendedGasEffectsBase;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.MaterialGas;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.block.BlockGasPipe;
+import glenn.gasesframework.common.block.BlockGasPipe;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;

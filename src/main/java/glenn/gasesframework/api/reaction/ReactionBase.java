@@ -11,7 +11,7 @@ public abstract class ReactionBase extends Reaction
 	protected final Block reactionBlock2;
 	
 	/**
-	 * Constructs a new reaction between the specified blocks. One of the blocks should be a {@link glenn.gasesframework.block.BlockGas}, otherwise the reaction will never occur
+	 * Constructs a new reaction between the specified blocks. One of the blocks should be a {@link glenn.gasesframework.common.block.BlockGas}, otherwise the reaction will never occur
 	 * @param priority - The priority of this reaction. If a gas touches several blocks it may react with, it will priorify the reaction of the greatest priority. For example, an ignition reaction uses priority level 10
 	 * @param delay - The delay of the reaction. If set below 0, it will happen at the same rate as the flow of the block
 	 * @param block1
