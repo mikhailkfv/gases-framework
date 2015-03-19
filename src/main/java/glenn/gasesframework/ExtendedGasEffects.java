@@ -3,11 +3,14 @@ package glenn.gasesframework;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
 import glenn.gasesframework.api.block.MaterialGas;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.api.item.IGasEffectProtector;
 import glenn.gasesframework.block.BlockGas;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -52,6 +55,54 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 		
 	}
 	
+	private boolean blind(GasType gasType)
+	{
+		if(entity instanceof EntityPlayer)
+		{
+			boolean protect = false;
+			
+			InventoryPlayer inventory = ((EntityPlayer)entity).inventory;
+			
+			for(int i = 0; i < 4; i++)
+			{
+				ItemStack stack = inventory.armorItemInSlot(i);
+				if(stack != null && IGasEffectProtector.class.isAssignableFrom(stack.getItem().getClass()))
+				{
+					IGasEffectProtector item = (IGasEffectProtector)stack.getItem();
+					
+					if(item.protectVision(entity, stack, gasType)) protect = true;
+				}
+			}
+			
+			return !protect;
+		}
+		return true;
+	}
+	
+	private boolean suffocate(GasType gasType)
+	{
+		if(entity instanceof EntityPlayer)
+		{
+			boolean protect = false;
+			
+			InventoryPlayer inventory = ((EntityPlayer)entity).inventory;
+			
+			for(int i = 0; i < 4; i++)
+			{
+				ItemStack stack = inventory.armorItemInSlot(i);
+				if(stack != null && IGasEffectProtector.class.isAssignableFrom(stack.getItem().getClass()))
+				{
+					IGasEffectProtector item = (IGasEffectProtector)stack.getItem();
+					
+					if(item.protectBreath(entity, stack, gasType)) protect = true;
+				}
+			}
+			
+			return !protect;
+		}
+		return true;
+	}
+	
 	public void tick()
 	{
 		GasType gasType = null;
@@ -74,13 +125,13 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 		int suffocationTimer = get(SUFFOCATION_WATCHER);
 		int slownessTimer = get(SLOWNESS_WATCHER);
 		
-		if(gasType != null && gasType.blindnessRate > 0 && UtilMethods.blind(entity, gasType))
+		if(gasType != null && gasType.blindnessRate > 0 && blind(gasType))
 		{
 			blindnessTimer += gasType.blindnessRate + 4;
 		}
 		blindnessTimer -= 4;
 		
-		if(gasType != null && gasType.suffocationRate > 0 && UtilMethods.suffocate(entity, gasType))
+		if(gasType != null && gasType.suffocationRate > 0 && suffocate(gasType))
 		{
 			suffocationTimer += gasType.suffocationRate + 32;
 			
