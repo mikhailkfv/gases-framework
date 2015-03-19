@@ -24,6 +24,7 @@ import glenn.gasesframework.tileentity.TileEntityGasFurnace.SpecialFurnaceRecipe
 import glenn.gasesframework.tileentity.TileEntityInfiniteGas;
 import glenn.gasesframework.tileentity.TileEntityPump;
 import glenn.gasesframework.tileentity.TileEntityTank;
+import glenn.gasesframework.waila.GasesFrameworkWaila;
 import glenn.gasesframework.worldgen.WorldGeneratorGasesFramework;
 import glenn.moddingutils.Configurations.ItemRepresentation;
 
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import mcp.mobius.waila.api.IWailaRegistrar;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.creativetab.CreativeTabs;
@@ -54,6 +56,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -235,6 +238,8 @@ public class GasesFramework implements IGasesFramework
 			Item item = (Item)Item.itemRegistry.getObject(s);
 			if(item != null) GasesFrameworkAPI.unregisterIgnitionItem(item);
 		}
+		
+		GasesFrameworkWaila.init();
 	}
 	
 	@EventHandler
