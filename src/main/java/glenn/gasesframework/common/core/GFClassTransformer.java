@@ -247,8 +247,8 @@ public class GFClassTransformer implements IClassTransformer
 						newInstructions.add(new InsnNode(I2D));
 						newInstructions.add(new InsnNode(DSUB));
 						newInstructions.add(new VarInsnNode(ALOAD, 7));
-						newInstructions.add(new TypeInsnNode(CHECKCAST, "glenn/gasesframework/block/BlockGas"));
-						newInstructions.add(new FieldInsnNode(GETFIELD, "glenn/gasesframework/block/BlockGas", "type", "Lglenn/gasesframework/api/gastype/GasType;"));
+						newInstructions.add(new TypeInsnNode(CHECKCAST, "glenn/gasesframework/common/block/BlockGas"));
+						newInstructions.add(new FieldInsnNode(GETFIELD, "glenn/gasesframework/common/block/BlockGas", "type", "Lglenn/gasesframework/api/gastype/GasType;"));
 						newInstructions.add(new VarInsnNode(ALOAD, 0));
 						newInstructions.add(new FieldInsnNode(GETFIELD, classEntity, fieldWorldObj, "L" + classWorld + ";"));
 						newInstructions.add(new TypeInsnNode(CHECKCAST, interfaceBlockAccess));
@@ -269,8 +269,8 @@ public class GFClassTransformer implements IClassTransformer
 						newInstructions.add(new InsnNode(I2D));
 						newInstructions.add(new InsnNode(DSUB));
 						newInstructions.add(new VarInsnNode(ALOAD, 7));
-						newInstructions.add(new TypeInsnNode(CHECKCAST, "glenn/gasesframework/block/BlockGas"));
-						newInstructions.add(new FieldInsnNode(GETFIELD, "glenn/gasesframework/block/BlockGas", "type", "Lglenn/gasesframework/api/gastype/GasType;"));
+						newInstructions.add(new TypeInsnNode(CHECKCAST, "glenn/gasesframework/common/block/BlockGas"));
+						newInstructions.add(new FieldInsnNode(GETFIELD, "glenn/gasesframework/common/block/BlockGas", "type", "Lglenn/gasesframework/api/gastype/GasType;"));
 						newInstructions.add(new VarInsnNode(ALOAD, 0));
 						newInstructions.add(new FieldInsnNode(GETFIELD, classEntity, fieldWorldObj, "L" + classWorld + ";"));
 						newInstructions.add(new TypeInsnNode(CHECKCAST, interfaceBlockAccess));
