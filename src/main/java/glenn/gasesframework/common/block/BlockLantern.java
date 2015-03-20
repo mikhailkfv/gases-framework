@@ -71,7 +71,7 @@ public class BlockLantern extends Block implements IGasReceptor
     @Override
 	public void updateTick(World world, int x, int y, int z, Random random)
     {
-		if(type.expirationRate > 0)
+		if(type.expirationRate > 0 && random.nextInt(type.expirationRate) == 0)
 		{
 			int metadata = world.getBlockMetadata(x, y, z) + 1;
 			if(metadata >= 16)
@@ -83,12 +83,6 @@ public class BlockLantern extends Block implements IGasReceptor
 				world.setBlockMetadataWithNotify(x, y, z, metadata, 3);
 			}
 		}
-    }
-
-    @Override
-    public int tickRate(World world)
-    {
-        return type.expirationRate > 0 ? type.expirationRate : 0;
     }
 
 	/**
