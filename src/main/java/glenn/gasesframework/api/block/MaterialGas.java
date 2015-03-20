@@ -11,6 +11,7 @@ public class MaterialGas extends Material
 	{
 		super(mapColor);
 		this.setReplaceable();
+		this.setNoPushMobility();
 	}
 	
 	@Override
