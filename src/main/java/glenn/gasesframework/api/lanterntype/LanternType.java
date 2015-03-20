@@ -187,6 +187,11 @@ public class LanternType
 		return block;
 	}
 	
+	public boolean expires()
+	{
+		return expirationRate > 0;
+	}
+	
 	/**
 	 * Get the unlocalized name of the lantern.
 	 * @return "gf_lantern." + name;

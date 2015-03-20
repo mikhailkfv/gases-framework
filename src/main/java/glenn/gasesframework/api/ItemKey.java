@@ -29,7 +29,7 @@ public class ItemKey
 		if(itemStack != null)
 		{
 			this.item = itemStack.getItem();
-			this.damage = 0;
+			this.damage = itemStack.getItemDamage();
 		}
 		else
 		{
