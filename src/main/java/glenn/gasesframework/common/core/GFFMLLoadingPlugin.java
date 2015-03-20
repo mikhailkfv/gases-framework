@@ -5,7 +5,9 @@ import java.util.Map;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
-@TransformerExclusions({"glenn.gasesframework.common.core"})
+@IFMLLoadingPlugin.Name(value = "Gases Framework Core")
+@IFMLLoadingPlugin.MCVersion(value = "1.7.10")
+@TransformerExclusions(value="glenn.gasesframework.common.core")
 public class GFFMLLoadingPlugin implements IFMLLoadingPlugin
 {
 	@Override
@@ -35,5 +37,6 @@ public class GFFMLLoadingPlugin implements IFMLLoadingPlugin
 	@Override
 	public void injectData(Map<String, Object> data)
 	{
+		
 	}
 }
