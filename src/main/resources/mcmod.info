@@ -1,18 +1,19 @@
 [
-{
-  "modid" : "gasesFramework",
-  "name" : "Gases Framework",
-  "version" : "1.1.0",
-  "url" : "http://jamieswhiteshirt.com/minecraft/mods/gases/",
-  "credits" : "Created by Glenn",
-  "authors" : [
-    "Glenn"
-  ],
-  "description" : "Gases Framework is a lightweight API that makes it possible to create gases in minecraft. Originally created for Glenn's Gases, other mods can expand upon the framework.",
-  "logoFile" : "assets/minecraft/textures/misc/unknown_pack.png",
-  "updateUrl" : "http://jamieswhiteshirt.com/minecraft/mods/gases/download/",
-  "parent" : "",
-  "screenshots": [
-  ]
-}
+	{
+		"modid" : "gasesFramework",
+		"name" : "Gases Framework",
+		"version" : "${version}",
+		"mcversion": "${mcversion}",
+		"url" : "http://jamieswhiteshirt.com/minecraft/mods/gases/",
+		"authorList" : [
+			"Glenn", "Trentv4"
+		],
+		"description" : "Gases Framework is a lightweight API that makes it possible to create gases in minecraft. Originally created for Glenn's Gases, other mods can expand upon the framework.",
+		"logoFile" : "",
+		"updateUrl" : "http://jamieswhiteshirt.com/minecraft/mods/gases/download/",
+		"parent" : "",
+		"dependencies" : [
+			"MinecraftForge"
+		]
+	}
 ]
