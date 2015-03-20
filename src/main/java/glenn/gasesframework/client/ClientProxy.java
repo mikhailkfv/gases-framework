@@ -1,5 +1,6 @@
 package glenn.gasesframework.client;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.client.render.RenderBlockGas;
 import glenn.gasesframework.client.render.RenderBlockGasPipe;
 import glenn.gasesframework.client.render.RenderBlockGasPump;
@@ -8,6 +9,7 @@ import glenn.gasesframework.client.render.RenderBlockLantern;
 import glenn.gasesframework.client.render.TileEntityTankRenderer;
 import glenn.gasesframework.common.CommonProxy;
 import glenn.gasesframework.common.tileentity.TileEntityTank;
+import glenn.moddingutils.UpdateChecker;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -31,5 +33,10 @@ public class ClientProxy extends CommonProxy
 	{
 		super.registerEventHandlers();
 		MinecraftForge.EVENT_BUS.register(new ForgeClientEvents());
+		
+		if(GasesFramework.configurations.other_enableUpdateCheck)
+		{
+			MinecraftForge.EVENT_BUS.register(new UpdateChecker("https://www.jamieswhiteshirt.com/trackable/gasesFramework.php", "Gases Framework", GasesFramework.MODID, GasesFramework.VERSION, GasesFramework.TARGETVERSION));
+		}
 	}
 }

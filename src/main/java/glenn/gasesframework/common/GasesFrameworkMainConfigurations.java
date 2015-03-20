@@ -41,6 +41,9 @@ public class GasesFrameworkMainConfigurations extends Configurations
 	@ConfigField(path="blocks.Gas tank.Fancy tanks", comment="Whether or not gas tanks will be rendered with fancy fluid physics", defaultValue="true")
 	public boolean other_fancyTank;
 	
+	@ConfigField(path="updatechecker.Enable", comment="Allow Gases Framework to automatically check for updates", defaultValue="true")
+	public boolean other_enableUpdateCheck;
+	
 	public GasesFrameworkMainConfigurations(File configurationsFile)
 	{
 		super(configurationsFile);
