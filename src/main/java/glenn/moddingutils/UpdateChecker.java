@@ -76,9 +76,9 @@ public class UpdateChecker implements Runnable
 	
 	private final Gson gson = new Gson();
 	private final LinkedList<VersionMessage> relevantMessages = new LinkedList<VersionMessage>();
-	
 	private File messageCounterFile;
 	private ArrayList<MessageCounter> counters;
+	private boolean requestValid = false;
 	
 	private final String urlString;
 	private final String fullModName;
@@ -111,7 +111,7 @@ public class UpdateChecker implements Runnable
 	@SubscribeEvent
 	public void onEntityJoinedWorld(EntityJoinWorldEvent event)
 	{
-		if(event.world.isRemote && event.entity instanceof EntityPlayer)
+		if(requestValid && event.world.isRemote && event.entity instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer)event.entity;
 			
@@ -439,10 +439,12 @@ public class UpdateChecker implements Runnable
 			}
 			
 			writeMessageCounterFile();
+			
+			requestValid = true;
 		}
 		catch(Exception e)
 		{
-			FMLLog.warning("Failed to check for update messages (" + e.toString() + ")");
+			FMLLog.warning(fullModName + " failed to check for update messages (" + e.toString() + ")");
 		}
 	}
 }
