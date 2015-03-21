@@ -75,7 +75,6 @@ public class UpdateChecker implements Runnable
 	}
 	
 	private final Gson gson = new Gson();
-	private final LinkedList<IChatComponent> messageQueue = new LinkedList<IChatComponent>();
 	private final LinkedList<VersionMessage> relevantMessages = new LinkedList<VersionMessage>();
 	
 	private File messageCounterFile;
@@ -116,9 +115,10 @@ public class UpdateChecker implements Runnable
 		{
 			EntityPlayer player = (EntityPlayer)event.entity;
 			
+			LinkedList<IChatComponent> messageQueue = new LinkedList<IChatComponent>();
 			for(VersionMessage message : relevantMessages)
 			{
-				printMessage(message);
+				printMessage(message, messageQueue);
 			}
 			
 			for(IChatComponent component : messageQueue)
@@ -200,6 +200,7 @@ public class UpdateChecker implements Runnable
 	{
 		HttpsURLConnection httpsConnection = (HttpsURLConnection)url.openConnection();
 		
+		httpsConnection.setReadTimeout(10000);
 		httpsConnection.setRequestMethod("POST");
 		httpsConnection.setRequestProperty("User-Agent", "Minecraft");
 		httpsConnection.setDoOutput(true);
@@ -270,7 +271,7 @@ public class UpdateChecker implements Runnable
 		}
 	}
 	
-	private void printMessage(VersionMessage message)
+	private void printMessage(VersionMessage message, LinkedList<IChatComponent> messageQueue)
 	{
 		MessageCounter counter = null;
 		for(int i = 0; i < counters.size(); i++)
