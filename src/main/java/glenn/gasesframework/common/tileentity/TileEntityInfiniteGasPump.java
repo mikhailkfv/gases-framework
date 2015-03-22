@@ -48,11 +48,6 @@ public class TileEntityInfiniteGasPump extends TileEntity
 			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
 				GasType type = getType(side);
-				
-				if(type == null)
-				{
-					type = GasesFrameworkAPI.gasTypeAir;
-				}
 
 				int x = xCoord + side.offsetX;
 				int y = yCoord + side.offsetY;

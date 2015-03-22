@@ -28,7 +28,6 @@ public class TileEntityGasPump extends TileEntity
 	public static final int SUCCESSFUL_PUMP = 1;
 	
 	public int pumpTime;
-	private int overload;
 	public boolean excludes;
 	public GasType containedType;
 	public GasType filterType;
@@ -36,7 +35,6 @@ public class TileEntityGasPump extends TileEntity
 	public TileEntityGasPump()
 	{
 		pumpTime = 25;
-		overload = 0;
 		excludes = false;
 	}
 
@@ -48,7 +46,6 @@ public class TileEntityGasPump extends TileEntity
 		excludes = tagCompound.getBoolean("excludes");
 		containedType = GasType.getGasTypeByID(tagCompound.getInteger("containedType"));
 		filterType = GasType.getGasTypeByID(tagCompound.getInteger("filterType"));
-		overload = tagCompound.getInteger("overload");
 	}
 
 	@Override
@@ -56,7 +53,6 @@ public class TileEntityGasPump extends TileEntity
 	{
 		super.writeToNBT(tagCompound);
 		tagCompound.setInteger("pumpTime", pumpTime);
-		tagCompound.setInteger("overload", overload);
 		tagCompound.setBoolean("excludes", excludes);
 		tagCompound.setInteger("containedType", containedType != null ? containedType.gasID : -1);
 		tagCompound.setInteger("filterType", filterType != null ? filterType.gasID : -1);
@@ -245,11 +241,6 @@ public class TileEntityGasPump extends TileEntity
 			
 			pumpTime = 25;
 		}
-		
-		if(overload-- < 0)
-		{
-			overload = 0;
-		}
     }
 	
 	protected int[] randomIndexArray(Random random)
@@ -281,7 +272,7 @@ public class TileEntityGasPump extends TileEntity
 			case PUMP_EVENT:
 				if(eventParam == SUCCESSFUL_PUMP)
 				{
-					overload += 10;
+					
 				}
 				else if(eventParam == FAILED_PUMP)
 				{

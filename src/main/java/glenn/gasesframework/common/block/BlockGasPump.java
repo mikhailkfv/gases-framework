@@ -1,6 +1,7 @@
 package glenn.gasesframework.common.block;
 
 import glenn.gasesframework.GasesFramework;
+import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.ISample;
@@ -136,7 +137,8 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
 			TileEntityGasPump tileEntity = (TileEntityGasPump)world.getTileEntity(x, y, z);
 			
 			tileEntity.containedType = gasType;
-			tileEntity.pumpTime = 1;
+			tileEntity.pumpTime /= 2;
+			
 			return true;
 		}
 		else
@@ -152,7 +154,7 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
 		{
 			TileEntityGasPump tileEntity = (TileEntityGasPump)world.getTileEntity(x, y, z);
 			
-			return tileEntity != null && tileEntity.acceptsType(gasType) && tileEntity.containedType == null;
+			return tileEntity != null && tileEntity.acceptsType(gasType) && (tileEntity.containedType == null || tileEntity.containedType == GasesFrameworkAPI.gasTypeAir);
 		}
 		else
 		{
