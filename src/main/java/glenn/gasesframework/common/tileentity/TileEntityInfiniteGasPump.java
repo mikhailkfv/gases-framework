@@ -23,7 +23,15 @@ public class TileEntityInfiniteGasPump extends TileEntity
 	
 	public GasType getType(ForgeDirection side)
 	{
-		return types[side.ordinal()];
+		GasType type = types[side.ordinal()];
+		if(type == null)
+		{
+			return GasesFrameworkAPI.gasTypeAir;
+		}
+		else
+		{
+			return type;
+		}
 	}
 	
 	public void setType(GasType newType, ForgeDirection side)
