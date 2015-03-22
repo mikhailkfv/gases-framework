@@ -262,7 +262,7 @@ public class BlockGasPipe extends Block implements IGasReceptor
     		else
     		{
     			IGasReceptor receptor = (IGasReceptor)world.getBlock(end.endPosition.x, end.endPosition.y, end.endPosition.z);
-    			hasPushed = receptor.receiveGas(world, end.endPosition.x, end.endPosition.y, end.endPosition.z, end.endDirection, pipeSourceBlock.type);
+    			hasPushed = receptor.receiveGas(world, end.endPosition.x, end.endPosition.y, end.endPosition.z, end.endDirection.getOpposite(), pipeSourceBlock.type);
     		}
     		
     		if(hasPushed)

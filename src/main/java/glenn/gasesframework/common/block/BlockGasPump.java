@@ -148,7 +148,7 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
 	@Override
 	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		if(ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)) != side.getOpposite())
+		if(ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)) != side)
 		{
 			TileEntityGasPump tileEntity = (TileEntityGasPump)world.getTileEntity(x, y, z);
 			

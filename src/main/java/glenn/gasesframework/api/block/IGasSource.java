@@ -17,7 +17,7 @@ public interface IGasSource extends IGasInterface
 	 * @param x
 	 * @param y
 	 * @param z
-	 * @param side - The side gas is attempted to be extracted from.
+	 * @param side - The local side gas is attempted to be extracted from.
 	 * @return
 	 */
 	GasType getGasTypeFromSide(World world, int x, int y, int z, ForgeDirection side);
@@ -27,7 +27,7 @@ public interface IGasSource extends IGasInterface
 	 * @param x
 	 * @param y
 	 * @param z
-	 * @param side - The side gas was extracted from.
+	 * @param side - The local side gas was extracted from.
 	 * @return
 	 */
 	GasType takeGasTypeFromSide(World world, int x, int y, int z, ForgeDirection side);

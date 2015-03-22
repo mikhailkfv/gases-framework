@@ -17,7 +17,7 @@ public interface IGasPropellor extends IGasInterface
 	 * @param x
 	 * @param y
 	 * @param z
-	 * @param side - The side gas can be propelled from.
+	 * @param side - The local side gas can be propelled from.
 	 * @return
 	 */
 	boolean canPropelGasFromSide(World world, int x, int y, int z, ForgeDirection side);

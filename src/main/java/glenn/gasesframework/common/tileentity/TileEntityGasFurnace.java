@@ -331,7 +331,7 @@ public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
     			Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
     			if(IGasReceptor.class.isAssignableFrom(blockAbove.getClass()))
     			{
-    				if(((IGasReceptor)blockAbove).receiveGas(worldObj, xCoord, yCoord + 1, zCoord, ForgeDirection.UP, GasesFrameworkAPI.gasTypeSmoke)) smokeTimer = 0;
+    				if(((IGasReceptor)blockAbove).receiveGas(worldObj, xCoord, yCoord + 1, zCoord, ForgeDirection.DOWN, GasesFrameworkAPI.gasTypeSmoke)) smokeTimer = 0;
     			}
     		}
     	}

@@ -180,7 +180,7 @@ public class TileEntityGasPump extends TileEntity
     	Block block = worldObj.getBlock(x, y, z);
     	if(IGasReceptor.class.isAssignableFrom(block.getClass()))
 		{
-			return ((IGasReceptor)block).receiveGas(worldObj, x, y, z, direction, containedType);
+			return ((IGasReceptor)block).receiveGas(worldObj, x, y, z, direction.getOpposite(), containedType);
 		}
 		else
 		{

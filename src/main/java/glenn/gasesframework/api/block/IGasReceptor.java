@@ -20,7 +20,7 @@ public interface IGasReceptor extends IGasInterface
 	 * @param x
 	 * @param y
 	 * @param z
-	 * @param side - The side the received gas is coming from
+	 * @param side - The local side the received gas is inserted into
 	 * @param gasType - The type of gas being received
 	 * @return
 	 */
@@ -32,7 +32,7 @@ public interface IGasReceptor extends IGasInterface
 	 * @param x
 	 * @param y
 	 * @param z
-	 * @param side - The side the received gas is coming from
+	 * @param side - The local side the received gas is inserted into
 	 * @param gasType - The type of gas being that can be received
 	 * @return
 	 */

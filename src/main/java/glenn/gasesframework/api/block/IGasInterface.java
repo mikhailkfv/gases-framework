@@ -11,7 +11,7 @@ public abstract interface IGasInterface
 	 * @param x
 	 * @param y
 	 * @param z
-	 * @param side - The side of this block the pipe can connect to.
+	 * @param side - The local side of this block the pipe can connect to.
 	 * @return
 	 */
 	boolean connectToPipe(IBlockAccess blockaccess, int x, int y, int z, ForgeDirection side);

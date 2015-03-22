@@ -62,7 +62,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
 				if(block instanceof IGasReceptor)
 				{
 					IGasReceptor receptor = (IGasReceptor)block;
-					receptor.receiveGas(worldObj, x, y, z, side, type);
+					receptor.receiveGas(worldObj, x, y, z, side.getOpposite(), type);
 				}
 				else
 				{
