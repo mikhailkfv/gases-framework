@@ -29,10 +29,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, ITileEntityProvider, ISample
 {
-	private static final int[] reindex = new int[]{
-		1, 0, 5, 4, 3, 2
-	};
-	
 	private boolean isBottomUnique;
 	public IIcon sideIcon;
 	public IIcon bottomIcon;
@@ -55,11 +51,11 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
     {
     	int metadata;
     	
-    	if(entity.rotationPitch > 45.0f)
+    	if(entity.rotationPitch < -45.0f)
     	{
     		metadata = 0;
     	}
-    	else if(entity.rotationPitch < -45.0f)
+    	else if(entity.rotationPitch > 45.0f)
     	{
     		metadata = 1;
     	}
