@@ -3,9 +3,9 @@ package glenn.gasesframework.common.block;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.block.MaterialGas;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.api.item.ISample;
 import glenn.gasesframework.api.reaction.Reaction;
 import glenn.gasesframework.api.reaction.ReactionEmpty;
 import glenn.gasesframework.client.render.RenderBlockGas;
@@ -27,6 +27,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * To allow a gas to flow in pipes, create a {@link glenn.gasesframework.common.block.BlockGasPipe BlockGasPipe} for the gas.
@@ -959,7 +960,7 @@ public class BlockGas extends Block implements ISample
 	}
 
 	@Override
-	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes)
+	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes, ForgeDirection side)
 	{
 		return type;
 	}

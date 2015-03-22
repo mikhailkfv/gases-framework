@@ -3,8 +3,8 @@ package glenn.gasesframework.common.block;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
+import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.api.item.ISample;
 import glenn.gasesframework.client.render.RenderBlockGasPump;
 import glenn.gasesframework.common.tileentity.TileEntityPump;
 
@@ -180,7 +180,7 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
 	}
 
 	@Override
-	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes)
+	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes, ForgeDirection side)
 	{
 		TileEntityPump tileEntity = (TileEntityPump)world.getTileEntity(x, y, z);
 		

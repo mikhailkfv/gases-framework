@@ -1,7 +1,7 @@
 package glenn.gasesframework.common.item;
 
+import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.api.item.ISample;
 
 import java.util.List;
 
@@ -20,12 +20,22 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class ItemGasSampler extends Item
 {
 	public boolean excludes;
 	public IIcon overlayIcon;
 	public IIcon emptyOverlayIcon;
+	
+	private final ForgeDirection[] sideToForgeDirection = new ForgeDirection[]{
+		ForgeDirection.DOWN,
+		ForgeDirection.UP,
+		ForgeDirection.EAST,
+		ForgeDirection.WEST,
+		ForgeDirection.NORTH,
+		ForgeDirection.SOUTH
+	};
 	
 	public ItemGasSampler(boolean excludes)
 	{
@@ -74,7 +84,7 @@ public class ItemGasSampler extends Item
                 if(ISample.class.isAssignableFrom(block.getClass()))
                 {
                 	ISample sample = (ISample)block;
-                	GasType newType = sample.sampleInteraction(world, i, j, k, getGasType(itemstack), excludes);
+                	GasType newType = sample.sampleInteraction(world, i, j, k, getGasType(itemstack), excludes, sideToForgeDirection[movingobjectposition.sideHit]);
                 	
                 	if(!(newType == null || !newType.isIndustrial))
                 	{

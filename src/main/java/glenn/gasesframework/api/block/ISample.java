@@ -1,10 +1,11 @@
-package glenn.gasesframework.api.item;
+package glenn.gasesframework.api.block;
 
 import glenn.gasesframework.api.gastype.GasType;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
- * An interface for interactivity with gas samplers.
+ * An interface for blocks with interactivity with gas samplers.
  * @author Glenn
  *
  */
@@ -18,7 +19,8 @@ public interface ISample
 	 * @param z
 	 * @param in - The current gas type of the sampler
 	 * @param excludes - True if the sampler is an excluding one
+	 * @param side - The side of the block the sampler is applied to
 	 * @return
 	 */
-	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes);
+	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes, ForgeDirection side);
 }

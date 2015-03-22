@@ -6,8 +6,8 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasSource;
+import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.api.item.ISample;
 import glenn.gasesframework.client.render.RenderBlockGasTank;
 import glenn.gasesframework.common.item.ItemGasBottle;
 import glenn.gasesframework.common.tileentity.TileEntityTank;
@@ -118,7 +118,7 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
     }
 
 	@Override
-	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes)
+	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes, ForgeDirection side)
 	{
 		TileEntityTank tileEntity = (TileEntityTank)world.getTileEntity(x, y, z);
 		return tileEntity.containedType;

@@ -1,7 +1,7 @@
 package glenn.gasesframework.common.block;
 
+import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.api.item.ISample;
 import glenn.gasesframework.common.tileentity.TileEntityInfiniteGas;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockInfiniteGas extends Block implements ISample, ITileEntityProvider
 {
@@ -62,7 +63,7 @@ public class BlockInfiniteGas extends Block implements ISample, ITileEntityProvi
     }
 
     @Override
-	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes)
+	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes, ForgeDirection side)
 	{
 		TileEntityInfiniteGas tileEntity = (TileEntityInfiniteGas)world.getTileEntity(x, y, z);
 		
