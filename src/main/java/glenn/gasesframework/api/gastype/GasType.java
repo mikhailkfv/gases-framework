@@ -220,7 +220,7 @@ public class GasType
 	 * Sets the rates of gas effects on this gas type.
 	 * @param blindness - How quickly the player will experience gradual blindness.
 	 * @param suffocation - How quickly the player will suffocate in the gas, and how often {@link GasType#onBreathed(EntityLivingBase)} will be called
-	 * @param slowness - How quickly the player will lose their movement speed inside the gas. NOTE: CURRENTLY UNIMPLEMENTED.
+	 * @param slowness - How quickly the player will lose their movement speed inside the gas.
 	 * @return
 	 */
 	public GasType setEffectRates(int blindness, int suffocation, int slowness)
