@@ -254,14 +254,6 @@ public class GasesFramework implements IGasesFramework
 	}
 	
 	/**
-	 * Returns the reverse direction index of a direction index. Used by most blocks in Gases Framework.
-	 */
-	public static int reverseDirection(int direction)
-	{
-		return (direction / 2) * 2 + 1 - direction % 2;
-	}
-	
-	/**
 	 * Adds a special furnace recipe which can be used in a gas furnace. Special furnace recipes are notably different in the way the stack size of what is smelted matters.
 	 * A special gas furnace recipe will always be prioritized before an ordinary furnace recipe.
 	 * @param ingredient - The item to be smelted. Can have a stack size larger than 1.

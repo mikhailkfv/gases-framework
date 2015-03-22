@@ -394,7 +394,7 @@ public class BlockGasPipe extends Block implements IGasReceptor
 					{
 						if(iteration.currentPosition.equals(pipePosition))
 						{
-							res[GasesFramework.reverseDirection(iteration.direction)] |= 1;
+							res[ForgeDirection.VALID_DIRECTIONS[iteration.direction].getOpposite().ordinal()] |= 1;
 						}
 						else if(iteration.previousPosition.equals(pipePosition))
 						{
