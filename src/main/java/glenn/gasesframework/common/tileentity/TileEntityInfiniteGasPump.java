@@ -36,8 +36,11 @@ public class TileEntityInfiniteGasPump extends TileEntity
 	
 	public void setType(GasType newType, ForgeDirection side)
 	{
-		worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), side.ordinal(), newType.gasID);
-		types[side.ordinal()] = newType;
+		int ordinal = side.ordinal();
+		if(newType == types[ordinal]) newType = null;
+		
+		worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), ordinal, newType != null ? newType.gasID : -1);
+		types[ordinal] = newType;
 	}
 	
 	@Override
