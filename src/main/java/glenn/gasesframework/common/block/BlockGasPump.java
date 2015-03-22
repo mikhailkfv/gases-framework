@@ -112,10 +112,6 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
     }
 	
 	@SideOnly(Side.CLIENT)
-
-    /**
-     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
-     */
     @Override
 	public IIcon getIcon(int side, int metadata)
     {
@@ -185,22 +181,11 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
 	{
 		TileEntityPump tileEntity = (TileEntityPump)world.getTileEntity(x, y, z);
 		
-		if(tileEntity != null)
+		if(!world.isRemote && tileEntity != null)
 		{
 			world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "random.click", 0.3F, 0.6F);
-			if(tileEntity.excludes == excludes && tileEntity.filterType == in)
-			{
-				tileEntity.excludes = false;
-				tileEntity.filterType = null;
-			}
-			else
-			{
-				tileEntity.excludes = excludes;
-		    	tileEntity.filterType = in;
-			}
+			tileEntity.setFilter(in, excludes);
 		}
-    	
-		world.markBlockForUpdate(x, y, z);
 		
 		return in;
 	}

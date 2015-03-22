@@ -22,8 +22,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityPump extends TileEntity
 {
-	public static final int SUCCESSFUL_PUMP = 1;
+	public static final int PUMP_EVENT = 0;
+	public static final int SET_FILTER_EVENT = 1;
 	public static final int FAILED_PUMP = 0;
+	public static final int SUCCESSFUL_PUMP = 1;
 	
 	public int pumpTime;
 	private int overload;
@@ -85,6 +87,24 @@ public class TileEntityPump extends TileEntity
     {
     	readFromNBT(packet.func_148857_g());
     }
+	
+	public void setFilter(GasType filterType, boolean excludes)
+	{
+		if(this.excludes == excludes && this.filterType == filterType)
+		{
+			this.excludes = false;
+			this.filterType = null;
+		}
+		else
+		{
+			this.excludes = excludes;
+			this.filterType = filterType;
+		}
+		
+		int eventParam = filterType.gasID & 0x7fffffff;
+		if(excludes) eventParam |= 0x80000000;
+		worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), SET_FILTER_EVENT, eventParam);
+	}
     
 	/**
 	 * Is this type accepted by the pump?
@@ -205,11 +225,11 @@ public class TileEntityPump extends TileEntity
 		
 		if(pump())
 		{
-			worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 0, SUCCESSFUL_PUMP);
+			worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), PUMP_EVENT, SUCCESSFUL_PUMP);
 		}
 		else
 		{
-			worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 0, FAILED_PUMP);
+			worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), PUMP_EVENT, FAILED_PUMP);
 		}
     }
 
@@ -254,21 +274,28 @@ public class TileEntityPump extends TileEntity
 	
 	public boolean blockEvent(int eventID, int eventParam)
 	{
-		if(!worldObj.isRemote) return true;
-		
-		switch(eventID)
+		if(worldObj.isRemote)
 		{
-		case 0:
-			if(eventParam == SUCCESSFUL_PUMP)
+			switch(eventID)
 			{
-				overload += 10;
+			case PUMP_EVENT:
+				if(eventParam == SUCCESSFUL_PUMP)
+				{
+					overload += 10;
+				}
+				else if(eventParam == FAILED_PUMP)
+				{
+					
+				}
+				break;
+			case SET_FILTER_EVENT:
+				excludes = (eventParam & 0x80000000) != 0;
+				filterType = GasType.getGasTypeByID(eventParam & 0x7fffffff);
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+				break;
 			}
-			else if(eventParam == FAILED_PUMP)
-			{
-				
-			}
-			break;
 		}
+		
 		return true;
 	}
 }
