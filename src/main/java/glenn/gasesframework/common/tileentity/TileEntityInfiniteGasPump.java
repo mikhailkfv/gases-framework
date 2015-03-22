@@ -13,12 +13,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityInfiniteGasPump extends TileEntity
 {
+	public static final int PUMP_FREQUENCY = 20;
+	
 	private int pumpTime;
 	private GasType[] types = new GasType[6];
 	
 	public TileEntityInfiniteGasPump()
 	{
-		pumpTime = 25;
+		pumpTime = PUMP_FREQUENCY;
 		for(int i = 0; i < types.length; i++)
 		{
 			types[i] = GasesFrameworkAPI.gasTypeAir;
@@ -40,32 +42,40 @@ public class TileEntityInfiniteGasPump extends TileEntity
 		types[ordinal] = newType;
 	}
 	
+	public boolean isActive()
+	{
+		return !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+	}
+	
 	@Override
 	public void updateEntity()
 	{
 		if(!worldObj.isRemote && pumpTime-- <= 0)
 		{
-			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+			if(isActive())
 			{
-				GasType type = getType(side);
-
-				int x = xCoord + side.offsetX;
-				int y = yCoord + side.offsetY;
-				int z = zCoord + side.offsetZ;
-				Block block = worldObj.getBlock(x, y, z);
-				
-				if(block instanceof IGasReceptor)
+				for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 				{
-					IGasReceptor receptor = (IGasReceptor)block;
-					receptor.receiveGas(worldObj, x, y, z, side.getOpposite(), type);
-				}
-				else
-				{
-					GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, x, y, z, type);
+					GasType type = getType(side);
+	
+					int x = xCoord + side.offsetX;
+					int y = yCoord + side.offsetY;
+					int z = zCoord + side.offsetZ;
+					Block block = worldObj.getBlock(x, y, z);
+					
+					if(block instanceof IGasReceptor)
+					{
+						IGasReceptor receptor = (IGasReceptor)block;
+						receptor.receiveGas(worldObj, x, y, z, side.getOpposite(), type);
+					}
+					else
+					{
+						GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, x, y, z, type);
+					}
 				}
 			}
 			
-			pumpTime = 25;
+			pumpTime = PUMP_FREQUENCY;
 		}
 	}
 	

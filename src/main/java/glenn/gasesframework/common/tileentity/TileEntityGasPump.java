@@ -22,6 +22,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityGasPump extends TileEntity
 {
+	public static final int PUMP_FREQUENCY = 20;
+	
 	public static final int PUMP_EVENT = 0;
 	public static final int SET_FILTER_EVENT = 1;
 	public static final int FAILED_PUMP = 0;
@@ -34,7 +36,7 @@ public class TileEntityGasPump extends TileEntity
 	
 	public TileEntityGasPump()
 	{
-		pumpTime = 25;
+		pumpTime = PUMP_FREQUENCY;
 		excludes = false;
 	}
 
@@ -228,18 +230,23 @@ public class TileEntityGasPump extends TileEntity
 			worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), PUMP_EVENT, FAILED_PUMP);
 		}
     }
+	
+	public boolean isActive()
+	{
+		return !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+	}
 
 	@Override
 	public void updateEntity()
     {
 		if(!worldObj.isRemote && pumpTime-- <= 0)
 		{
-			if(!worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord))
+			if(isActive())
 			{
 				tick();
 			}
 			
-			pumpTime = 25;
+			pumpTime = PUMP_FREQUENCY;
 		}
     }
 	

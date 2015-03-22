@@ -31,14 +31,15 @@ public class BlockInfiniteGasDrain extends Block implements ITileEntityProvider,
 	}
 
 	@Override
-	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
+	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		return true;
+		TileEntityInfiniteGasDrain tileEntity = (TileEntityInfiniteGasDrain)world.getTileEntity(x, y, z);
+		return tileEntity.isActive();
 	}
 
 	@Override
-	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
+	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		return true;
+		return canReceiveGas(world, x, y, z, side, gasType);
 	}
 }

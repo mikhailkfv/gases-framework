@@ -38,26 +38,34 @@ public class TileEntityInfiniteGasDrain extends TileEntity
     	readFromNBT(packet.func_148857_g());
     }
 	
+	public boolean isActive()
+	{
+		return !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
+	}
+	
 	@Override
 	public void updateEntity()
     {
-		for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+		if(!worldObj.isRemote && isActive())
 		{
-			int x = xCoord + side.offsetX;
-			int y = yCoord + side.offsetY;
-			int z = zCoord + side.offsetZ;
-			
-			if(GasesFrameworkAPI.getGasType(worldObj, x, y, z) != null)
+			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 			{
-				worldObj.setBlockToAir(x, y, z);
-			}
-			else
-			{
-				Block block = worldObj.getBlock(x, y, z);
+				int x = xCoord + side.offsetX;
+				int y = yCoord + side.offsetY;
+				int z = zCoord + side.offsetZ;
 				
-				if(block instanceof IGasSource)
+				if(GasesFrameworkAPI.getGasType(worldObj, x, y, z) != null)
 				{
-					((IGasSource)block).takeGasTypeFromSide(worldObj, x, y, z, side.getOpposite());
+					worldObj.setBlockToAir(x, y, z);
+				}
+				else
+				{
+					Block block = worldObj.getBlock(x, y, z);
+					
+					if(block instanceof IGasSource)
+					{
+						((IGasSource)block).takeGasTypeFromSide(worldObj, x, y, z, side.getOpposite());
+					}
 				}
 			}
 		}
