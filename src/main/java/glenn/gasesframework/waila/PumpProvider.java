@@ -33,11 +33,6 @@ public class PumpProvider implements IWailaDataProvider
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
 		TileEntityGasPump pump = (TileEntityGasPump)accessor.getTileEntity();
-		if (pump.containedType != null)
-		{
-			String containedGasName = StatCollector.translateToLocal(pump.containedType.getUnlocalizedName() + ".name");
-			currenttip.add(StatCollector.translateToLocalFormatted("tile.gf_gasPump.waila.body.content", containedGasName));
-		}
 		if (pump.filterType == null)
 		{
 			currenttip.add(StatCollector.translateToLocal("tile.gf_gasPump.waila.body.filter.none"));
