@@ -119,18 +119,19 @@ public class ContainerGasFurnace extends Container
      * Called when a player shift-clicks on a slot. You must override this or you will crash when someone does that.
      */
     @Override
-    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2)
+    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int slotIndex)
     {
         ItemStack itemstack = null;
-        Slot slot = (Slot)this.inventorySlots.get(par2);
+        Slot slot = (Slot)this.inventorySlots.get(slotIndex);
 
         if (slot != null && slot.getHasStack())
         {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (par2 == 2)
+            if (slotIndex == 1)
             {
+            	//Taking from the furnace output slot
                 if (!this.mergeItemStack(itemstack1, 2, 38, true))
                 {
                     return null;
@@ -138,24 +139,28 @@ public class ContainerGasFurnace extends Container
 
                 slot.onSlotChange(itemstack1, itemstack);
             }
-            else if (par2 != 1 && par2 != 0)
+            else if (slotIndex > 2)
             {
+            	//Taking from an item somewhere in the player's inventory to be placed somewhere in the furnace
                 if (TileEntityGasFurnace.getSpecialFurnaceRecipe(itemstack1) != null || FurnaceRecipes.smelting().getSmeltingResult(itemstack1) != null)
                 {
+                	//This is smeltable
                     if (!this.mergeItemStack(itemstack1, 0, 1, false))
                     {
                         return null;
                     }
                 }
-                else if (par2 >= 3 && par2 < 30)
+                else if (slotIndex >= 2 && slotIndex < 29)
                 {
+                	//This is from the player's main inventory
                     if (!this.mergeItemStack(itemstack1, 29, 38, false))
                     {
                         return null;
                     }
                 }
-                else if (par2 >= 30 && par2 < 39 && !this.mergeItemStack(itemstack1, 2, 29, false))
+                else if (slotIndex >= 29 && slotIndex < 38 && !this.mergeItemStack(itemstack1, 2, 29, false))
                 {
+                	//This is from the player's action bar
                     return null;
                 }
             }
