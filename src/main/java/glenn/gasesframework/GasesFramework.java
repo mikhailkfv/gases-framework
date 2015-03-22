@@ -15,7 +15,7 @@ import glenn.gasesframework.common.block.BlockGasFurnace;
 import glenn.gasesframework.common.block.BlockGasPipe;
 import glenn.gasesframework.common.block.BlockGasPump;
 import glenn.gasesframework.common.block.BlockGasTank;
-import glenn.gasesframework.common.block.BlockInfiniteGas;
+import glenn.gasesframework.common.block.BlockInfiniteGasPump;
 import glenn.gasesframework.common.block.BlockLantern;
 import glenn.gasesframework.common.item.ItemGasBottle;
 import glenn.gasesframework.common.item.ItemGasPipe;
@@ -24,7 +24,7 @@ import glenn.gasesframework.common.reaction.ReactionIgnition;
 import glenn.gasesframework.common.tileentity.TileEntityGasCollector;
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace;
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace.SpecialFurnaceRecipe;
-import glenn.gasesframework.common.tileentity.TileEntityInfiniteGas;
+import glenn.gasesframework.common.tileentity.TileEntityInfiniteGasPump;
 import glenn.gasesframework.common.tileentity.TileEntityPump;
 import glenn.gasesframework.common.tileentity.TileEntityTank;
 import glenn.gasesframework.common.worldgen.WorldGeneratorGasesFramework;
@@ -101,13 +101,12 @@ public class GasesFramework implements IGasesFramework
 	public static Block gasCollector;
 	public static Block gasFurnaceIdle;
 	public static Block gasFurnaceActive;
-	public static Block infGasBlock;
+	public static Block infiniteGasPump;
 	
 	private void initBlocksAndItems()
 	{
 		GameRegistry.registerItem(GasesFrameworkAPI.gasBottle = (new ItemGasBottle()).setUnlocalizedName("gf_gasBottle").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:gas_bottle"), "gasBottle");
 
-		GameRegistry.registerBlock(infGasBlock = new BlockInfiniteGas().setBlockName("gf_infGasBlock").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:infGasBlock"), "infGasBlock");
 		
 		GameRegistry.registerItem(GasesFrameworkAPI.gasSamplerIncluder = (new ItemGasSampler(false)).setUnlocalizedName("gf_gasSamplerIncluder").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:sampler"), "gasSamplerIncluder");
 		GameRegistry.registerItem(GasesFrameworkAPI.gasSamplerExcluder = (new ItemGasSampler(true)).setUnlocalizedName("gf_gasSamplerExcluder").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:sampler"), "gasSamplerExcluder");
@@ -117,6 +116,7 @@ public class GasesFramework implements IGasesFramework
 		GameRegistry.registerBlock(gasCollector = new BlockGasCollector().setHardness(2.5F).setStepSound(Block.soundTypeStone).setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockName("gf_gasCollector").setBlockTextureName("gasesframework:collector"), "gasCollector");
 		GameRegistry.registerBlock(gasFurnaceIdle = new BlockGasFurnace(false).setHardness(3.5F).setStepSound(Block.soundTypeStone).setBlockName("gf_gasFurnace").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:gas_furnace"), "gasFurnaceIdle");
 		GameRegistry.registerBlock(gasFurnaceActive = new BlockGasFurnace(true).setHardness(3.5F).setStepSound(Block.soundTypeStone).setLightLevel(0.25F).setBlockName("gf_gasFurnaceWarm").setBlockTextureName("gasesframework:gas_furnace"), "gasFurnaceActive");
+		GameRegistry.registerBlock(infiniteGasPump = new BlockInfiniteGasPump().setBlockName("gf_infiniteGasPump").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:pump_infinite"), "infiniteGasPump");
 		
 		GasesFrameworkAPI.registerLanternType(GasesFrameworkAPI.lanternTypeEmpty, GasesFrameworkAPI.creativeTab);
 		for(int i = 0; i < GasesFrameworkAPI.lanternTypesGas.length; i++)
@@ -218,7 +218,7 @@ public class GasesFramework implements IGasesFramework
 		}
 		
 		GameRegistry.registerTileEntity(TileEntityPump.class, "gasPump");
-		GameRegistry.registerTileEntity(TileEntityInfiniteGas.class, "infiniteGas");
+		GameRegistry.registerTileEntity(TileEntityInfiniteGasPump.class, "infiniteGas");
 		GameRegistry.registerTileEntity(TileEntityGasCollector.class, "gasCollector");
 		GameRegistry.registerTileEntity(TileEntityTank.class, "gasTank");
 		GameRegistry.registerTileEntity(TileEntityGasFurnace.class, "gasPoweredFurnace");

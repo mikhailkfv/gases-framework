@@ -5,6 +5,7 @@ import glenn.gasesframework.client.render.RenderBlockGas;
 import glenn.gasesframework.client.render.RenderBlockGasPipe;
 import glenn.gasesframework.client.render.RenderBlockGasPump;
 import glenn.gasesframework.client.render.RenderBlockGasTank;
+import glenn.gasesframework.client.render.RenderBlockInfiniteGasPump;
 import glenn.gasesframework.client.render.RenderBlockLantern;
 import glenn.gasesframework.client.render.TileEntityTankRenderer;
 import glenn.gasesframework.common.CommonProxy;
@@ -26,6 +27,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerBlockHandler(RenderBlockGasPipe.RENDER_ID, new RenderBlockGasPipe());
 		RenderingRegistry.registerBlockHandler(RenderBlockGasPump.RENDER_ID, new RenderBlockGasPump());
 		RenderingRegistry.registerBlockHandler(RenderBlockGasTank.RENDER_ID, new RenderBlockGasTank());
+		RenderingRegistry.registerBlockHandler(RenderBlockInfiniteGasPump.RENDER_ID, new RenderBlockInfiniteGasPump());
 	}
 	
 	@Override
