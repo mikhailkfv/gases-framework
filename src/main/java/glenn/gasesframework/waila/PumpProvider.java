@@ -1,7 +1,7 @@
 package glenn.gasesframework.waila;
 
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.common.tileentity.TileEntityPump;
+import glenn.gasesframework.common.tileentity.TileEntityGasPump;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class PumpProvider implements IWailaDataProvider
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
-		TileEntityPump pump = (TileEntityPump)accessor.getTileEntity();
+		TileEntityGasPump pump = (TileEntityGasPump)accessor.getTileEntity();
 		if (pump.containedType != null)
 		{
 			String containedGasName = StatCollector.translateToLocal(pump.containedType.getUnlocalizedName() + ".name");

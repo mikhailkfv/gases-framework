@@ -16,7 +16,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityGasCollector extends TileEntityPump
+public class TileEntityGasCollector extends TileEntityGasPump
 {
 	private GasType pendingGasType;
 	private int pendingGasAmount;

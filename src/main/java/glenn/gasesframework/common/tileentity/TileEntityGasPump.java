@@ -20,7 +20,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityPump extends TileEntity
+public class TileEntityGasPump extends TileEntity
 {
 	public static final int PUMP_EVENT = 0;
 	public static final int SET_FILTER_EVENT = 1;
@@ -33,7 +33,7 @@ public class TileEntityPump extends TileEntity
 	public GasType containedType;
 	public GasType filterType;
 	
-	public TileEntityPump()
+	public TileEntityGasPump()
 	{
 		pumpTime = 25;
 		overload = 0;

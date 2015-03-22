@@ -7,7 +7,7 @@ import glenn.gasesframework.client.render.RenderBlockGasTank;
 import glenn.gasesframework.client.render.RenderBlockLantern;
 import glenn.gasesframework.client.render.TileEntityTankRenderer;
 import glenn.gasesframework.common.CommonProxy;
-import glenn.gasesframework.common.tileentity.TileEntityTank;
+import glenn.gasesframework.common.tileentity.TileEntityGasTank;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;

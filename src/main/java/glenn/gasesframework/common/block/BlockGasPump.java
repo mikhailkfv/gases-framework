@@ -6,7 +6,7 @@ import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.client.render.RenderBlockGasPump;
-import glenn.gasesframework.common.tileentity.TileEntityPump;
+import glenn.gasesframework.common.tileentity.TileEntityGasPump;
 
 import java.util.Random;
 
@@ -137,7 +137,7 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
 	{
 		if(canReceiveGas(world, x, y, z, side, gasType))
 		{
-			TileEntityPump tileEntity = (TileEntityPump)world.getTileEntity(x, y, z);
+			TileEntityGasPump tileEntity = (TileEntityGasPump)world.getTileEntity(x, y, z);
 			
 			tileEntity.containedType = gasType;
 			tileEntity.pumpTime = 1;
@@ -154,7 +154,7 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
 	{
 		if(ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)) != side.getOpposite())
 		{
-			TileEntityPump tileEntity = (TileEntityPump)world.getTileEntity(x, y, z);
+			TileEntityGasPump tileEntity = (TileEntityGasPump)world.getTileEntity(x, y, z);
 			
 			return tileEntity != null && tileEntity.acceptsType(gasType) && tileEntity.containedType == null;
 		}
@@ -173,13 +173,13 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{
-	   return new TileEntityPump();
+	   return new TileEntityGasPump();
 	}
 
 	@Override
 	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes, ForgeDirection side)
 	{
-		TileEntityPump tileEntity = (TileEntityPump)world.getTileEntity(x, y, z);
+		TileEntityGasPump tileEntity = (TileEntityGasPump)world.getTileEntity(x, y, z);
 		
 		if(!world.isRemote && tileEntity != null)
 		{
@@ -193,7 +193,7 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
     @Override
     public boolean onBlockEventReceived(World world, int x, int y, int z, int eventID, int eventParam)
     {
-    	TileEntityPump tileEntity = (TileEntityPump)world.getTileEntity(x, y, z);
+    	TileEntityGasPump tileEntity = (TileEntityGasPump)world.getTileEntity(x, y, z);
     	if(tileEntity == null) return false;
     	return tileEntity.blockEvent(eventID, eventParam);
     }

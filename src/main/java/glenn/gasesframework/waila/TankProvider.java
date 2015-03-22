@@ -1,7 +1,7 @@
 package glenn.gasesframework.waila;
 
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.common.tileentity.TileEntityTank;
+import glenn.gasesframework.common.tileentity.TileEntityGasTank;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class TankProvider implements IWailaDataProvider
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
-		TileEntityTank tank = (TileEntityTank)accessor.getTileEntity();
+		TileEntityGasTank tank = (TileEntityGasTank)accessor.getTileEntity();
 		if (tank.containedType == null)
 		{
 			currenttip.add(StatCollector.translateToLocal("tile.gf_gasTank.waila.body.empty"));

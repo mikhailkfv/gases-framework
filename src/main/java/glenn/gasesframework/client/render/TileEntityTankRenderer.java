@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.common.tileentity.TileEntityTank;
+import glenn.gasesframework.common.tileentity.TileEntityGasTank;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -22,12 +22,12 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float)d0, (float)d1, (float)d2);
 		
-		renderTankAt((TileEntityTank)tileEntity, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
+		renderTankAt((TileEntityGasTank)tileEntity, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 		
 		GL11.glPopMatrix();
 	}
 	
-	public void renderTankAt(TileEntityTank tileEntity, int i, int j, int k)
+	public void renderTankAt(TileEntityGasTank tileEntity, int i, int j, int k)
 	{
 		double gasHeight = (double)tileEntity.amount / (double)tileEntity.getGasCap();
 		

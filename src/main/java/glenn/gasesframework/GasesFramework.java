@@ -25,8 +25,8 @@ import glenn.gasesframework.common.tileentity.TileEntityGasCollector;
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace;
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace.SpecialFurnaceRecipe;
 import glenn.gasesframework.common.tileentity.TileEntityInfiniteGasPump;
-import glenn.gasesframework.common.tileentity.TileEntityPump;
-import glenn.gasesframework.common.tileentity.TileEntityTank;
+import glenn.gasesframework.common.tileentity.TileEntityGasPump;
+import glenn.gasesframework.common.tileentity.TileEntityGasTank;
 import glenn.gasesframework.common.worldgen.WorldGeneratorGasesFramework;
 import glenn.gasesframework.waila.GasesFrameworkWaila;
 import glenn.moddingutils.Configurations.ItemRepresentation;
@@ -217,10 +217,10 @@ public class GasesFramework implements IGasesFramework
 			}
 		}
 		
-		GameRegistry.registerTileEntity(TileEntityPump.class, "gasPump");
+		GameRegistry.registerTileEntity(TileEntityGasPump.class, "gasPump");
 		GameRegistry.registerTileEntity(TileEntityInfiniteGasPump.class, "infiniteGas");
 		GameRegistry.registerTileEntity(TileEntityGasCollector.class, "gasCollector");
-		GameRegistry.registerTileEntity(TileEntityTank.class, "gasTank");
+		GameRegistry.registerTileEntity(TileEntityGasTank.class, "gasTank");
 		GameRegistry.registerTileEntity(TileEntityGasFurnace.class, "gasPoweredFurnace");
 		
 		GasesFrameworkAPI.registerReaction(new ReactionIgnition());

@@ -10,7 +10,7 @@ import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.client.render.RenderBlockGasTank;
 import glenn.gasesframework.common.item.ItemGasBottle;
-import glenn.gasesframework.common.tileentity.TileEntityTank;
+import glenn.gasesframework.common.tileentity.TileEntityGasTank;
 import glenn.moddingutils.IVec;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -66,7 +66,7 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
 	@Override
 	public GasType getGasTypeFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		TileEntityTank tileEntity = (TileEntityTank)world.getTileEntity(x, y, z);
+		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
 		
 		return tileEntity.containedType != null ? tileEntity.containedType : GasesFrameworkAPI.gasTypeAir;
 	}
@@ -74,7 +74,7 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
 	@Override
 	public GasType takeGasTypeFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		TileEntityTank tileEntity = (TileEntityTank)world.getTileEntity(x, y, z);
+		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
 		GasType gasType = tileEntity.containedType;
 		tileEntity.decrement();
 		
@@ -84,21 +84,21 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
 	@Override
 	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		TileEntityTank tileEntity = (TileEntityTank)world.getTileEntity(x, y, z);
+		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
 		return tileEntity.canIncrement(gasType);
 	}
 	
 	@Override
 	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		TileEntityTank tileEntity = (TileEntityTank)world.getTileEntity(x, y, z);
+		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
 		return tileEntity.increment(gasType);
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{
-	   return new TileEntityTank();
+	   return new TileEntityGasTank();
 	}
 
     @Override
@@ -120,7 +120,7 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
 	@Override
 	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes, ForgeDirection side)
 	{
-		TileEntityTank tileEntity = (TileEntityTank)world.getTileEntity(x, y, z);
+		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
 		return tileEntity.containedType;
 	}
 	
@@ -130,7 +130,7 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
     {
-		TileEntityTank tileEntity = (TileEntityTank)world.getTileEntity(x, y, z);
+		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
 		GasType containedType = tileEntity.containedType;
     	ItemStack inUse = entityPlayer.getCurrentEquippedItem();
     	boolean consumed = false;
@@ -184,7 +184,7 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
     @Override
     public boolean onBlockEventReceived(World world, int x, int y, int z, int eventID, int eventParam)
     {
-    	TileEntityTank tileEntity = (TileEntityTank)world.getTileEntity(x, y, z);
+    	TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
     	if(tileEntity == null) return false;
     	return tileEntity.blockEvent(eventID, eventParam);
     }
@@ -197,7 +197,7 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
     @Override
 	public void breakBlock(World world, int x, int y, int z, Block oldBlock, int oldBlockMetadata)
 	{
-    	TileEntityTank tileEntity = (TileEntityTank)world.getTileEntity(x, y, z);
+    	TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
     	super.breakBlock(world, x, y, z, oldBlock, oldBlockMetadata);
     	
     	if(tileEntity.containedType != null)

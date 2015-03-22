@@ -13,7 +13,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.common.block.BlockGasPump;
-import glenn.gasesframework.common.tileentity.TileEntityPump;
+import glenn.gasesframework.common.tileentity.TileEntityGasPump;
 
 public class RenderBlockGasPump implements ISimpleBlockRenderingHandler
 {
@@ -222,7 +222,7 @@ public class RenderBlockGasPump implements ISimpleBlockRenderingHandler
 			
 			if(faceDirection == blockDirection)
 			{
-				TileEntityPump tileEntity = (TileEntityPump)blockAccess.getTileEntity(x, y, z);
+				TileEntityGasPump tileEntity = (TileEntityGasPump)blockAccess.getTileEntity(x, y, z);
 				
 				if(tileEntity.filterType != null && tileEntity.filterType != GasesFrameworkAPI.gasTypeAir)
 				{

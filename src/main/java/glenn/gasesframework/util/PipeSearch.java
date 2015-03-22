@@ -6,7 +6,7 @@ import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.common.block.BlockGasPipe;
 import glenn.gasesframework.common.block.BlockGasPump;
-import glenn.gasesframework.common.tileentity.TileEntityPump;
+import glenn.gasesframework.common.tileentity.TileEntityGasPump;
 import glenn.moddingutils.IVec;
 import glenn.moddingutils.KeyPair;
 import glenn.moddingutils.KeyVec;

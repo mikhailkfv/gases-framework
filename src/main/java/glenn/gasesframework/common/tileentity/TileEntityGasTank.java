@@ -15,7 +15,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityTank extends TileEntity
+public class TileEntityGasTank extends TileEntity
 {
 	public static final int SET_AMOUNT = 0;
 	public static final int SET_TYPE = 1;
@@ -28,7 +28,7 @@ public class TileEntityTank extends TileEntity
 	
 	private static Random rand = new Random();
 	
-	public TileEntityTank()
+	public TileEntityGasTank()
 	{
 		amount = 0;
 		
@@ -123,9 +123,9 @@ public class TileEntityTank extends TileEntity
 			if(amount > 0)
 			{
 				TileEntity belowTileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
-				if(belowTileEntity != null && belowTileEntity instanceof TileEntityTank)
+				if(belowTileEntity != null && belowTileEntity instanceof TileEntityGasTank)
 				{
-					TileEntityTank tankEntity = (TileEntityTank)belowTileEntity;
+					TileEntityGasTank tankEntity = (TileEntityGasTank)belowTileEntity;
 					if(!tankEntity.isFull() && tankEntity.increment(containedType)) decrement();
 				}
 			}
@@ -205,7 +205,7 @@ public class TileEntityTank extends TileEntity
 			else
 			{
 				TileEntity aboveTileEntity = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
-				return aboveTileEntity != null && aboveTileEntity instanceof TileEntityTank && ((TileEntityTank)aboveTileEntity).canIncrement(gasType);
+				return aboveTileEntity != null && aboveTileEntity instanceof TileEntityGasTank && ((TileEntityGasTank)aboveTileEntity).canIncrement(gasType);
 			}
 		}
 		else
@@ -239,7 +239,7 @@ public class TileEntityTank extends TileEntity
 				amount = getGasCap();
 				
 				TileEntity aboveTileEntity = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
-				return aboveTileEntity != null && aboveTileEntity instanceof TileEntityTank && ((TileEntityTank)aboveTileEntity).increment(gasType);
+				return aboveTileEntity != null && aboveTileEntity instanceof TileEntityGasTank && ((TileEntityGasTank)aboveTileEntity).increment(gasType);
 			}
 		}
 		else
