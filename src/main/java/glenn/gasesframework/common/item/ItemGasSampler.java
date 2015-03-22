@@ -28,15 +28,6 @@ public class ItemGasSampler extends Item
 	public IIcon overlayIcon;
 	public IIcon emptyOverlayIcon;
 	
-	private final ForgeDirection[] sideToForgeDirection = new ForgeDirection[]{
-		ForgeDirection.DOWN,
-		ForgeDirection.UP,
-		ForgeDirection.EAST,
-		ForgeDirection.WEST,
-		ForgeDirection.NORTH,
-		ForgeDirection.SOUTH
-	};
-	
 	public ItemGasSampler(boolean excludes)
 	{
 		super();
@@ -84,7 +75,7 @@ public class ItemGasSampler extends Item
                 if(ISample.class.isAssignableFrom(block.getClass()))
                 {
                 	ISample sample = (ISample)block;
-                	GasType newType = sample.sampleInteraction(world, i, j, k, getGasType(itemstack), excludes, sideToForgeDirection[movingobjectposition.sideHit]);
+                	GasType newType = sample.sampleInteraction(world, i, j, k, getGasType(itemstack), excludes, ForgeDirection.getOrientation(movingobjectposition.sideHit));
                 	
                 	if(!(newType == null || !newType.isIndustrial))
                 	{
