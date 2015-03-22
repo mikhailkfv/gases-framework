@@ -249,7 +249,7 @@ public class BlockLantern extends Block implements IGasReceptor
 	}
 
 	@Override
-	public boolean connectToPipe()
+	public boolean connectToPipe(IBlockAccess blockaccess, int x, int y, int z, ForgeDirection side)
 	{
 		return false;
 	}

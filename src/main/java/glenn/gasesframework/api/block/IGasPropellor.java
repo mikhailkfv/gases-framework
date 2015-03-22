@@ -9,7 +9,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  * @author Glenn
  *
  */
-public interface IGasPropellor
+public interface IGasPropellor extends IGasInterface
 {
 	/**
 	 * Returns true if the gas propellor can propel gas from this specific side.

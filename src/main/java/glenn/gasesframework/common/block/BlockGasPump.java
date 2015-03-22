@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -213,7 +214,7 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
     }
 
 	@Override
-	public boolean connectToPipe()
+	public boolean connectToPipe(IBlockAccess blockaccess, int x, int y, int z, ForgeDirection side)
 	{
 		return true;
 	}

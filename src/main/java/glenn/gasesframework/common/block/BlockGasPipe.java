@@ -42,16 +42,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockGasPipe extends Block implements IGasReceptor
 {
-	private static final int[] xDirection = new int[]{
-		0, 0, 1, -1, 0, 0
-	};
-	private static final int[] yDirection = new int[]{
-		1, -1, 0, 0, 0, 0
-	};
-	private static final int[] zDirection = new int[]{
-		0, 0, 0, 0, 1, -1
-	};
-	
 	/**
 	 * A sub-type for pipes, defined by their metadata
 	 * @author Glenn
@@ -169,25 +159,33 @@ public class BlockGasPipe extends Block implements IGasReceptor
 		final boolean[] renderConnections = new boolean[6];
         for(int i = 0; i < 6; i++)
 		{
-			int x1 = x + xDirection[i];
-			int y1 = y + yDirection[i];
-			int z1 = z + zDirection[i];
+        	ForgeDirection side = ForgeDirection.VALID_DIRECTIONS[i];
+			int x1 = x + side.offsetX;
+			int y1 = y + side.offsetY;
+			int z1 = z + side.offsetZ;
 			
 			Block directionBlock = blockAccess.getBlock(x1, y1, z1);
-			sidePipe[i] = IGasInterface.class.isAssignableFrom(directionBlock.getClass()) ? ((IGasInterface)directionBlock).connectToPipe() : false;
+			if(directionBlock instanceof IGasInterface)
+			{
+				sidePipe[i] = ((IGasInterface)directionBlock).connectToPipe(blockAccess, x1, y1, z1, side.getOpposite());
+			}
+			else
+			{
+				sidePipe[i] = false;
+			}
 		}
         
         boolean collectionAll = sidePipe[0] || sidePipe[1] || sidePipe[2] || sidePipe[3] || sidePipe[4] || sidePipe[5];
 		boolean collectionY = sidePipe[2] || sidePipe[3] || sidePipe[4] || sidePipe[5];
-		boolean collectionX = sidePipe[0] || sidePipe[1] || sidePipe[4] || sidePipe[5];
-		boolean collectionZ = sidePipe[0] || sidePipe[1] || sidePipe[2] || sidePipe[3];
+		boolean collectionX = sidePipe[0] || sidePipe[1] || sidePipe[2] || sidePipe[3];
+		boolean collectionZ = sidePipe[0] || sidePipe[1] || sidePipe[4] || sidePipe[5];
         
     	renderConnections[0] = (sidePipe[0] | !collectionY) & collectionAll;
     	renderConnections[1] = (sidePipe[1] | !collectionY) & collectionAll;
-    	renderConnections[2] = (sidePipe[2] | !collectionX) & collectionAll;
-    	renderConnections[3] = (sidePipe[3] | !collectionX) & collectionAll;
-    	renderConnections[4] = (sidePipe[4] | !collectionZ) & collectionAll;
-    	renderConnections[5] = (sidePipe[5] | !collectionZ) & collectionAll;
+    	renderConnections[2] = (sidePipe[2] | !collectionZ) & collectionAll;
+    	renderConnections[3] = (sidePipe[3] | !collectionZ) & collectionAll;
+    	renderConnections[4] = (sidePipe[4] | !collectionX) & collectionAll;
+    	renderConnections[5] = (sidePipe[5] | !collectionX) & collectionAll;
     	
     	return renderConnections;
 	}
@@ -199,12 +197,12 @@ public class BlockGasPipe extends Block implements IGasReceptor
     	float f2 = 10.0F / 16.0F;
 		
 		return new float[]{
-				renderConnections[0] ? 1.0F : f2,
-		    	renderConnections[1] ? 0.0F : f1,
-		    	renderConnections[2] ? 1.0F : f2,
-		    	renderConnections[3] ? 0.0F : f1,
-		    	renderConnections[4] ? 1.0F : f2,
-		    	renderConnections[5] ? 0.0F : f1
+				renderConnections[0] ? 0.0F : f1,
+		    	renderConnections[1] ? 1.0F : f2,
+		    	renderConnections[2] ? 0.0F : f1,
+		    	renderConnections[3] ? 1.0F : f2,
+		    	renderConnections[4] ? 0.0F : f1,
+		    	renderConnections[5] ? 1.0F : f2
 			};
 	}
 	
@@ -219,13 +217,13 @@ public class BlockGasPipe extends Block implements IGasReceptor
         float f1 = 6.0F / 16.0F;
     	float f2 = 10.0F / 16.0F;
     	
-    	this.setBlockBounds(f1, f1, bounds[5], f2, f2, bounds[4]);
+    	this.setBlockBounds(f1, f1, bounds[2], f2, f2, bounds[3]);
         super.addCollisionBoxesToList(world, x, y, z, axisAlignedBB, list, entity);
 
-    	this.setBlockBounds(f1, bounds[1], f1, f2, bounds[0], f2);
+    	this.setBlockBounds(f1, bounds[0], f1, f2, bounds[1], f2);
         super.addCollisionBoxesToList(world, x, y, z, axisAlignedBB, list, entity);
 
-    	this.setBlockBounds(bounds[3], f1, f1, bounds[2], f2, f2);
+    	this.setBlockBounds(bounds[4], f1, f1, bounds[5], f2, f2);
         super.addCollisionBoxesToList(world, x, y, z, axisAlignedBB, list, entity);
         
         this.setBlockBoundsBasedOnState(world, x, y, z);
@@ -239,7 +237,7 @@ public class BlockGasPipe extends Block implements IGasReceptor
     {
     	float[] bounds = getBounds(blockAccess, x, y, z);
     	
-    	this.setBlockBounds(bounds[3], bounds[1], bounds[5], bounds[2], bounds[0], bounds[4]);
+    	this.setBlockBounds(bounds[4], bounds[0], bounds[2], bounds[5], bounds[1], bounds[3]);
     }
 
     @Override
@@ -354,7 +352,7 @@ public class BlockGasPipe extends Block implements IGasReceptor
 	}
 
 	@Override
-	public boolean connectToPipe()
+	public boolean connectToPipe(IBlockAccess blockaccess, int x, int y, int z, ForgeDirection side)
 	{
 		return true;
 	}

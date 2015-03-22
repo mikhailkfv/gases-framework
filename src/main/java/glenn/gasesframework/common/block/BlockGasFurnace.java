@@ -403,7 +403,7 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 	}
 
 	@Override
-	public boolean connectToPipe()
+	public boolean connectToPipe(IBlockAccess blockaccess, int x, int y, int z, ForgeDirection side)
 	{
 		return true;
 	}

@@ -12,22 +12,13 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 {
 	public static final int RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
-	
-	private static final int[] xDirection = new int[]{
-		0, 0, 1, -1, 0, 0
-	};
-	private static final int[] yDirection = new int[]{
-		-1, 1, 0, 0, 0, 0
-	};
-	private static final int[] zDirection = new int[]{
-		0, 0, 0, 0, 1, -1
-	};
 	
 	@Override
 	public void renderInventoryBlock(Block bblock, int metadata, int modelID,RenderBlocks renderer)
@@ -192,14 +183,15 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 		
 		for(int i = 0; i < 6; i++)
 		{
-			int x1 = x + xDirection[i];
-			int y1 = y + yDirection[i];
-			int z1 = z + zDirection[i];
+			ForgeDirection side = ForgeDirection.VALID_DIRECTIONS[i];
+			int x1 = x + side.offsetX;
+			int y1 = y + side.offsetY;
+			int z1 = z + side.offsetZ;
 			
 			Block directionBlock = blockAccess.getBlock(x1, y1, z1);
 			if(directionBlock != Blocks.air)
 			{
-				sidePipe[i] = IGasInterface.class.isAssignableFrom(directionBlock.getClass()) ? ((IGasInterface)directionBlock).connectToPipe() : false;
+				sidePipe[i] = IGasInterface.class.isAssignableFrom(directionBlock.getClass()) ? ((IGasInterface)directionBlock).connectToPipe(blockAccess, x1, y1, z1, side.getOpposite()) : false;
 				sideOpaque[i] = directionBlock.isOpaqueCube() & !sidePipe[i];
 			}
 		}
@@ -211,15 +203,15 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 		
 		boolean collectionAll = sidePipe[0] || sidePipe[1] || sidePipe[2] || sidePipe[3] || sidePipe[4] || sidePipe[5];
 		boolean collectionY = sidePipe[2] || sidePipe[3] || sidePipe[4] || sidePipe[5];
-		boolean collectionX = sidePipe[0] || sidePipe[1] || sidePipe[4] || sidePipe[5];
-		boolean collectionZ = sidePipe[0] || sidePipe[1] || sidePipe[2] || sidePipe[3];
+		boolean collectionX = sidePipe[0] || sidePipe[1] || sidePipe[2] || sidePipe[3];
+		boolean collectionZ = sidePipe[0] || sidePipe[1] || sidePipe[4] || sidePipe[5];
 		
-		double minX = (sidePipe[3] | !collectionX) & collectionAll ? 0.0F : d1;
-		double maxX = (sidePipe[2] | !collectionX) & collectionAll ? 1.0F : d2;
+		double minX = (sidePipe[4] | !collectionX) & collectionAll ? 0.0F : d1;
+		double maxX = (sidePipe[5] | !collectionX) & collectionAll ? 1.0F : d2;
 		double minY = (sidePipe[0] | !collectionY) & collectionAll ? 0.0F : d1;
 		double maxY = (sidePipe[1] | !collectionY) & collectionAll ? 1.0F : d2;
-		double minZ = (sidePipe[5] | !collectionZ) & collectionAll ? 0.0F : d1;
-		double maxZ = (sidePipe[4] | !collectionZ) & collectionAll ? 1.0F : d2;
+		double minZ = (sidePipe[2] | !collectionZ) & collectionAll ? 0.0F : d1;
+		double maxZ = (sidePipe[3] | !collectionZ) & collectionAll ? 1.0F : d2;
 
     	tessellator.setBrightness(brightness);
     	tessellator.addTranslation((float)x, (float)y, (float)z);
@@ -477,12 +469,12 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
     		{
     			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.connectorsIcon;
             	
-            	minX = sideOpaque[3] ? 0.0F : d1;
-        		maxX = sideOpaque[2] ? 1.0F : d2;
+            	minX = sideOpaque[4] ? 0.0F : d1;
+        		maxX = sideOpaque[5] ? 1.0F : d2;
         		minY = sideOpaque[0] ? 0.0F : d1;
         		maxY = sideOpaque[1] ? 1.0F : d2;
-        		minZ = sideOpaque[5] ? 0.0F : d1;
-        		maxZ = sideOpaque[4] ? 1.0F : d2;
+        		minZ = sideOpaque[2] ? 0.0F : d1;
+        		maxZ = sideOpaque[3] ? 1.0F : d2;
         		
         		uvMinU = icon.getInterpolatedU(minX * 16.0D);
         		uvMaxU = icon.getInterpolatedU(maxX * 16.0D);
@@ -491,7 +483,6 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
         		
         		if(sidePipe[0] | !collectionY)
             	{
-            		
             		tessellator.setColorOpaque_F(0.6F, 0.6F, 0.6F);
             		tessellator.setNormal(0.0F, -1.0F, 0.0F);
             		tessellator.addVertexWithUV(minX, d3, minZ, uvMinU, uvMinV);
@@ -506,7 +497,6 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
             		tessellator.addVertexWithUV(maxX, d3, minZ, uvMaxU, uvMinV);
             		tessellator.addVertexWithUV(minX, d3, minZ, uvMinU, uvMinV);
             	}
-        		
         		if(sidePipe[1] | !collectionY)
             	{
             		tessellator.setColorOpaque_F(0.6F, 0.6F, 0.6F);
@@ -524,49 +514,27 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
             		tessellator.addVertexWithUV(minX, d4, minZ, uvMinU, uvMinV);
             	}
         		
-        		uvMinU = icon.getInterpolatedU(minY * 16.0D);
-        		uvMaxU = icon.getInterpolatedU(maxY * 16.0D);
-        		uvMinV = icon.getInterpolatedV(minZ * 16.0D);
-        		uvMaxV = icon.getInterpolatedV(maxZ * 16.0D);
-        		
-        		if(sidePipe[2] | !collectionX)
-            	{
-            		tessellator.setColorOpaque_F(0.8F, 0.8F, 0.8F);
-            		tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-            		tessellator.addVertexWithUV(d4, minY, maxZ, uvMinU, uvMaxV);
-            		tessellator.addVertexWithUV(d4, maxY, maxZ, uvMaxU, uvMaxV);
-            		tessellator.addVertexWithUV(d4, maxY, minZ, uvMaxU, uvMinV);
-            		tessellator.addVertexWithUV(d4, minY, minZ, uvMinU, uvMinV);
-
-            		tessellator.setNormal(1.0F, 0.0F, 0.0F);
-            		tessellator.addVertexWithUV(d4, minY, minZ, uvMinU, uvMinV);
-            		tessellator.addVertexWithUV(d4, maxY, minZ, uvMaxU, uvMinV);
-            		tessellator.addVertexWithUV(d4, maxY, maxZ, uvMaxU, uvMaxV);
-            		tessellator.addVertexWithUV(d4, minY, maxZ, uvMinU, uvMaxV);
-            	}
-
-            	if(sidePipe[3] | !collectionX)
-            	{
-            		tessellator.setColorOpaque_F(0.8F, 0.8F, 0.8F);
-            		tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-            		tessellator.addVertexWithUV(d3, minY, maxZ, uvMinU, uvMaxV);
-            		tessellator.addVertexWithUV(d3, maxY, maxZ, uvMaxU, uvMaxV);
-            		tessellator.addVertexWithUV(d3, maxY, minZ, uvMaxU, uvMinV);
-            		tessellator.addVertexWithUV(d3, minY, minZ, uvMinU, uvMinV);
-
-            		tessellator.setNormal(1.0F, 0.0F, 0.0F);
-            		tessellator.addVertexWithUV(d3, minY, minZ, uvMinU, uvMinV);
-            		tessellator.addVertexWithUV(d3, maxY, minZ, uvMaxU, uvMinV);
-            		tessellator.addVertexWithUV(d3, maxY, maxZ, uvMaxU, uvMaxV);
-            		tessellator.addVertexWithUV(d3, minY, maxZ, uvMinU, uvMaxV);
-            	}
-        		
         		uvMinU = icon.getInterpolatedU(minX * 16.0D);
         		uvMaxU = icon.getInterpolatedU(maxX * 16.0D);
         		uvMinV = icon.getInterpolatedV(minY * 16.0D);
         		uvMaxV = icon.getInterpolatedV(maxY * 16.0D);
             	
-            	if(sidePipe[4] | !collectionZ)
+            	if(sidePipe[2] | !collectionZ)
+            	{
+            		tessellator.setColorOpaque_F(0.8F, 0.8F, 0.8F);
+            		tessellator.setNormal(0.0F, 0.0F, -1.0F);
+            		tessellator.addVertexWithUV(minX, maxY, d3, uvMinU, uvMaxV);
+            		tessellator.addVertexWithUV(maxX, maxY, d3, uvMaxU, uvMaxV);
+            		tessellator.addVertexWithUV(maxX, minY, d3, uvMaxU, uvMinV);
+            		tessellator.addVertexWithUV(minX, minY, d3, uvMinU, uvMinV);
+
+            		tessellator.setNormal(0.0F, 0.0F, 1.0F);
+            		tessellator.addVertexWithUV(minX, minY, d3, uvMinU, uvMinV);
+            		tessellator.addVertexWithUV(maxX, minY, d3, uvMaxU, uvMinV);
+            		tessellator.addVertexWithUV(maxX, maxY, d3, uvMaxU, uvMaxV);
+            		tessellator.addVertexWithUV(minX, maxY, d3, uvMinU, uvMaxV);
+            	}
+            	if(sidePipe[3] | !collectionZ)
             	{
             		tessellator.setColorOpaque_F(0.8F, 0.8F, 0.8F);
             		tessellator.setNormal(0.0F, 0.0F, -1.0F);
@@ -581,21 +549,41 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
             		tessellator.addVertexWithUV(maxX, maxY, d4, uvMaxU, uvMaxV);
             		tessellator.addVertexWithUV(minX, maxY, d4, uvMinU, uvMaxV);
             	}
-            	
-            	if(sidePipe[5] | !collectionZ)
+        		
+        		uvMinU = icon.getInterpolatedU(minY * 16.0D);
+        		uvMaxU = icon.getInterpolatedU(maxY * 16.0D);
+        		uvMinV = icon.getInterpolatedV(minZ * 16.0D);
+        		uvMaxV = icon.getInterpolatedV(maxZ * 16.0D);
+
+            	if(sidePipe[4] | !collectionX)
             	{
             		tessellator.setColorOpaque_F(0.8F, 0.8F, 0.8F);
-            		tessellator.setNormal(0.0F, 0.0F, -1.0F);
-            		tessellator.addVertexWithUV(minX, maxY, d3, uvMinU, uvMaxV);
-            		tessellator.addVertexWithUV(maxX, maxY, d3, uvMaxU, uvMaxV);
-            		tessellator.addVertexWithUV(maxX, minY, d3, uvMaxU, uvMinV);
-            		tessellator.addVertexWithUV(minX, minY, d3, uvMinU, uvMinV);
+            		tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+            		tessellator.addVertexWithUV(d3, minY, maxZ, uvMinU, uvMaxV);
+            		tessellator.addVertexWithUV(d3, maxY, maxZ, uvMaxU, uvMaxV);
+            		tessellator.addVertexWithUV(d3, maxY, minZ, uvMaxU, uvMinV);
+            		tessellator.addVertexWithUV(d3, minY, minZ, uvMinU, uvMinV);
 
-            		tessellator.setNormal(0.0F, 0.0F, 1.0F);
-            		tessellator.addVertexWithUV(minX, minY, d3, uvMinU, uvMinV);
-            		tessellator.addVertexWithUV(maxX, minY, d3, uvMaxU, uvMinV);
-            		tessellator.addVertexWithUV(maxX, maxY, d3, uvMaxU, uvMaxV);
-            		tessellator.addVertexWithUV(minX, maxY, d3, uvMinU, uvMaxV);
+            		tessellator.setNormal(1.0F, 0.0F, 0.0F);
+            		tessellator.addVertexWithUV(d3, minY, minZ, uvMinU, uvMinV);
+            		tessellator.addVertexWithUV(d3, maxY, minZ, uvMaxU, uvMinV);
+            		tessellator.addVertexWithUV(d3, maxY, maxZ, uvMaxU, uvMaxV);
+            		tessellator.addVertexWithUV(d3, minY, maxZ, uvMinU, uvMaxV);
+            	}
+        		if(sidePipe[5] | !collectionX)
+            	{
+            		tessellator.setColorOpaque_F(0.8F, 0.8F, 0.8F);
+            		tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+            		tessellator.addVertexWithUV(d4, minY, maxZ, uvMinU, uvMaxV);
+            		tessellator.addVertexWithUV(d4, maxY, maxZ, uvMaxU, uvMaxV);
+            		tessellator.addVertexWithUV(d4, maxY, minZ, uvMaxU, uvMinV);
+            		tessellator.addVertexWithUV(d4, minY, minZ, uvMinU, uvMinV);
+
+            		tessellator.setNormal(1.0F, 0.0F, 0.0F);
+            		tessellator.addVertexWithUV(d4, minY, minZ, uvMinU, uvMinV);
+            		tessellator.addVertexWithUV(d4, maxY, minZ, uvMaxU, uvMinV);
+            		tessellator.addVertexWithUV(d4, maxY, maxZ, uvMaxU, uvMaxV);
+            		tessellator.addVertexWithUV(d4, minY, maxZ, uvMinU, uvMaxV);
             	}
     		}
     	}
