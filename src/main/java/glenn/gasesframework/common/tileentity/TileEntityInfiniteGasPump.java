@@ -18,6 +18,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
 	
 	public TileEntityInfiniteGasPump()
 	{
+		pumpTime = 25;
 		for(int i = 0; i < types.length; i++)
 		{
 			types[i] = GasesFrameworkAPI.gasTypeAir;
