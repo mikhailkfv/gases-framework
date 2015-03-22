@@ -18,26 +18,22 @@ public class TileEntityInfiniteGasPump extends TileEntity
 	
 	public TileEntityInfiniteGasPump()
 	{
-		
+		for(int i = 0; i < types.length; i++)
+		{
+			types[i] = GasesFrameworkAPI.gasTypeAir;
+		}
 	}
 	
 	public GasType getType(ForgeDirection side)
 	{
 		GasType type = types[side.ordinal()];
-		if(type == null)
-		{
-			return GasesFrameworkAPI.gasTypeAir;
-		}
-		else
-		{
-			return type;
-		}
+		return type;
 	}
 	
 	public void setType(GasType newType, ForgeDirection side)
 	{
 		int ordinal = side.ordinal();
-		if(newType == types[ordinal]) newType = null;
+		if(newType == types[ordinal]) newType = GasesFrameworkAPI.gasTypeAir;
 		
 		worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), ordinal, newType != null ? newType.gasID : -1);
 		types[ordinal] = newType;
@@ -87,6 +83,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
 		for(int i = 0; i < types.length; i++)
 		{
 			types[i] = GasType.getGasTypeByID(gasIDArray[i]);
+			if(types[i] == null) types[i] = GasesFrameworkAPI.gasTypeAir; 
 		}
 	}
 
@@ -99,7 +96,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
 		for(int i = 0; i < types.length; i++)
 		{
 			GasType type = types[i];
-			gasIDArray[i] = type != null ? type.gasID : 0;
+			gasIDArray[i] = type.gasID;
 		}
 		tagCompound.setIntArray("types", gasIDArray);
 	}
