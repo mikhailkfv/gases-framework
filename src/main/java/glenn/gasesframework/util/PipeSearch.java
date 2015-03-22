@@ -99,7 +99,7 @@ public abstract class PipeSearch
 		{
 			Block directionBlock = world.getBlock(connectionPos.x, connectionPos.y, connectionPos.z);
 			
-			if(IGasPropellor.class.isAssignableFrom(directionBlock.getClass()))
+			if(directionBlock instanceof IGasPropellor)
 			{
 				IGasPropellor gasPropellor = (IGasPropellor)directionBlock;
 				

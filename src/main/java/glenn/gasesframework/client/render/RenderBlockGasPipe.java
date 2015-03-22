@@ -191,7 +191,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 			Block directionBlock = blockAccess.getBlock(x1, y1, z1);
 			if(directionBlock != Blocks.air)
 			{
-				sidePipe[i] = IGasInterface.class.isAssignableFrom(directionBlock.getClass()) ? ((IGasInterface)directionBlock).connectToPipe(blockAccess, x1, y1, z1, side.getOpposite()) : false;
+				sidePipe[i] = directionBlock instanceof IGasInterface ? ((IGasInterface)directionBlock).connectToPipe(blockAccess, x1, y1, z1, side.getOpposite()) : false;
 				sideOpaque[i] = directionBlock.isOpaqueCube() & !sidePipe[i];
 			}
 		}

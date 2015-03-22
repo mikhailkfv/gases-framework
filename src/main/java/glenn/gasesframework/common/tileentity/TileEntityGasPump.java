@@ -150,7 +150,7 @@ public class TileEntityGasPump extends TileEntity
 			
 			Block directionBlock = worldObj.getBlock(x1, y1, z1);
 			
-			if(directionBlock != Blocks.air && IGasSource.class.isAssignableFrom(directionBlock.getClass()))
+			if(directionBlock instanceof IGasSource)
 			{
 				IGasSource gasSource = (IGasSource)directionBlock;
 				if(acceptsType(gasSource.getGasTypeFromSide(worldObj, x1, y1, z1, direction.getOpposite())))
@@ -174,7 +174,7 @@ public class TileEntityGasPump extends TileEntity
     protected boolean pumpToBlock(int x, int y, int z, ForgeDirection direction)
     {
     	Block block = worldObj.getBlock(x, y, z);
-    	if(IGasReceptor.class.isAssignableFrom(block.getClass()))
+    	if(block instanceof IGasReceptor)
 		{
 			return ((IGasReceptor)block).receiveGas(worldObj, x, y, z, direction.getOpposite(), containedType);
 		}

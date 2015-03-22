@@ -66,7 +66,7 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 			for(int i = 0; i < 4; i++)
 			{
 				ItemStack stack = inventory.armorItemInSlot(i);
-				if(stack != null && IGasEffectProtector.class.isAssignableFrom(stack.getItem().getClass()))
+				if(stack != null && stack.getItem() instanceof IGasEffectProtector)
 				{
 					IGasEffectProtector item = (IGasEffectProtector)stack.getItem();
 					
@@ -90,7 +90,7 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 			for(int i = 0; i < 4; i++)
 			{
 				ItemStack stack = inventory.armorItemInSlot(i);
-				if(stack != null && IGasEffectProtector.class.isAssignableFrom(stack.getItem().getClass()))
+				if(stack != null && stack.getItem() instanceof IGasEffectProtector)
 				{
 					IGasEffectProtector item = (IGasEffectProtector)stack.getItem();
 					

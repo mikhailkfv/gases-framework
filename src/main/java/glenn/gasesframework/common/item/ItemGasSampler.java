@@ -72,7 +72,7 @@ public class ItemGasSampler extends Item
                 int k = movingobjectposition.blockZ;
                 Block block = world.getBlock(i, j, k);
                 
-                if(ISample.class.isAssignableFrom(block.getClass()))
+                if(block instanceof ISample)
                 {
                 	ISample sample = (ISample)block;
                 	GasType newType = sample.sampleInteraction(world, i, j, k, getGasType(itemstack), excludes, ForgeDirection.getOrientation(movingobjectposition.sideHit));
