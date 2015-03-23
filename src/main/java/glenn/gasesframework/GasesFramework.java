@@ -673,9 +673,12 @@ public class GasesFramework implements IGasesFramework
 	@Override
 	public void registerGasWorldGenType(GasWorldGenType type, String[] dimensionNames)
 	{
-		for(String dimensionName : dimensionNames)
+		if(type.generationFrequency > 0.0f)
 		{
-			worldGenerator.registerGasWorldGenType(type, dimensionName);
+			for(String dimensionName : dimensionNames)
+			{
+				worldGenerator.registerGasWorldGenType(type, dimensionName);
+			}
 		}
 	}
 	
