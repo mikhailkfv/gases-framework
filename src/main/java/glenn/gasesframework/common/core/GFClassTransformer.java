@@ -27,37 +27,37 @@ public class GFClassTransformer implements IClassTransformer
 	private Map<String, String> c = new HashMap<String, String>();
 	
 	{
-		c.put("Block", "aji");
-		c.put("Blocks", "ajn");
-		c.put("BlockFire", "alb");
-		c.put("ItemRenderer", "bly");
-		c.put("Entity", "sa");
-		c.put("EntityLivingBase", "sv");
-		c.put("ItemGlassBottle", "abl");
-		c.put("BlockLiquid", "alw");
-		c.put("BlockDynamicLiquid", "akr");
-		c.put("EntityRenderer", "blt");
-		c.put("WorldProvider", "aqo");
-		c.put("World", "ahb");
-		c.put("Material", "awt");
-		c.put("MaterialLiquid", "aws");
-		c.put("EntityPlayer", "yz");
-		c.put("MovingObjectPosition", "azu");
-		c.put("ItemStack", "add");
-		c.put("Item", "adb");
-		c.put("InventoryPlayer", "yx");
-		c.put("ItemPotion", "adp");
-		c.put("EntityItem", "xk");
-		c.put("MathHelper", "qh");
-		c.put("DamageSource", "ro");
-		c.put("Minecraft", "bao");
-		c.put("ResourceLocation", "bqx");
-		c.put("EntityClientPlayerMP", "bjk");
-		c.put("TextureManager", "bqf");
-		c.put("Tessellator", "bmh");
-		c.put("WorldClient", "bjf");
-		c.put("GuiIngame", "bbv");
-		c.put("IBlockAccess", "ahl");
+		c.put("Block", "ahu");
+ 		c.put("Blocks", "ahz");
+ 		c.put("BlockFire", "ajn");
+ 		c.put("ItemRenderer", "blq");
+ 		c.put("Entity", "qn");
+ 		c.put("EntityLivingBase", "rh");
+ 		c.put("ItemGlassBottle", "zx");
+ 		c.put("BlockLiquid", "aki");
+ 		c.put("BlockDynamicLiquid", "ajd");
+ 		c.put("EntityRenderer", "bll");
+ 		c.put("WorldProvider", "apa");
+ 		c.put("World", "afn");
+ 		c.put("Material", "avf");
+ 		c.put("MaterialLiquid", "ave");
+ 		c.put("EntityPlayer", "xl");
+ 		c.put("MovingObjectPosition", "ayi");
+ 		c.put("ItemStack", "abp");
+ 		c.put("Item", "abn");
+ 		c.put("InventoryPlayer", "xj");
+ 		c.put("ItemPotion", "acb");
+ 		c.put("EntityItem", "vw");
+ 		c.put("MathHelper", "ou");
+ 		c.put("DamageSource", "qb");
+ 		c.put("Minecraft", "azd");
+ 		c.put("ResourceLocation", "bqo");
+ 		c.put("EntityClientPlayerMP", "bje");
+ 		c.put("TextureManager", "bpx");
+ 		c.put("Tessellator", "blz");
+ 		c.put("WorldClient", "biz");
+ 		c.put("GuiIngame", "bah");
+ 		c.put("IBlockAccess", "afx");
 	}
 	
 	@Override
@@ -110,12 +110,12 @@ public class GFClassTransformer implements IClassTransformer
 		String methodGetBlock = obfuscated ? "a" : "getBlock";
 		String methodUpdatePotionEffects = obfuscated ? "aO" : "updatePotionEffects";
 		
-		String fieldPosX = obfuscated ? "s" : "posX";
-		String fieldPosY = obfuscated ? "t" : "posY";
-		String fieldPosZ = obfuscated ? "u" : "posZ";
-		String fieldMotionX = obfuscated ? "v" : "motionX";
-		String fieldMotionZ = obfuscated ? "x" : "motionZ";
-		String fieldWorldObj = obfuscated ? "o" : "worldObj";
+		String fieldPosX = obfuscated ? "t" : "posX";
+		String fieldPosY = obfuscated ? "u" : "posY";
+		String fieldPosZ = obfuscated ? "v" : "posZ";
+		String fieldMotionX = obfuscated ? "w" : "motionX";
+		String fieldMotionZ = obfuscated ? "y" : "motionZ";
+		String fieldWorldObj = obfuscated ? "p" : "worldObj";
 		
 		String descriptor = "(L" + classMaterial + ";)Z";
 
@@ -210,7 +210,7 @@ public class GFClassTransformer implements IClassTransformer
 		String methodGetBlockMetadata = obfuscated ? "e" : "getBlockMetadata";
 		String methodGetMaterial = obfuscated ? "o" : "getMaterial";
 
-		String fieldWorldObj = obfuscated ? "o" : "worldObj";
+		String fieldWorldObj = obfuscated ? "p" : "worldObj";
 		
 		String descriptor = "(L" + classMaterial + ";)Z";
 
