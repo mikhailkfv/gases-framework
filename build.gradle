@@ -17,12 +17,12 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.1.0"
+version = "1.7.2-1.1.0"
 group= "glenn.gasesframework" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "gasesFramework"
 
 minecraft {
-    version = "1.7.10-10.13.2.1291"
+    version = "1.7.2-10.12.2.1147"
     runDir = "eclipse"
 }
 
