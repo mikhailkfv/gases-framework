@@ -6,7 +6,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
 @IFMLLoadingPlugin.Name(value = "Gases Framework Core")
-@IFMLLoadingPlugin.MCVersion(value = "1.7.10")
+@IFMLLoadingPlugin.MCVersion(value = "1.7.2")
 @TransformerExclusions(value="glenn.gasesframework.common.core")
 public class GFFMLLoadingPlugin implements IFMLLoadingPlugin
 {
