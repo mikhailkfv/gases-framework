@@ -53,7 +53,7 @@ public class ItemKey
 	public int hashCode()
 	{
     	int itemHash = item != null ? item.hashCode() : 0;
-    	int damageHash = Integer.hashCode(damage);
+    	int damageHash = new Integer(damage).hashCode();
     	return (itemHash + damageHash) * damageHash + itemHash;
     }
 

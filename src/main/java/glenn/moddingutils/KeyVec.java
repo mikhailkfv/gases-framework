@@ -46,6 +46,6 @@ public class KeyVec
 	@Override
 	public int hashCode()
 	{
-		return (Integer.hashCode(x) * 3) ^ (Integer.hashCode(y) * 7) ^ (Integer.hashCode(z) * 31);
+		return (new Integer(x).hashCode() * 3) ^ (new Integer(y).hashCode() * 7) ^ (new Integer(z).hashCode() * 31);
 	}
 }
