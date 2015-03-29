@@ -3,12 +3,10 @@ package glenn.gasesframework.common.tileentity;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.common.block.BlockGasTank;
 
 import java.util.Arrays;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -189,8 +187,6 @@ public class TileEntityGasTank extends TileEntity
 	
 	public boolean canIncrement(GasType gasType)
 	{
-		GasType prevGasType = containedType;
-		
 		if(gasType == GasesFrameworkAPI.gasTypeAir)
 		{
 			return true;
@@ -216,8 +212,6 @@ public class TileEntityGasTank extends TileEntity
 	
 	public boolean increment(GasType gasType)
 	{
-		GasType prevGasType = containedType;
-		
 		if(gasType == GasesFrameworkAPI.gasTypeAir)
 		{
 			return true;
@@ -251,8 +245,6 @@ public class TileEntityGasTank extends TileEntity
 	public boolean decrement()
 	{
 		if(worldObj.isRemote) return amount > 0;
-		
-		GasType prevGasType = containedType;
 		
 		if(amount-- > 0)
 		{

@@ -80,6 +80,8 @@ public abstract class GasWorldGenType
 		this.evenness = evenness < 0.0f ? 0.0f : (evenness > 1.0f ? 1.0f : evenness);
 		this.minY = minY;
 		this.maxY = maxY;
+		
+		map();
 	}
 	
 	/**

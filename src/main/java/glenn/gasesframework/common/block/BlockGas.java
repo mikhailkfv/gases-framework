@@ -9,21 +9,15 @@ import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.reaction.Reaction;
 import glenn.gasesframework.api.reaction.ReactionEmpty;
 import glenn.gasesframework.client.render.RenderBlockGas;
-import glenn.gasesframework.common.reaction.ReactionIgnition;
 
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.DamageSource;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -99,8 +93,6 @@ public class BlockGas extends Block implements ISample
     	else if(entity instanceof EntityPlayer)
     	{
     		EntityPlayer playerEntity = (EntityPlayer)entity;
-    		
-    		boolean flag = false;
     		
     		ItemStack stack;
     		if((stack = playerEntity.getCurrentEquippedItem()) != null)

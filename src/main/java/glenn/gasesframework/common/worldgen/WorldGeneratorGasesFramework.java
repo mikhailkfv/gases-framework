@@ -2,22 +2,15 @@ package glenn.gasesframework.common.worldgen;
 
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
-import glenn.gasesframework.common.block.BlockGas;
-import glenn.moddingutils.KeyPair;
-import glenn.moddingutils.KeyVec;
 
-import java.io.Console;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockFalling;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -25,7 +18,6 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
 import cpw.mods.fml.common.IWorldGenerator;
@@ -163,15 +155,10 @@ public class WorldGeneratorGasesFramework implements IWorldGenerator
 			}
 		}
 		
-		public final int chunkX, chunkZ;
-		
 		public final HashMap<String, Pocket[]> pocketsByType = new HashMap<String, Pocket[]>();
 		
 		public ChunkBlobs(int chunkX, int chunkZ, Collection<TypeValues> types)
 		{
-			this.chunkX = chunkX;
-			this.chunkZ = chunkZ;
-			
 			Random random = new Random(currentWorld.getSeed() + new ChunkCoordIntPair(chunkX, chunkZ).hashCode() * currentWorld.provider.getDimensionName().hashCode());
 			
 			for(TypeValues type : types)

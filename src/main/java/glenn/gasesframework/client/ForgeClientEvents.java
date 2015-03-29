@@ -19,7 +19,6 @@ import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
 import net.minecraftforge.client.event.FOVUpdateEvent;
-import net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 import org.lwjgl.opengl.GL11;
@@ -36,7 +35,7 @@ public class ForgeClientEvents
 	{
 		ExtendedGasEffectsBase gasEffects = ExtendedGasEffectsBase.get(event.entity);
 		
-		float f = gasEffects.get(ExtendedGasEffectsBase.BLINDNESS_WATCHER) / 250.0f;
+		float f = gasEffects.get(ExtendedGasEffectsBase.BLINDNESS_CAP) / 250.0f;
 		
 		if(f > 0.0f)
 		{
@@ -52,7 +51,7 @@ public class ForgeClientEvents
 	{
 		ExtendedGasEffectsBase gasEffects = ExtendedGasEffectsBase.get(event.entity);
 		
-		float f = 1.0f / (gasEffects.get(ExtendedGasEffectsBase.BLINDNESS_WATCHER) / 30.0f + 1.0f);
+		float f = 1.0f / (gasEffects.get(ExtendedGasEffectsBase.BLINDNESS_CAP) / 30.0f + 1.0f);
 		event.red *= f;
 		event.green *= f;
 		event.blue *= f;
@@ -62,7 +61,7 @@ public class ForgeClientEvents
 	@SubscribeEvent
 	public void onFOVUpdate(FOVUpdateEvent event)
 	{
-		float f = ExtendedGasEffectsBase.get(event.entity).get(ExtendedGasEffectsBase.BLINDNESS_WATCHER) / 500.0f;
+		float f = ExtendedGasEffectsBase.get(event.entity).get(ExtendedGasEffectsBase.BLINDNESS_CAP) / 500.0f;
 		
 		event.newfov = event.fov * (2.0f - f * f) / 2.0f;
 	}

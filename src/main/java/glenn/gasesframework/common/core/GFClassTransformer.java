@@ -1,26 +1,58 @@
 package glenn.gasesframework.common.core;
 
-import static org.objectweb.asm.Opcodes.*;
+import static org.objectweb.asm.Opcodes.ACC_PROTECTED;
+import static org.objectweb.asm.Opcodes.ALOAD;
+import static org.objectweb.asm.Opcodes.ASTORE;
+import static org.objectweb.asm.Opcodes.CHECKCAST;
+import static org.objectweb.asm.Opcodes.DADD;
+import static org.objectweb.asm.Opcodes.DCMPG;
+import static org.objectweb.asm.Opcodes.DCMPL;
+import static org.objectweb.asm.Opcodes.DDIV;
+import static org.objectweb.asm.Opcodes.DLOAD;
+import static org.objectweb.asm.Opcodes.DMUL;
+import static org.objectweb.asm.Opcodes.DSTORE;
+import static org.objectweb.asm.Opcodes.DSUB;
+import static org.objectweb.asm.Opcodes.DUP;
+import static org.objectweb.asm.Opcodes.GETFIELD;
+import static org.objectweb.asm.Opcodes.GETSTATIC;
+import static org.objectweb.asm.Opcodes.I2D;
+import static org.objectweb.asm.Opcodes.ICONST_0;
+import static org.objectweb.asm.Opcodes.ICONST_1;
+import static org.objectweb.asm.Opcodes.IFGE;
+import static org.objectweb.asm.Opcodes.IFLE;
+import static org.objectweb.asm.Opcodes.IF_ACMPNE;
+import static org.objectweb.asm.Opcodes.ILOAD;
+import static org.objectweb.asm.Opcodes.INVOKESTATIC;
+import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
+import static org.objectweb.asm.Opcodes.IRETURN;
+import static org.objectweb.asm.Opcodes.ISUB;
+import static org.objectweb.asm.Opcodes.PUTFIELD;
+import static org.objectweb.asm.Opcodes.RETURN;
+import static org.objectweb.asm.Opcodes.SIPUSH;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import net.minecraft.launchwrapper.IClassTransformer;
-import net.minecraft.launchwrapper.LaunchClassLoader;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.tree.*;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.IntInsnNode;
+import org.objectweb.asm.tree.JumpInsnNode;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.LocalVariableNode;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TypeInsnNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 import cpw.mods.fml.common.FMLLog;
-import cpw.mods.fml.common.asm.transformers.deobf.FMLDeobfuscatingRemapper;
 
 public class GFClassTransformer implements IClassTransformer
 {
@@ -97,27 +129,12 @@ public class GFClassTransformer implements IClassTransformer
 	public byte[] patchClassEntityLivingBase(byte[] data, boolean obfuscated)
 	{
 		String classEntityLivingBase = obfuscated ? c.get("EntityLivingBase") : "net/minecraft/entity/EntityLivingBase";
-		String classMaterial = obfuscated ? c.get("Material") : "net/minecraft/block/material/Material";
-		String classMathHelper = obfuscated ? c.get("MathHelper") : "net/minecraft/util/MathHelper";
-		String classBlock = obfuscated ? c.get("Block") : "net/minecraft/block/Block";
-		String classWorld = obfuscated ? c.get("World") : "net/minecraft/world/World";
 
 		String methodOnEntityUpdate = obfuscated ? "C" : "onEntityUpdate";
-		String methodIsInsideOfMaterial = obfuscated ? "a" : "isInsideOfMaterial";
-		String methodGetEyeHeight = obfuscated ? "g" : "getEyeHeight";
-		String methodFloor_double = obfuscated ? "c" : "floor_double";
-		String methodFloor_float = obfuscated ? "d" : "floor_float";
-		String methodGetBlock = obfuscated ? "a" : "getBlock";
 		String methodUpdatePotionEffects = obfuscated ? "aO" : "updatePotionEffects";
 		
-		String fieldPosX = obfuscated ? "t" : "posX";
-		String fieldPosY = obfuscated ? "u" : "posY";
-		String fieldPosZ = obfuscated ? "v" : "posZ";
 		String fieldMotionX = obfuscated ? "w" : "motionX";
 		String fieldMotionZ = obfuscated ? "y" : "motionZ";
-		String fieldWorldObj = obfuscated ? "p" : "worldObj";
-		
-		String descriptor = "(L" + classMaterial + ";)Z";
 
 		ClassNode classNode = new ClassNode();
 		ClassReader classReader = new ClassReader(data);
@@ -140,7 +157,7 @@ public class GFClassTransformer implements IClassTransformer
 						if(methodInstruction.name.equals(methodUpdatePotionEffects) && methodInstruction.desc.equals("()V"))
 						{
 							newInstructions.add(new VarInsnNode(ALOAD, 0));
-							newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classEntityLivingBase, "handleGasEffects", "()V"));
+							newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classEntityLivingBase, "handleGasEffects", "()V", false));
 						}
 					}
 				}
@@ -157,9 +174,9 @@ public class GFClassTransformer implements IClassTransformer
 			method.instructions.add(new LdcInsnNode(0.1D));
 			method.instructions.add(new IntInsnNode(SIPUSH, 1000));
 			method.instructions.add(new VarInsnNode(ALOAD, 0));
-			method.instructions.add(new MethodInsnNode(INVOKESTATIC, "glenn/gasesframework/api/ExtendedGasEffectsBase", "get", "(L" + classEntityLivingBase + ";)Lglenn/gasesframework/api/ExtendedGasEffectsBase;"));
-			method.instructions.add(new FieldInsnNode(GETSTATIC, "glenn/gasesframework/api/ExtendedGasEffectsBase", "SLOWNESS_WATCHER", "I"));
-			method.instructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/ExtendedGasEffectsBase", "get", "(I)I"));
+			method.instructions.add(new MethodInsnNode(INVOKESTATIC, "glenn/gasesframework/api/ExtendedGasEffectsBase", "get", "(L" + classEntityLivingBase + ";)Lglenn/gasesframework/api/ExtendedGasEffectsBase;", false));
+			method.instructions.add(new FieldInsnNode(GETSTATIC, "glenn/gasesframework/api/ExtendedGasEffectsBase", "SLOWNESS_CAP", "I"));
+			method.instructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/ExtendedGasEffectsBase", "get", "(I)I", false));
 			method.instructions.add(new InsnNode(ISUB));
 			method.instructions.add(new InsnNode(I2D));
 			method.instructions.add(new LdcInsnNode(1000.0D));
@@ -198,7 +215,6 @@ public class GFClassTransformer implements IClassTransformer
 
 	public byte[] patchClassEntity(byte[] data, boolean obfuscated)
 	{
-		String classMinecraft = obfuscated ? c.get("Minecraft") : "net/minecraft/client/Minecraft";
 		String classBlock = obfuscated ? c.get("Block") : "net/minecraft/block/Block";
 		String classEntity = obfuscated ? c.get("Entity") : "net/minecraft/entity/Entity";
 		String classMaterial = obfuscated ? c.get("Material") : "net/minecraft/block/material/Material";
@@ -235,11 +251,11 @@ public class GFClassTransformer implements IClassTransformer
 						LabelNode l8 = new LabelNode();
 						
 						newInstructions.add(new VarInsnNode(ALOAD, 7));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classBlock, methodGetMaterial, "()L" + classMaterial + ";"));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classBlock, methodGetMaterial, "()L" + classMaterial + ";", false));
 						newInstructions.add(new FieldInsnNode(GETSTATIC, "glenn/gasesframework/api/block/MaterialGas", "INSTANCE", "L" + classMaterial + ";"));
 						newInstructions.add(new JumpInsnNode(IF_ACMPNE, l6));
 						newInstructions.add(new VarInsnNode(ALOAD, 7));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classBlock, methodGetMaterial, "()L" + classMaterial + ";"));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classBlock, methodGetMaterial, "()L" + classMaterial + ";", false));
 						newInstructions.add(new VarInsnNode(ALOAD, 1));
 						newInstructions.add(new JumpInsnNode(IF_ACMPNE, l6));
 						newInstructions.add(new VarInsnNode(DLOAD, 2));
@@ -260,8 +276,8 @@ public class GFClassTransformer implements IClassTransformer
 						newInstructions.add(new VarInsnNode(ILOAD, 4));
 						newInstructions.add(new VarInsnNode(ILOAD, 5));
 						newInstructions.add(new VarInsnNode(ILOAD, 6));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classWorld, methodGetBlockMetadata, "(III)I"));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/gastype/GasType", "getMinY", "(L" + interfaceBlockAccess + ";IIII)D"));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classWorld, methodGetBlockMetadata, "(III)I", false));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/gastype/GasType", "getMinY", "(L" + interfaceBlockAccess + ";IIII)D", false));
 						newInstructions.add(new InsnNode(DCMPL));
 						newInstructions.add(new JumpInsnNode(IFLE, l8));
 						newInstructions.add(new VarInsnNode(DLOAD, 2));
@@ -282,8 +298,8 @@ public class GFClassTransformer implements IClassTransformer
 						newInstructions.add(new VarInsnNode(ILOAD, 4));
 						newInstructions.add(new VarInsnNode(ILOAD, 5));
 						newInstructions.add(new VarInsnNode(ILOAD, 6));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classWorld, methodGetBlockMetadata, "(III)I"));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/gastype/GasType", "getMaxY", "(L" + interfaceBlockAccess + ";IIII)D"));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classWorld, methodGetBlockMetadata, "(III)I", false));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/gastype/GasType", "getMaxY", "(L" + interfaceBlockAccess + ";IIII)D", false));
 						newInstructions.add(new InsnNode(DCMPG));
 						newInstructions.add(new JumpInsnNode(IFGE, l8));
 						newInstructions.add(new InsnNode(ICONST_1));

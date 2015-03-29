@@ -4,7 +4,6 @@ import glenn.gasesframework.common.ContainerGasFurnace;
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
@@ -43,7 +42,7 @@ public class GuiGasFurnace extends GuiContainer
 	    int i1 = this.furnaceInventory.getStage();
         this.drawTexturedModalRect(k + 55, l + 34, 176 + (this.furnaceInventory.furnaceBurnTime > 0 ? 0 : 18), 31 + i1 * 18, 18, 18);
         
-        i1 = 54 * this.furnaceInventory.furnaceBurnTime / this.furnaceInventory.maxFurnaceBurnTime;
+        i1 = 54 * this.furnaceInventory.furnaceBurnTime / TileEntityGasFurnace.maxFurnaceBurnTime;
         this.drawTexturedModalRect(k + 29, l + 70 - i1, 212, 54 - i1, 26, i1);
 
 	    i1 = this.furnaceInventory.getCookProgressScaled(24);

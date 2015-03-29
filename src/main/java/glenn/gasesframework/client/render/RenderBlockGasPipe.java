@@ -1,10 +1,6 @@
 package glenn.gasesframework.client.render;
 
-import org.lwjgl.opengl.GL11;
-
-import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.block.IGasInterface;
-import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.common.block.BlockGasPipe;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -13,6 +9,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 

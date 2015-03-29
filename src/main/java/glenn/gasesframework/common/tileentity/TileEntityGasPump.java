@@ -1,18 +1,13 @@
 package glenn.gasesframework.common.tileentity;
 
-import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasSource;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.common.block.BlockGas;
-import glenn.gasesframework.common.block.BlockGasPump;
-import glenn.moddingutils.DVec;
 
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;

@@ -1,8 +1,5 @@
 package glenn.gasesframework.common.block;
 
-import java.util.ArrayList;
-
-import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasSource;
@@ -12,22 +9,23 @@ import glenn.gasesframework.client.render.RenderBlockGasTank;
 import glenn.gasesframework.common.item.ItemGasBottle;
 import glenn.gasesframework.common.tileentity.TileEntityGasTank;
 import glenn.moddingutils.IVec;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITileEntityProvider, ISample
 {

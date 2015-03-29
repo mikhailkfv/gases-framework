@@ -1,18 +1,16 @@
 package glenn.gasesframework.common.tileentity;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
-
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.common.block.BlockGas;
 import glenn.moddingutils.IVec;
 import glenn.moddingutils.KeyPair;
+
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
+
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 

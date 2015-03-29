@@ -49,7 +49,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import net.minecraftforge.common.config.Configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -90,11 +89,10 @@ public class GasesFramework implements IGasesFramework
 	public static final GuiHandler guiHandler = new GuiHandler();
 	
 	public static final String MODID = GasesFrameworkAPI.OWNER;
-	public static final String VERSION = "1.1.0";
+	public static final String VERSION = "1.1.1";
 	public static final String TARGETVERSION = GasesFrameworkAPI.TARGETVERSION;
 	
 	public static GasesFrameworkMainConfigurations configurations;
-	private static Configuration config;
 	
 	public static final WorldGeneratorGasesFramework worldGenerator = new WorldGeneratorGasesFramework();
 	

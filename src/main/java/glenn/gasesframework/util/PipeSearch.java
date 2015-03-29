@@ -1,14 +1,10 @@
 package glenn.gasesframework.util;
 
-import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.common.block.BlockGasPipe;
-import glenn.gasesframework.common.block.BlockGasPump;
-import glenn.gasesframework.common.tileentity.TileEntityGasPump;
 import glenn.moddingutils.IVec;
-import glenn.moddingutils.KeyPair;
 import glenn.moddingutils.KeyVec;
 
 import java.util.ArrayList;
@@ -27,10 +23,6 @@ public abstract class PipeSearch
 		new IVec(0, 0, 1),
 		new IVec(-1, 0, 0),
 		new IVec(1, 0, 0)
-	};
-	
-	private static final int[] reverseIndices = new int[]{
-		1, 0, 3, 2, 5, 4
 	};
 	
 	public static class PipeEnd

@@ -1,10 +1,7 @@
 package glenn.gasesframework.api.gasworldgentype;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockFalling;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import glenn.gasesframework.api.gastype.GasType;
+import net.minecraft.world.World;
 
 public class GasWorldGenCloud extends GasWorldGenType
 {
