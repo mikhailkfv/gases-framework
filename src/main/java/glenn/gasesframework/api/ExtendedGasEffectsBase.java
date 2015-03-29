@@ -1,5 +1,6 @@
 package glenn.gasesframework.api;
 
+import glenn.gasesframework.GasesFramework;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
@@ -12,9 +13,7 @@ public abstract class ExtendedGasEffectsBase implements IExtendedEntityPropertie
 {
 	public static final String EXT_PROP_NAME = "ExtendedGasEffects";
 	
-	public static final int BLINDNESS_WATCHER = 24;
-	public static final int SUFFOCATION_WATCHER = 25;
-	public static final int SLOWNESS_WATCHER = 26;
+	public static final int WATCHER = GasesFramework.configurations.watcher_id;
 	
 	public final EntityLivingBase entity;
 	

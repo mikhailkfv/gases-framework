@@ -22,9 +22,7 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 	{
 		super(entity);
 		
-		entity.getDataWatcher().addObject(BLINDNESS_WATCHER, 0);
-		entity.getDataWatcher().addObject(SUFFOCATION_WATCHER, 0);
-		entity.getDataWatcher().addObject(SLOWNESS_WATCHER, 0);
+		entity.getDataWatcher().addObject(WATCHER, 0);
 	}
 	
 	@Override
@@ -32,9 +30,9 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 	{
 		NBTTagCompound properties = new NBTTagCompound();
 		
-		properties.setInteger("blindnessTimer", get(BLINDNESS_WATCHER));
-		properties.setInteger("suffocationTimer", get(SUFFOCATION_WATCHER));
-		properties.setInteger("slownessTimer", get(SLOWNESS_WATCHER));
+		properties.setInteger("blindnessTimer", get(0));
+		properties.setInteger("suffocationTimer", get(1));
+		properties.setInteger("slownessTimer", get(2));
 		
 		compound.setTag(EXT_PROP_NAME, properties);
 	}
@@ -44,9 +42,9 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 	{
 		NBTTagCompound properties = compound.getCompoundTag(EXT_PROP_NAME);
 		
-		set(BLINDNESS_WATCHER, properties.getInteger("blindnessTimer"));
-		set(SUFFOCATION_WATCHER, properties.getInteger("suffocationTimer"));
-		set(SLOWNESS_WATCHER, properties.getInteger("slownessTimer"));
+		set(1, properties.getInteger("blindnessTimer"));
+		set(2, properties.getInteger("suffocationTimer"));
+		set(3, properties.getInteger("slownessTimer"));
 	}
 
 	@Override
@@ -121,9 +119,9 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 			}
 		}
 		
-		int blindnessTimer = get(BLINDNESS_WATCHER);
-		int suffocationTimer = get(SUFFOCATION_WATCHER);
-		int slownessTimer = get(SLOWNESS_WATCHER);
+		int blindnessTimer = get(1);
+		int suffocationTimer = get(2);
+		int slownessTimer = get(3);
 		
 		if(gasType != null && gasType.blindnessRate > 0 && blind(gasType))
 		{
@@ -157,22 +155,48 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 		if(slownessTimer > 1000) slownessTimer = 1000;
 		else if(slownessTimer < 0) slownessTimer = 0;
 		
-		set(BLINDNESS_WATCHER, blindnessTimer);
-		set(SUFFOCATION_WATCHER, suffocationTimer);
-		set(SLOWNESS_WATCHER, slownessTimer);
+		set(0, blindnessTimer);
+		set(1, suffocationTimer);
+		set(2, slownessTimer);
 	}
 	
 	@Override
 	public int get(int watchObject)
 	{
-		return entity.getDataWatcher().getWatchableObjectInt(watchObject);
+		int d = entity.getDataWatcher().getWatchableObjectInt(WATCHER);
+		switch(watchObject)
+		{
+		case 0: return d / 1000000;
+		case 1: return (d - (d / 1000000 * 1000000)) / 1000;
+		case 2: return (d - (d / 1000 * 1000));
+		default: return -1;
+		}
 	}
-
+	
 	@Override
 	public int set(int watchObject, int i)
 	{
-		entity.getDataWatcher().updateObject(watchObject, i);
-		return i;
+		int d = entity.getDataWatcher().getWatchableObjectInt(WATCHER);
+		
+		int blindness = 0;
+		int suffocation = 0;
+		int slowness = 0;
+		switch(watchObject)
+		{
+		case 0: blindness = d / 1000000; // returns XXX 000 000
+		case 1: suffocation = (d - (d / 1000000 * 1000000)) / 1000; // returns 000 XXX 000
+		case 2: slowness = (d - (d / 1000 * 1000)); // returns 000 000 XXX
+		}
+		
+		int combined = (slowness * 1) + (suffocation * 1000) + (blindness * 1000000);;
+		switch(watchObject)
+		{
+		case 0: entity.getDataWatcher().updateObject(WATCHER, combined); return blindness; //blindness (000 /// ///)
+		case 1: entity.getDataWatcher().updateObject(WATCHER, combined); return suffocation; //suffocation (/// 111 ///)
+		case 2: entity.getDataWatcher().updateObject(WATCHER, combined); return slowness; //slowness (/// /// 222)
+		default: return 0; //welp you fucked up
+		}
+		
 	}
 
 	@Override
