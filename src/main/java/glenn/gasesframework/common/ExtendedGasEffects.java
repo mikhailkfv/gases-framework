@@ -1,5 +1,6 @@
 package glenn.gasesframework.common;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
 import glenn.gasesframework.api.block.MaterialGas;
 import glenn.gasesframework.api.gastype.GasType;
@@ -17,6 +18,9 @@ import net.minecraft.world.World;
 
 public class ExtendedGasEffects extends ExtendedGasEffectsBase
 {
+	public static final int WATCHER = GasesFramework.configurations.watcher_id;
+	private static final int BITS_PER_CAP = 10;
+	
 	private ExtendedGasEffects(EntityLivingBase entity)
 	{
 		super(entity);
@@ -29,9 +33,9 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 	{
 		NBTTagCompound properties = new NBTTagCompound();
 		
-		properties.setInteger("blindnessTimer", get(0));
-		properties.setInteger("suffocationTimer", get(1));
-		properties.setInteger("slownessTimer", get(2));
+		properties.setInteger("blindnessTimer", get(BLINDNESS_CAP));
+		properties.setInteger("suffocationTimer", get(SUFFOCATION_CAP));
+		properties.setInteger("slownessTimer", get(SLOWNESS_CAP));
 		
 		compound.setTag(EXT_PROP_NAME, properties);
 	}
@@ -41,9 +45,9 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 	{
 		NBTTagCompound properties = compound.getCompoundTag(EXT_PROP_NAME);
 		
-		set(1, properties.getInteger("blindnessTimer"));
-		set(2, properties.getInteger("suffocationTimer"));
-		set(3, properties.getInteger("slownessTimer"));
+		set(BLINDNESS_CAP, properties.getInteger("blindnessTimer"));
+		set(SUFFOCATION_CAP, properties.getInteger("suffocationTimer"));
+		set(SLOWNESS_CAP, properties.getInteger("slownessTimer"));
 	}
 
 	@Override
@@ -118,9 +122,9 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 			}
 		}
 		
-		int blindnessTimer = get(1);
-		int suffocationTimer = get(2);
-		int slownessTimer = get(3);
+		int blindnessTimer = get(BLINDNESS_CAP);
+		int suffocationTimer = get(SUFFOCATION_CAP);
+		int slownessTimer = get(SLOWNESS_CAP);
 		
 		if(gasType != null && gasType.blindnessRate > 0 && blind(gasType))
 		{
@@ -154,54 +158,48 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 		if(slownessTimer > 1000) slownessTimer = 1000;
 		else if(slownessTimer < 0) slownessTimer = 0;
 		
-		set(0, blindnessTimer);
-		set(1, suffocationTimer);
-		set(2, slownessTimer);
+		set(BLINDNESS_CAP, blindnessTimer);
+		set(SUFFOCATION_CAP, suffocationTimer);
+		set(SLOWNESS_CAP, slownessTimer);
 	}
 	
 	@Override
-	public int get(int watchObject)
+	public int get(int cap)
 	{
-		int d = entity.getDataWatcher().getWatchableObjectInt(WATCHER);
-		switch(watchObject)
-		{
-		case 0: return d / 1000000;
-		case 1: return (d - (d / 1000000 * 1000000)) / 1000;
-		case 2: return (d - (d / 1000 * 1000));
-		default: return -1;
-		}
+		int bitmask = getBitmask(cap);
+		int combined = entity.getDataWatcher().getWatchableObjectInt(WATCHER);
+		return (combined & bitmask) >>> (BITS_PER_CAP * cap);
 	}
 	
 	@Override
-	public int set(int watchObject, int i)
+	public int set(int cap, int i)
 	{
-		int d = entity.getDataWatcher().getWatchableObjectInt(WATCHER);
-		
-		int blindness = 0;
-		int suffocation = 0;
-		int slowness = 0;
-		switch(watchObject)
+		if(i >= 1 << BITS_PER_CAP)
 		{
-		case 0: blindness = d / 1000000; // returns XXX 000 000
-		case 1: suffocation = (d - (d / 1000000 * 1000000)) / 1000; // returns 000 XXX 000
-		case 2: slowness = (d - (d / 1000 * 1000)); // returns 000 000 XXX
+			i = (1 << BITS_PER_CAP) - 1;
+		}
+		else if(i < 0)
+		{
+			i = 0;
 		}
 		
-		int combined = (slowness * 1) + (suffocation * 1000) + (blindness * 1000000);;
-		switch(watchObject)
-		{
-		case 0: entity.getDataWatcher().updateObject(WATCHER, combined); return blindness; //blindness (000 /// ///)
-		case 1: entity.getDataWatcher().updateObject(WATCHER, combined); return suffocation; //suffocation (/// 111 ///)
-		case 2: entity.getDataWatcher().updateObject(WATCHER, combined); return slowness; //slowness (/// /// 222)
-		default: return 0; //welp you fucked up
-		}
+		int bitmask = getBitmask(cap);
+		int combined = entity.getDataWatcher().getWatchableObjectInt(WATCHER);
+		combined = (combined & ~bitmask) | ((i << (BITS_PER_CAP * cap)) & bitmask);
+		entity.getDataWatcher().updateObject(WATCHER, combined);
 		
+		return i;
 	}
 
 	@Override
 	public int increment(int watchObject, int i)
 	{
 		return set(watchObject, get(watchObject) + i);
+	}
+	
+	private int getBitmask(int cap)
+	{
+		return ((1 << BITS_PER_CAP) - 1) << (BITS_PER_CAP * cap);
 	}
 	
 	public static void register(EntityLivingBase entity)

@@ -1,6 +1,5 @@
 package glenn.gasesframework.api.gastype;
 
-import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 
