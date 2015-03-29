@@ -157,7 +157,7 @@ public class GFClassTransformer implements IClassTransformer
 						if(methodInstruction.name.equals(methodUpdatePotionEffects) && methodInstruction.desc.equals("()V"))
 						{
 							newInstructions.add(new VarInsnNode(ALOAD, 0));
-							newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classEntityLivingBase, "handleGasEffects", "()V", false));
+							newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classEntityLivingBase, "handleGasEffects", "()V"));
 						}
 					}
 				}
@@ -174,9 +174,9 @@ public class GFClassTransformer implements IClassTransformer
 			method.instructions.add(new LdcInsnNode(0.1D));
 			method.instructions.add(new IntInsnNode(SIPUSH, 1000));
 			method.instructions.add(new VarInsnNode(ALOAD, 0));
-			method.instructions.add(new MethodInsnNode(INVOKESTATIC, "glenn/gasesframework/api/ExtendedGasEffectsBase", "get", "(L" + classEntityLivingBase + ";)Lglenn/gasesframework/api/ExtendedGasEffectsBase;", false));
+			method.instructions.add(new MethodInsnNode(INVOKESTATIC, "glenn/gasesframework/api/ExtendedGasEffectsBase", "get", "(L" + classEntityLivingBase + ";)Lglenn/gasesframework/api/ExtendedGasEffectsBase;"));
 			method.instructions.add(new FieldInsnNode(GETSTATIC, "glenn/gasesframework/api/ExtendedGasEffectsBase", "SLOWNESS_CAP", "I"));
-			method.instructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/ExtendedGasEffectsBase", "get", "(I)I", false));
+			method.instructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/ExtendedGasEffectsBase", "get", "(I)I"));
 			method.instructions.add(new InsnNode(ISUB));
 			method.instructions.add(new InsnNode(I2D));
 			method.instructions.add(new LdcInsnNode(1000.0D));
@@ -251,11 +251,11 @@ public class GFClassTransformer implements IClassTransformer
 						LabelNode l8 = new LabelNode();
 						
 						newInstructions.add(new VarInsnNode(ALOAD, 7));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classBlock, methodGetMaterial, "()L" + classMaterial + ";", false));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classBlock, methodGetMaterial, "()L" + classMaterial + ";"));
 						newInstructions.add(new FieldInsnNode(GETSTATIC, "glenn/gasesframework/api/block/MaterialGas", "INSTANCE", "L" + classMaterial + ";"));
 						newInstructions.add(new JumpInsnNode(IF_ACMPNE, l6));
 						newInstructions.add(new VarInsnNode(ALOAD, 7));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classBlock, methodGetMaterial, "()L" + classMaterial + ";", false));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classBlock, methodGetMaterial, "()L" + classMaterial + ";"));
 						newInstructions.add(new VarInsnNode(ALOAD, 1));
 						newInstructions.add(new JumpInsnNode(IF_ACMPNE, l6));
 						newInstructions.add(new VarInsnNode(DLOAD, 2));
@@ -276,8 +276,8 @@ public class GFClassTransformer implements IClassTransformer
 						newInstructions.add(new VarInsnNode(ILOAD, 4));
 						newInstructions.add(new VarInsnNode(ILOAD, 5));
 						newInstructions.add(new VarInsnNode(ILOAD, 6));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classWorld, methodGetBlockMetadata, "(III)I", false));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/gastype/GasType", "getMinY", "(L" + interfaceBlockAccess + ";IIII)D", false));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classWorld, methodGetBlockMetadata, "(III)I"));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/gastype/GasType", "getMinY", "(L" + interfaceBlockAccess + ";IIII)D"));
 						newInstructions.add(new InsnNode(DCMPL));
 						newInstructions.add(new JumpInsnNode(IFLE, l8));
 						newInstructions.add(new VarInsnNode(DLOAD, 2));
@@ -298,8 +298,8 @@ public class GFClassTransformer implements IClassTransformer
 						newInstructions.add(new VarInsnNode(ILOAD, 4));
 						newInstructions.add(new VarInsnNode(ILOAD, 5));
 						newInstructions.add(new VarInsnNode(ILOAD, 6));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classWorld, methodGetBlockMetadata, "(III)I", false));
-						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/gastype/GasType", "getMaxY", "(L" + interfaceBlockAccess + ";IIII)D", false));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classWorld, methodGetBlockMetadata, "(III)I"));
+						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/gastype/GasType", "getMaxY", "(L" + interfaceBlockAccess + ";IIII)D"));
 						newInstructions.add(new InsnNode(DCMPG));
 						newInstructions.add(new JumpInsnNode(IFGE, l8));
 						newInstructions.add(new InsnNode(ICONST_1));
