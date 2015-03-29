@@ -1,15 +1,11 @@
 package glenn.gasesframework.api.lanterntype;
 
 import glenn.gasesframework.api.ItemKey;
-import glenn.gasesframework.api.gastype.GasType;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 public class LanternType
 {

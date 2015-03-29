@@ -1,7 +1,5 @@
 package glenn.gasesframework.api;
 
-import glenn.gasesframework.api.lanterntype.LanternType;
-import net.minecraft.block.Block;
 
 /**
  * An enumerator to set gas combustion properties. Gases are not combustible ({@link Combustibility#NONE}) by default.

@@ -1,23 +1,19 @@
 package glenn.gasesframework.api.gastype;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Random;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockFire;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -28,7 +24,6 @@ public class GasType
 {
 	private static final GasType[] gasTypesByID = new GasType[256];
 	private static final HashMap<String, GasType> gasTypesByName = new HashMap<String, GasType>();
-	private static final HashMap<String, GasType> gasTypesByItem = new HashMap<String, GasType>();
 	
 	/**
 	 * Is this gas type {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}?

@@ -71,7 +71,6 @@ public class ReactionIgnition extends Reaction
 		{
 			if(block1 instanceof BlockGas && block1 != GasesFrameworkAPI.gasTypeFire.block)
 			{
-				int metadata = world.getBlockMetadata(block1X, block1Y, block1Z);
 				((BlockGas)block1).onFire(world, block1X, block1Y, block1Z, random, world.getBlockMetadata(block1X, block1Y, block1Z));
 				return true;
 			}

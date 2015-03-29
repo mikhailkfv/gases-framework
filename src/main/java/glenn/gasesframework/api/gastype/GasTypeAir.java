@@ -1,13 +1,12 @@
 package glenn.gasesframework.api.gastype;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
 
 public class GasTypeAir extends GasType
 {

@@ -1,16 +1,15 @@
 package glenn.gasesframework.client.render;
 
-import org.lwjgl.opengl.GL11;
-
+import glenn.gasesframework.common.block.BlockGasTank;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.world.IBlockAccess;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.common.block.BlockGasPump;
-import glenn.gasesframework.common.block.BlockGasTank;
 
 public class RenderBlockGasTank implements ISimpleBlockRenderingHandler
 {

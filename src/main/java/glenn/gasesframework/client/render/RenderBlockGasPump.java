@@ -1,19 +1,19 @@
 package glenn.gasesframework.client.render;
 
-import org.lwjgl.opengl.GL11;
-
+import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.common.block.BlockGasPump;
+import glenn.gasesframework.common.tileentity.TileEntityGasPump;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.common.block.BlockGasPump;
-import glenn.gasesframework.common.tileentity.TileEntityGasPump;
 
 public class RenderBlockGasPump implements ISimpleBlockRenderingHandler
 {

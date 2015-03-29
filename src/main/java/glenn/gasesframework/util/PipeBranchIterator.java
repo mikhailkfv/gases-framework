@@ -1,7 +1,6 @@
 package glenn.gasesframework.util;
 
 import glenn.moddingutils.IVec;
-import glenn.moddingutils.KeyPair;
 
 import java.util.ArrayList;
 import java.util.Random;
