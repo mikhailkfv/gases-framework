@@ -80,5 +80,18 @@ public class GasTypeFire extends GasType
 		{
 			world.playSound((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), "fire.fire", 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F, false);
 		}
+    	
+    	int metadata = world.getBlockMetadata(x, y, z);
+    	double minY = this.getMinY(world, x, y, z, metadata);
+    	double maxY = this.getMaxY(world, x, y, z, metadata);
+    	
+    	if(random.nextFloat() < maxY - minY)
+    	{
+    		double xd = x + random.nextDouble();
+    		double yd = y + minY + random.nextDouble() * (maxY - minY);
+    		double zd = z + random.nextDouble();
+    		
+    		world.spawnParticle("largesmoke", xd, yd, zd, 0.0D, 0.0D, 0.0D);
+    	}
 	}
 }
