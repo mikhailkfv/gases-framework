@@ -493,8 +493,8 @@ public class BlockGas extends Block implements ISample
     	type.preTick(world, par2, par3, par4, random);
     	
     	//For technical reasons, metadata is a reverse representation of how much gas there is inside a block
-    	int metadata = 16 - world.getBlockMetadata(par2, par3, par4) - getGasDecay(world, par2, par3, par4, random);
-		boolean requiresTick = type.evaporationRate > 0;
+    	int metadata = 16 - world.getBlockMetadata(par2, par3, par4) - type.getDissipation(world, par2, par3, par4, random);
+		boolean requiresTick = type.dissipationRate > 0;
 		
 		if(metadata <= 0)
 		{
@@ -853,20 +853,6 @@ public class BlockGas extends Block implements ISample
     	}
 		
 		type.postTick(world, par2, par3, par4, random);
-    }
-    
-    /**
-     * Gets the decay of the gas in a tick. Only used internally.
-     * @param par1World
-     * @param par2
-     * @param par3
-     * @param par4
-     * @param par5Random
-     * @return
-     */
-    public int getGasDecay(World par1World, int par2, int par3, int par4, Random par5Random)
-    {
-    	return type.evaporationRate > 0 && par5Random.nextInt(type.evaporationRate) == 0 ? 1 : 0;
     }
     
     /**

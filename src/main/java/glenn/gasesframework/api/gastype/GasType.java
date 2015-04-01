@@ -70,9 +70,9 @@ public class GasType
 	 */
 	public final Combustibility combustibility;
 	/**
-	 * How quickly this gas type will evaporate in the world. Higher values will decrease evaporation speed. If 0, it does not evaporate.
+	 * How quickly this gas type will dissipate in the world. Higher values will decrease dissipate speed. If 0, it does not dissipate.
 	 */
-	public int evaporationRate = 0;
+	public int dissipationRate = 0;
 	/**
 	 * The damage this gas deals upon touch.
 	 */
@@ -243,13 +243,13 @@ public class GasType
 	}
 	
 	/**
-	 * Set how quickly the gas can evaporate. Higher values will decrease evaporation speed.
-	 * @param evaporation
+	 * Set how quickly the gas can dissipate. Higher values will decrease dissipation speed.
+	 * @param dissipationRate
 	 * @return
 	 */
-	public GasType setEvaporationRate(int evaporation)
+	public GasType setDissipationRate(int dissipationRate)
     {
-    	this.evaporationRate = evaporation;
+    	this.dissipationRate = dissipationRate;
     	return this;
     }
 	
@@ -441,7 +441,7 @@ public class GasType
 	}
 	
 	/**
-	 * Get the decay of a gas. This triggers every time the gas block ticks.
+	 * Get the dissipation of a gas. This triggers every time the gas block ticks. This is affected by the {@link #dissipationRate} of the GasType.
 	 * @param world
 	 * @param x
 	 * @param y
@@ -449,9 +449,9 @@ public class GasType
 	 * @param random
 	 * @return
 	 */
-    public int getGasDecay(World world, int x, int y, int z, Random random)
+    public int getDissipation(World world, int x, int y, int z, Random random)
     {
-    	return evaporationRate > 0 && random.nextInt(evaporationRate) == 0 ? 1 : 0;
+    	return dissipationRate > 0 && random.nextInt(dissipationRate) == 0 ? 1 : 0;
     }
     
     /**

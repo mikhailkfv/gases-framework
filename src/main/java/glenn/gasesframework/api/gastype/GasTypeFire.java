@@ -16,7 +16,7 @@ public class GasTypeFire extends GasType
 	{
 		super(false, 11, "fire", 0xFFFFFFFF, 0, 0, Combustibility.NONE);
 		setOverlayImage(GasesFrameworkAPI.fireOverlayImage);
-		setEvaporationRate(2);
+		setDissipationRate(2);
 		setTextureName("gasesframework:gas_fire");
 	}
 	
