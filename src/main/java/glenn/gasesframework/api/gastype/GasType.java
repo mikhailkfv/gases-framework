@@ -334,13 +334,13 @@ public class GasType
 	}
 	
 	/**
-	 * Called when a gas block of this type evaporates.
+	 * Called when a gas block of this type dissipates.
 	 * @param world
 	 * @param x
 	 * @param y
 	 * @param z
 	 */
-	public void onEvaporated(World world, int x, int y, int z)
+	public void onDissipated(World world, int x, int y, int z)
 	{
 		
 	}

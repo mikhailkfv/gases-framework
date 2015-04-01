@@ -499,7 +499,7 @@ public class BlockGas extends Block implements ISample
 		if(metadata <= 0)
 		{
 			world.setBlockToAir(par2, par3, par4);
-			type.onEvaporated(world, par2, par3, par4);
+			type.onDissipated(world, par2, par3, par4);
 			return;
 		}
     	

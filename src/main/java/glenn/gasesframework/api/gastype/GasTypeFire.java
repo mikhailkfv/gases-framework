@@ -50,7 +50,7 @@ public class GasTypeFire extends GasType
 	 * @param z
 	 */
     @Override
-    public void onEvaporated(World world, int x, int y, int z)
+    public void onDissipated(World world, int x, int y, int z)
     {
     	if(!world.isRemote)
     	{
