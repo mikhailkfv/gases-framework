@@ -30,6 +30,7 @@ import glenn.gasesframework.common.tileentity.TileEntityGasTank;
 import glenn.gasesframework.common.tileentity.TileEntityInfiniteGasDrain;
 import glenn.gasesframework.common.tileentity.TileEntityInfiniteGasPump;
 import glenn.gasesframework.common.worldgen.WorldGeneratorGasesFramework;
+import glenn.gasesframework.network.message.MessageGasEffects;
 import glenn.gasesframework.waila.GasesFrameworkWaila;
 import glenn.moddingutils.Configurations.ItemRepresentation;
 
@@ -61,7 +62,9 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * <b>Gases Framework</b>
@@ -86,11 +89,13 @@ public class GasesFramework implements IGasesFramework
 	// Says where the client and server 'proxy' code is loaded.
 	@SidedProxy(clientSide = "glenn.gasesframework.client.ClientProxy", serverSide = "glenn.gasesframework.server.ServerProxy")
 	public static CommonProxy proxy;
-	public static final GuiHandler guiHandler = new GuiHandler();
 	
 	public static final String MODID = GasesFrameworkAPI.OWNER;
 	public static final String VERSION = "1.1.1";
 	public static final String TARGETVERSION = GasesFrameworkAPI.TARGETVERSION;
+	
+	public static final GuiHandler guiHandler = new GuiHandler();
+	public static final SimpleNetworkWrapper networkWrapper = new SimpleNetworkWrapper(MODID);
 	
 	public static GasesFrameworkMainConfigurations configurations;
 	
@@ -191,6 +196,7 @@ public class GasesFramework implements IGasesFramework
 	public void load(FMLInitializationEvent event)
 	{
 		proxy.registerRenderers();
+		networkWrapper.registerMessage(MessageGasEffects.Handler.class, MessageGasEffects.class, 0, Side.CLIENT);
 		
 		GameRegistry.registerWorldGenerator(worldGenerator, 10);
 		

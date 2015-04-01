@@ -1,11 +1,17 @@
 package glenn.gasesframework.common;
 
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Set;
+
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
 import glenn.gasesframework.api.block.MaterialGas;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.item.IGasEffectProtector;
 import glenn.gasesframework.common.block.BlockGas;
+import glenn.gasesframework.network.message.MessageGasEffects;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,14 +24,12 @@ import net.minecraft.world.World;
 
 public class ExtendedGasEffects extends ExtendedGasEffectsBase
 {
-	public static final int WATCHER = GasesFramework.configurations.watcher_id;
-	private static final int BITS_PER_CAP = 10;
+	private EnumMap<EffectType, Integer> prevValues = new EnumMap<EffectType, Integer>(EffectType.class);
+	private EnumMap<EffectType, Integer> values = new EnumMap<EffectType, Integer>(EffectType.class);
 	
 	private ExtendedGasEffects(EntityLivingBase entity)
 	{
 		super(entity);
-		
-		entity.getDataWatcher().addObject(WATCHER, 0);
 	}
 	
 	@Override
@@ -33,9 +37,10 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 	{
 		NBTTagCompound properties = new NBTTagCompound();
 		
-		properties.setInteger("blindnessTimer", get(BLINDNESS_CAP));
-		properties.setInteger("suffocationTimer", get(SUFFOCATION_CAP));
-		properties.setInteger("slownessTimer", get(SLOWNESS_CAP));
+		for(Map.Entry<EffectType, Integer> entry : values.entrySet())
+		{
+			properties.setInteger(entry.getKey().name(), entry.getValue());
+		}
 		
 		compound.setTag(EXT_PROP_NAME, properties);
 	}
@@ -45,9 +50,22 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 	{
 		NBTTagCompound properties = compound.getCompoundTag(EXT_PROP_NAME);
 		
-		set(BLINDNESS_CAP, properties.getInteger("blindnessTimer"));
-		set(SUFFOCATION_CAP, properties.getInteger("suffocationTimer"));
-		set(SLOWNESS_CAP, properties.getInteger("slownessTimer"));
+		Set<String> keys = properties.func_150296_c();
+		for(String key : keys)
+		{
+			try
+			{
+				EffectType type = EffectType.valueOf(key);
+				if(type != null)
+				{
+					set(type, properties.getInteger(key));
+				}
+			}
+			catch(IllegalArgumentException e)
+			{
+				
+			}
+		}
 	}
 
 	@Override
@@ -106,100 +124,120 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 	
 	public void tick()
 	{
-		GasType gasType = null;
-		
-		if(entity.isInsideOfMaterial(MaterialGas.INSTANCE))
+		if(!entity.worldObj.isRemote)
 		{
-			double dy = entity.posY + (double)entity.getEyeHeight();
-			int x = MathHelper.floor_double(entity.posX);
-			int y = MathHelper.floor_double(dy);
-			int z = MathHelper.floor_double(entity.posZ);
+			GasType gasType = null;
 			
-			Block block = entity.worldObj.getBlock(x, y, z);
-			if(block instanceof BlockGas)
+			if(entity.isInsideOfMaterial(MaterialGas.INSTANCE))
 			{
-				gasType = ((BlockGas)block).type;
+				double dy = entity.posY + (double)entity.getEyeHeight();
+				int x = MathHelper.floor_double(entity.posX);
+				int y = MathHelper.floor_double(dy);
+				int z = MathHelper.floor_double(entity.posZ);
+				
+				Block block = entity.worldObj.getBlock(x, y, z);
+				if(block instanceof BlockGas)
+				{
+					gasType = ((BlockGas)block).type;
+				}
+			}
+			
+			int blindnessTimer = get(EffectType.BLINDNESS);
+			int suffocationTimer = get(EffectType.SUFFOCATION);
+			int slownessTimer = get(EffectType.SLOWNESS);
+			
+			if(gasType != null && gasType.blindnessRate > 0 && blind(gasType))
+			{
+				blindnessTimer += gasType.blindnessRate + 4;
+			}
+			blindnessTimer -= 4;
+			
+			if(gasType != null && gasType.suffocationRate > 0 && suffocate(gasType))
+			{
+				suffocationTimer += gasType.suffocationRate + 32;
+				
+				if(suffocationTimer > 350)
+				{
+					slownessTimer += gasType.slownessRate + 10;
+				}
+				
+				if(suffocationTimer > 400)
+				{
+					gasType.onBreathed(entity);
+					suffocationTimer -= 32;
+				}
+			}
+			suffocationTimer -= 32;
+			slownessTimer -= 10;
+			
+			if(blindnessTimer > 500) blindnessTimer = 500;
+			else if(blindnessTimer < 0) blindnessTimer = 0;
+			
+			if(suffocationTimer < 0) suffocationTimer = 0;
+			
+			if(slownessTimer > 1000) slownessTimer = 1000;
+			else if(slownessTimer < 0) slownessTimer = 0;
+			
+			set(EffectType.BLINDNESS, blindnessTimer);
+			set(EffectType.SUFFOCATION, suffocationTimer);
+			set(EffectType.SLOWNESS, slownessTimer);
+			
+			if(hasChanged())
+			{
+				GasesFramework.networkWrapper.sendToAllAround(
+						new MessageGasEffects(entity, (short)blindnessTimer, (short)suffocationTimer, (short)slownessTimer),
+						new TargetPoint(entity.worldObj.provider.dimensionId, entity.posX, entity.posY, entity.posZ, 50.0D));
+				prevValues = values.clone();
+			}
+		}
+	}
+	
+	private boolean hasChanged()
+	{
+		if(values.size() != prevValues.size()) return true;
+		
+		for(Map.Entry<EffectType, Integer> entry : values.entrySet())
+		{
+			Integer value = entry.getValue();
+			Integer prevValue = prevValues.get(entry.getKey());
+			if(value != null && prevValue != null)
+			{
+				if(value.equals(prevValue)) return true;
+			}
+			else if(value != null || prevValue != null)
+			{
+				return false;
 			}
 		}
 		
-		int blindnessTimer = get(BLINDNESS_CAP);
-		int suffocationTimer = get(SUFFOCATION_CAP);
-		int slownessTimer = get(SLOWNESS_CAP);
-		
-		if(gasType != null && gasType.blindnessRate > 0 && blind(gasType))
-		{
-			blindnessTimer += gasType.blindnessRate + 4;
-		}
-		blindnessTimer -= 4;
-		
-		if(gasType != null && gasType.suffocationRate > 0 && suffocate(gasType))
-		{
-			suffocationTimer += gasType.suffocationRate + 32;
-			
-			if(suffocationTimer > 350)
-			{
-				slownessTimer += gasType.slownessRate + 10;
-			}
-			
-			if(suffocationTimer > 400)
-			{
-				gasType.onBreathed(entity);
-				suffocationTimer -= 32;
-			}
-		}
-		suffocationTimer -= 32;
-		slownessTimer -= 10;
-		
-		if(blindnessTimer > 500) blindnessTimer = 500;
-		else if(blindnessTimer < 0) blindnessTimer = 0;
-		
-		if(suffocationTimer < 0) suffocationTimer = 0;
-		
-		if(slownessTimer > 1000) slownessTimer = 1000;
-		else if(slownessTimer < 0) slownessTimer = 0;
-		
-		set(BLINDNESS_CAP, blindnessTimer);
-		set(SUFFOCATION_CAP, suffocationTimer);
-		set(SLOWNESS_CAP, slownessTimer);
+		return false;
 	}
 	
 	@Override
-	public int get(int cap)
+	public int get(EffectType effectType)
 	{
-		int bitmask = getBitmask(cap);
-		int combined = entity.getDataWatcher().getWatchableObjectInt(WATCHER);
-		return (combined & bitmask) >>> (BITS_PER_CAP * cap);
+		Integer res = values.get(effectType);
+		if(res != null)
+		{
+			return res;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 	
 	@Override
-	public int set(int cap, int i)
+	public int set(EffectType effectType, int i)
 	{
-		if(i >= 1 << BITS_PER_CAP)
-		{
-			i = (1 << BITS_PER_CAP) - 1;
-		}
-		else if(i < 0)
-		{
-			i = 0;
-		}
-		
-		int bitmask = getBitmask(cap);
-		int combined = entity.getDataWatcher().getWatchableObjectInt(WATCHER);
-		combined = (combined & ~bitmask) | ((i << (BITS_PER_CAP * cap)) & bitmask);
-		entity.getDataWatcher().updateObject(WATCHER, combined);
-		
+		values.put(effectType, Integer.valueOf(i));
 		return i;
 	}
 
 	@Override
-	public int increment(int watchObject, int i)
+	public int increment(EffectType effectType, int i)
 	{
-		return set(watchObject, get(watchObject) + i);
-	}
-	
-	private int getBitmask(int cap)
-	{
-		return ((1 << BITS_PER_CAP) - 1) << (BITS_PER_CAP * cap);
+		return set(effectType, get(effectType) + i);
 	}
 	
 	public static void register(EntityLivingBase entity)
