@@ -30,6 +30,7 @@ import glenn.gasesframework.common.tileentity.TileEntityGasTank;
 import glenn.gasesframework.common.tileentity.TileEntityInfiniteGasDrain;
 import glenn.gasesframework.common.tileentity.TileEntityInfiniteGasPump;
 import glenn.gasesframework.common.worldgen.WorldGeneratorGasesFramework;
+import glenn.gasesframework.network.PacketPipeline;
 import glenn.gasesframework.waila.GasesFrameworkWaila;
 import glenn.moddingutils.Configurations.ItemRepresentation;
 
@@ -87,6 +88,7 @@ public class GasesFramework implements IGasesFramework
 	@SidedProxy(clientSide = "glenn.gasesframework.client.ClientProxy", serverSide = "glenn.gasesframework.server.ServerProxy")
 	public static CommonProxy proxy;
 	public static final GuiHandler guiHandler = new GuiHandler();
+	public static final PacketPipeline packetPipeline = new PacketPipeline();
 	
 	public static final String MODID = GasesFrameworkAPI.OWNER;
 	public static final String VERSION = "1.1.1";
@@ -191,6 +193,7 @@ public class GasesFramework implements IGasesFramework
 	public void load(FMLInitializationEvent event)
 	{
 		proxy.registerRenderers();
+		packetPipeline.initialize();
 		
 		GameRegistry.registerWorldGenerator(worldGenerator, 10);
 		
@@ -248,7 +251,7 @@ public class GasesFramework implements IGasesFramework
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		
+		packetPipeline.postInitialize();
 	}
 	
 	/**
