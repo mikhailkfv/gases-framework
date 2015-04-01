@@ -14,10 +14,10 @@ import net.minecraft.entity.player.EntityPlayer;
  * @author Glenn
  *
  */
-public abstract class AbstractSerialPacket extends AbstractPacket
+public abstract class AbstractSerialMessage extends AbstractMessage
 {
 	@Override
-	public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+	public void toBytes(ByteBuf buffer)
 	{
 		for(Field field : getClass().getFields())
 		{
@@ -145,7 +145,7 @@ public abstract class AbstractSerialPacket extends AbstractPacket
 	}
 
 	@Override
-	public void decodeinto(ChannelHandlerContext ctx, ByteBuf buffer)
+	public void fromBytes(ByteBuf buffer)
 	{
 		for(Field field : getClass().getFields())
 		{

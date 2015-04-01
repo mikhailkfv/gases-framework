@@ -175,8 +175,8 @@ public class GFClassTransformer implements IClassTransformer
 			method.instructions.add(new IntInsnNode(SIPUSH, 1000));
 			method.instructions.add(new VarInsnNode(ALOAD, 0));
 			method.instructions.add(new MethodInsnNode(INVOKESTATIC, "glenn/gasesframework/api/ExtendedGasEffectsBase", "get", "(L" + classEntityLivingBase + ";)Lglenn/gasesframework/api/ExtendedGasEffectsBase;", false));
-			method.instructions.add(new FieldInsnNode(GETSTATIC, "glenn/gasesframework/api/ExtendedGasEffectsBase", "SLOWNESS_CAP", "I"));
-			method.instructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/ExtendedGasEffectsBase", "get", "(I)I", false));
+			method.instructions.add(new FieldInsnNode(GETSTATIC, "glenn/gasesframework/api/ExtendedGasEffectsBase$EffectType", "SLOWNESS", "Lglenn/gasesframework/api/ExtendedGasEffectsBase$EffectType;"));
+			method.instructions.add(new MethodInsnNode(INVOKEVIRTUAL, "glenn/gasesframework/api/ExtendedGasEffectsBase", "get", "(Lglenn/gasesframework/api/ExtendedGasEffectsBase$EffectType;)I", false));
 			method.instructions.add(new InsnNode(ISUB));
 			method.instructions.add(new InsnNode(I2D));
 			method.instructions.add(new LdcInsnNode(1000.0D));
