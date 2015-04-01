@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -77,6 +78,12 @@ public class GasType
 	 * The damage this gas deals upon touch.
 	 */
 	public float damage = 0.0f;
+	/**
+	 * Will this gas type, when flowing, destroy loose blocks such as redstone and torches?
+	 * If true, the gas can destroy blocks with materials on the condition {@link net.minecraft.block.material.Material#getMaterialMobility() getMaterialMobility()} == 1. 
+	 * If false, the gas can destroy blocks with materials on the condition {@link net.minecraft.block.material.Material#isReplaceable() isReplaceable()}.
+	 */
+	public boolean destroyLooseBlocks = false;
 	
 	/**
 	 * The rate at which gas of this type will cause various gas effects.
@@ -276,6 +283,17 @@ public class GasType
 	}
 	
 	/**
+	 * Set whether this gas type, when flowing, will destroy loose blocks such as redstone and torches.
+	 * If true, the gas can destroy blocks with materials on the condition {@link net.minecraft.block.material.Material#getMaterialMobility() getMaterialMobility()} == 1. 
+	 * If false, the gas can destroy blocks with materials on the condition {@link net.minecraft.block.material.Material#isReplaceable() isReplaceable()}.
+	 */
+	public GasType setDestroyLooseBlocks(boolean destroyLooseBlocks)
+	{
+		this.destroyLooseBlocks = destroyLooseBlocks;
+		return this;
+	}
+	
+	/**
 	 * Get the bottled item. Is {@link GasesFramework#gasBottle} by default.
 	 * @return
 	 */
@@ -458,7 +476,15 @@ public class GasType
 		}
 		else
 		{
-			return world.isAirBlock(x, y, z);
+			Material material = world.getBlock(x, y, z).getMaterial();
+			if(this.destroyLooseBlocks)
+			{
+				return material.getMaterialMobility() == 1;
+			}
+			else
+			{
+				return material.isReplaceable();
+			}
 		}
 	}
 	
