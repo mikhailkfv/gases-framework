@@ -522,7 +522,7 @@ public class BlockGas extends Block implements ISample
     	    	Block direction2Block = world.getBlock(par2 + xDirection, par3 + yDirection, par4 + zDirection);
     			int direction2BlockMetadata = 16 - world.getBlockMetadata(par2 + xDirection, par3 + yDirection, par4 + zDirection);
     			
-    			if(canForcefullyFlowInto(direction2Block, direction2BlockMetadata, prevMetadata))
+    			if(type.canFlowHere(prevMetadata, world, par2 + xDirection, par3 + yDirection, par4 + zDirection))
     			{
     				direction2BlockMetadata = -1;
     				surroundingAirBlocks++;
@@ -616,7 +616,7 @@ public class BlockGas extends Block implements ISample
     	Block reverseDirectionBlock = world.getBlock(par2, par3 - yDirection, par4);
 		int reverseDirectionBlockMetadata = 16 - world.getBlockMetadata(par2, par3 - yDirection, par4);
 		
-    	if(canForcefullyFlowInto(directionBlock, directionBlockMetadata, metadata))
+    	if(type.canFlowHere(metadata, world, par2, par3 + yDirection, par4))
     	{
     		//If the block in the direction can be flowed into forcefully, it will only move in this direction.
     		if(metadata > 0)
@@ -682,7 +682,7 @@ public class BlockGas extends Block implements ISample
     	    	Block direction2Block = world.getBlock(par2 + xDirection, par3, par4 + zDirection);
     			int direction2BlockMetadata = 16 - world.getBlockMetadata(par2 + xDirection, par3, par4 + zDirection);
 
-    			if(canForcefullyFlowInto(direction2Block, direction2BlockMetadata, prevMetadata))
+    			if(type.canFlowHere(prevMetadata, world, par2 + xDirection, par3, par4 + zDirection))
     			{
     				direction2BlockMetadata = -1;
     				surroundingAirBlocks++;
@@ -740,25 +740,25 @@ public class BlockGas extends Block implements ISample
         			Block direction2Block = world.getBlock(x, par3, z);
         			int direction2BlockMetadata = world.getBlockMetadata(x, par3, z);
 
-        			if(canForcefullyFlowInto(direction2Block, direction2BlockMetadata, prevMetadata))
+        			if(type.canFlowHere(prevMetadata, world, x, par3, z))
         			{
         				Block direction3Block = world.getBlock(x, par3 + yDirection, z);
             			int direction3BlockMetadata = world.getBlockMetadata(x, par3 + yDirection, z);
 
-        				if(canForcefullyFlowInto(direction3Block, direction3BlockMetadata, prevMetadata) || (direction3Block == this && metadata - world.getBlockMetadata(x, par3 + yDirection, z) <= 0))
+        				if(type.canFlowHere(prevMetadata, world, x, par3 + yDirection, z) || (direction3Block == this && metadata - world.getBlockMetadata(x, par3 + yDirection, z) <= 0))
         				{
         					if(i >= 8)
         					{
         						Block direction4Block = world.getBlock(par2 + movesX[i], par3, par4 + movesZ[i]);
                     			int direction4BlockMetadata = world.getBlockMetadata(par2 + movesX[i], par3, par4 + movesZ[i]);
                     			
-            					if(!canForcefullyFlowInto(world, par2 + movesX[i], par3, par4 + movesZ[i], prevMetadata))
+            					if(!type.canFlowHere(prevMetadata, world, par2 + movesX[i], par3, par4 + movesZ[i]))
         						{
         							continue;
         						}
         					} else if(i >= 4)
         					{
-        						if(!canForcefullyFlowInto(world, par2 + movesX[i], par3, par4, prevMetadata) && !canForcefullyFlowInto(world, par2, par3, par4 + movesZ[i], prevMetadata))
+        						if(!type.canFlowHere(prevMetadata, world, par2 + movesX[i], par3, par4) && !type.canFlowHere(prevMetadata, world, par2, par3, par4 + movesZ[i]))
         						{
         							continue;
         						}
@@ -853,32 +853,6 @@ public class BlockGas extends Block implements ISample
     	}
 		
 		type.postTick(world, par2, par3, par4, random);
-    }
-    
-    /**
-     * Can this gas block forcefully flow into this block?
-     * @param block
-     * @param thisMetadata
-     * @param i
-     * @param j
-     * @param k
-     * @return
-     */
-    protected boolean canForcefullyFlowInto(World world, int i, int j, int k, int thisMetadata)
-    {
-    	return canForcefullyFlowInto(world.getBlock(i, j, k), world.getBlockMetadata(i, j, k), thisMetadata);
-    }
-    
-    /**
-     * Can this gas block forcefully flow into this block?
-     * @param block
-     * @param thisMetadata
-     * @param otherMetadata
-     * @return
-     */
-    protected boolean canForcefullyFlowInto(Block block, int otherMetadata, int thisMetadata)
-    {
-    	return block == Blocks.air || (block instanceof BlockGas && ((BlockGas)block).type.canBeDestroyedBy(type, otherMetadata, thisMetadata));
     }
 
     /**

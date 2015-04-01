@@ -430,14 +430,36 @@ public class GasType
 	
 	/**
 	 * Can a gas block of type 'type' forcefully flow into this type of gas?
+	 * @param thisVolume - The volume of this gas block.
 	 * @param type - The type of gas attempting to flow into this one.
-	 * @param thisMetadata - The metadata of this gas block.
-	 * @param otherMetadata - The metadata of the other gas block.
+	 * @param otherVolume - The volume of the other gas block.
 	 * @return
 	 */
-	public boolean canBeDestroyedBy(GasType type, int thisMetadata, int otherMetadata)
+	public boolean canBeDestroyedBy(int thisVolume, GasType type, int otherVolume)
 	{
 		return false;
+	}
+	
+	/**
+	 * Can this gas type flow to this coordinate?
+	 * @param thisVolume - The volume of this gas block.
+	 * @param world
+	 * @param x - The X coordinate this gas can flow to.
+	 * @param y - The Y coordinate this gas can flow to.
+	 * @param z - The z coordinate this gas can flow to.
+	 * @return
+	 */
+	public boolean canFlowHere(int thisVolume, World world, int x, int y, int z)
+	{
+		GasType otherGasType = GasesFrameworkAPI.getGasType(world, x, y, z);
+		if(otherGasType != null)
+		{
+			return otherGasType.canBeDestroyedBy(GasesFrameworkAPI.getGasVolume(world, x, y, z), this, thisVolume);
+		}
+		else
+		{
+			return world.isAirBlock(x, y, z);
+		}
 	}
 	
 	/**
