@@ -203,11 +203,11 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 			Integer prevValue = prevValues.get(entry.getKey());
 			if(value != null && prevValue != null)
 			{
-				if(value.equals(prevValue)) return true;
+				if(!value.equals(prevValue)) return true;
 			}
 			else if(value != null || prevValue != null)
 			{
-				return false;
+				return true;
 			}
 		}
 		
