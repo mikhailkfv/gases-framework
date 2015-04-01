@@ -1,9 +1,11 @@
 package glenn.gasesframework.api.gastype;
 
 import glenn.gasesframework.api.Combustibility;
+import glenn.gasesframework.api.ExtendedGasEffectsBase.EffectType;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
@@ -77,17 +79,10 @@ public class GasType
 	public float damage = 0.0f;
 	
 	/**
-	 * The rate at which gas of this type will cause blindness.
+	 * The rate at which gas of this type will cause various gas effects.
 	 */
-	public int blindnessRate = 0;
-	/**
-	 * The rate at which gas of this type will cause suffocation. At higher values, the player will suffocate earlier and will take damage more frequently.
-	 */
-	public int suffocationRate = 0;
-	/**
-	 * How much this gas will gradually slow down the player.
-	 */
-	public int slownessRate = 0;
+	private final EnumMap<EffectType, Integer> effectRates = new EnumMap<EffectType, Integer>(EffectType.class);
+	
 	/**
 	 * The overlay image used when the player is inside the gas.
 	 */
@@ -211,24 +206,30 @@ public class GasType
 	}
 	
 	/**
-	 * Sets the rates of gas effects on this gas type.
-	 * @param blindness - How quickly the player will experience gradual blindness.
-	 * @param suffocation - How quickly the player will suffocate in the gas, and how often {@link GasType#onBreathed(EntityLivingBase)} will be called
-	 * @param slowness - How quickly the player will lose their movement speed inside the gas.
+	 * Sets the rate of a gas effect on this gas type.
+	 * @param effectType - The effect type which is to be added to the gas.
+	 * @param value - The rate at which this effect will be applied. Greater numbers trigger the effects more quickly.
 	 * @return
 	 */
-	public GasType setEffectRates(int blindness, int suffocation, int slowness)
+	public GasType setEffectRate(EffectType effectType, int value)
     {
-    	this.blindnessRate = blindness;
-    	this.suffocationRate = suffocation;
-    	this.slownessRate = slowness;
-    	
-    	if(blindnessRate <= 0) blindnessRate = -4;
-    	if(suffocationRate <= 0) suffocationRate = -16;
-    	if(slownessRate <= 0) slownessRate = -32;
+		this.effectRates.put(effectType, Integer.valueOf(value));
     	
     	return this;
     }
+	
+	public int getEffectRate(EffectType effectType)
+	{
+		Integer res = this.effectRates.get(effectType);
+		if(res == null)
+		{
+			return 0;
+		}
+		else
+		{
+			return res;
+		}
+	}
 	
 	/**
 	 * Set how much damage the gas will deal upon contact with the player.

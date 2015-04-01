@@ -17,11 +17,11 @@ public abstract class ExtendedGasEffectsBase implements IExtendedEntityPropertie
 		 */
 		BLINDNESS,
 		/**
-		 * Whenever suffocation reaches a certain value, it drops to some value below and damages the entity.
+		 * Whenever suffocation reaches a certain value, it drops to some value below and triggers the effects of breathing the gas.
 		 */
 		SUFFOCATION,
 		/**
-		 * This is a slowness effect much like the one already in Minecraft, except it is gradual.
+		 * This is a slowness effect much like the one already in Minecraft, except it is gradual. It is usually applied when the player starts suffocating in gas.
 		 */
 		SLOWNESS
 	}

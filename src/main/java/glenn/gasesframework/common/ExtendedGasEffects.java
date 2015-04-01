@@ -1,10 +1,5 @@
 package glenn.gasesframework.common;
 
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Set;
-
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
 import glenn.gasesframework.api.block.MaterialGas;
@@ -12,6 +7,11 @@ import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.item.IGasEffectProtector;
 import glenn.gasesframework.common.block.BlockGas;
 import glenn.gasesframework.network.message.MessageGasEffects;
+
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Set;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 
 public class ExtendedGasEffects extends ExtendedGasEffectsBase
 {
@@ -146,19 +147,19 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 			int suffocationTimer = get(EffectType.SUFFOCATION);
 			int slownessTimer = get(EffectType.SLOWNESS);
 			
-			if(gasType != null && gasType.blindnessRate > 0 && blind(gasType))
+			if(gasType != null && gasType.getEffectRate(EffectType.BLINDNESS) > 0 && blind(gasType))
 			{
-				blindnessTimer += gasType.blindnessRate + 4;
+				blindnessTimer += gasType.getEffectRate(EffectType.BLINDNESS) + 4;
 			}
 			blindnessTimer -= 4;
 			
-			if(gasType != null && gasType.suffocationRate > 0 && suffocate(gasType))
+			if(gasType != null && gasType.getEffectRate(EffectType.SUFFOCATION) > 0 && suffocate(gasType))
 			{
-				suffocationTimer += gasType.suffocationRate + 32;
+				suffocationTimer += gasType.getEffectRate(EffectType.SUFFOCATION) + 32;
 				
 				if(suffocationTimer > 350)
 				{
-					slownessTimer += gasType.slownessRate + 10;
+					slownessTimer += gasType.getEffectRate(EffectType.SLOWNESS) + 10;
 				}
 				
 				if(suffocationTimer > 400)

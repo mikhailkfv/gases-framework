@@ -1,5 +1,6 @@
 package glenn.gasesframework.api;
 
+import glenn.gasesframework.api.ExtendedGasEffectsBase.EffectType;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gastype.GasTypeAir;
 import glenn.gasesframework.api.gastype.GasTypeFire;
@@ -77,7 +78,7 @@ public class GasesFrameworkAPI
 	/**
 	 * The gas type for smoke. Do not register this!
 	 */
-	public static final GasType gasTypeSmoke = new GasType(true, 1, "smoke", 0x3F3F3F9F, 2, -16, Combustibility.NONE).setEffectRates(4, 4, 16);
+	public static final GasType gasTypeSmoke = new GasType(true, 1, "smoke", 0x3F3F3F9F, 2, -16, Combustibility.NONE).setEffectRate(EffectType.BLINDNESS, 4).setEffectRate(EffectType.SUFFOCATION, 4).setEffectRate(EffectType.SLOWNESS, 16);
 	/**
 	 * The gas type for ignited gas. Do not register this!
 	 */
