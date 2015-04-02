@@ -39,9 +39,9 @@ public class GasTypeFire extends GasType
 	 * @param entity
 	 */
     @Override
-	public void onTouched(Entity entity)
+	public void onTouched(Entity entity, World world)
 	{
-    	super.onTouched(entity);
+    	super.onTouched(entity, world);
 		entity.setFire(5);
 	}
     

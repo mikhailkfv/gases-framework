@@ -334,7 +334,7 @@ public class GasType
 	 * Called when an entity touches the gas in block form.
 	 * @param entity
 	 */
-	public void onTouched(Entity entity)
+	public void onTouched(Entity entity, World world)
 	{
 		if(damage > 0.0F & !(entity instanceof EntityItem))
     	{
