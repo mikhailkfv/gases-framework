@@ -27,12 +27,16 @@ public class ItemGasBottle extends Item
     @Override
 	public String getItemStackDisplayName(ItemStack itemstack)
 	{
-		if(itemstack.getItemDamage() > 0)
+    	GasType gasType = getGasType(itemstack);
+		if(gasType == GasesFrameworkAPI.gasTypeAir || gasType == null)
 		{
-			String s = StatCollector.translateToLocal(getGasType(itemstack).getUnlocalizedName() + ".name");
+			return super.getItemStackDisplayName(itemstack);
+		}
+		else
+		{
+			String s = StatCollector.translateToLocal(gasType.getUnlocalizedName() + ".name");
 			return StatCollector.translateToLocalFormatted(getUnlocalizedNameInefficiently(itemstack) + ".name.filled", s);
 		}
-		return super.getItemStackDisplayName(itemstack);
     }
 	
 	@SideOnly(Side.CLIENT)
@@ -46,20 +50,14 @@ public class ItemGasBottle extends Item
     @Override
     public int getColorFromItemStack(ItemStack par1ItemStack, int par2)
     {
-        return par2 > 0 ? 16777215 : this.getColorFromDamage(par1ItemStack.getItemDamage());
+        return par2 > 0 ? 0xFFFFFF : this.getColorFromDamage(par1ItemStack.getItemDamage());
     }
 	
 	@SideOnly(Side.CLIENT)
     public int getColorFromDamage(int par1)
     {
-		if(par1 > 0)
-		{
-			return GasType.getGasTypeByID(par1).color >> 8;
-		}
-		else
-		{
-			return 16777215;
-		}
+		GasType gasType = GasType.getGasTypeByID(par1);
+		return gasType != null ? (gasType.color >> 8) : 0xFFFFFF;
     }
 	
 	@SideOnly(Side.CLIENT)
