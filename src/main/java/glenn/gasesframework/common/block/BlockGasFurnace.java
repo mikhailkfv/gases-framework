@@ -5,6 +5,7 @@ import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.common.container.ContainerGasFurnace;
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace;
 
 import java.util.Random;
@@ -142,7 +143,7 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 
             if (tileentityfurnace != null)
             {
-            	par5EntityPlayer.openGui(GasesFramework.instance, 0, par1World, par2, par3, par4);
+            	par5EntityPlayer.openGui(GasesFramework.instance, ContainerGasFurnace.GUI_ID, par1World, par2, par3, par4);
             }
 
             return true;
