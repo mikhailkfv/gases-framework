@@ -1,4 +1,4 @@
-package glenn.gasesframework.network;
+package glenn.moddingutils;
 
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;

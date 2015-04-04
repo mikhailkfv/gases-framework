@@ -6,9 +6,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
-import glenn.gasesframework.network.AbstractMessage;
-import glenn.gasesframework.network.AbstractMessageHandler;
-import glenn.gasesframework.network.AbstractSerialMessage;
+import glenn.moddingutils.AbstractMessage;
+import glenn.moddingutils.AbstractMessageHandler;
+import glenn.moddingutils.AbstractSerialMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageGasEffects extends AbstractSerialMessage

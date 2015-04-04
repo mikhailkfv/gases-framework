@@ -1,4 +1,4 @@
-package glenn.gasesframework.network;
+package glenn.moddingutils;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
