@@ -52,6 +52,19 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			}
 			
 			@Override
+			public boolean isValidInput(ItemStack inputStack)
+			{
+				if(inputStack != null)
+				{
+					return !getHandlersForItem(inputStack).isEmpty();
+				}
+				else
+				{
+					return false;
+				}
+			}
+			
+			@Override
 			public String getUnlocalizedName()
 			{
 				return "container.gasTransposer.insert.name";
@@ -182,6 +195,19 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 					{
 						tileEntity.setHandler(null, 0);
 					}
+				}
+			}
+			
+			@Override
+			public boolean isValidInput(ItemStack inputStack)
+			{
+				if(inputStack != null)
+				{
+					return getHandlerFromItem(inputStack) != null;
+				}
+				else
+				{
+					return false;
 				}
 			}
 			
@@ -322,6 +348,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 		
 		public abstract void registerHandler(IGasTransposerHandler handler);
 		public abstract void validate(TileEntityGasTransposer tileEntity);
+		public abstract boolean isValidInput(ItemStack inputStack);
 		public abstract String getUnlocalizedName();
 		public abstract void tick(TileEntityGasTransposer tileEntity);
 		public abstract boolean complete(TileEntityGasTransposer tileEntity);

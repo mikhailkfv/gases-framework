@@ -22,6 +22,8 @@ public class ContainerGasTransposer extends Container
 	private int lastTime;
 	private int lastTotalTime;
 	
+	private boolean forceUpdate = true;
+	
 	public ContainerGasTransposer(InventoryPlayer inventoryPlayer, TileEntityGasTransposer tileEntity)
 	{
 		this.tileEntity = tileEntity;
@@ -78,19 +80,19 @@ public class ContainerGasTransposer extends Container
 		{
 			ICrafting icrafting = (ICrafting)this.crafters.get(i);
 			
-			if(lastContainedType != tileEntity.containedType)
+			if(forceUpdate || lastContainedType != tileEntity.containedType)
 			{
 				icrafting.sendProgressBarUpdate(this, 0, tileEntity.containedType != null ? tileEntity.containedType.gasID : -1);
 			}
-			if(lastMode != tileEntity.mode)
+			if(forceUpdate || lastMode != tileEntity.mode)
 			{
 				icrafting.sendProgressBarUpdate(this, 1, tileEntity.mode.ordinal());
 			}
-			if(lastTime != tileEntity.time)
+			if(forceUpdate || lastTime != tileEntity.time)
 			{
 				icrafting.sendProgressBarUpdate(this, 2, tileEntity.time);
 			}
-			if(lastTotalTime != tileEntity.totalTime)
+			if(forceUpdate || lastTotalTime != tileEntity.totalTime)
 			{
 				icrafting.sendProgressBarUpdate(this, 3, tileEntity.totalTime);
 			}
@@ -100,6 +102,7 @@ public class ContainerGasTransposer extends Container
 		this.lastMode = tileEntity.mode;
 		this.lastTime = tileEntity.time;
 		this.lastTotalTime = tileEntity.totalTime;
+		this.forceUpdate = false;
 	}
 	
 	@Override
@@ -115,7 +118,7 @@ public class ContainerGasTransposer extends Container
 			
 			if(slotIndex < 2)
 			{
-				//Left or right slot
+				//Left or right slot, should be placed in player's inventory
 				if(!mergeItemStack(slotContents, 2, 38, true))
 				{
 					return null;
@@ -125,7 +128,49 @@ public class ContainerGasTransposer extends Container
 			else
 			{
 				//Player inventory slots
+				int inputSlot = tileEntity.mode.inputSlot;
+				
+				if(tileEntity.mode.isValidInput(slotContents))
+				{
+					//This input can apply to the input slot of the gas transposer
+					if(!mergeItemStack(slotContents, inputSlot, inputSlot + 1, false))
+					{
+						return null;
+					}
+				}
+				else if(slotIndex < 29)
+				{
+					//This is from the player's main inventory and should be placed in the action bar
+					if(!mergeItemStack(slotContents, 29, 38, false))
+					{
+						return null;
+					}
+				}
+				else if(slotIndex < 38)
+				{
+					//This is from the player's action bar and should be placed in the main inventory
+					if(!mergeItemStack(slotContents, 2, 29, false))
+					{
+						return null;
+					}
+				}
 			}
+			
+			if(slotContents.stackSize <= 0)
+			{
+				slot.putStack(null);
+			}
+			else
+			{
+				slot.onSlotChanged();
+			}
+			
+			if(itemstack.stackSize == slotContents.stackSize)
+			{
+				return null;
+			}
+			
+			slot.onPickupFromSlot(entityPlayer, slotContents);
 		}
 		
 		return itemstack;
