@@ -203,6 +203,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 						if(handler != null)
 						{
 							tileEntity.setHandler(handler, handler.getExtractionTime());
+							tileEntity.pendingType = handler.getOutputGasType(itemstack);
 						}
 					}
 				}
@@ -240,12 +241,11 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				
 				if(tileEntity.containedType == null)
 				{
-					GasType gasType = handler.getOutputGasType(tileEntity.itemStacks[inputSlot]);
-					if(handler.completeExtraction(tileEntity.itemStacks[1], tileEntity.itemStacks[outputSlot], gasType))
+					if(handler.completeExtraction(tileEntity.itemStacks[1], tileEntity.itemStacks[outputSlot], tileEntity.pendingType))
 					{
-						tileEntity.containedType = gasType;
-						tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.containedType);
-						tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[outputSlot], tileEntity.containedType);
+						tileEntity.containedType = tileEntity.pendingType;
+						tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.pendingType);
+						tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
 						return true;
 					}
 					else
@@ -345,6 +345,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 	public int time = 0;
 	public int totalTime = 0;
 	public GasType containedType = null;
+	public GasType pendingType = null;
 	private IGasTransposerHandler currentHandler;
 	
 	private void setHandler(IGasTransposerHandler handler, int totalTime)
@@ -354,6 +355,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			this.currentHandler = handler;
 			this.time = 0;
 			this.totalTime = totalTime;
+			this.pendingType = null;
 		}
 	}
 	
