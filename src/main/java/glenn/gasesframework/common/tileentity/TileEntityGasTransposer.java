@@ -220,7 +220,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			@Override
 			public void tick(TileEntityGasTransposer tileEntity)
 			{
-				if(tileEntity.currentHandler == null && tileEntity.containedType == null)
+				if(tileEntity.currentHandler == null)
 				{
 					ItemStack itemstack = tileEntity.itemStacks[inputSlot];
 					if(itemstack != null)
@@ -233,31 +233,6 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 						}
 					}
 				}
-				
-				if(tileEntity.containedType != null)
-				{
-					ForgeDirection direction = ForgeDirection.getOrientation(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
-					
-					int x = tileEntity.xCoord + direction.offsetX;
-					int y = tileEntity.yCoord + direction.offsetY;
-					int z = tileEntity.zCoord + direction.offsetZ;
-					
-					Block block = tileEntity.worldObj.getBlock(x, y, z);
-			    	if(block instanceof IGasReceptor)
-					{
-						if(((IGasReceptor)block).receiveGas(tileEntity.worldObj, x, y, z, direction.getOpposite(), tileEntity.containedType))
-						{
-							tileEntity.containedType = null;
-						}
-					}
-					else
-					{
-						if(GasesFrameworkAPI.fillWithGas(tileEntity.worldObj, tileEntity.worldObj.rand, x, y, z, tileEntity.containedType))
-						{
-							tileEntity.containedType = null;
-						}
-					}
-				}
 			}
 			
 			@Override
@@ -265,24 +240,35 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			{
 				IGasTransposerExtractHandler handler = (IGasTransposerExtractHandler)tileEntity.currentHandler;
 				
-				if(tileEntity.containedType == null)
+				if(handler.completeExtraction(tileEntity.itemStacks[1], tileEntity.itemStacks[outputSlot], tileEntity.pendingType))
 				{
-					if(handler.completeExtraction(tileEntity.itemStacks[1], tileEntity.itemStacks[outputSlot], tileEntity.pendingType))
+					ForgeDirection direction = ForgeDirection.getOrientation(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
+					int x = tileEntity.xCoord + direction.offsetX;
+					int y = tileEntity.yCoord + direction.offsetY;
+					int z = tileEntity.zCoord + direction.offsetZ;
+					
+					Block block = tileEntity.worldObj.getBlock(x, y, z);
+			    	if(block instanceof IGasReceptor)
 					{
-						tileEntity.containedType = tileEntity.pendingType;
-						tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.pendingType);
-						tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
-						return true;
+						if(((IGasReceptor)block).receiveGas(tileEntity.worldObj, x, y, z, direction.getOpposite(), tileEntity.pendingType))
+						{
+							tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.pendingType);
+							tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
+							return true;
+						}
 					}
 					else
 					{
-						return false;
+						if(GasesFrameworkAPI.fillWithGas(tileEntity.worldObj, tileEntity.worldObj.rand, x, y, z, tileEntity.pendingType))
+						{
+							tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.pendingType);
+							tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
+							return true;
+						}
 					}
 				}
-				else
-				{
-					return false;
-				}
+				
+				return false;
 			}
 			
 			@Override
