@@ -220,7 +220,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			@Override
 			public void tick(TileEntityGasTransposer tileEntity)
 			{
-				if(tileEntity.currentHandler == null)
+				if(tileEntity.currentHandler == null && tileEntity.containedType == null)
 				{
 					ItemStack itemstack = tileEntity.itemStacks[inputSlot];
 					if(itemstack != null)
