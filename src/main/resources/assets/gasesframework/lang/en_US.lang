@@ -39,6 +39,7 @@ tile.gf_gasFurnaceWarm.name=Warm Gas Furnace
 tile.gf_infiniteGasPump.name=Infinite Gas Pump
 tile.gf_infiniteGasPump.waila.body.side=Side emits: %s
 tile.gf_infiniteGasDrain.name=Infinite Gas Drain
+tile.gf_gasTransposer.name=Gas Transposer
 
 itemGroup.tabGases=Glenn's Gases
 
