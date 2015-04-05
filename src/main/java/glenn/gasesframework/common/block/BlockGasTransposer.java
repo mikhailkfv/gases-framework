@@ -9,11 +9,13 @@ import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -24,6 +26,41 @@ public class BlockGasTransposer extends Block implements ITileEntityProvider, IG
 	{
 		super(Material.iron);
 	}
+    
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemstack)
+    {
+    	int metadata;
+    	
+    	if(entity.rotationPitch < -45.0f)
+    	{
+    		metadata = 0;
+    	}
+    	else if(entity.rotationPitch > 45.0f)
+    	{
+    		metadata = 1;
+    	}
+    	else
+    	{
+    		int side = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+    		switch(side)
+    		{
+    		case 0:
+    			metadata = 2;
+    			break;
+    		case 1:
+    			metadata = 5;
+    			break;
+    		case 2:
+    			metadata = 3;
+    			break;
+    		default:
+    			metadata = 4;
+    		}
+    	}
+    	
+    	world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
+    }
 	
 	@Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
@@ -103,19 +140,29 @@ public class BlockGasTransposer extends Block implements ITileEntityProvider, IG
 	@Override
 	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		return false;
+		TileEntityGasTransposer tileEntity = (TileEntityGasTransposer)world.getTileEntity(x, y, z);
+		return tileEntity.mode.receiveGas(tileEntity, gasType);
 	}
 
 	@Override
 	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		return false;
+		TileEntityGasTransposer tileEntity = (TileEntityGasTransposer)world.getTileEntity(x, y, z);
+		return tileEntity.mode.canReceiveGas(tileEntity, gasType);
 	}
 
 	@Override
 	public boolean canPropelGasFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		return false;
+		if(side == ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)))
+		{
+			TileEntityGasTransposer tileEntity = (TileEntityGasTransposer)world.getTileEntity(x, y, z);
+			return tileEntity.mode.canPropelGas(tileEntity);
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	@Override

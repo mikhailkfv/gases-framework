@@ -7,6 +7,7 @@ import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.common.CommonProxy;
+import glenn.gasesframework.common.GasBottleTransposerHandler;
 import glenn.gasesframework.common.GasesFrameworkMainConfigurations;
 import glenn.gasesframework.common.GuiHandler;
 import glenn.gasesframework.common.block.BlockGas;
@@ -261,7 +262,7 @@ public class GasesFramework implements IGasesFramework
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		
+		TileEntityGasTransposer.registerHandler(new GasBottleTransposerHandler());
 	}
 	
 	/**
