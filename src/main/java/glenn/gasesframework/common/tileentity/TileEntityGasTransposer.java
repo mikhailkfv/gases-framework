@@ -25,7 +25,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 {
 	public static enum Mode
 	{
-		INSERT
+		INSERT(0, 1)
 		{
 			private final LinkedList<IGasTransposerInsertHandler> handlers = new LinkedList<IGasTransposerInsertHandler>();
 			
@@ -44,36 +44,11 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				IGasTransposerInsertHandler handler = (IGasTransposerInsertHandler)tileEntity.currentHandler;
 				if(handler != null)
 				{
-					if(tileEntity.itemStacks[0] == null || !handler.isValidInputItemStack(tileEntity.itemStacks[0]) || !handler.isValidInputGasType(tileEntity.containedType))
+					if(tileEntity.itemStacks[inputSlot] == null || !handler.isValidInputItemStack(tileEntity.itemStacks[inputSlot]) || !handler.isValidInputGasType(tileEntity.containedType))
 					{
 						tileEntity.setHandler(null, 0);
 					}
 				}
-			}
-			
-			@Override
-			public boolean isItemValidForSlot(int slot, ItemStack itemstack)
-			{
-				return slot == 0;
-			}
-			
-			@Override
-			public int[] getAccessibleSlotsFromSide(int side)
-			{
-				if(side == 0)
-				{
-					return new int[]{ 1 };
-				}
-				else
-				{
-					return new int[]{ 0 };
-				}
-			}
-			
-			@Override
-			public boolean canExtractItem(int slot, ItemStack itemstack, int side)
-			{
-				return slot == 1;
 			}
 			
 			@Override
@@ -92,10 +67,10 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			public boolean complete(TileEntityGasTransposer tileEntity)
 			{
 				IGasTransposerInsertHandler handler = (IGasTransposerInsertHandler)tileEntity.currentHandler;
-				if(handler.completeInsertion(tileEntity.itemStacks[0], tileEntity.itemStacks[1], tileEntity.containedType))
+				if(handler.completeInsertion(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.containedType))
 				{
-					tileEntity.itemStacks[0] = handler.getInsertionInputStack(tileEntity.itemStacks[0], tileEntity.containedType);
-					tileEntity.itemStacks[1] = handler.getInsertionOutputStack(tileEntity.itemStacks[1], tileEntity.containedType);
+					tileEntity.itemStacks[inputSlot] = handler.getInsertionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.containedType);
+					tileEntity.itemStacks[outputSlot] = handler.getInsertionOutputStack(tileEntity.itemStacks[outputSlot], tileEntity.containedType);
 					tileEntity.containedType = null;
 					return true;
 				}
@@ -108,7 +83,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			@Override
 			public boolean canReceiveGas(TileEntityGasTransposer tileEntity, GasType gasType)
 			{
-				IGasTransposerInsertHandler handler = getHandlerForItemAndGasType(tileEntity.itemStacks[0], gasType);
+				IGasTransposerInsertHandler handler = getHandlerForItemAndGasType(tileEntity.itemStacks[inputSlot], gasType);
 				
 				if(handler != null)
 				{
@@ -123,7 +98,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			@Override
 			public boolean receiveGas(TileEntityGasTransposer tileEntity, GasType gasType)
 			{
-				IGasTransposerInsertHandler handler = getHandlerForItemAndGasType(tileEntity.itemStacks[0], gasType);
+				IGasTransposerInsertHandler handler = getHandlerForItemAndGasType(tileEntity.itemStacks[inputSlot], gasType);
 				
 				if(handler != null)
 				{
@@ -184,7 +159,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				return 0xFFFFFF;
 			}
 		},
-		EXTRACT
+		EXTRACT(1, 0)
 		{
 			private final LinkedList<IGasTransposerExtractHandler> handlers = new LinkedList<IGasTransposerExtractHandler>();
 			
@@ -203,36 +178,11 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				IGasTransposerExtractHandler handler = (IGasTransposerExtractHandler)tileEntity.currentHandler;
 				if(handler != null)
 				{
-					if(tileEntity.itemStacks[1] == null || handler.getOutputGasType(tileEntity.itemStacks[1]) == null)
+					if(tileEntity.itemStacks[inputSlot] == null || handler.getOutputGasType(tileEntity.itemStacks[inputSlot]) == null)
 					{
 						tileEntity.setHandler(null, 0);
 					}
 				}
-			}
-			
-			@Override
-			public boolean isItemValidForSlot(int slot, ItemStack itemstack)
-			{
-				return slot == 1;
-			}
-
-			@Override
-			public int[] getAccessibleSlotsFromSide(int side)
-			{
-				if(side == 0)
-				{
-					return new int[]{ 0 };
-				}
-				else
-				{
-					return new int[]{ 1 };
-				}
-			}
-
-			@Override
-			public boolean canExtractItem(int slot, ItemStack itemstack, int side)
-			{
-				return slot == 0;
 			}
 			
 			@Override
@@ -246,7 +196,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			{
 				if(tileEntity.currentHandler == null)
 				{
-					ItemStack itemstack = tileEntity.itemStacks[1];
+					ItemStack itemstack = tileEntity.itemStacks[inputSlot];
 					if(itemstack != null)
 					{
 						IGasTransposerExtractHandler handler = getHandlerFromItem(itemstack);
@@ -290,12 +240,12 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				
 				if(tileEntity.containedType == null)
 				{
-					GasType gasType = handler.getOutputGasType(tileEntity.itemStacks[1]);
-					if(handler.completeExtraction(tileEntity.itemStacks[1], tileEntity.itemStacks[0], gasType))
+					GasType gasType = handler.getOutputGasType(tileEntity.itemStacks[inputSlot]);
+					if(handler.completeExtraction(tileEntity.itemStacks[1], tileEntity.itemStacks[outputSlot], gasType))
 					{
 						tileEntity.containedType = gasType;
-						tileEntity.itemStacks[1] = handler.getExtractionInputStack(tileEntity.itemStacks[1], tileEntity.containedType);
-						tileEntity.itemStacks[0] = handler.getExtractionOutputStack(tileEntity.itemStacks[0], tileEntity.containedType);
+						tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.containedType);
+						tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[outputSlot], tileEntity.containedType);
 						return true;
 					}
 					else
@@ -330,7 +280,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			@Override
 			public int getGuiArrowColor(TileEntityGasTransposer tileEntity)
 			{
-				ItemStack inputStack = tileEntity.itemStacks[1];
+				ItemStack inputStack = tileEntity.itemStacks[inputSlot];
 				if(inputStack != null)
 				{
 					IGasTransposerExtractHandler handler = getHandlerFromItem(inputStack);
@@ -361,11 +311,17 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			}
 		};
 		
+		public final int inputSlot;
+		public final int outputSlot;
+		
+		private Mode(int inputSlot, int outputSlot)
+		{
+			this.inputSlot = inputSlot;
+			this.outputSlot = outputSlot;
+		}
+		
 		public abstract void registerHandler(IGasTransposerHandler handler);
 		public abstract void validate(TileEntityGasTransposer tileEntity);
-		public abstract boolean isItemValidForSlot(int slot, ItemStack itemstack);
-		public abstract int[] getAccessibleSlotsFromSide(int side);
-		public abstract boolean canExtractItem(int slot, ItemStack itemstack, int side);
 		public abstract String getUnlocalizedName();
 		public abstract void tick(TileEntityGasTransposer tileEntity);
 		public abstract boolean complete(TileEntityGasTransposer tileEntity);
@@ -625,13 +581,20 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
 	{
-		return mode.isItemValidForSlot(slot, itemstack);
+		return slot == mode.inputSlot;
 	}
 
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side)
 	{
-		return mode.getAccessibleSlotsFromSide(side);
+		if(side == 0)
+		{
+			return new int[]{ mode.outputSlot };
+		}
+		else
+		{
+			return new int[]{ mode.inputSlot };
+		}
 	}
 
 	@Override
@@ -643,6 +606,6 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 	@Override
 	public boolean canExtractItem(int slot, ItemStack itemstack, int side)
 	{
-		return mode.canExtractItem(slot, itemstack, side);
+		return slot == mode.outputSlot;
 	}
 }

@@ -10,6 +10,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 
 public class ContainerGasTransposer extends Container
 {
@@ -99,5 +100,34 @@ public class ContainerGasTransposer extends Container
 		this.lastMode = tileEntity.mode;
 		this.lastTime = tileEntity.time;
 		this.lastTotalTime = tileEntity.totalTime;
+	}
+	
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotIndex)
+	{
+		ItemStack itemstack = null;
+		Slot slot = (Slot)this.inventorySlots.get(slotIndex);
+		
+		if(slot != null && slot.getHasStack())
+		{
+			ItemStack slotContents = slot.getStack();
+			itemstack = slotContents.copy();
+			
+			if(slotIndex < 2)
+			{
+				//Left or right slot
+				if(!mergeItemStack(slotContents, 2, 38, true))
+				{
+					return null;
+				}
+				slot.onSlotChange(slotContents, itemstack);
+			}
+			else
+			{
+				//Player inventory slots
+			}
+		}
+		
+		return itemstack;
 	}
 }
