@@ -610,7 +610,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack itemstack)
 	{
-		return slot == mode.inputSlot;
+		return slot == mode.inputSlot && mode.isValidInput(itemstack);
 	}
 
 	@Override

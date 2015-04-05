@@ -9,11 +9,29 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ContainerGasTransposer extends Container
 {
+	private static class SlotTransposer extends Slot
+	{
+		private final TileEntityGasTransposer tileEntity;
+		
+		public SlotTransposer(TileEntityGasTransposer tileEntity, int slotIndex, int x, int y)
+		{
+			super(tileEntity, slotIndex, x, y);
+			this.tileEntity = tileEntity;
+		}
+		
+		@Override
+		public boolean isItemValid(ItemStack itemStack)
+		{
+			return getSlotIndex() == tileEntity.mode.inputSlot && tileEntity.mode.isValidInput(itemStack);
+		}
+	}
+	
 	public static final int GUI_ID = 1;
 	
 	public TileEntityGasTransposer tileEntity;
@@ -28,8 +46,8 @@ public class ContainerGasTransposer extends Container
 	{
 		this.tileEntity = tileEntity;
 		
-		addSlotToContainer(new Slot(tileEntity, 0, 44, 35));
-		addSlotToContainer(new Slot(tileEntity, 1, 116, 35));
+		addSlotToContainer(new SlotTransposer(tileEntity, 0, 44, 35));
+		addSlotToContainer(new SlotTransposer(tileEntity, 1, 116, 35));
 		
 		for (int x = 0; x < 3; x++)
         {
