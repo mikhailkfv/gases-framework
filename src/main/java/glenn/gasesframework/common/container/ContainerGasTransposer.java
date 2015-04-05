@@ -2,6 +2,7 @@ package glenn.gasesframework.common.container;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
 import glenn.gasesframework.common.tileentity.TileEntityGasTransposer.Mode;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,6 +16,7 @@ public class ContainerGasTransposer extends Container
 	public static final int GUI_ID = 1;
 	
 	public TileEntityGasTransposer tileEntity;
+	private GasType lastContainedType;
 	private TileEntityGasTransposer.Mode lastMode;
 	private int lastTime;
 	private int lastTotalTime;
@@ -53,12 +55,14 @@ public class ContainerGasTransposer extends Container
 		switch(id)
 		{
 		case 0:
+			tileEntity.containedType = GasType.getGasTypeByID(val);
+		case 1:
 			tileEntity.setMode(val);
 			break;
-		case 1:
+		case 2:
 			tileEntity.time = val;
 			break;
-		case 2:
+		case 3:
 			tileEntity.totalTime = val;
 			break;
 		}
@@ -73,20 +77,25 @@ public class ContainerGasTransposer extends Container
 		{
 			ICrafting icrafting = (ICrafting)this.crafters.get(i);
 			
+			if(lastContainedType != tileEntity.containedType)
+			{
+				icrafting.sendProgressBarUpdate(this, 0, tileEntity.containedType != null ? tileEntity.containedType.gasID : -1);
+			}
 			if(lastMode != tileEntity.mode)
 			{
-				icrafting.sendProgressBarUpdate(this, 0, tileEntity.mode.ordinal());
+				icrafting.sendProgressBarUpdate(this, 1, tileEntity.mode.ordinal());
 			}
 			if(lastTime != tileEntity.time)
 			{
-				icrafting.sendProgressBarUpdate(this, 1, tileEntity.time);
+				icrafting.sendProgressBarUpdate(this, 2, tileEntity.time);
 			}
 			if(lastTotalTime != tileEntity.totalTime)
 			{
-				icrafting.sendProgressBarUpdate(this, 2, tileEntity.totalTime);
+				icrafting.sendProgressBarUpdate(this, 3, tileEntity.totalTime);
 			}
 		}
 		
+		this.lastContainedType = tileEntity.containedType;
 		this.lastMode = tileEntity.mode;
 		this.lastTime = tileEntity.time;
 		this.lastTotalTime = tileEntity.totalTime;

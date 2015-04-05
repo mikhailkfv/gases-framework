@@ -150,27 +150,38 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				return false;
 			}
 			
-			private Collection<IGasTransposerInsertHandler> getHandlersForItem(ItemStack itemstack)
+			private Collection<IGasTransposerInsertHandler> getHandlersForItem(ItemStack inputStack)
 			{
 				LinkedList<IGasTransposerInsertHandler> itemHandlers = new LinkedList<IGasTransposerInsertHandler>();
-				if(itemstack != null)
+				if(inputStack != null)
 				{
 					for(IGasTransposerInsertHandler handler : handlers)
 					{
-						if(handler.isValidInputItemStack(itemstack)) itemHandlers.push(handler);
+						if(handler.isValidInputItemStack(inputStack)) itemHandlers.push(handler);
 					}
 				}
 				return itemHandlers;
 			}
 			
-			private IGasTransposerInsertHandler getHandlerForItemAndGasType(ItemStack itemstack, GasType gasType)
+			private IGasTransposerInsertHandler getHandlerForItemAndGasType(ItemStack inputStack, GasType gasType)
 			{
-				for(IGasTransposerInsertHandler handler : getHandlersForItem(itemstack))
+				for(IGasTransposerInsertHandler handler : getHandlersForItem(inputStack))
 				{
 					if(handler.isValidInputGasType(gasType)) return handler;
 				}
 				
 				return null;
+			}
+
+			@Override
+			public int getGuiArrowColor(TileEntityGasTransposer tileEntity)
+			{
+				if(tileEntity.containedType != null)
+				{
+					return tileEntity.containedType.color >> 8;
+				}
+				
+				return 0xFFFFFF;
 			}
 		},
 		EXTRACT
@@ -238,20 +249,12 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 					ItemStack itemstack = tileEntity.itemStacks[1];
 					if(itemstack != null)
 					{
-						for(IGasTransposerExtractHandler handler : handlers)
+						IGasTransposerExtractHandler handler = getHandlerFromItem(itemstack);
+						if(handler != null)
 						{
-							if(handler.getOutputGasType(itemstack) != null)
-							{
-								tileEntity.setHandler(handler, handler.getExtractionTime());
-								break;
-							}
+							tileEntity.setHandler(handler, handler.getExtractionTime());
 						}
 					}
-				}
-				
-				if(tileEntity.currentHandler != null)
-				{
-					IGasTransposerExtractHandler extractHandler = (IGasTransposerExtractHandler)tileEntity.currentHandler;
 				}
 				
 				if(tileEntity.containedType != null)
@@ -323,6 +326,39 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			{
 				return true;
 			}
+
+			@Override
+			public int getGuiArrowColor(TileEntityGasTransposer tileEntity)
+			{
+				ItemStack inputStack = tileEntity.itemStacks[1];
+				if(inputStack != null)
+				{
+					IGasTransposerExtractHandler handler = getHandlerFromItem(inputStack);
+					if(handler != null)
+					{
+						GasType gasType = handler.getOutputGasType(inputStack);
+						if(gasType != null)
+						{
+							return gasType.color >> 8;
+						}
+					}
+				}
+				
+				return 0xFFFFFF;
+			}
+			
+			private IGasTransposerExtractHandler getHandlerFromItem(ItemStack inputStack)
+			{
+				for(IGasTransposerExtractHandler handler : handlers)
+				{
+					if(handler.getOutputGasType(inputStack) != null)
+					{
+						return handler;
+					}
+				}
+				
+				return null;
+			}
 		};
 		
 		public abstract void registerHandler(IGasTransposerHandler handler);
@@ -336,6 +372,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 		public abstract boolean canReceiveGas(TileEntityGasTransposer tileEntity, GasType gasType);
 		public abstract boolean receiveGas(TileEntityGasTransposer tileEntity, GasType gasType);
 		public abstract boolean canPropelGas(TileEntityGasTransposer tileEntity);
+		public abstract int getGuiArrowColor(TileEntityGasTransposer tileEntity);
 	}
 	
 	public static void registerHandler(IGasTransposerHandler handler)

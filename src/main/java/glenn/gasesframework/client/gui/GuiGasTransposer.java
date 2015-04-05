@@ -64,16 +64,23 @@ public class GuiGasTransposer extends GuiContainer
 	    int progress = tileEntity.getScaledProgress(38);
 	    int invertedProgress = 38 - progress;
 	    
+	    int color = tileEntity.mode.getGuiArrowColor(tileEntity);
+		float red = (float)((color >> 16) & 0xFF) / 255.0F;
+		float green = (float)((color >> 8) & 0xFF) / 255.0F;
+		float blue = (float)(color & 0xFF) / 255.0F;
+	    
 	    if(tileEntity.mode == tileEntity.mode.INSERT)
 	    {
 	    	drawTexturedModalRect(guiMinX + 69, guiMinY + 35, 176, 0, 38, 16);
 	    	
+	    	GL11.glColor3f(red, green, blue);
 	    	drawTexturedModalRect(guiMinX + 69, guiMinY + 35, 214, 0, progress, 16);
 	    }
 	    else if(tileEntity.mode == tileEntity.mode.EXTRACT)
 	    {
 	    	drawTexturedModalRect(guiMinX + 69, guiMinY + 35, 176, 16, 38, 16);
-	    	
+
+	    	GL11.glColor3f(red, green, blue);
 	    	drawTexturedModalRect(guiMinX + 69 + invertedProgress, guiMinY + 35, 214 + invertedProgress, 16, progress, 16);
 	    }
 	}
