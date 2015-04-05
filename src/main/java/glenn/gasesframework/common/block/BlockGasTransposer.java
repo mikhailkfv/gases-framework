@@ -1,5 +1,7 @@
 package glenn.gasesframework.common.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
@@ -9,12 +11,14 @@ import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -22,11 +26,29 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockGasTransposer extends Block implements ITileEntityProvider, IGasReceptor, IGasPropellor
 {
+	@SideOnly(Side.CLIENT)
+	protected IIcon frontIcon;
+	
     public BlockGasTransposer()
 	{
 		super(Material.iron);
 	}
-    
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerBlockIcons(IIconRegister iconRegister)
+	{
+		super.registerBlockIcons(iconRegister);
+		frontIcon = iconRegister.registerIcon(this.getTextureName() + "_front");
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public IIcon getIcon(int side, int metadata)
+	{
+		return side == metadata ? frontIcon : blockIcon;
+	}
+	
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemstack)
     {
