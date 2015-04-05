@@ -36,6 +36,7 @@ public class ContainerGasTransposer extends Container
 	
 	public TileEntityGasTransposer tileEntity;
 	private GasType lastContainedType;
+	private GasType lastPendingType;
 	private TileEntityGasTransposer.Mode lastMode;
 	private int lastTime;
 	private int lastTotalTime;
@@ -77,13 +78,17 @@ public class ContainerGasTransposer extends Container
 		{
 		case 0:
 			tileEntity.containedType = GasType.getGasTypeByID(val);
+			break;
 		case 1:
-			tileEntity.setMode(val);
+			tileEntity.pendingType = GasType.getGasTypeByID(val);
 			break;
 		case 2:
-			tileEntity.time = val;
+			tileEntity.setMode(val);
 			break;
 		case 3:
+			tileEntity.time = val;
+			break;
+		case 4:
 			tileEntity.totalTime = val;
 			break;
 		}
@@ -102,21 +107,26 @@ public class ContainerGasTransposer extends Container
 			{
 				icrafting.sendProgressBarUpdate(this, 0, tileEntity.containedType != null ? tileEntity.containedType.gasID : -1);
 			}
+			if(forceUpdate || lastPendingType != tileEntity.pendingType)
+			{
+				icrafting.sendProgressBarUpdate(this, 1, tileEntity.pendingType != null ? tileEntity.pendingType.gasID : -1);
+			}
 			if(forceUpdate || lastMode != tileEntity.mode)
 			{
-				icrafting.sendProgressBarUpdate(this, 1, tileEntity.mode.ordinal());
+				icrafting.sendProgressBarUpdate(this, 2, tileEntity.mode.ordinal());
 			}
 			if(forceUpdate || lastTime != tileEntity.time)
 			{
-				icrafting.sendProgressBarUpdate(this, 2, tileEntity.time);
+				icrafting.sendProgressBarUpdate(this, 3, tileEntity.time);
 			}
 			if(forceUpdate || lastTotalTime != tileEntity.totalTime)
 			{
-				icrafting.sendProgressBarUpdate(this, 3, tileEntity.totalTime);
+				icrafting.sendProgressBarUpdate(this, 4, tileEntity.totalTime);
 			}
 		}
 		
 		this.lastContainedType = tileEntity.containedType;
+		this.lastPendingType = tileEntity.pendingType;
 		this.lastMode = tileEntity.mode;
 		this.lastTime = tileEntity.time;
 		this.lastTotalTime = tileEntity.totalTime;

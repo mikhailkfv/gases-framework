@@ -292,18 +292,9 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			@Override
 			public int getGuiArrowColor(TileEntityGasTransposer tileEntity)
 			{
-				ItemStack inputStack = tileEntity.itemStacks[inputSlot];
-				if(inputStack != null)
+				if(tileEntity.pendingType != null)
 				{
-					IGasTransposerExtractHandler handler = getHandlerFromItem(inputStack);
-					if(handler != null)
-					{
-						GasType gasType = handler.getOutputGasType(inputStack);
-						if(gasType != null)
-						{
-							return gasType.color >> 8;
-						}
-					}
+					return tileEntity.pendingType.color >> 8;
 				}
 				
 				return 0xFFFFFF;
