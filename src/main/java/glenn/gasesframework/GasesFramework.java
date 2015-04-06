@@ -6,6 +6,7 @@ import glenn.gasesframework.api.ItemKey;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
+import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
 import glenn.gasesframework.common.CommonProxy;
 import glenn.gasesframework.common.GasBottleTransposerHandler;
 import glenn.gasesframework.common.GasesFrameworkMainConfigurations;
@@ -243,6 +244,8 @@ public class GasesFramework implements IGasesFramework
 		
 		GasesFrameworkAPI.registerReaction(new ReactionIgnition());
 		
+		GasesFrameworkAPI.registerGasTransposerHandler(new GasBottleTransposerHandler());
+		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 		
 		for(String s : configurations.other_removedIgnitionBlocks)
@@ -263,7 +266,7 @@ public class GasesFramework implements IGasesFramework
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		TileEntityGasTransposer.registerHandler(new GasBottleTransposerHandler());
+		
 	}
 	
 	/**
@@ -693,6 +696,16 @@ public class GasesFramework implements IGasesFramework
 				worldGenerator.registerGasWorldGenType(type, dimensionName);
 			}
 		}
+	}
+
+	/**
+	 * Registers a gas transposer handler.
+	 * @param handler
+	 */
+	@Override
+	public void registerGasTransposerHandler(IGasTransposerHandler handler)
+	{
+		TileEntityGasTransposer.registerHandler(handler);
 	}
 	
 	private class CustomGasFurnaceRecipe

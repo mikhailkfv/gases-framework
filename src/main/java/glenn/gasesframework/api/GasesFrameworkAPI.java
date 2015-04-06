@@ -6,6 +6,7 @@ import glenn.gasesframework.api.gastype.GasTypeAir;
 import glenn.gasesframework.api.gastype.GasTypeFire;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
+import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
 import glenn.gasesframework.api.reaction.Reaction;
 import glenn.gasesframework.api.reaction.ReactionEmpty;
 
@@ -454,6 +455,18 @@ public class GasesFrameworkAPI
 		if(isModInstalled())
 		{
 			modInstance.registerGasWorldGenType(type, dimensionNames);
+		}
+	}
+	
+	/**
+	 * Registers a gas transposer handler.
+	 * @param handler
+	 */
+	public static void registerGasTransposerHandler(IGasTransposerHandler handler)
+	{
+		if(isModInstalled())
+		{
+			modInstance.registerGasTransposerHandler(handler);
 		}
 	}
 }
