@@ -14,6 +14,7 @@ import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -75,58 +76,37 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 		
 	}
 	
-	private boolean blind(GasType gasType)
+	private boolean protect(boolean[] appliedProtectors, IGasEffectProtector[] protectors, GasType gasType, EffectType effect)
 	{
-		if(entity instanceof EntityPlayer)
+		boolean res = false;
+		for(int slot = 0; slot < protectors.length; slot++)
 		{
-			boolean protect = false;
-			
-			InventoryPlayer inventory = ((EntityPlayer)entity).inventory;
-			
-			for(int i = 0; i < 4; i++)
+			IGasEffectProtector protector = protectors[slot];
+			if(protector != null && protector.protect(entity, entity.getEquipmentInSlot(slot), slot, gasType, effect))
 			{
-				ItemStack stack = inventory.armorItemInSlot(i);
-				if(stack != null && stack.getItem() instanceof IGasEffectProtector)
-				{
-					IGasEffectProtector item = (IGasEffectProtector)stack.getItem();
-					
-					if(item.protectVision(entity, stack, gasType)) protect = true;
-				}
+				res = true;
+				appliedProtectors[slot] = true;
 			}
-			
-			return !protect;
 		}
-		return true;
-	}
-	
-	private boolean suffocate(GasType gasType)
-	{
-		if(entity instanceof EntityPlayer)
-		{
-			boolean protect = false;
-			
-			InventoryPlayer inventory = ((EntityPlayer)entity).inventory;
-			
-			for(int i = 0; i < 4; i++)
-			{
-				ItemStack stack = inventory.armorItemInSlot(i);
-				if(stack != null && stack.getItem() instanceof IGasEffectProtector)
-				{
-					IGasEffectProtector item = (IGasEffectProtector)stack.getItem();
-					
-					if(item.protectBreath(entity, stack, gasType)) protect = true;
-				}
-			}
-			
-			return !protect;
-		}
-		return true;
+		return res;
 	}
 	
 	public void tick()
 	{
 		if(!entity.worldObj.isRemote)
 		{
+			boolean[] appliedProtectors = new boolean[5];
+			IGasEffectProtector[] protectors = new IGasEffectProtector[5];
+			for(int slot = 0; slot < 5; slot++)
+			{
+				ItemStack itemstack = entity.getEquipmentInSlot(slot);
+				if(itemstack != null && itemstack.getItem() instanceof IGasEffectProtector)
+				{
+					IGasEffectProtector protector = (IGasEffectProtector)itemstack.getItem();
+					protectors[slot] = protector;
+				}
+			}
+			
 			GasType gasType = null;
 			
 			if(entity.isInsideOfMaterial(MaterialGas.INSTANCE))
@@ -147,17 +127,17 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 			int suffocationTimer = get(EffectType.SUFFOCATION);
 			int slownessTimer = get(EffectType.SLOWNESS);
 			
-			if(gasType != null && gasType.getEffectRate(EffectType.BLINDNESS) > 0 && blind(gasType))
+			if(gasType != null && gasType.getEffectRate(EffectType.BLINDNESS) > 0 && !protect(appliedProtectors, protectors, gasType, EffectType.BLINDNESS))
 			{
 				blindnessTimer += gasType.getEffectRate(EffectType.BLINDNESS) + 4;
 			}
 			blindnessTimer -= 4;
 			
-			if(gasType != null && gasType.getEffectRate(EffectType.SUFFOCATION) > 0 && suffocate(gasType))
+			if(gasType != null && gasType.getEffectRate(EffectType.SUFFOCATION) > 0 && !protect(appliedProtectors, protectors, gasType, EffectType.SUFFOCATION))
 			{
 				suffocationTimer += gasType.getEffectRate(EffectType.SUFFOCATION) + 32;
 				
-				if(suffocationTimer > 350)
+				if(suffocationTimer > 350 && gasType.getEffectRate(EffectType.SLOWNESS) > 0 && !protect(appliedProtectors, protectors, gasType, EffectType.SLOWNESS))
 				{
 					slownessTimer += gasType.getEffectRate(EffectType.SLOWNESS) + 10;
 				}
@@ -182,6 +162,14 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 			set(EffectType.BLINDNESS, blindnessTimer);
 			set(EffectType.SUFFOCATION, suffocationTimer);
 			set(EffectType.SLOWNESS, slownessTimer);
+			
+			for(int slot = 0; slot < protectors.length; slot++)
+			{
+				if(appliedProtectors[slot])
+				{
+					entity.setCurrentItemOrArmor(slot, protectors[slot].getItemstackOnProtect(entity, entity.getEquipmentInSlot(slot), slot, gasType));
+				}
+			}
 			
 			if(hasChanged())
 			{
