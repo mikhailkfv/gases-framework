@@ -8,6 +8,7 @@ import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
 import glenn.gasesframework.common.CommonProxy;
+import glenn.gasesframework.common.ConfigGasFurnaceRecipes;
 import glenn.gasesframework.common.GasBottleTransposerHandler;
 import glenn.gasesframework.common.GasesFrameworkMainConfigurations;
 import glenn.gasesframework.common.GuiHandler;
@@ -37,14 +38,8 @@ import glenn.gasesframework.common.worldgen.WorldGeneratorGasesFramework;
 import glenn.gasesframework.network.message.MessageGasEffects;
 import glenn.gasesframework.network.message.MessageSetTransposerMode;
 import glenn.gasesframework.waila.GasesFrameworkWaila;
-import glenn.moddingutils.Configurations.ItemRepresentation;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -55,10 +50,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -158,39 +149,8 @@ public class GasesFramework implements IGasesFramework
 		
 		initBlocksAndItems();
 		configurations = new GasesFrameworkMainConfigurations(event.getSuggestedConfigurationFile());
-		try
-		{
-			File gasFurnaceRecipesFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/gasesframework_GasFurnaceRecipes.json");
-			
-			if(!gasFurnaceRecipesFile.exists())
-			{
-				gasFurnaceRecipesFile.createNewFile();
-				PrintWriter writer = new PrintWriter(gasFurnaceRecipesFile);
-				writer.print(String.format("[%n\t%n]"));
-				writer.close();
-			}
-			
-			BufferedReader bf = new BufferedReader(new FileReader(gasFurnaceRecipesFile));
-			String recipesJsonString = "";
-			String line;
-			while((line = bf.readLine()) != null)
-			{
-				recipesJsonString += line + "\n";
-			}
-			bf.close();
-			
-			Gson gson = new Gson();
-			ArrayList<CustomGasFurnaceRecipe> recipes = gson.fromJson(recipesJsonString, new TypeToken<ArrayList<CustomGasFurnaceRecipe>>(){}.getType());
-			
-			for(CustomGasFurnaceRecipe recipe : recipes)
-			{
-				addSpecialFurnaceRecipe(recipe.input.getItemStack(), recipe.output.getItemStack(), recipe.time == 0 ? 200 : recipe.time, recipe.exp);
-			}
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		
+		ConfigGasFurnaceRecipes.load(new File(event.getModConfigurationDirectory().getAbsolutePath() + "/gasesframework_GasFurnaceRecipes.json"));
 		
 		GasesFrameworkAPI.registerIgnitionBlock(Blocks.torch);
 		GasesFrameworkAPI.registerIgnitionBlock(Blocks.fire);
@@ -706,13 +666,5 @@ public class GasesFramework implements IGasesFramework
 	public void registerGasTransposerHandler(IGasTransposerHandler handler)
 	{
 		TileEntityGasTransposer.registerHandler(handler);
-	}
-	
-	private class CustomGasFurnaceRecipe
-	{
-		public ItemRepresentation input;
-		public ItemRepresentation output;
-		public int time = 200;
-		public int exp = 200;
 	}
 }
