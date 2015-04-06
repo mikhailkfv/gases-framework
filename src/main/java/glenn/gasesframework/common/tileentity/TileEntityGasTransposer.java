@@ -2,6 +2,7 @@ package glenn.gasesframework.common.tileentity;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasReceptor;
+import glenn.gasesframework.api.block.IGasSource;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.mechanical.IGasTransposerExtractHandler;
 import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
@@ -73,7 +74,33 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			@Override
 			public void tick(TileEntityGasTransposer tileEntity)
 			{
-				
+				if(tileEntity.currentHandler == null && tileEntity.itemStacks[inputSlot] != null)
+				{
+					for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+					{
+						int x = tileEntity.xCoord + direction.offsetX;
+						int y = tileEntity.yCoord + direction.offsetY;
+						int z = tileEntity.zCoord + direction.offsetZ;
+						
+						Block block = tileEntity.worldObj.getBlock(x, y, z);
+						if(block instanceof IGasSource)
+						{
+							IGasSource gasSource = (IGasSource)block;
+							GasType gasType = gasSource.getGasTypeFromSide(tileEntity.worldObj, x, y, z, direction.getOpposite());
+							if(gasType != null)
+							{
+								IGasTransposerInsertHandler handler = getHandlerForItemAndGasType(tileEntity.itemStacks[inputSlot], gasType);
+								if(handler != null)
+								{
+									gasType = gasSource.takeGasTypeFromSide(tileEntity.worldObj, x, y, z, direction.getOpposite());
+									tileEntity.setHandler(handler, handler.getInsertionTime());
+									tileEntity.containedType = gasType;
+									return;
+								}
+							}
+						}
+					}
+				}
 			}
 			
 			@Override
