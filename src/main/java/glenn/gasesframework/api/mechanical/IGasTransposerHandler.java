@@ -1,4 +1,4 @@
-package glenn.gasesframework.api;
+package glenn.gasesframework.api.mechanical;
 
 import net.minecraft.item.ItemStack;
 

@@ -1,11 +1,11 @@
 package glenn.gasesframework.common.tileentity;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.IGasTransposerExtractHandler;
-import glenn.gasesframework.api.IGasTransposerHandler;
-import glenn.gasesframework.api.IGasTransposerInsertHandler;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.api.mechanical.IGasTransposerExtractHandler;
+import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
+import glenn.gasesframework.api.mechanical.IGasTransposerInsertHandler;
 
 import java.util.Collection;
 import java.util.LinkedList;

@@ -3,9 +3,9 @@ package glenn.gasesframework.common;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.IGasTransposerExtractHandler;
-import glenn.gasesframework.api.IGasTransposerInsertHandler;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.api.mechanical.IGasTransposerExtractHandler;
+import glenn.gasesframework.api.mechanical.IGasTransposerInsertHandler;
 import glenn.gasesframework.common.item.ItemGasBottle;
 
 public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, IGasTransposerExtractHandler
