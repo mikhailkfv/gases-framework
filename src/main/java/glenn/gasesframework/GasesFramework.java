@@ -138,6 +138,8 @@ public class GasesFramework implements IGasesFramework
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+		proxy.registerMessage(MessageGasEffects.Handler.class, MessageGasEffects.class, 0);
+		proxy.registerMessage(MessageSetTransposerMode.Handler.class, MessageSetTransposerMode.class, 1);
 		
 		GasesFrameworkAPI.modInstance = instance;
 		
@@ -165,7 +167,6 @@ public class GasesFramework implements IGasesFramework
 	public void load(FMLInitializationEvent event)
 	{
 		proxy.registerRenderers();
-		proxy.registerMessages();
 		
 		GameRegistry.registerWorldGenerator(worldGenerator, 10);
 		

@@ -3,8 +3,12 @@ package glenn.gasesframework.common;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.network.message.MessageGasEffects;
 import glenn.gasesframework.network.message.MessageSetTransposerMode;
+import glenn.moddingutils.AbstractMessage;
+import glenn.moddingutils.AbstractMessageHandler;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.relauncher.Side;
 
 public class CommonProxy
@@ -20,9 +24,8 @@ public class CommonProxy
 		FMLCommonHandler.instance().bus().register(new FMLCommonEvents());
 	}
 	
-	public void registerMessages()
+	public <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, int discriminator)
 	{
-		GasesFramework.networkWrapper.registerMessage(MessageGasEffects.Handler.class, MessageGasEffects.class, 0, Side.CLIENT);
-		GasesFramework.networkWrapper.registerMessage(MessageSetTransposerMode.Handler.class, MessageSetTransposerMode.class, 1, Side.SERVER);
+		GasesFramework.networkWrapper.registerMessage(messageHandler, requestMessageType, discriminator, Side.SERVER);
 	}
 }
