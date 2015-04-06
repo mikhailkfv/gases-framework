@@ -91,7 +91,7 @@ public class GasesFramework implements IGasesFramework
 	public static final String TARGETVERSION = GasesFrameworkAPI.TARGETVERSION;
 	
 	public static final GuiHandler guiHandler = new GuiHandler();
-	public static final SimpleNetworkWrapper networkWrapper = new SimpleNetworkWrapper(MODID);
+	public static SimpleNetworkWrapper networkWrapper = new SimpleNetworkWrapper(MODID);
 	
 	public static GasesFrameworkMainConfigurations configurations;
 	
@@ -137,6 +137,8 @@ public class GasesFramework implements IGasesFramework
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+		
 		GasesFrameworkAPI.modInstance = instance;
 		
 		GasesFrameworkAPI.creativeTab = new CreativeTabs("tabGases")
