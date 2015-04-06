@@ -39,14 +39,14 @@ public class GasTypeFire extends GasType
 	 * @param entity
 	 */
     @Override
-	public void onTouched(Entity entity, World world)
+	public void onTouched(Entity entity)
 	{
-    	super.onTouched(entity, world);
+    	super.onTouched(entity);
 		entity.setFire(5);
 	}
     
     /**
-	 * Called when a gas block of this type evaporates.
+	 * Called when a gas block of this type dissipates.
 	 * @param world
 	 * @param x
 	 * @param y

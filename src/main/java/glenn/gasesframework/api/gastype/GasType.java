@@ -71,7 +71,7 @@ public class GasType
 	 */
 	public final Combustibility combustibility;
 	/**
-	 * How quickly this gas type will dissipate in the world. Higher values will decrease dissipate speed. If 0, it does not dissipate.
+	 * How quickly this gas type will dissipate in the world. Higher values will decrease dissipation speed. If 0, it does not dissipate.
 	 */
 	public int dissipationRate = 0;
 	/**
@@ -334,7 +334,7 @@ public class GasType
 	 * Called when an entity touches the gas in block form.
 	 * @param entity
 	 */
-	public void onTouched(Entity entity, World world)
+	public void onTouched(Entity entity)
 	{
 		if(damage > 0.0F & !(entity instanceof EntityItem))
     	{
