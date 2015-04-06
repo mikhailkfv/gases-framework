@@ -1,6 +1,6 @@
 package glenn.gasesframework.client.gui;
 
-import glenn.gasesframework.common.ContainerGasFurnace;
+import glenn.gasesframework.common.container.ContainerGasFurnace;
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.InventoryPlayer;

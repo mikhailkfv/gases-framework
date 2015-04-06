@@ -1,4 +1,4 @@
-package glenn.gasesframework.common;
+package glenn.gasesframework.common.container;
 
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,7 +14,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class ContainerGasFurnace extends Container
 {
-    private TileEntityGasFurnace furnace;
+	public static final int GUI_ID = 0;
+	
+	private TileEntityGasFurnace furnace;
     private int lastCookTime;
     private int lastCookSpeed;
     private int lastBurnTime;
