@@ -27,9 +27,9 @@ public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, 
 	}
 
 	@Override
-	public boolean isValidInputGasType(GasType gasType)
+	public boolean isValidInputGasType(ItemStack inputStack, GasType gasType)
 	{
-		return gasType != null && gasType != GasesFrameworkAPI.gasTypeAir;
+		return inputStack.getItem() == Items.glass_bottle && gasType != null && gasType != GasesFrameworkAPI.gasTypeAir;
 	}
 
 	@Override

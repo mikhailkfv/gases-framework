@@ -44,7 +44,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				IGasTransposerInsertHandler handler = (IGasTransposerInsertHandler)tileEntity.currentHandler;
 				if(handler != null)
 				{
-					if(tileEntity.itemStacks[inputSlot] == null || !handler.isValidInputItemStack(tileEntity.itemStacks[inputSlot]) || !handler.isValidInputGasType(tileEntity.containedType))
+					if(tileEntity.itemStacks[inputSlot] == null || !handler.isValidInputItemStack(tileEntity.itemStacks[inputSlot]) || !handler.isValidInputGasType(tileEntity.itemStacks[inputSlot], tileEntity.containedType))
 					{
 						tileEntity.setHandler(null, 0);
 					}
@@ -155,7 +155,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			{
 				for(IGasTransposerInsertHandler handler : getHandlersForItem(inputStack))
 				{
-					if(handler.isValidInputGasType(gasType)) return handler;
+					if(handler.isValidInputGasType(inputStack, gasType)) return handler;
 				}
 				
 				return null;
