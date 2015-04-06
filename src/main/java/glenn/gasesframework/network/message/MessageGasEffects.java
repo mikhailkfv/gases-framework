@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
 import glenn.moddingutils.AbstractMessage;
 import glenn.moddingutils.AbstractMessageHandler;
@@ -18,7 +19,7 @@ public class MessageGasEffects extends AbstractSerialMessage
 		@Override
 		public AbstractMessage onMessage(MessageGasEffects message, MessageContext ctx)
 		{
-			World world = Minecraft.getMinecraft().theWorld;
+			World world = GasesFramework.proxy.getPlayerEntity(ctx).worldObj;
 			
 			Entity entity = world.getEntityByID(message.entityID);
 			

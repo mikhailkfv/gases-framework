@@ -1,5 +1,6 @@
 package glenn.gasesframework.network.message;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
 import glenn.moddingutils.AbstractMessage;
 import glenn.moddingutils.AbstractMessageHandler;
@@ -15,7 +16,7 @@ public class MessageSetTransposerMode extends AbstractSerialMessage
 		@Override
 		public AbstractMessage onMessage(MessageSetTransposerMode message, MessageContext ctx)
 		{
-			World world = ctx.getServerHandler().playerEntity.worldObj;
+			World world = GasesFramework.proxy.getPlayerEntity(ctx).worldObj;
 			
 			TileEntity tileEntity = world.getTileEntity(message.tileEntityX, message.tileEntityY, message.tileEntityZ);
 			if(tileEntity != null && tileEntity instanceof TileEntityGasTransposer)
