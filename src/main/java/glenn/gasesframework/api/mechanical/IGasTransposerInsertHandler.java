@@ -12,23 +12,24 @@ import net.minecraft.item.ItemStack;
 public interface IGasTransposerInsertHandler extends IGasTransposerHandler
 {
 	/**
-	 * Is this a valid item to insert gas into?
-	 * @param inputStack - The itemstack in the input slot. Should not be modified.
+	 * Is this a valid item to insert gas into? Must not check the size of the itemstack.
+	 * @param itemstack
 	 * @return
 	 */
-	boolean isValidInputItemStack(ItemStack inputStack);
+	boolean isValidInsertionInput(ItemStack itemstack);
 	
 	/**
-	 * Is this a valid gas to insert into this item?
+	 * Is this a valid gas to insert into this item? Can check the size of the itemstack.
+	 * This will only be called if {@link #isValidInsertionInput(ItemStack)} returns true.
 	 * @param inputStack - The itemstack in the input slot. Should not be modified.
 	 * @param gasType - The gas type that will be inserted into the item.
 	 * @return
 	 */
-	boolean isValidInputGasType(ItemStack inputStack, GasType gasType);
+	boolean isValidInsertionInput(ItemStack inputStack, GasType gasType);
 	
 	/**
 	 * Can insertion be completed with the current state of the gas transposer?
-	 * Commonly used to determine if the input item can be extracted from the slot and the output item can be placed in the slot.
+	 * Commonly used to determine if the output item can be placed in the slot.
 	 * If false is returned, the insertion will be delayed until true is returned.
 	 * @param inputStack - The itemstack in the input slot.
 	 * @param outputStack - The itemstack in the output slot.
@@ -49,7 +50,7 @@ public interface IGasTransposerInsertHandler extends IGasTransposerHandler
 	/**
 	 * If {@link #completeInsertion(ItemStack, ItemStack, GasType)} returns true, this method is called.
 	 * Use this method to extract the input item from the slot.
-	 * @param inputStack - The itemstack that already exists in the input slot.
+	 * @param inputStack - The itemstack that already exists in the output slot.
 	 * @param gasType - The gas type that will be inserted into the item.
 	 * @return The modified itemstack to be placed in the input slot.
 	 */

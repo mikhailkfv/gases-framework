@@ -44,7 +44,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				IGasTransposerInsertHandler handler = (IGasTransposerInsertHandler)tileEntity.currentHandler;
 				if(handler != null)
 				{
-					if(tileEntity.itemStacks[inputSlot] == null || !handler.isValidInputItemStack(tileEntity.itemStacks[inputSlot]) || !handler.isValidInputGasType(tileEntity.itemStacks[inputSlot], tileEntity.containedType))
+					if(tileEntity.itemStacks[inputSlot] == null || !handler.isValidInsertionInput(tileEntity.itemStacks[inputSlot]) || !handler.isValidInsertionInput(tileEntity.itemStacks[inputSlot], tileEntity.containedType))
 					{
 						tileEntity.setHandler(null, 0);
 					}
@@ -145,7 +145,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				{
 					for(IGasTransposerInsertHandler handler : handlers)
 					{
-						if(handler.isValidInputItemStack(inputStack)) itemHandlers.push(handler);
+						if(handler.isValidInsertionInput(inputStack)) itemHandlers.push(handler);
 					}
 				}
 				return itemHandlers;
@@ -155,7 +155,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			{
 				for(IGasTransposerInsertHandler handler : getHandlersForItem(inputStack))
 				{
-					if(handler.isValidInputGasType(inputStack, gasType)) return handler;
+					if(handler.isValidInsertionInput(inputStack, gasType)) return handler;
 				}
 				
 				return null;
@@ -191,7 +191,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				IGasTransposerExtractHandler handler = (IGasTransposerExtractHandler)tileEntity.currentHandler;
 				if(handler != null)
 				{
-					if(tileEntity.itemStacks[inputSlot] == null || handler.getOutputGasType(tileEntity.itemStacks[inputSlot]) == null)
+					if(tileEntity.itemStacks[inputSlot] == null || handler.getExtractionOutputGasType(tileEntity.itemStacks[inputSlot]) == null)
 					{
 						tileEntity.setHandler(null, 0);
 					}
@@ -203,7 +203,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 			{
 				if(inputStack != null)
 				{
-					return getHandlerFromItem(inputStack) != null;
+					return !getHandlersForItem(inputStack).isEmpty();
 				}
 				else
 				{
@@ -225,11 +225,15 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 					ItemStack itemstack = tileEntity.itemStacks[inputSlot];
 					if(itemstack != null)
 					{
-						IGasTransposerExtractHandler handler = getHandlerFromItem(itemstack);
-						if(handler != null)
+						for(IGasTransposerExtractHandler handler : getHandlersForItem(itemstack))
 						{
-							tileEntity.setHandler(handler, handler.getExtractionTime());
-							tileEntity.pendingType = handler.getOutputGasType(itemstack);
+							GasType gasType = handler.getExtractionOutputGasType(itemstack);
+							if(gasType != null)
+							{
+								tileEntity.setHandler(handler, handler.getExtractionTime());
+								tileEntity.pendingType = gasType;
+								break;
+							}
 						}
 					}
 				}
@@ -300,17 +304,17 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				return 0xFFFFFF;
 			}
 			
-			private IGasTransposerExtractHandler getHandlerFromItem(ItemStack inputStack)
+			private Collection<IGasTransposerExtractHandler> getHandlersForItem(ItemStack inputStack)
 			{
+				LinkedList<IGasTransposerExtractHandler> itemHandlers = new LinkedList<IGasTransposerExtractHandler>();
 				for(IGasTransposerExtractHandler handler : handlers)
 				{
-					if(handler.getOutputGasType(inputStack) != null)
+					if(handler.isValidExtractionInput(inputStack))
 					{
-						return handler;
+						itemHandlers.push(handler);
 					}
 				}
-				
-				return null;
+				return itemHandlers;
 			}
 		};
 		

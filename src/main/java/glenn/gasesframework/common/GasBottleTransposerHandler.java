@@ -11,37 +11,70 @@ import glenn.gasesframework.common.item.ItemGasBottle;
 public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, IGasTransposerExtractHandler
 {
 	@Override
-	public GasType getOutputGasType(ItemStack inputStack)
+	public boolean isValidInsertionInput(ItemStack itemstack)
 	{
-		if(inputStack.getItem() == GasesFrameworkAPI.gasBottle)
+		return itemstack.getItem() == Items.glass_bottle;
+	}
+
+	@Override
+	public boolean isValidInsertionInput(ItemStack inputStack, GasType gasType)
+	{
+		return gasType != null && gasType != GasesFrameworkAPI.gasTypeAir;
+	}
+
+	@Override
+	public boolean completeInsertion(ItemStack inputStack, ItemStack outputStack, GasType gasType)
+	{
+		ItemStack result = new ItemStack(GasesFrameworkAPI.gasBottle, 1, gasType.gasID);
+		
+		if(outputStack == null)
 		{
-			return ((ItemGasBottle)GasesFrameworkAPI.gasBottle).getGasType(inputStack);
+			return true;
 		}
-		return null;
+		else 
+		{
+			return outputStack.isItemEqual(result) && outputStack.stackSize + result.stackSize <= outputStack.getMaxStackSize();
+		}
 	}
 
 	@Override
-	public boolean isValidInputItemStack(ItemStack inputStack)
+	public ItemStack getInsertionInputStack(ItemStack inputStack, GasType gasType)
 	{
-		return inputStack.getItem() == Items.glass_bottle;
+		return --inputStack.stackSize > 0 ? inputStack : null;
 	}
 
 	@Override
-	public boolean isValidInputGasType(ItemStack inputStack, GasType gasType)
+	public ItemStack getInsertionOutputStack(ItemStack outputStack, GasType gasType)
 	{
-		return inputStack.getItem() == Items.glass_bottle && gasType != null && gasType != GasesFrameworkAPI.gasTypeAir;
-	}
-
-	@Override
-	public int getExtractionTime()
-	{
-		return 20;
+		ItemStack result = new ItemStack(GasesFrameworkAPI.gasBottle, 1, gasType.gasID);
+		
+		if(outputStack == null)
+		{
+			return result;
+		}
+		else
+		{
+			outputStack.stackSize += result.stackSize;
+			return outputStack;
+		}
 	}
 
 	@Override
 	public int getInsertionTime()
 	{
 		return 20;
+	}
+	
+	@Override
+	public boolean isValidExtractionInput(ItemStack itemstack)
+	{
+		return itemstack.getItem() == GasesFrameworkAPI.gasBottle;
+	}
+
+	@Override
+	public GasType getExtractionOutputGasType(ItemStack inputStack)
+	{
+		return ((ItemGasBottle)GasesFrameworkAPI.gasBottle).getGasType(inputStack);
 	}
 
 	@Override
@@ -82,39 +115,8 @@ public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, 
 	}
 
 	@Override
-	public boolean completeInsertion(ItemStack inputStack, ItemStack outputStack, GasType gasType)
+	public int getExtractionTime()
 	{
-		ItemStack result = new ItemStack(GasesFrameworkAPI.gasBottle, 1, gasType.gasID);
-		
-		if(outputStack == null)
-		{
-			return true;
-		}
-		else 
-		{
-			return outputStack.isItemEqual(result) && outputStack.stackSize + result.stackSize <= outputStack.getMaxStackSize();
-		}
-	}
-
-	@Override
-	public ItemStack getInsertionInputStack(ItemStack inputStack, GasType gasType)
-	{
-		return --inputStack.stackSize > 0 ? inputStack : null;
-	}
-
-	@Override
-	public ItemStack getInsertionOutputStack(ItemStack outputStack, GasType gasType)
-	{
-		ItemStack result = new ItemStack(GasesFrameworkAPI.gasBottle, 1, gasType.gasID);
-		
-		if(outputStack == null)
-		{
-			return result;
-		}
-		else
-		{
-			outputStack.stackSize += result.stackSize;
-			return outputStack;
-		}
+		return 20;
 	}
 }
