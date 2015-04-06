@@ -10,6 +10,13 @@ public class SimpleTransposerBiHandler implements IGasTransposerExtractHandler, 
 	private final GasType gasType;
 	private final int time;
 	
+	/**
+	 * Create a simple two-way gas transposer recipe.
+	 * @param insertable - The item gas can be inserted into.
+	 * @param extractable - The item gas can be extracted from.
+	 * @param gasType - The gas type that can be inserted into {@link #insertable} and extracted from {@link #extractable}.
+	 * @param time - The time it takes to insert or extract.
+	 */
 	public SimpleTransposerBiHandler(ItemStack insertable, ItemStack extractable, GasType gasType, int time)
 	{
 		this.insertable = insertable;
