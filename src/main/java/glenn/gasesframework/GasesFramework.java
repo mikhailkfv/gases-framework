@@ -163,8 +163,7 @@ public class GasesFramework implements IGasesFramework
 	public void load(FMLInitializationEvent event)
 	{
 		proxy.registerRenderers();
-		networkWrapper.registerMessage(MessageGasEffects.Handler.class, MessageGasEffects.class, 0, Side.CLIENT);
-		networkWrapper.registerMessage(MessageSetTransposerMode.Handler.class, MessageSetTransposerMode.class, 1, Side.SERVER);
+		proxy.registerMessages();
 		
 		GameRegistry.registerWorldGenerator(worldGenerator, 10);
 		
