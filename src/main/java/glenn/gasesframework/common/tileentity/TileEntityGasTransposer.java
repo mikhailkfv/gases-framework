@@ -109,8 +109,8 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				IGasTransposerInsertHandler handler = (IGasTransposerInsertHandler)tileEntity.currentHandler;
 				if(handler.completeInsertion(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.containedType))
 				{
-					tileEntity.itemStacks[inputSlot] = handler.getInsertionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.containedType);
-					tileEntity.itemStacks[outputSlot] = handler.getInsertionOutputStack(tileEntity.itemStacks[outputSlot], tileEntity.containedType);
+					tileEntity.itemStacks[inputSlot] = handler.getInsertionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.containedType);
+					tileEntity.itemStacks[outputSlot] = handler.getInsertionOutputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.containedType);
 					tileEntity.containedType = null;
 					return true;
 				}
@@ -283,8 +283,8 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 					{
 						if(((IGasReceptor)block).receiveGas(tileEntity.worldObj, x, y, z, direction.getOpposite(), tileEntity.pendingType))
 						{
-							tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.pendingType);
-							tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
+							tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
+							tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
 							return true;
 						}
 					}
@@ -292,8 +292,8 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 					{
 						if(GasesFrameworkAPI.fillWithGas(tileEntity.worldObj, tileEntity.worldObj.rand, x, y, z, tileEntity.pendingType))
 						{
-							tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.pendingType);
-							tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
+							tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
+							tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
 							return true;
 						}
 					}

@@ -41,19 +41,21 @@ public interface IGasTransposerExtractHandler extends IGasTransposerHandler
 	 * If {@link #completeExtraction(ItemStack, ItemStack, GasType)} returns true, this method is called.
 	 * Use this method to extract the input item from the slot.
 	 * @param inputStack - The itemstack that already exists in the input slot.
+	 * @param outputStack - The itemstack that already exists in the output slot.
 	 * @param gasType - Taken from {@link #getExtractionOutputGasType(ItemStack)}.
 	 * @return The modified itemstack to be placed in the input slot.
 	 */
-	ItemStack getExtractionInputStack(ItemStack inputStack, GasType gasType);
+	ItemStack getExtractionInputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType);
 	
 	/**
 	 * If {@link #completeExtraction(ItemStack, ItemStack, GasType)} returns true, this method is called.
 	 * Use this method to insert the output item in the slot.
+	 * @param inputStack - The itemstack that already exists in the input slot.
 	 * @param outputStack - The itemstack that already exists in the output slot.
 	 * @param gasType - Taken from {@link #getExtractionOutputGasType(ItemStack)}.
 	 * @return The modified itemstack to be placed in the output slot.
 	 */
-	ItemStack getExtractionOutputStack(ItemStack outputStack, GasType gasType);
+	ItemStack getExtractionOutputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType);
 	
 	/**
 	 * Get the amount of ticks required to complete this extraction. Commonly set to 20.

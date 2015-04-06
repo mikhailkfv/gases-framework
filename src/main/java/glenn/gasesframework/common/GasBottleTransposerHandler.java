@@ -38,13 +38,13 @@ public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, 
 	}
 
 	@Override
-	public ItemStack getInsertionInputStack(ItemStack inputStack, GasType gasType)
+	public ItemStack getInsertionInputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
 		return --inputStack.stackSize > 0 ? inputStack : null;
 	}
 
 	@Override
-	public ItemStack getInsertionOutputStack(ItemStack outputStack, GasType gasType)
+	public ItemStack getInsertionOutputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
 		ItemStack result = new ItemStack(GasesFrameworkAPI.gasBottle, 1, gasType.gasID);
 		
@@ -93,13 +93,13 @@ public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, 
 	}
 
 	@Override
-	public ItemStack getExtractionInputStack(ItemStack inputStack, GasType gasType)
+	public ItemStack getExtractionInputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
 		return --inputStack.stackSize > 0 ? inputStack : null;
 	}
 
 	@Override
-	public ItemStack getExtractionOutputStack(ItemStack outputStack, GasType gasType)
+	public ItemStack getExtractionOutputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
 		ItemStack result = new ItemStack(Items.glass_bottle);
 		

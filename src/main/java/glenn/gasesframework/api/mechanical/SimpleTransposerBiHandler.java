@@ -44,13 +44,13 @@ public class SimpleTransposerBiHandler implements IGasTransposerExtractHandler, 
 	}
 
 	@Override
-	public ItemStack getInsertionInputStack(ItemStack inputStack, GasType gasType)
+	public ItemStack getInsertionInputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
 		return (inputStack.stackSize -= insertable.stackSize) > 0 ? inputStack : null;
 	}
 
 	@Override
-	public ItemStack getInsertionOutputStack(ItemStack outputStack, GasType gasType)
+	public ItemStack getInsertionOutputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
 		if(outputStack == null)
 		{
@@ -95,13 +95,13 @@ public class SimpleTransposerBiHandler implements IGasTransposerExtractHandler, 
 	}
 
 	@Override
-	public ItemStack getExtractionInputStack(ItemStack inputStack, GasType gasType)
+	public ItemStack getExtractionInputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
 		return (inputStack.stackSize -= extractable.stackSize) > 0 ? inputStack : null;
 	}
 
 	@Override
-	public ItemStack getExtractionOutputStack(ItemStack outputStack, GasType gasType)
+	public ItemStack getExtractionOutputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
 		if(outputStack == null)
 		{

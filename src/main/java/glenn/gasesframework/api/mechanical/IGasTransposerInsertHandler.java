@@ -42,19 +42,21 @@ public interface IGasTransposerInsertHandler extends IGasTransposerHandler
 	 * If {@link #completeInsertion(ItemStack, ItemStack, GasType)} returns true, this method is called.
 	 * Use this method to extract the input item from the slot.
 	 * @param inputStack - The itemstack that already exists in the input slot.
+	 * @param outputStack - The itemstack that already exists in the output slot.
 	 * @param gasType - The gas type that will be inserted into the item.
 	 * @return The modified itemstack to be placed in the input slot.
 	 */
-	ItemStack getInsertionInputStack(ItemStack inputStack, GasType gasType);
+	ItemStack getInsertionInputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType);
 	
 	/**
 	 * If {@link #completeInsertion(ItemStack, ItemStack, GasType)} returns true, this method is called.
 	 * Use this method to extract the input item from the slot.
-	 * @param inputStack - The itemstack that already exists in the output slot.
+	 * @param inputStack - The itemstack that already exists in the input slot.
+	 * @param outputStack - The itemstack that already exists in the output slot.
 	 * @param gasType - The gas type that will be inserted into the item.
 	 * @return The modified itemstack to be placed in the input slot.
 	 */
-	ItemStack getInsertionOutputStack(ItemStack outputStack, GasType gasType);
+	ItemStack getInsertionOutputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType);
 	
 	/**
 	 * Get the amount of ticks required to complete this insertion. Commonly set to 20.
