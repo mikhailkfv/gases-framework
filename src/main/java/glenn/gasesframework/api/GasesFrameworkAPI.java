@@ -1,10 +1,12 @@
 package glenn.gasesframework.api;
 
+import glenn.gasesframework.api.ExtendedGasEffectsBase.EffectType;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gastype.GasTypeAir;
 import glenn.gasesframework.api.gastype.GasTypeFire;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
+import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
 import glenn.gasesframework.api.reaction.Reaction;
 import glenn.gasesframework.api.reaction.ReactionEmpty;
 
@@ -43,7 +45,7 @@ import net.minecraft.world.World;
 public class GasesFrameworkAPI
 {
 	public static final String OWNER = "gasesFramework";
-	public static final String VERSION = "1.1.1";
+	public static final String VERSION = "1.1.2";
 	public static final String TARGETVERSION = "1.7.2";
 	public static final String PROVIDES = "gasesFrameworkAPI";
 	
@@ -77,7 +79,7 @@ public class GasesFrameworkAPI
 	/**
 	 * The gas type for smoke. Do not register this!
 	 */
-	public static final GasType gasTypeSmoke = new GasType(true, 1, "smoke", 0x3F3F3F9F, 2, -16, Combustibility.NONE).setEffectRates(4, 4, 16);
+	public static final GasType gasTypeSmoke = new GasType(true, 1, "smoke", 0x3F3F3F9F, 2, -16, Combustibility.NONE).setEffectRate(EffectType.BLINDNESS, 4).setEffectRate(EffectType.SUFFOCATION, 4).setEffectRate(EffectType.SLOWNESS, 16);
 	/**
 	 * The gas type for ignited gas. Do not register this!
 	 */
@@ -453,6 +455,18 @@ public class GasesFrameworkAPI
 		if(isModInstalled())
 		{
 			modInstance.registerGasWorldGenType(type, dimensionNames);
+		}
+	}
+	
+	/**
+	 * Registers a gas transposer handler.
+	 * @param handler
+	 */
+	public static void registerGasTransposerHandler(IGasTransposerHandler handler)
+	{
+		if(isModInstalled())
+		{
+			modInstance.registerGasTransposerHandler(handler);
 		}
 	}
 }

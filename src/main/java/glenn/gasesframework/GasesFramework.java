@@ -6,7 +6,10 @@ import glenn.gasesframework.api.ItemKey;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
+import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
 import glenn.gasesframework.common.CommonProxy;
+import glenn.gasesframework.common.ConfigGasFurnaceRecipes;
+import glenn.gasesframework.common.GasBottleTransposerHandler;
 import glenn.gasesframework.common.GasesFrameworkMainConfigurations;
 import glenn.gasesframework.common.GuiHandler;
 import glenn.gasesframework.common.block.BlockGas;
@@ -15,6 +18,7 @@ import glenn.gasesframework.common.block.BlockGasFurnace;
 import glenn.gasesframework.common.block.BlockGasPipe;
 import glenn.gasesframework.common.block.BlockGasPump;
 import glenn.gasesframework.common.block.BlockGasTank;
+import glenn.gasesframework.common.block.BlockGasTransposer;
 import glenn.gasesframework.common.block.BlockInfiniteGasDrain;
 import glenn.gasesframework.common.block.BlockInfiniteGasPump;
 import glenn.gasesframework.common.block.BlockLantern;
@@ -27,18 +31,15 @@ import glenn.gasesframework.common.tileentity.TileEntityGasFurnace;
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace.SpecialFurnaceRecipe;
 import glenn.gasesframework.common.tileentity.TileEntityGasPump;
 import glenn.gasesframework.common.tileentity.TileEntityGasTank;
+import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
 import glenn.gasesframework.common.tileentity.TileEntityInfiniteGasDrain;
 import glenn.gasesframework.common.tileentity.TileEntityInfiniteGasPump;
 import glenn.gasesframework.common.worldgen.WorldGeneratorGasesFramework;
+import glenn.gasesframework.network.message.MessageGasEffects;
+import glenn.gasesframework.network.message.MessageSetTransposerMode;
 import glenn.gasesframework.waila.GasesFrameworkWaila;
-import glenn.moddingutils.Configurations.ItemRepresentation;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -49,10 +50,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -61,7 +58,9 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * <b>Gases Framework</b>
@@ -86,11 +85,13 @@ public class GasesFramework implements IGasesFramework
 	// Says where the client and server 'proxy' code is loaded.
 	@SidedProxy(clientSide = "glenn.gasesframework.client.ClientProxy", serverSide = "glenn.gasesframework.server.ServerProxy")
 	public static CommonProxy proxy;
-	public static final GuiHandler guiHandler = new GuiHandler();
 	
 	public static final String MODID = GasesFrameworkAPI.OWNER;
-	public static final String VERSION = "1.1.1";
+	public static final String VERSION = "1.1.2";
 	public static final String TARGETVERSION = GasesFrameworkAPI.TARGETVERSION;
+	
+	public static final GuiHandler guiHandler = new GuiHandler();
+	public static SimpleNetworkWrapper networkWrapper = new SimpleNetworkWrapper(MODID);
 	
 	public static GasesFrameworkMainConfigurations configurations;
 	
@@ -103,6 +104,7 @@ public class GasesFramework implements IGasesFramework
 	public static Block gasFurnaceActive;
 	public static Block infiniteGasPump;
 	public static Block infiniteGasDrain;
+	public static Block gasTransposer;
 	
 	private void initBlocksAndItems()
 	{
@@ -117,8 +119,9 @@ public class GasesFramework implements IGasesFramework
 		GameRegistry.registerBlock(gasCollector = new BlockGasCollector().setHardness(2.5F).setStepSound(Block.soundTypeStone).setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockName("gf_gasCollector").setBlockTextureName("gasesframework:collector"), "gasCollector");
 		GameRegistry.registerBlock(gasFurnaceIdle = new BlockGasFurnace(false).setHardness(3.5F).setStepSound(Block.soundTypeStone).setBlockName("gf_gasFurnace").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:gas_furnace"), "gasFurnaceIdle");
 		GameRegistry.registerBlock(gasFurnaceActive = new BlockGasFurnace(true).setHardness(3.5F).setStepSound(Block.soundTypeStone).setLightLevel(0.25F).setBlockName("gf_gasFurnaceWarm").setBlockTextureName("gasesframework:gas_furnace"), "gasFurnaceActive");
-		GameRegistry.registerBlock(infiniteGasPump = new BlockInfiniteGasPump().setBlockName("gf_infiniteGasPump").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:pump_infinite"), "infiniteGasPump");
-		GameRegistry.registerBlock(infiniteGasDrain = new BlockInfiniteGasDrain().setBlockName("gf_infiniteGasDrain").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:drain"), "infiniteGasDrain");
+		GameRegistry.registerBlock(infiniteGasPump = new BlockInfiniteGasPump().setHardness(-1.0F).setBlockName("gf_infiniteGasPump").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:pump_infinite"), "infiniteGasPump");
+		GameRegistry.registerBlock(infiniteGasDrain = new BlockInfiniteGasDrain().setHardness(-1.0F).setBlockName("gf_infiniteGasDrain").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:drain"), "infiniteGasDrain");
+		GameRegistry.registerBlock(gasTransposer = new BlockGasTransposer().setHardness(2.5F).setBlockName("gf_gasTransposer").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:transposer"), "gasTransposer");
 		
 		GasesFrameworkAPI.registerLanternType(GasesFrameworkAPI.lanternTypeEmpty, GasesFrameworkAPI.creativeTab);
 		for(int i = 0; i < GasesFrameworkAPI.lanternTypesGas.length; i++)
@@ -134,6 +137,10 @@ public class GasesFramework implements IGasesFramework
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+		proxy.registerMessage(MessageGasEffects.Handler.class, MessageGasEffects.class, 0);
+		proxy.registerMessage(MessageSetTransposerMode.Handler.class, MessageSetTransposerMode.class, 1);
+		
 		GasesFrameworkAPI.modInstance = instance;
 		
 		GasesFrameworkAPI.creativeTab = new CreativeTabs("tabGases")
@@ -146,39 +153,8 @@ public class GasesFramework implements IGasesFramework
 		
 		initBlocksAndItems();
 		configurations = new GasesFrameworkMainConfigurations(event.getSuggestedConfigurationFile());
-		try
-		{
-			File gasFurnaceRecipesFile = new File(event.getModConfigurationDirectory().getAbsolutePath() + "/gasesframework_GasFurnaceRecipes.json");
-			
-			if(!gasFurnaceRecipesFile.exists())
-			{
-				gasFurnaceRecipesFile.createNewFile();
-				PrintWriter writer = new PrintWriter(gasFurnaceRecipesFile);
-				writer.print(String.format("[%n\t%n]"));
-				writer.close();
-			}
-			
-			BufferedReader bf = new BufferedReader(new FileReader(gasFurnaceRecipesFile));
-			String recipesJsonString = "";
-			String line;
-			while((line = bf.readLine()) != null)
-			{
-				recipesJsonString += line + "\n";
-			}
-			bf.close();
-			
-			Gson gson = new Gson();
-			ArrayList<CustomGasFurnaceRecipe> recipes = gson.fromJson(recipesJsonString, new TypeToken<ArrayList<CustomGasFurnaceRecipe>>(){}.getType());
-			
-			for(CustomGasFurnaceRecipe recipe : recipes)
-			{
-				addSpecialFurnaceRecipe(recipe.input.getItemStack(), recipe.output.getItemStack(), recipe.time == 0 ? 200 : recipe.time, recipe.exp);
-			}
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		
+		ConfigGasFurnaceRecipes.load(new File(event.getModConfigurationDirectory().getAbsolutePath() + "/gasesframework_GasFurnaceRecipes.json"));
 		
 		GasesFrameworkAPI.registerIgnitionBlock(Blocks.torch);
 		GasesFrameworkAPI.registerIgnitionBlock(Blocks.fire);
@@ -202,6 +178,7 @@ public class GasesFramework implements IGasesFramework
 		GameRegistry.addRecipe(new ItemStack(gasCollector), " P ", "PUP", " P ", 'U', gasPump, 'P', GasesFrameworkAPI.gasTypeAir.pipeBlock);
 		GameRegistry.addRecipe(new ItemStack(gasTank), "IPI", "P P", "IPI", 'I', Items.iron_ingot, 'P', GasesFrameworkAPI.gasTypeAir.pipeBlock);
 		GameRegistry.addRecipe(new ItemStack(gasFurnaceIdle), " I ", "IFI", " I ", 'I', Items.iron_ingot, 'F', Blocks.furnace);
+		GameRegistry.addRecipe(new ItemStack(gasTransposer), " P ", "PHP", " P ", 'P', GasesFrameworkAPI.gasTypeAir.pipeBlock, 'H', Blocks.hopper);
 		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.gasSamplerExcluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 0));
 		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.gasSamplerIncluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 15));
 		
@@ -225,8 +202,11 @@ public class GasesFramework implements IGasesFramework
 		GameRegistry.registerTileEntity(TileEntityGasFurnace.class, "gasPoweredFurnace");
 		GameRegistry.registerTileEntity(TileEntityInfiniteGasPump.class, "infiniteGasPump");
 		GameRegistry.registerTileEntity(TileEntityInfiniteGasDrain.class, "infiniteGasDrain");
+		GameRegistry.registerTileEntity(TileEntityGasTransposer.class, "gasTransposer");
 		
 		GasesFrameworkAPI.registerReaction(new ReactionIgnition());
+		
+		GasesFrameworkAPI.registerGasTransposerHandler(new GasBottleTransposerHandler());
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 		
@@ -679,12 +659,14 @@ public class GasesFramework implements IGasesFramework
 			}
 		}
 	}
-	
-	private class CustomGasFurnaceRecipe
+
+	/**
+	 * Registers a gas transposer handler.
+	 * @param handler
+	 */
+	@Override
+	public void registerGasTransposerHandler(IGasTransposerHandler handler)
 	{
-		public ItemRepresentation input;
-		public ItemRepresentation output;
-		public int time = 200;
-		public int exp = 200;
+		TileEntityGasTransposer.registerHandler(handler);
 	}
 }

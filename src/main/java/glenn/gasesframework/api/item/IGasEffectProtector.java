@@ -1,29 +1,35 @@
 package glenn.gasesframework.api.item;
 
+import glenn.gasesframework.api.ExtendedGasEffectsBase.EffectType;
 import glenn.gasesframework.api.gastype.GasType;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
 /**
- * An interface for items that can protect against gas effects when worn.
+ * An interface for items that can protect against gas effects when held or worn.
  * @author Glenn
  */
 public interface IGasEffectProtector
 {
 	/**
-	 * Return true if this item will protect the vision of the holder.
-	 * @param entity
-	 * @param stack
-	 * @param type
+	 * Return true if this item will protect the holder from this effect.
+	 * @param entity - The affected entity.
+	 * @param itemstack - The itemstack containing the IGasEffectProtector.
+	 * @param slot - The slot the itemstack comes from. 0 is held item, 1-4 is armor.
+	 * @param gasType - The gas type causing this effect.
+	 * @param effect - The effect that can be prevented.
 	 * @return
 	 */
-	public boolean protectVision(EntityLivingBase entity, ItemStack stack, GasType type);
+	public boolean protect(EntityLivingBase entity, ItemStack itemstack, int slot, GasType gasType, EffectType effect);
+	
 	/**
-	 * Return true if this item will protect the breath of the holder.
-	 * @param entity
-	 * @param stack
-	 * @param type
+	 * Get the itemstack after it has protected the holder against one or several gas effects.
+	 * Return itemstack if the item is unaffected.
+	 * @param entity - The affected entity.
+	 * @param itemstack - The itemstack containing the IGasEffectProtector.
+	 * @param slot - The slot the itemstack comes from. 0 is held item, 1-4 is armor.
+	 * @param gasType - The gas type causing this effect.
 	 * @return
 	 */
-	public boolean protectBreath(EntityLivingBase entity, ItemStack stack, GasType type);
+	public ItemStack getItemstackOnProtect(EntityLivingBase entity, ItemStack itemstack, int slot, GasType gasType);
 }

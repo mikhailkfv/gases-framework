@@ -1,14 +1,17 @@
 package glenn.gasesframework.api.gastype;
 
 import glenn.gasesframework.api.Combustibility;
+import glenn.gasesframework.api.ExtendedGasEffectsBase.EffectType;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -68,26 +71,23 @@ public class GasType
 	 */
 	public final Combustibility combustibility;
 	/**
-	 * How quickly this gas type will evaporate in the world. Higher values will decrease evaporation speed. If 0, it does not evaporate.
+	 * How quickly this gas type will dissipate in the world. Higher values will decrease dissipation speed. If 0, it does not dissipate.
 	 */
-	public int evaporationRate = 0;
+	public int dissipationRate = 0;
 	/**
 	 * The damage this gas deals upon touch.
 	 */
 	public float damage = 0.0f;
+	/**
+	 * Will this gas type, when flowing, destroy loose blocks such as redstone, torches and lanterns?
+	 */
+	public boolean destroyLooseBlocks = false;
 	
 	/**
-	 * The rate at which gas of this type will cause blindness.
+	 * The rate at which gas of this type will cause various gas effects.
 	 */
-	public int blindnessRate = 0;
-	/**
-	 * The rate at which gas of this type will cause suffocation. At higher values, the player will suffocate earlier and will take damage more frequently.
-	 */
-	public int suffocationRate = 0;
-	/**
-	 * How much this gas will gradually slow down the player.
-	 */
-	public int slownessRate = 0;
+	private final EnumMap<EffectType, Integer> effectRates = new EnumMap<EffectType, Integer>(EffectType.class);
+	
 	/**
 	 * The overlay image used when the player is inside the gas.
 	 */
@@ -211,24 +211,30 @@ public class GasType
 	}
 	
 	/**
-	 * Sets the rates of gas effects on this gas type.
-	 * @param blindness - How quickly the player will experience gradual blindness.
-	 * @param suffocation - How quickly the player will suffocate in the gas, and how often {@link GasType#onBreathed(EntityLivingBase)} will be called
-	 * @param slowness - How quickly the player will lose their movement speed inside the gas.
+	 * Sets the rate of a gas effect on this gas type.
+	 * @param effectType - The effect type which is to be added to the gas.
+	 * @param value - The rate at which this effect will be applied. Greater numbers trigger the effects more quickly.
 	 * @return
 	 */
-	public GasType setEffectRates(int blindness, int suffocation, int slowness)
+	public GasType setEffectRate(EffectType effectType, int value)
     {
-    	this.blindnessRate = blindness;
-    	this.suffocationRate = suffocation;
-    	this.slownessRate = slowness;
-    	
-    	if(blindnessRate <= 0) blindnessRate = -4;
-    	if(suffocationRate <= 0) suffocationRate = -16;
-    	if(slownessRate <= 0) slownessRate = -32;
+		this.effectRates.put(effectType, Integer.valueOf(value));
     	
     	return this;
     }
+	
+	public int getEffectRate(EffectType effectType)
+	{
+		Integer res = this.effectRates.get(effectType);
+		if(res == null)
+		{
+			return 0;
+		}
+		else
+		{
+			return res;
+		}
+	}
 	
 	/**
 	 * Set how much damage the gas will deal upon contact with the player.
@@ -242,13 +248,13 @@ public class GasType
 	}
 	
 	/**
-	 * Set how quickly the gas can evaporate. Higher values will decrease evaporation speed.
-	 * @param evaporation
+	 * Set how quickly the gas can dissipate. Higher values will decrease dissipation speed.
+	 * @param dissipationRate
 	 * @return
 	 */
-	public GasType setEvaporationRate(int evaporation)
+	public GasType setDissipationRate(int dissipationRate)
     {
-    	this.evaporationRate = evaporation;
+    	this.dissipationRate = dissipationRate;
     	return this;
     }
 	
@@ -271,6 +277,17 @@ public class GasType
 	public GasType setOverlayImage(ResourceLocation overlayImage)
 	{
 		this.overlayImage = overlayImage;
+		return this;
+	}
+	
+	/**
+	 * Set whether this gas type, when flowing, will destroy loose blocks such as redstone and torches.
+	 * If true, the gas can destroy blocks with materials on the condition {@link net.minecraft.block.material.Material#getMaterialMobility() getMaterialMobility()} == 1. 
+	 * If false, the gas can destroy blocks with materials on the condition {@link net.minecraft.block.material.Material#isReplaceable() isReplaceable()}.
+	 */
+	public GasType setDestroyLooseBlocks(boolean destroyLooseBlocks)
+	{
+		this.destroyLooseBlocks = destroyLooseBlocks;
 		return this;
 	}
 	
@@ -333,13 +350,13 @@ public class GasType
 	}
 	
 	/**
-	 * Called when a gas block of this type evaporates.
+	 * Called when a gas block of this type dissipates.
 	 * @param world
 	 * @param x
 	 * @param y
 	 * @param z
 	 */
-	public void onEvaporated(World world, int x, int y, int z)
+	public void onDissipated(World world, int x, int y, int z)
 	{
 		
 	}
@@ -429,18 +446,48 @@ public class GasType
 	
 	/**
 	 * Can a gas block of type 'type' forcefully flow into this type of gas?
+	 * @param thisVolume - The volume of this gas block.
 	 * @param type - The type of gas attempting to flow into this one.
-	 * @param thisMetadata - The metadata of this gas block.
-	 * @param otherMetadata - The metadata of the other gas block.
+	 * @param otherVolume - The volume of the other gas block.
 	 * @return
 	 */
-	public boolean canBeDestroyedBy(GasType type, int thisMetadata, int otherMetadata)
+	public boolean canBeDestroyedBy(int thisVolume, GasType type, int otherVolume)
 	{
 		return false;
 	}
 	
 	/**
-	 * Get the decay of a gas. This triggers every time the gas block ticks.
+	 * Can this gas type flow to this coordinate?
+	 * @param thisVolume - The volume of this gas block.
+	 * @param world
+	 * @param x - The X coordinate this gas can flow to.
+	 * @param y - The Y coordinate this gas can flow to.
+	 * @param z - The z coordinate this gas can flow to.
+	 * @return
+	 */
+	public boolean canFlowHere(int thisVolume, World world, int x, int y, int z)
+	{
+		GasType otherGasType = GasesFrameworkAPI.getGasType(world, x, y, z);
+		if(otherGasType != null)
+		{
+			return otherGasType.canBeDestroyedBy(GasesFrameworkAPI.getGasVolume(world, x, y, z), this, thisVolume);
+		}
+		else
+		{
+			Material material = world.getBlock(x, y, z).getMaterial();
+			if(this.destroyLooseBlocks)
+			{
+				return !material.isLiquid() && (material.isReplaceable() || material.getMaterialMobility() == 1);
+			}
+			else
+			{
+				return !material.isLiquid() && material.isReplaceable();
+			}
+		}
+	}
+	
+	/**
+	 * Get the dissipation of a gas. This triggers every time the gas block ticks. This is affected by the {@link #dissipationRate} of the GasType.
 	 * @param world
 	 * @param x
 	 * @param y
@@ -448,9 +495,9 @@ public class GasType
 	 * @param random
 	 * @return
 	 */
-    public int getGasDecay(World world, int x, int y, int z, Random random)
+    public int getDissipation(World world, int x, int y, int z, Random random)
     {
-    	return evaporationRate > 0 && random.nextInt(evaporationRate) == 0 ? 1 : 0;
+    	return dissipationRate > 0 && random.nextInt(dissipationRate) == 0 ? 1 : 0;
     }
     
     /**

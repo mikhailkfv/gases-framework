@@ -121,63 +121,6 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
 		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
 		return tileEntity.containedType;
 	}
-	
-	/**
-     * Called upon block activation (right click on the block.)
-     */
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
-    {
-		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
-		GasType containedType = tileEntity.containedType;
-    	ItemStack inUse = entityPlayer.getCurrentEquippedItem();
-    	boolean consumed = false;
-    	ItemStack newItem = null;
-    	
-    	if(inUse != null)
-    	{
-    		if(inUse.getItem() == Items.glass_bottle)
-        	{
-        		if(tileEntity.decrement())
-        		{
-        			consumed = true;
-        			newItem = containedType.getBottledItem();
-        		}
-        	}
-        	else if(inUse.getItem() == GasesFrameworkAPI.gasBottle)
-        	{
-        		GasType heldType = ((ItemGasBottle)GasesFrameworkAPI.gasBottle).getGasType(inUse);
-        		if(tileEntity.increment(heldType))
-        		{
-        			consumed = true;
-        			newItem = new ItemStack(Items.glass_bottle);
-        		}
-        	}
-    	}
-    	
-    	boolean addNewItem = newItem != null;
-    	
-    	if(consumed)
-    	{
-    		inUse.stackSize--;
-			if(inUse.stackSize <= 0)
-			{
-				entityPlayer.inventory.setInventorySlotContents(entityPlayer.inventory.currentItem, null);
-			}
-    	}
-    	
-    	if(addNewItem && !entityPlayer.inventory.addItemStackToInventory(newItem))
-		{
-			entityPlayer.dropPlayerItemWithRandomChoice(newItem, false);
-		}
-    	
-    	if(newItem == null | inUse == null)
-    	{
-    		return false;
-    	}
-    	
-    	return consumed & newItem.getItem() != inUse.getItem() & newItem.getItemDamage() != inUse.getItemDamage();
-    }
     
     @Override
     public boolean onBlockEventReceived(World world, int x, int y, int z, int eventID, int eventParam)

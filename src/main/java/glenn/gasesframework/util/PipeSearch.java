@@ -1,6 +1,7 @@
 package glenn.gasesframework.util;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.block.IGasInterface;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.common.block.BlockGasPipe;
@@ -50,7 +51,7 @@ public abstract class PipeSearch
 		}
 
 		@Override
-		protected boolean inspectConnection(PipeBranch branch, World world, IVec connectionPos, BlockGasPipe pipeBlock, ForgeDirection direction)
+		protected void inspectConnection(PipeBranch branch, World world, IVec connectionPos, BlockGasPipe pipeBlock, ForgeDirection direction)
 		{
 			Block directionBlock = world.getBlock(connectionPos.x, connectionPos.y, connectionPos.z);
 			if(IGasReceptor.class.isAssignableFrom(directionBlock.getClass()))
@@ -60,11 +61,7 @@ public abstract class PipeSearch
 				{
 					ends.add(new PipeEnd(branch, connectionPos, direction));
 				}
-				
-				return true;
 			}
-			
-			return false;
 		}
 
 		@Override
@@ -87,7 +84,7 @@ public abstract class PipeSearch
 		}
 
 		@Override
-		protected boolean inspectConnection(PipeBranch branch, World world, IVec connectionPos, BlockGasPipe pipeBlock, ForgeDirection direction)
+		protected void inspectConnection(PipeBranch branch, World world, IVec connectionPos, BlockGasPipe pipeBlock, ForgeDirection direction)
 		{
 			Block directionBlock = world.getBlock(connectionPos.x, connectionPos.y, connectionPos.z);
 			
@@ -100,8 +97,6 @@ public abstract class PipeSearch
 					propellors.add(new PipeEnd(branch, connectionPos, direction.getOpposite()));
 				}
 			}
-			
-			return false;
 		}
 	}
 	
@@ -142,14 +137,18 @@ public abstract class PipeSearch
     						connection = new PipeBranch(depth, branchMap, connectionPos);
     						newTop.add(connection);
     					}
-    					else if(inspectConnection(branch, world, connectionPos, pipeBlock, direction))
+    					else
+    					{
+    						inspectConnection(branch, world, connectionPos, pipeBlock, direction);
+    					}
+    					
+    					if(directionBlock instanceof IGasInterface && ((IGasInterface)directionBlock).connectToPipe(world, connectionPos.x, connectionPos.y, connectionPos.z, direction.getOpposite()))
     					{
     						connectionCount++;
     						lastConnection = i;
     					}
     				}
-    				
-    				if(connection != null)
+    				else
     				{
     					connectionCount++;
 						lastConnection = i;
@@ -169,7 +168,7 @@ public abstract class PipeSearch
     	}
 	}
 	
-	protected abstract boolean inspectConnection(PipeBranch branch, World world, IVec connectionPos, BlockGasPipe pipeBlock, ForgeDirection direction);
+	protected abstract void inspectConnection(PipeBranch branch, World world, IVec connectionPos, BlockGasPipe pipeBlock, ForgeDirection direction);
 	protected void inspectLooseEnd(PipeBranch branch, World world, IVec looseConnectionPos, BlockGasPipe pipeBlock, ForgeDirection direction)
 	{
 		
