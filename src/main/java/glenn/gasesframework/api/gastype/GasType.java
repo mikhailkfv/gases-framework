@@ -79,9 +79,7 @@ public class GasType
 	 */
 	public float damage = 0.0f;
 	/**
-	 * Will this gas type, when flowing, destroy loose blocks such as redstone and torches?
-	 * If true, the gas can destroy blocks with materials on the condition {@link net.minecraft.block.material.Material#getMaterialMobility() getMaterialMobility()} == 1. 
-	 * If false, the gas can destroy blocks with materials on the condition {@link net.minecraft.block.material.Material#isReplaceable() isReplaceable()}.
+	 * Will this gas type, when flowing, destroy loose blocks such as redstone, torches and lanterns?
 	 */
 	public boolean destroyLooseBlocks = false;
 	
@@ -479,11 +477,11 @@ public class GasType
 			Material material = world.getBlock(x, y, z).getMaterial();
 			if(this.destroyLooseBlocks)
 			{
-				return material.getMaterialMobility() == 1;
+				return !material.isLiquid() && (material.isReplaceable() || material.getMaterialMobility() == 1);
 			}
 			else
 			{
-				return material.isReplaceable();
+				return !material.isLiquid() && material.isReplaceable();
 			}
 		}
 	}
