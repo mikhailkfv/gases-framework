@@ -317,7 +317,8 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
     		uvMaxU = icon.getInterpolatedU(maxY * 16.0D);
     		uvMinV = icon.getInterpolatedV(minZ * 16.0D);
     		uvMaxV = icon.getInterpolatedV(maxZ * 16.0D);
-    		
+
+    		tessellator.setColorOpaque_F(0.8F, 0.8F, 0.8F);
     		tessellator.setNormal(1.0F, 0.0F, 0.0F);
     		tessellator.addVertexWithUV(d2, minY, minZ, uvMinU, uvMinV);
     		tessellator.addVertexWithUV(d2, maxY, minZ, uvMaxU, uvMinV);
@@ -375,7 +376,8 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
     		uvMaxU = icon.getInterpolatedU(maxX * 16.0D);
     		uvMinV = icon.getInterpolatedV(minY * 16.0D);
     		uvMaxV = icon.getInterpolatedV(maxY * 16.0D);
-    		
+
+    		tessellator.setColorOpaque_F(0.8F, 0.8F, 0.8F);
     		tessellator.setNormal(0.0F, 0.0F, 1.0F);
     		tessellator.addVertexWithUV(minX, minY, d2, uvMinU, uvMinV);
     		tessellator.addVertexWithUV(maxX, minY, d2, uvMaxU, uvMinV);
