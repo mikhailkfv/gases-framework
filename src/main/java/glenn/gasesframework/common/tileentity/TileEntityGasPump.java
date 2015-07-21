@@ -131,7 +131,7 @@ public class TileEntityGasPump extends TileEntity
      */
     protected GasType extract()
     {
-		ForgeDirection blockDirection = ForgeDirection.getOrientation(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+		ForgeDirection blockDirection = ForgeDirection.getOrientation(worldObj.getBlockMetadata(xCoord, yCoord, zCoord) % 6);
     	int[] indices = randomIndexArray(this.worldObj.rand);
 		for(int i = 0; i < 6 & containedType == null; i++)
 		{
@@ -189,7 +189,7 @@ public class TileEntityGasPump extends TileEntity
     {
 		if(containedType != null)
 		{
-			ForgeDirection direction = ForgeDirection.getOrientation(worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+			ForgeDirection direction = ForgeDirection.getOrientation(worldObj.getBlockMetadata(xCoord, yCoord, zCoord) % 6);
 			if(pumpToBlock(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, direction))
 			{
 				containedType = null;

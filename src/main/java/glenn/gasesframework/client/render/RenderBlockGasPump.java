@@ -206,7 +206,7 @@ public class RenderBlockGasPump implements ISimpleBlockRenderingHandler
 	@Override
 	public boolean renderWorldBlock(IBlockAccess blockAccess, int x, int y, int z, Block bblock, int modelId, RenderBlocks renderer)
 	{
-		ForgeDirection blockDirection = ForgeDirection.getOrientation(blockAccess.getBlockMetadata(x, y, z));
+		ForgeDirection blockDirection = ForgeDirection.getOrientation(blockAccess.getBlockMetadata(x, y, z) % 6);
 		BlockGasPump block = (BlockGasPump)bblock;
 
 		Tessellator tessellator = Tessellator.instance;
