@@ -228,7 +228,29 @@ public class GasesFramework implements IGasesFramework
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
+		for(String s : configurations.other_additionalIgnitionBlocks)
+		{
+			Block block = Block.getBlockFromName(s);
+			if(block != null) GasesFrameworkAPI.registerIgnitionBlock(block);
+		}
 		
+		for(String s : configurations.other_additionalIgnitionItems)
+		{
+			Item item = (Item)Item.itemRegistry.getObject(s);
+			if(item != null) GasesFrameworkAPI.registerIgnitionItem(item);
+		}
+		
+		for(String s : configurations.other_removedIgnitionBlocks)
+		{
+			Block block = Block.getBlockFromName(s);
+			if(block != null) GasesFrameworkAPI.unregisterIgnitionBlock(block);
+		}
+		
+		for(String s : configurations.other_removedIgnitionItems)
+		{
+			Item item = (Item)Item.itemRegistry.getObject(s);
+			if(item != null) GasesFrameworkAPI.unregisterIgnitionItem(item);
+		}
 	}
 	
 	/**

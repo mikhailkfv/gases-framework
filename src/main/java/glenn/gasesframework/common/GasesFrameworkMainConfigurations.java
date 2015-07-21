@@ -51,16 +51,6 @@ public class GasesFrameworkMainConfigurations extends Configurations
 	@Override
 	protected void onLoaded()
 	{
-		for(String s : other_additionalIgnitionBlocks)
-		{
-			Block block = Block.getBlockFromName(s);
-			if(block != null) GasesFrameworkAPI.registerIgnitionBlock(block);
-		}
 		
-		for(String s : other_additionalIgnitionItems)
-		{
-			Item item = (Item)Item.itemRegistry.getObject(s);
-			if(item != null) GasesFrameworkAPI.registerIgnitionItem(item);
-		}
 	}
 }
