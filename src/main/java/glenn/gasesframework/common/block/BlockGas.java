@@ -288,7 +288,7 @@ public class BlockGas extends Block implements ISample
 	        {
 	        	float power = (16.0F - metadata) / 32.0F + 0.20F;
 	        	world.setBlockToAir(i, j, k);
-	        	world.createExplosion(null, (double)i + 0.5D, (double)j + 0.5D, (double)k + 0.5D, type.combustibility.explosionPower * GasesFrameworkAPI.getGasExplosionPowerFactor() * power, true);
+	        	GasesFrameworkAPI.spawnDelayedExplosion(world, i + 0.5D, j + 0.5D, k + 0.5D, 5, type.combustibility.explosionPower * GasesFrameworkAPI.getGasExplosionPowerFactor() * power, true, false);
 	        }
 	        return true;
 		}
