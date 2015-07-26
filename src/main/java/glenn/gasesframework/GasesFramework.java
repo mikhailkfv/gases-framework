@@ -22,6 +22,7 @@ import glenn.gasesframework.common.block.BlockGasTransposer;
 import glenn.gasesframework.common.block.BlockInfiniteGasDrain;
 import glenn.gasesframework.common.block.BlockInfiniteGasPump;
 import glenn.gasesframework.common.block.BlockLantern;
+import glenn.gasesframework.common.entity.EntityDelayedExplosion;
 import glenn.gasesframework.common.item.ItemGasBottle;
 import glenn.gasesframework.common.item.ItemGasPipe;
 import glenn.gasesframework.common.item.ItemGasSampler;
@@ -59,6 +60,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 
@@ -203,6 +205,8 @@ public class GasesFramework implements IGasesFramework
 		GameRegistry.registerTileEntity(TileEntityInfiniteGasPump.class, "infiniteGasPump");
 		GameRegistry.registerTileEntity(TileEntityInfiniteGasDrain.class, "infiniteGasDrain");
 		GameRegistry.registerTileEntity(TileEntityGasTransposer.class, "gasTransposer");
+		
+		EntityRegistry.registerModEntity(EntityDelayedExplosion.class, "delayedGasExplosion", 127, this, 20, 1, false);
 		
 		GasesFrameworkAPI.registerReaction(new ReactionIgnition());
 		
@@ -497,6 +501,15 @@ public class GasesFramework implements IGasesFramework
 		{
 			((BlockGas)block).onFire(world, x, y, z, random, world.getBlockMetadata(x, y, z));
 		}
+	}
+
+	@Override
+	public void spawnDelayedExplosion(World world, double x, double y, double z, int delay, float power, boolean isFlaming, boolean isSmoking)
+	{
+        EntityDelayedExplosion explosionEntity = new EntityDelayedExplosion(world, 5, power, false, true);
+        explosionEntity.setPosition(x, y, z);
+        
+        world.spawnEntityInWorld(explosionEntity);
 	}
 	
 	/**

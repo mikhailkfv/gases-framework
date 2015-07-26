@@ -309,6 +309,23 @@ public class GasesFrameworkAPI
 	{
 		modInstance.ignite(world, x, y, z, random);
 	}
+
+	/**
+	 * Spawn a delayed explosion in the world.
+	 * This method is unsafe to call when Gases Framework is not present.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param delay
+	 * @param power
+	 * @param isFlaming
+	 * @param isSmoking
+	 */
+	public static void spawnDelayedExplosion(World world, double x, double y, double z, int delay, float power, boolean isFlaming, boolean isSmoking)
+	{
+		modInstance.spawnDelayedExplosion(world, x, y, z, delay, power, isFlaming, isSmoking);
+	}
 	
 	/**
 	 * Gets the gas type of the gas block at the location, if any. If no gas block is present, null is returned.

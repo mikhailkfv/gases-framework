@@ -75,6 +75,19 @@ public interface IGasesFramework
 	public void ignite(World world, int x, int y, int z, Random random);
 	
 	/**
+	 * Spawn a delayed explosion in the world.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param delay
+	 * @param power
+	 * @param isFlaming
+	 * @param isSmoking
+	 */
+	public void spawnDelayedExplosion(World world, double x, double y, double z, int delay, float power, boolean isFlaming, boolean isSmoking);
+	
+	/**
 	 * Gets the gas type of the gas block at the location, if any. If no gas block is present, null is returned.
 	 * @param world
 	 * @param x
