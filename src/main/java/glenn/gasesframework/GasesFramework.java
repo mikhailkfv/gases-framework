@@ -214,18 +214,6 @@ public class GasesFramework implements IGasesFramework
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 		
-		for(String s : configurations.other_removedIgnitionBlocks)
-		{
-			Block block = Block.getBlockFromName(s);
-			if(block != null) GasesFrameworkAPI.unregisterIgnitionBlock(block);
-		}
-		
-		for(String s : configurations.other_removedIgnitionItems)
-		{
-			Item item = (Item)Item.itemRegistry.getObject(s);
-			if(item != null) GasesFrameworkAPI.unregisterIgnitionItem(item);
-		}
-		
 		GasesFrameworkWaila.init();
 	}
 	
