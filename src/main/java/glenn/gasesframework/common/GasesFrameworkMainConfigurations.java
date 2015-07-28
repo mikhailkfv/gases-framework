@@ -40,6 +40,18 @@ public class GasesFrameworkMainConfigurations extends Configurations
 	@ConfigField(path="blocks.Gas tank.Fancy tanks", comment="Whether or not gas tanks will be rendered with fancy fluid physics", defaultValue="true")
 	public boolean other_fancyTank;
 	
+	@ConfigField(path="blocks.Gas Dynamo.Max fuel", comment="The maximal amount of fuel contained by a gas dynamo", defaultValue="1000")
+	public int gasDynamo_maxFuel;
+	
+	@ConfigField(path="blocks.Gas Dynamo.Energy per fuel", comment="The energy generated for each fuel unit", defaultValue="16")
+	public int gasDynamo_energyPerFuel;
+	
+	@ConfigField(path="blocks.Gas Dynamo.Max energy", comment="The maximal amount of energy contained by a gas dynamo", defaultValue="60000")
+	public int gasDynamo_maxEnergy;
+	
+	@ConfigField(path="blocks.Gas Dynamo.Max energy transfer", comment="The maximal amount of energy that can be transmitted from each side of a gas dynamo", defaultValue="80")
+	public int gasDynamo_maxEnergyTransfer;
+	
 	@ConfigField(path="updatechecker.Enable", comment="Allow Gases Framework to automatically check for updates", defaultValue="true")
 	public boolean other_enableUpdateCheck;
 	
