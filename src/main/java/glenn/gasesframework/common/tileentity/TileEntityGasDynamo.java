@@ -56,7 +56,7 @@ public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider
 	private void burnFuel()
 	{
 		int capacity = Math.min(energyStorage.getMaxEnergyStored() - energyStorage.getEnergyStored(), energyStorage.getMaxReceive());
-		int burnableUnits = Math.min(fuelLevel, 4);
+		int burnableUnits = Math.min(fuelLevel, GasesFramework.configurations.gasDynamo_energyPerFuel);
 		int energyCreated = Math.min(capacity, burnableUnits * GasesFramework.configurations.gasDynamo_energyPerFuel);
 		
 		setFuelLevel(fuelLevel - energyCreated / GasesFramework.configurations.gasDynamo_energyPerFuel);
