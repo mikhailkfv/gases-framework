@@ -25,9 +25,7 @@ public class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityPr
     @SideOnly(Side.CLIENT)
     private IIcon iconFront;
     @SideOnly(Side.CLIENT)
-    private IIcon iconFrontActive;
-    @SideOnly(Side.CLIENT)
-    private IIcon iconFrontActiveBurning;
+    private IIcon iconFrontBurning;
     
 	public BlockGasDynamo()
 	{
@@ -43,17 +41,7 @@ public class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityPr
     {
     	super.registerBlockIcons(iconRegister);
     	iconFront = iconRegister.registerIcon(getTextureName() + "_front");
-    	iconFrontActive = iconRegister.registerIcon(getTextureName() + "_front_active");
-    	iconFrontActiveBurning = iconRegister.registerIcon(getTextureName() + "_front_active_burning");
-    }
-    
-    /**
-     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
-     */
-    @Override
-    public IIcon getIcon(int par1, int par2)
-    {
-        return par1 == 4 ? iconFront : this.blockIcon;
+    	iconFrontBurning = iconRegister.registerIcon(getTextureName() + "_front_burning");
     }
     
     @SideOnly(Side.CLIENT)
@@ -64,14 +52,7 @@ public class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityPr
     	if(metadata == side)
     	{
     		TileEntityGasDynamo gasDynamo = (TileEntityGasDynamo)blockAccess.getTileEntity(x, y, z);
-    		if(gasDynamo.isBurning)
-    		{
-    			return iconFrontActiveBurning;
-    		}
-    		else
-    		{
-    			return gasDynamo.hasEnergy ? iconFrontActive : iconFront;
-    		}
+    		return gasDynamo.isBurning ? iconFrontBurning : iconFront;
     	}
     	else
     	{
@@ -85,12 +66,36 @@ public class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityPr
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemstack)
     {
-        int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-
-        if(l == 0) world.setBlockMetadataWithNotify(x, y, z, 2, 2);
-        else if(l == 1) world.setBlockMetadataWithNotify(x, y, z, 5, 2);
-        else if(l == 2) world.setBlockMetadataWithNotify(x, y, z, 3, 2);
-        else if(l == 3) world.setBlockMetadataWithNotify(x, y, z, 4, 2);
+    	int metadata;
+    	
+    	if(entity.rotationPitch < -45.0f)
+    	{
+    		metadata = 0;
+    	}
+    	else if(entity.rotationPitch > 45.0f)
+    	{
+    		metadata = 1;
+    	}
+    	else
+    	{
+    		int side = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+    		switch(side)
+    		{
+    		case 0:
+    			metadata = 2;
+    			break;
+    		case 1:
+    			metadata = 5;
+    			break;
+    		case 2:
+    			metadata = 3;
+    			break;
+    		default:
+    			metadata = 4;
+    		}
+    	}
+    	
+    	world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
     }
     
     @Override
@@ -145,6 +150,6 @@ public class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityPr
 	@Override
 	public boolean connectToPipe(IBlockAccess blockaccess, int x, int y, int z, ForgeDirection side)
 	{
-		return false;
+		return true;
 	}
 }

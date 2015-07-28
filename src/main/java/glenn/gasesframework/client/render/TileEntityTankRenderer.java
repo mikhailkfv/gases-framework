@@ -6,10 +6,12 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.common.tileentity.TileEntityGasTank;
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
 public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 {
@@ -30,6 +32,9 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 	public void renderTankAt(TileEntityGasTank tileEntity, int i, int j, int k)
 	{
 		double gasHeight = (double)tileEntity.amount / (double)tileEntity.getGasCap();
+		World world = tileEntity.getWorldObj();
+		Block block = tileEntity.getBlockType();
+		int mixedBrightness = block.getMixedBrightnessForBlock(world, i, j, k);
 		
 		if(gasHeight > 0.0D)
 		{
@@ -45,7 +50,6 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 			float alpha = (float)(color & 0xFF) / 255.0f;
 	    	
 	    	tessellator = Tessellator.instance;
-	    	tessellator.setColorRGBA_F(1.0F, 1.0F, 1.0F, (3.0F + alpha) / 4.0F);
 	    	
 	    	double minX = 2.0D / 16.0D;
 	    	double maxX = 14.0D / 16.0D;
@@ -65,6 +69,7 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 		    	double scale = 12.0D / 16.0D;
 		    	
 		    	tessellator.startDrawing(GL11.GL_QUAD_STRIP);
+		    	tessellator.setBrightness(mixedBrightness);
 		    	tessellator.setNormal(0.0F, 0.0F, -1.0F);
 		    	for(int l = 1; l < 8; l++)
 		    	{
@@ -75,6 +80,7 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 		    	tessellator.draw();
 		    	
 		    	tessellator.startDrawing(GL11.GL_QUAD_STRIP);
+		    	tessellator.setBrightness(mixedBrightness);
 		    	tessellator.setNormal(0.0F, 0.0F, 1.0F);
 		    	for(int l = 1; l < 8; l++)
 		    	{
@@ -85,6 +91,7 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 		    	tessellator.draw();
 		    	
 		    	tessellator.startDrawing(GL11.GL_QUAD_STRIP);
+		    	tessellator.setBrightness(mixedBrightness);
 		    	tessellator.setNormal(-1.0F, 0.0F, 0.0F);
 		    	for(int l = 1; l < 8; l++)
 		    	{
@@ -95,6 +102,7 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 		    	tessellator.draw();
 		    	
 		    	tessellator.startDrawing(GL11.GL_QUAD_STRIP);
+		    	tessellator.setBrightness(mixedBrightness);
 		    	tessellator.setNormal(1.0F, 0.0F, 0.0F);
 		    	for(int l = 1; l < 8; l++)
 		    	{
@@ -107,6 +115,7 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 		    	for(int x = 0; x < 8; x++)
 		    	{
 		    		tessellator.startDrawing(GL11.GL_QUAD_STRIP);
+		    		tessellator.setBrightness(mixedBrightness);
 			    	tessellator.setNormal(0.0F, 1.0F, 0.0F);
 			    	for(int y = 0; y < 9; y++)
 			    	{
@@ -119,6 +128,7 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 	    	else
 	    	{
 	    		tessellator.startDrawingQuads();
+		    	tessellator.setBrightness(mixedBrightness);
 
 		    	tessellator.setNormal(0.0F, 0.0F, -1.0F);
 		    	tessellator.addVertexWithUV(minX, minY, 0.0D, maxX, minY);

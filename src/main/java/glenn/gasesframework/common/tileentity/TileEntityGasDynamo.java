@@ -3,6 +3,12 @@ package glenn.gasesframework.common.tileentity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
+
+import java.util.EnumMap;
+import java.util.Map.Entry;
+
+import com.sun.javafx.collections.MappingChange.Map;
+
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
@@ -13,7 +19,6 @@ public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider
 	private EnergyStorage energyStorage;
 	public int fuelLevel;
 	public boolean isBurning;
-	public boolean hasEnergy;
 	
 	public TileEntityGasDynamo()
 	{
@@ -26,7 +31,9 @@ public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider
 	{
 		super.readFromNBT(tagCompound);
 		energyStorage.readFromNBT(tagCompound);
-		setFuelLevel(tagCompound.getInteger("fuelLevel"));
+		fuelLevel = tagCompound.getInteger("fuelLevel");
+		
+		isBurning = fuelLevel > 0;
 	}
 	
 	@Override
@@ -37,60 +44,58 @@ public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider
 		tagCompound.setInteger("fuelLevel", fuelLevel);
 	}
 	
-	private void updateEnergyState()
-	{
-		boolean hasEnergy = energyStorage.getEnergyStored() > 0;
-		
-		if(hasEnergy ^ this.hasEnergy)
-		{
-			if(worldObj != null)
-			{
-				worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 1, hasEnergy ? 1 : 0);
-			}
-		}
-	}
-	
 	public void setFuelLevel(int fuelLevel)
 	{
-		boolean isBurning = fuelLevel > 0;
-		
-		if(isBurning ^ this.isBurning)
+		if(fuelLevel != this.fuelLevel)
 		{
-			if(worldObj != null)
-			{
-				worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 0, isBurning ? 1 : 0);
-			}
+			this.fuelLevel = fuelLevel;
+			worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 0, fuelLevel);
 		}
-		
-		this.fuelLevel = fuelLevel;
 	}
 	
 	private void burnFuel()
 	{
-		int maxBurn = fuelLevel < 4 ? fuelLevel : 4;
+		int capacity = Math.min(energyStorage.getMaxEnergyStored() - energyStorage.getEnergyStored(), energyStorage.getMaxReceive());
+		int burnableUnits = Math.min(fuelLevel, 4);
+		int energyCreated = Math.min(capacity, burnableUnits * GasesFramework.configurations.gasDynamo_energyPerFuel);
 		
-		setFuelLevel(fuelLevel - maxBurn);
-		energyStorage.modifyEnergyStored(maxBurn * GasesFramework.configurations.gasDynamo_energyPerFuel);
+		setFuelLevel(fuelLevel - energyCreated / GasesFramework.configurations.gasDynamo_energyPerFuel);
+		energyStorage.modifyEnergyStored(energyCreated);
 	}
 	
 	public void updateEntity()
 	{
 		if(worldObj.isRemote) return;
 		
+		int previousEnergy = energyStorage.getEnergyStored();
+		int previousFuelLevel = fuelLevel;
+		
 		burnFuel();
 		
+		EnumMap<ForgeDirection, IEnergyReceiver> energyReceivers = new EnumMap<ForgeDirection, IEnergyReceiver>(ForgeDirection.class);
 		for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 		{
 			TileEntity tileEntity = worldObj.getTileEntity(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
 			if(tileEntity != null && tileEntity instanceof IEnergyReceiver)
 			{
-				IEnergyReceiver energyReceiver = (IEnergyReceiver)tileEntity;
-				
-				energyStorage.modifyEnergyStored(-energyReceiver.receiveEnergy(direction, Math.min(energyStorage.getMaxExtract(), energyStorage.getEnergyStored()), false));
+				energyReceivers.put(direction, (IEnergyReceiver)tileEntity);
 			}
 		}
 		
-		updateEnergyState();
+		if(!energyReceivers.isEmpty())
+		{
+			int extract = Math.min(energyStorage.getMaxExtract(), energyStorage.getEnergyStored()) / energyReceivers.size();
+		
+			for(Entry<ForgeDirection, IEnergyReceiver> entry : energyReceivers.entrySet())
+			{
+				energyStorage.modifyEnergyStored(-entry.getValue().receiveEnergy(entry.getKey(), extract, false));
+			}
+		}
+		
+		if(energyStorage.getEnergyStored() != previousEnergy)
+		{
+			worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 1, energyStorage.getEnergyStored());
+		}
 	}
 	
 	public boolean blockEvent(int eventID, int eventParam)
@@ -98,15 +103,18 @@ public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider
 		switch(eventID)
 		{
 		case 0:
-			isBurning = eventParam == 1;
+			fuelLevel = eventParam;
 			break;
 		case 1:
-			hasEnergy = eventParam == 1;
+			energyStorage.setEnergyStored(eventParam);
 			break;
 		}
 		
-		if(worldObj != null && worldObj.isRemote)
+		boolean isBurning = fuelLevel > 1;
+		
+		if(worldObj != null && worldObj.isRemote && isBurning != this.isBurning)
 		{
+			this.isBurning = isBurning;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 		

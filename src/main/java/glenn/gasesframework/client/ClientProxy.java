@@ -7,8 +7,10 @@ import glenn.gasesframework.client.render.RenderBlockGasPump;
 import glenn.gasesframework.client.render.RenderBlockGasTank;
 import glenn.gasesframework.client.render.RenderBlockInfiniteGasPump;
 import glenn.gasesframework.client.render.RenderBlockLantern;
+import glenn.gasesframework.client.render.TileEntityGasDynamoRenderer;
 import glenn.gasesframework.client.render.TileEntityTankRenderer;
 import glenn.gasesframework.common.CommonProxy;
+import glenn.gasesframework.common.tileentity.TileEntityGasDynamo;
 import glenn.gasesframework.common.tileentity.TileEntityGasTank;
 import glenn.moddingutils.UpdateChecker;
 import net.minecraft.client.Minecraft;
@@ -27,6 +29,7 @@ public class ClientProxy extends CommonProxy
 	public void registerRenderers()
 	{
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGasTank.class, new TileEntityTankRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGasDynamo.class, new TileEntityGasDynamoRenderer());
 		
 		RenderingRegistry.registerBlockHandler(RenderBlockGas.RENDER_ID, new RenderBlockGas());
 		RenderingRegistry.registerBlockHandler(RenderBlockLantern.RENDER_ID, new RenderBlockLantern());
