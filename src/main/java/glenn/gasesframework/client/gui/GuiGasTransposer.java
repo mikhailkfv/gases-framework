@@ -8,6 +8,7 @@ import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
 import glenn.gasesframework.network.message.MessageSetTransposerMode;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
@@ -31,7 +32,7 @@ public class GuiGasTransposer extends GuiContainer
 	    int guiMinX = (width - xSize) / 2;
 	    int guiMinY = (height - ySize) / 2;
 	    
-		buttonList.add(new GuiButton(0, guiMinX + 64, guiMinY + 60, 48, 20, StatCollector.translateToLocal("container.gasTransposer.toggleMode")));
+		buttonList.add(new GuiButton(0, guiMinX + 64, guiMinY + 60, 48, 20, I18n.format("container.gasTransposer.toggleMode")));
 	}
 	
 	@Override
@@ -47,9 +48,9 @@ public class GuiGasTransposer extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
-		String inventoryName = tileEntity.hasCustomInventoryName() ? tileEntity.getInventoryName() : StatCollector.translateToLocal(tileEntity.getInventoryName());
+		String inventoryName = tileEntity.hasCustomInventoryName() ? tileEntity.getInventoryName() : I18n.format(tileEntity.getInventoryName());
 		this.fontRendererObj.drawString(inventoryName, xSize / 2 - fontRendererObj.getStringWidth(inventoryName) / 2, 6, 0x404040);
-		this.fontRendererObj.drawString(StatCollector.translateToLocal("container.inventory"), 8, ySize - 96 + 2, 0x404040);
+		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, ySize - 96 + 2, 0x404040);
 	}
 
 	@Override
