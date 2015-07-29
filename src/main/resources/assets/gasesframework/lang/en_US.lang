@@ -44,7 +44,10 @@ tile.gf_gasDynamo.name=Gas Dynamo
 
 itemGroup.tabGases=Glenn's Gases
 
-container.gasFurnace.name=Gas Furnace
+container.gasFurnace=Gas Furnace
 container.gasTransposer.insert.name=Gas Transposer (Insert)
 container.gasTransposer.extract.name=Gas Transposer (Extract)
 container.gasTransposer.toggleMode=Toggle
+container.gasDynamo=Gas Dynamo
+container.gasDynamo.fuel.amount=%s/%s FU
+container.gasDynamo.energy.amount=%s/%s RF

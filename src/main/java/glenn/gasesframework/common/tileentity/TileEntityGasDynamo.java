@@ -1,6 +1,12 @@
 package glenn.gasesframework.common.tileentity;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -14,10 +20,12 @@ import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import glenn.gasesframework.GasesFramework;
 
-public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider
+public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider, ISidedInventory
 {
 	private EnergyStorage energyStorage;
-	public int fuelLevel;
+	private int fuelLevel;
+	private String invName;
+	
 	public boolean isBurning;
 	
 	public TileEntityGasDynamo()
@@ -32,6 +40,11 @@ public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider
 		super.readFromNBT(tagCompound);
 		energyStorage.readFromNBT(tagCompound);
 		fuelLevel = tagCompound.getInteger("fuelLevel");
+
+        if (tagCompound.hasKey("CustomName"))
+        {
+            this.invName = tagCompound.getString("CustomName");
+        }
 		
 		isBurning = fuelLevel > 0;
 	}
@@ -42,6 +55,11 @@ public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider
 		super.writeToNBT(tagCompound);
 		energyStorage.writeToNBT(tagCompound);
 		tagCompound.setInteger("fuelLevel", fuelLevel);
+
+        if (this.hasCustomInventoryName())
+        {
+            tagCompound.setString("CustomName", this.invName);
+        }
 	}
 	
 	public void setFuelLevel(int fuelLevel)
@@ -120,6 +138,30 @@ public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider
 		
 		return true;
 	}
+    
+	@Override
+	public Packet getDescriptionPacket()
+	{
+		NBTTagCompound localNBTTagCompound = new NBTTagCompound();
+		writeToNBT(localNBTTagCompound);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 5, localNBTTagCompound);
+	}
+	
+	@Override
+    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+    {
+    	readFromNBT(packet.func_148857_g());
+    }
+	
+	public int getFuelStored()
+	{
+		return fuelLevel;
+	}
+	
+	public int getMaxFuelStored()
+	{
+		return GasesFramework.configurations.gasDynamo_maxFuel;
+	}
 	
 	@Override
 	public boolean canConnectEnergy(ForgeDirection from)
@@ -143,5 +185,95 @@ public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider
 	public int getMaxEnergyStored(ForgeDirection from)
 	{
 		return energyStorage.getMaxEnergyStored();
+	}
+
+	@Override
+    public boolean isUseableByPlayer(EntityPlayer entityPlayer)
+    {
+        return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : entityPlayer.getDistanceSq((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D) <= 64.0D;
+    }
+
+	@Override
+	public int getSizeInventory()
+	{
+		return 0;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int slot)
+	{
+		return null;
+	}
+
+	@Override
+	public ItemStack decrStackSize(int slot, int amount)
+	{
+		return null;
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int slot)
+	{
+		return null;
+	}
+
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack itemStack)
+	{
+		
+	}
+
+	@Override
+	public String getInventoryName()
+	{
+        return this.hasCustomInventoryName() ? this.invName : "container.gasDynamo";
+	}
+
+	@Override
+	public boolean hasCustomInventoryName()
+	{
+        return this.invName != null && this.invName.length() > 0;
+	}
+
+	@Override
+	public int getInventoryStackLimit()
+	{
+		return 64;
+	}
+
+	@Override
+	public void openInventory()
+	{
+		
+	}
+
+	@Override
+	public void closeInventory()
+	{
+		
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack itemStack)
+	{
+		return false;
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int side)
+	{
+		return new int[0];
+	}
+
+	@Override
+	public boolean canInsertItem(int slot, ItemStack itemStack, int side)
+	{
+		return false;
+	}
+
+	@Override
+	public boolean canExtractItem(int slot, ItemStack itemStack, int side)
+	{
+		return false;
 	}
 }

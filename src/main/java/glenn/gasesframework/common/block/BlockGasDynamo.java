@@ -4,12 +4,14 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.common.container.ContainerGasDynamo;
 import glenn.gasesframework.common.tileentity.TileEntityGasDynamo;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
@@ -99,6 +101,26 @@ public class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityPr
     }
     
     @Override
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9)
+    {
+        if (world.isRemote)
+        {
+            return true;
+        }
+        else
+        {
+            TileEntityGasDynamo tileEntity = (TileEntityGasDynamo)world.getTileEntity(x, y, z);
+
+            if (tileEntity != null)
+            {
+            	entityPlayer.openGui(GasesFramework.instance, ContainerGasDynamo.GUI_ID, world, x, y, z);
+            }
+
+            return true;
+        }
+    }
+
+    @Override
     public boolean onBlockEventReceived(World world, int x, int y, int z, int eventID, int eventParam)
     {
     	TileEntityGasDynamo tileEntity = (TileEntityGasDynamo)world.getTileEntity(x, y, z);
@@ -118,7 +140,7 @@ public class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityPr
 		{
 			return false;
 		}
-		else if(gasDynamo.fuelLevel + 100 * gasType.combustibility.burnRate <= GasesFramework.configurations.gasDynamo_maxFuel)
+		else if(gasDynamo.getFuelStored() + 100 * gasType.combustibility.burnRate <= gasDynamo.getMaxFuelStored())
 		{
 			return true;
 		}
@@ -132,7 +154,7 @@ public class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityPr
 		if(canReceiveGas(world, x, y, z, side, gasType))
 		{
 			TileEntityGasDynamo gasDynamo = (TileEntityGasDynamo)world.getTileEntity(x, y, z);
-			gasDynamo.setFuelLevel(gasDynamo.fuelLevel + 100 * gasType.combustibility.burnRate);
+			gasDynamo.setFuelLevel(gasDynamo.getFuelStored() + 100 * gasType.combustibility.burnRate);
 			return true;
 		}
 		else
