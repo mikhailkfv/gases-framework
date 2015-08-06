@@ -13,8 +13,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import java.util.EnumMap;
 import java.util.Map.Entry;
 
-import com.sun.javafx.collections.MappingChange.Map;
-
 import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
