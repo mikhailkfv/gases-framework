@@ -6,6 +6,7 @@ import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasTransporter;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.api.pipetype.PipeType;
 import glenn.gasesframework.client.render.RenderBlockGasPipe;
 import glenn.gasesframework.util.GasTransporterIterator;
 import glenn.gasesframework.util.GasTransporterSearch;
@@ -35,45 +36,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class BlockGasPipe extends Block implements IGasTransporter
 {
 	/**
-	 * A sub-type for pipes, defined by their metadata
-	 * @author Glenn
-	 *
-	 */
-	public static class SubType
-	{
-		public final int metadata;
-		public final String name;
-		public final boolean isSolid;
-		
-		public IIcon solidIcon;
-		public IIcon gasContentIcon;
-		public IIcon connectorsIcon;
-		public IIcon endIcon;
-		
-		public SubType(int metadata, String name, boolean isSolid)
-		{
-			this.metadata = metadata;
-			this.name = name;
-			this.isSolid = isSolid;
-		}
-		
-		public String baseTexture()
-		{
-			return "gasesframework:pipe_" + name;
-		}
-		
-		public void registerIcons(IIconRegister iconRegister)
-		{
-			solidIcon = iconRegister.registerIcon(baseTexture() + "_solid");
-			if(!isSolid) gasContentIcon = iconRegister.registerIcon(baseTexture() + "_gas_content");
-			connectorsIcon = iconRegister.registerIcon(baseTexture() + "_connectors");
-			endIcon = iconRegister.registerIcon(baseTexture() + "_end");
-		}
-	}
-	
-	public final SubType[] subTypes = new SubType[16];
-	
-	/**
 	 * The gas block contained by this gas pipe.
 	 */
 	public GasType type;
@@ -91,9 +53,6 @@ public class BlockGasPipe extends Block implements IGasTransporter
 		this.setHardness(0.25F);
 		this.setBlockTextureName("gasesframework:pipe");
 		this.setStepSound(Block.soundTypeStone);
-		
-		subTypes[0] = new SubType(0, "iron", true);
-		subTypes[1] = new SubType(1, "glass", false);
 	}
 	
 	/**
@@ -103,13 +62,9 @@ public class BlockGasPipe extends Block implements IGasTransporter
 	@Override
 	public void registerBlockIcons(IIconRegister iconRegister)
 	{
-		for(int i = 0; i < subTypes.length; i++)
+		for(PipeType type : PipeType.getAllTypes())
 		{
-			SubType subType = subTypes[i];
-			if(subType != null)
-			{
-				subType.registerIcons(iconRegister);
-			}
+			type.registerIcons(iconRegister);
 		}
 	}
 	
@@ -119,7 +74,7 @@ public class BlockGasPipe extends Block implements IGasTransporter
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int metadata)
     {
-        return subTypes[metadata].solidIcon;
+        return PipeType.getPipeTypeByID(metadata).solidIcon;
     }
 	
 	/**
@@ -128,12 +83,9 @@ public class BlockGasPipe extends Block implements IGasTransporter
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item blockItem, CreativeTabs creativeTab, List list)
     {
-        for (int i = 0; i < 16; ++i)
+        for (PipeType type : PipeType.getAllTypes())
         {
-        	if(subTypes[i] != null)
-        	{
-        		list.add(new ItemStack(blockItem, 1, i));
-        	}
+        	list.add(new ItemStack(blockItem, 1, type.pipeID));
         }
     }
     
@@ -280,11 +232,23 @@ public class BlockGasPipe extends Block implements IGasTransporter
     @Override
 	public void breakBlock(World world, int x, int y, int z, Block oldBlock, int oldBlockMetadata)
 	{
-		if(type.block != null && world.isAirBlock(x, y, z))
-		{
-			world.setBlock(x, y, z, type.block);
-		}
+    	if (world.isAirBlock(x, y, z))
+    	{
+		    burst(world, x, y, z);
+    	}
 	}
+    
+    public void burst(World world, int x, int y, int z)
+    {
+    	if (type != GasesFrameworkAPI.gasTypeAir)
+    	{
+			GasesFrameworkAPI.placeGas(world, x, y, z, type, 16);
+    	}
+    	else
+    	{
+    		world.setBlockToAir(x, y, z);
+    	}
+    }
 
 	@Override
 	public boolean connectToPipe(IBlockAccess blockaccess, int x, int y, int z, ForgeDirection side)
@@ -349,6 +313,16 @@ public class BlockGasPipe extends Block implements IGasTransporter
 		
 		return res;
 	}
+	
+	public PipeType getPipeType(int metadata)
+	{
+		return PipeType.getPipeTypeByID(metadata);
+	}
+	
+	public PipeType getPipeType(IBlockAccess blockAccess, int x, int y, int z)
+	{
+		return getPipeType(blockAccess.getBlockMetadata(x, y, z));
+	}
 
 	@Override
 	public GasType getCarriedType(World world, int x, int y, int z)
@@ -362,7 +336,7 @@ public class BlockGasPipe extends Block implements IGasTransporter
 		if (this.type != type)
 		{
 			world.setBlock(x, y, z, type.pipeBlock, world.getBlockMetadata(x, y, z), 3);
-			return (IGasTransporter)type.pipeBlock;
+			return (IGasTransporter)world.getBlock(x, y, z);
 		}
 		else
 		{
@@ -373,6 +347,37 @@ public class BlockGasPipe extends Block implements IGasTransporter
 	@Override
 	public void handlePressure(World world, Random random, int x, int y, int z, int pressure)
 	{
+		PipeType type = getPipeType(world, x, y, z);
+		int pressureTolerance = type.getPressureTolerance();
 		
+		if (pressureTolerance != -1 && pressureTolerance < pressure)
+		{
+			int burstChance = (pressureTolerance * 4 - pressure) * 10 + 20;
+			if (burstChance <= 0 || random.nextInt(burstChance * 2) == 0)
+			{
+				burst(world, x, y, z);
+				world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "random.break", 1.0F, random.nextFloat() * 0.1F + 0.9F);
+			}
+			else
+			{
+				float volume = 0.01F + random.nextFloat() * 0.01F + (pressure - pressureTolerance) * 0.001F;
+				if(random.nextInt(burstChance) == 0)
+				{
+					world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "random.chestopen", volume * 2.0F, 0.25F);
+				}
+				else if(random.nextInt(burstChance) == 0)
+				{
+					world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "mob.irongolem.death", volume * 2.0F, 0.25F);
+				}
+				else if(random.nextInt(burstChance * 2) == 0)
+				{
+					world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "minecart.base", volume, 0.25F);
+				}
+				else if(random.nextInt(burstChance * 2) == 0)
+				{
+					world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "minecart.inside", volume, 0.25F);
+				}
+			}
+		}
 	}
 }

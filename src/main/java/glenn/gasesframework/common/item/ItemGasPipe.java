@@ -1,5 +1,6 @@
 package glenn.gasesframework.common.item;
 
+import glenn.gasesframework.api.pipetype.PipeType;
 import glenn.gasesframework.common.block.BlockGasPipe;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlockWithMetadata;
@@ -15,6 +16,7 @@ public class ItemGasPipe extends ItemBlockWithMetadata
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack)
 	{
-		return "tile.gf_gasPipe." + ((BlockGasPipe)Block.getBlockFromItem(itemstack.getItem())).subTypes[itemstack.getItemDamage()].name;
+		PipeType type = ((BlockGasPipe)Block.getBlockFromItem(itemstack.getItem())).getPipeType(itemstack.getItemDamage());
+		return "tile.gf_gasPipe." + type.name;
 	}
 }

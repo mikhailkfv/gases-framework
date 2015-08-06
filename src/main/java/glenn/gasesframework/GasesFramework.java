@@ -9,6 +9,7 @@ import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
+import glenn.gasesframework.api.pipetype.PipeType;
 import glenn.gasesframework.common.CommonProxy;
 import glenn.gasesframework.common.ConfigGasFurnaceRecipes;
 import glenn.gasesframework.common.GasBottleTransposerHandler;
@@ -29,6 +30,8 @@ import glenn.gasesframework.common.entity.EntityDelayedExplosion;
 import glenn.gasesframework.common.item.ItemGasBottle;
 import glenn.gasesframework.common.item.ItemGasPipe;
 import glenn.gasesframework.common.item.ItemGasSampler;
+import glenn.gasesframework.common.pipetype.PipeTypeGlass;
+import glenn.gasesframework.common.pipetype.PipeTypeIron;
 import glenn.gasesframework.common.reaction.ReactionIgnition;
 import glenn.gasesframework.common.tileentity.TileEntityGasCollector;
 import glenn.gasesframework.common.tileentity.TileEntityGasDynamo;
@@ -107,6 +110,9 @@ public class GasesFramework implements IGasesFramework
 	
 	public static GasesFrameworkMainConfigurations configurations;
 	
+	public static final PipeType pipeTypeIron = new PipeTypeIron(0, "iron", true, "gasesframework:pipe_iron");
+	public static final PipeType pipeTypeGlass = new PipeTypeGlass(1, "glass", false, "gasesframework:pipe_glass");
+	
 	public static final WorldGeneratorGasesFramework worldGenerator = new WorldGeneratorGasesFramework();
 	
 	public static Block gasPump;
@@ -146,6 +152,9 @@ public class GasesFramework implements IGasesFramework
 		GasesFrameworkAPI.registerGasType(GasesFrameworkAPI.gasTypeAir);
 		GasesFrameworkAPI.registerGasType(GasesFrameworkAPI.gasTypeSmoke, GasesFrameworkAPI.creativeTab);
 		GasesFrameworkAPI.registerGasType(GasesFrameworkAPI.gasTypeFire, GasesFrameworkAPI.creativeTab);
+		
+		GasesFrameworkAPI.registerPipeType(pipeTypeIron);
+		GasesFrameworkAPI.registerPipeType(pipeTypeGlass);
 	}
 	
 	@EventHandler
@@ -542,7 +551,10 @@ public class GasesFramework implements IGasesFramework
 				    }
 				    
 				    IGasTransporter receptorBlock = (IGasTransporter)block;
-				    receptorBlock.setCarriedType(world, x, y, z, type);
+				    receptorBlock = receptorBlock.setCarriedType(world, x, y, z, type);
+				    Block kek = world.getBlock(x, y, z);
+				    receptorBlock.handlePressure(world, random, x, y, z, end.branch.depth + 1);
+				    
 				    
 				    return true;
 			    }
@@ -806,5 +818,14 @@ public class GasesFramework implements IGasesFramework
 	public void registerGasTransposerHandler(IGasTransposerHandler handler)
 	{
 		TileEntityGasTransposer.registerHandler(handler);
+	}
+
+	/**
+	 * Registers a pipe type.
+	 * @param type
+	 */
+	public void registerPipeType(PipeType type)
+	{
+		
 	}
 }

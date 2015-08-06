@@ -4,6 +4,7 @@ import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
+import glenn.gasesframework.api.pipetype.PipeType;
 
 import java.util.Random;
 
@@ -202,4 +203,10 @@ public interface IGasesFramework
 	 * @param handler
 	 */
 	public void registerGasTransposerHandler(IGasTransposerHandler handler);
+	
+	/**
+	 * Registers a pipe type.
+	 * @param type
+	 */
+	public void registerPipeType(PipeType type);
 }
