@@ -54,8 +54,6 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import com.sun.xml.internal.ws.org.objectweb.asm.Opcodes;
-
 import cpw.mods.fml.common.FMLLog;
 
 public class GFClassTransformer implements IClassTransformer
@@ -94,7 +92,8 @@ public class GFClassTransformer implements IClassTransformer
 		c.put("WorldClient", "bjf");
 		c.put("GuiIngame", "bbv");
 		c.put("IBlockAccess", "ahl");
-		c.put("ItemInWorldManager", "FINDME"); //TODO
+		c.put("ItemInWorldManager", "mx");
+		c.put("EntityPlayerMP", "mw");
 	}
 	
 	@Override
@@ -344,17 +343,17 @@ public class GFClassTransformer implements IClassTransformer
 		String classEventBus = "cpw/mods/fml/common/eventhandler/EventBus";
 		String classEvent = "cpw/mods/fml/common/eventhandler/Event";
 
-		String methodTryHarvestBlock = obfuscated ? "tryHarvestBlock" : "tryHarvestBlock";
+		String methodTryHarvestBlock = obfuscated ? "b" : "tryHarvestBlock";
 		
-		String fieldTheWorld = obfuscated ? "theWorld" : "theWorld";
-		String fieldThisPlayerMP = obfuscated ? "thisPlayerMP" : "thisPlayerMP";
+		String fieldTheWorld = obfuscated ? "a" : "theWorld";
+		String fieldThisPlayerMP = obfuscated ? "b" : "thisPlayerMP";
 		
 		String descriptor = "(III)Z";
 
 		ClassNode classNode = new ClassNode();
 		ClassReader classReader = new ClassReader(data);
 		classReader.accept(classNode, 0);
-
+		
 		for(int i = 0; i < classNode.methods.size(); i++)
 		{
 			MethodNode method = (MethodNode)classNode.methods.get(i);
