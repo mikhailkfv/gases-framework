@@ -12,7 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public interface IGasPropellor extends IGasInterface
 {
 	/**
-	 * Returns true if the gas propellor can propel gas from this specific side.
+	 * Returns the pressure the gas propellor can give from a side.
 	 * @param world - The world object
 	 * @param x
 	 * @param y
@@ -20,5 +20,5 @@ public interface IGasPropellor extends IGasInterface
 	 * @param side - The local side gas can be propelled from.
 	 * @return
 	 */
-	boolean canPropelGasFromSide(World world, int x, int y, int z, ForgeDirection side);
+	int getPressureFromSide(World world, int x, int y, int z, ForgeDirection side);
 }

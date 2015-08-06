@@ -3,6 +3,8 @@ package glenn.gasesframework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.IGasesFramework;
 import glenn.gasesframework.api.ItemKey;
+import glenn.gasesframework.api.block.IGasReceptor;
+import glenn.gasesframework.api.block.IGasTransporter;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
@@ -40,9 +42,14 @@ import glenn.gasesframework.common.tileentity.TileEntityInfiniteGasPump;
 import glenn.gasesframework.common.worldgen.WorldGeneratorGasesFramework;
 import glenn.gasesframework.network.message.MessageGasEffects;
 import glenn.gasesframework.network.message.MessageSetTransposerMode;
+import glenn.gasesframework.util.GasTransporterIterator;
+import glenn.gasesframework.util.GasTransporterSearch;
 import glenn.gasesframework.waila.GasesFrameworkWaila;
+import glenn.moddingutils.IVec;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -53,6 +60,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -475,6 +483,108 @@ public class GasesFramework implements IGasesFramework
 		{
 			if(volume > 16) volume = 16;
 			world.setBlock(x, y, z, type.block, 16 - volume, 3);
+		}
+	}
+
+	/**
+	 * Pump gas into an IGasTransporter or an IGasReceptor with a certain direction and pressure.
+	 * If the block is an IGasTransporter, the gas will be pumped as far as the pressure allows it.
+	 * @param world
+	 * @param random
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param type
+	 * @param direction
+	 * @param pressure
+	 * @return Whether the pumping action succeeded or not.
+	 */
+	public boolean pumpGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
+	{
+		Block block = world.getBlock(x, y, z);
+		if (block instanceof IGasTransporter)
+		{
+			GasTransporterSearch.ReceptorSearch search = new GasTransporterSearch.ReceptorSearch(world, x, y, z, pressure);
+		    
+			boolean isSearchingLooseEnds = !search.looseEnds.isEmpty();
+		    ArrayList<GasTransporterSearch.End> listToSearch = (ArrayList<GasTransporterSearch.End>)(isSearchingLooseEnds ? search.looseEnds : search.ends).clone();
+		    Collections.shuffle(listToSearch, random);
+		    
+		    for(GasTransporterSearch.End end : listToSearch)
+		    {
+			    IVec branchPos = end.branch.getPosition();
+			    IGasTransporter sourceBlock = (IGasTransporter)world.getBlock(branchPos.x, branchPos.y, branchPos.z);
+			    GasType sourceBlockType = sourceBlock.getCarriedType(world, x, y, z);
+			    boolean hasPushed = false;
+			    
+			    if(isSearchingLooseEnds)
+			    {
+				    hasPushed = GasesFrameworkAPI.fillWithGas(world, random, end.endPosition.x, end.endPosition.y, end.endPosition.z, sourceBlockType);
+			    }
+			    else
+			    {
+				    IGasReceptor receptor = (IGasReceptor)world.getBlock(end.endPosition.x, end.endPosition.y, end.endPosition.z);
+				    hasPushed = receptor.receiveGas(world, end.endPosition.x, end.endPosition.y, end.endPosition.z, end.endDirection.getOpposite(), sourceBlockType);
+			    }
+			    
+			    if(hasPushed)
+			    {
+				    GasTransporterIterator.DescendingGasTransporterIterator iterator = new GasTransporterIterator.DescendingGasTransporterIterator(end.branch);
+				    GasTransporterIterator.Iteration iteration;
+				    while((iteration = iterator.narrowNext(random)) != null)
+				    {
+					    IGasTransporter receptorBlock = (IGasTransporter)world.getBlock(iteration.previousPosition.x, iteration.previousPosition.y, iteration.previousPosition.z);
+					    IGasTransporter giverBlock = (IGasTransporter)world.getBlock(iteration.currentPosition.x, iteration.currentPosition.y, iteration.currentPosition.z);
+					    GasType transferredType = giverBlock.getCarriedType(world, iteration.currentPosition.x, iteration.currentPosition.y, iteration.currentPosition.z);
+					    
+					    receptorBlock = receptorBlock.setCarriedType(world, iteration.previousPosition.x, iteration.previousPosition.y, iteration.previousPosition.z, transferredType);
+					    receptorBlock.handlePressure(world, random, iteration.previousPosition.x, iteration.previousPosition.y, iteration.previousPosition.z, end.branch.depth + 1);
+				    }
+				    
+				    IGasTransporter receptorBlock = (IGasTransporter)block;
+				    receptorBlock.setCarriedType(world, x, y, z, type);
+				    
+				    return true;
+			    }
+		    }
+		    
+		    return false;
+		}
+		else if (block instanceof IGasReceptor)
+		{
+			IGasReceptor receptorBlock = (IGasReceptor)block;
+			return receptorBlock.receiveGas(world, x, y, z, direction.getOpposite(), type);
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	/**
+	 * Push gas to a coordinate with a certain direction and pressure.
+	 * If the block is an IGasTransporter or IGasReceptor, {@link glenn.gasesframework.api.IGasesFramework#pumpGas(World,int,int,int,GasType,ForgeDirection,int) pumpGas(World,int,int,int,GasType,ForgeDirection,int)} is returned.
+	 * Else, {@link glenn.gasesframework.api.IGasesFramework#fillWithGas(World,int,int,int,GasType) fillWithGas(World,int,int,int,GasType)} is returned.
+	 * @param world
+	 * @param random
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param type
+	 * @param direction
+	 * @param pressure
+	 * @return Whether the pushing action succeeded or not.
+	 */
+	public boolean pushGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
+	{
+		Block block = world.getBlock(x, y, z);
+		if (block instanceof IGasTransporter || block instanceof IGasReceptor)
+		{
+			return pumpGas(world, random, x, y, z, type, direction, pressure);
+		}
+		else
+		{
+			return fillWithGas(world, random, x, y, z, type);
 		}
 	}
 	

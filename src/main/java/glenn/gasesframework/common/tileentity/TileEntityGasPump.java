@@ -1,6 +1,7 @@
 package glenn.gasesframework.common.tileentity;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasSource;
 import glenn.gasesframework.api.gastype.GasType;
@@ -170,15 +171,9 @@ public class TileEntityGasPump extends TileEntity
      */
     protected boolean pumpToBlock(int x, int y, int z, ForgeDirection direction)
     {
-    	Block block = worldObj.getBlock(x, y, z);
-    	if(block instanceof IGasReceptor)
-		{
-			return ((IGasReceptor)block).receiveGas(worldObj, x, y, z, direction.getOpposite(), containedType);
-		}
-		else
-		{
-			return GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, x, y, z, containedType);
-		}
+    	IGasPropellor propellor = (IGasPropellor)getBlockType();
+    	int pressure = propellor.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, direction);
+    	return GasesFrameworkAPI.pushGas(worldObj, worldObj.rand, x, y, z, containedType, direction, pressure);
     }
     
     /**

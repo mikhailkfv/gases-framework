@@ -55,6 +55,21 @@ public class GasesFrameworkMainConfigurations extends Configurations
 	@ConfigField(path="blocks.Gas Dynamo.Max RF transfer", comment="The maximal amount of RF (Redstone Flux) that can be evently transmitted from a gas dynamo each tick", defaultValue="80")
 	public int gasDynamo_maxEnergyTransfer;
 	
+	@ConfigField(path="piping.Iron material.Max pressure", comment="The maximal amount of pressure piping blocks of the iron tier can produce", defaultValue="31")
+	public int piping_iron_maxPressure;
+
+	@ConfigField(path="piping.Iron material.Pipe pressure tolerance", comment="The amount of pressure iron pipes can take before breaking", defaultValue="31")
+	public int piping_iron_pressureTolerance;
+
+	@ConfigField(path="piping.Glass material.Pipe pressure tolerance", comment="The amount of pressure glass pipes can take before breaking", defaultValue="31")
+	public int piping_glass_pressureTolerance;
+	
+	@ConfigField(path="piping.Wood material.Max pressure", comment="The maximal amount of pressure piping blocks of the wood tier can produce", defaultValue="7")
+	public int piping_wood_maxPressure;
+
+	@ConfigField(path="piping.Wood material.Pipe pressure tolerance", comment="The amount of pressure wood pipes can take before breaking", defaultValue="7")
+	public int piping_wood_pressureTolerance;
+
 	@ConfigField(path="updatechecker.Enable", comment="Allow Gases Framework to automatically check for updates", defaultValue="true")
 	public boolean other_enableUpdateCheck;
 	

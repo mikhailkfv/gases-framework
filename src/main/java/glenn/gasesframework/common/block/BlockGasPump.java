@@ -1,5 +1,6 @@
 package glenn.gasesframework.common.block;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
@@ -157,9 +158,9 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
 	}
 	
 	@Override
-	public boolean canPropelGasFromSide(World world, int x, int y, int z, ForgeDirection side)
+	public int getPressureFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		return side == ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z) % 6);
+		return side == ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z) % 6) ? GasesFramework.configurations.piping_iron_maxPressure : 0;
 	}
 	
 	@Override

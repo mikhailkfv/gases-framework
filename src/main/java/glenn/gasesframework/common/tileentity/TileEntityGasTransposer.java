@@ -1,6 +1,7 @@
 package glenn.gasesframework.common.tileentity;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasSource;
 import glenn.gasesframework.api.gastype.GasType;
@@ -273,29 +274,18 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				
 				if(handler.completeExtraction(tileEntity.itemStacks[1], tileEntity.itemStacks[outputSlot], tileEntity.pendingType))
 				{
-					ForgeDirection direction = ForgeDirection.getOrientation(tileEntity.worldObj.getBlockMetadata(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord));
+					ForgeDirection direction = ForgeDirection.getOrientation(tileEntity.getBlockMetadata());
 					int x = tileEntity.xCoord + direction.offsetX;
 					int y = tileEntity.yCoord + direction.offsetY;
 					int z = tileEntity.zCoord + direction.offsetZ;
+					IGasPropellor propellor = (IGasPropellor)tileEntity.getBlockType();
+					int pressure = propellor.getPressureFromSide(tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, direction);
 					
-					Block block = tileEntity.worldObj.getBlock(x, y, z);
-			    	if(block instanceof IGasReceptor)
+					if (GasesFrameworkAPI.pushGas(tileEntity.worldObj, tileEntity.worldObj.rand, x, y, z, tileEntity.pendingType, direction, pressure))
 					{
-						if(((IGasReceptor)block).receiveGas(tileEntity.worldObj, x, y, z, direction.getOpposite(), tileEntity.pendingType))
-						{
-							tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
-							tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
-							return true;
-						}
-					}
-					else
-					{
-						if(GasesFrameworkAPI.fillWithGas(tileEntity.worldObj, tileEntity.worldObj.rand, x, y, z, tileEntity.pendingType))
-						{
-							tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
-							tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
-							return true;
-						}
+						tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
+						tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
+						return true;
 					}
 				}
 				

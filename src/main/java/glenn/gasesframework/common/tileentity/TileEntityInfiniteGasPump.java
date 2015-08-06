@@ -1,6 +1,7 @@
 package glenn.gasesframework.common.tileentity;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.gastype.GasType;
 import net.minecraft.block.Block;
@@ -47,6 +48,21 @@ public class TileEntityInfiniteGasPump extends TileEntity
 		return !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 	}
 	
+    /**
+     * Pump to a specified block. If the contained gas type is consumed, return true.
+     * @param x
+     * @param y
+     * @param z
+     * @param direction
+     * @return
+     */
+    protected boolean pumpToBlock(int x, int y, int z, GasType type, ForgeDirection direction)
+    {
+    	IGasPropellor propellor = (IGasPropellor)getBlockType();
+    	int pressure = propellor.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, direction);
+    	return GasesFrameworkAPI.pushGas(worldObj, worldObj.rand, x, y, z, type, direction, pressure);
+    }
+    
 	@Override
 	public void updateEntity()
 	{
@@ -61,17 +77,8 @@ public class TileEntityInfiniteGasPump extends TileEntity
 					int x = xCoord + side.offsetX;
 					int y = yCoord + side.offsetY;
 					int z = zCoord + side.offsetZ;
-					Block block = worldObj.getBlock(x, y, z);
 					
-					if(block instanceof IGasReceptor)
-					{
-						IGasReceptor receptor = (IGasReceptor)block;
-						receptor.receiveGas(worldObj, x, y, z, side.getOpposite(), type);
-					}
-					else
-					{
-						GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, x, y, z, type);
-					}
+					pumpToBlock(x, y, z, type, side);
 				}
 			}
 			

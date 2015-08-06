@@ -350,14 +350,14 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 	}
 	
 	@Override
-	public boolean canPropelGasFromSide(World world, int x, int y, int z, ForgeDirection side)
+	public int getPressureFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
 		if(side == ForgeDirection.UP)
 		{
 			TileEntityGasFurnace gasFurnace = (TileEntityGasFurnace)world.getTileEntity(x, y, z);
-			return gasFurnace.isBurning();
+			return gasFurnace.isBurning() ? GasesFramework.configurations.piping_iron_maxPressure : 0;
 		}
-		return false;
+		return 0;
 	}
 
 	@Override

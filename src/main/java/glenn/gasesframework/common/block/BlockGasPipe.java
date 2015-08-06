@@ -2,11 +2,13 @@ package glenn.gasesframework.common.block;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasInterface;
+import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
+import glenn.gasesframework.api.block.IGasTransporter;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.client.render.RenderBlockGasPipe;
-import glenn.gasesframework.util.PipeBranchIterator;
-import glenn.gasesframework.util.PipeSearch;
+import glenn.gasesframework.util.GasTransporterIterator;
+import glenn.gasesframework.util.GasTransporterSearch;
 import glenn.moddingutils.IVec;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockGasPipe extends Block implements IGasReceptor
+public class BlockGasPipe extends Block implements IGasTransporter
 {
 	/**
 	 * A sub-type for pipes, defined by their metadata
@@ -229,63 +231,6 @@ public class BlockGasPipe extends Block implements IGasReceptor
     	
     	this.setBlockBounds(bounds[4], bounds[0], bounds[2], bounds[5], bounds[1], bounds[3]);
     }
-
-    @Override
-	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
-	{
-		PipeSearch.ReceptorSearch search = new PipeSearch.ReceptorSearch(world, x, y, z, 15);
-    	
-		boolean isSearchingLooseEnds = !search.looseEnds.isEmpty();
-    	ArrayList<PipeSearch.PipeEnd> listToSearch = (ArrayList<PipeSearch.PipeEnd>)(isSearchingLooseEnds ? search.looseEnds : search.ends).clone();
-    	Collections.shuffle(listToSearch, world.rand);
-    	
-    	for(PipeSearch.PipeEnd end : listToSearch)
-    	{
-    		IVec branchPos = end.branch.getPosition();
-    		BlockGasPipe pipeSourceBlock = (BlockGasPipe)world.getBlock(branchPos.x, branchPos.y, branchPos.z);
-    		boolean hasPushed = false;
-    		
-    		if(isSearchingLooseEnds)
-    		{
-    			hasPushed = GasesFrameworkAPI.fillWithGas(world, world.rand, end.endPosition.x, end.endPosition.y, end.endPosition.z, pipeSourceBlock.type);
-    		}
-    		else
-    		{
-    			IGasReceptor receptor = (IGasReceptor)world.getBlock(end.endPosition.x, end.endPosition.y, end.endPosition.z);
-    			hasPushed = receptor.receiveGas(world, end.endPosition.x, end.endPosition.y, end.endPosition.z, end.endDirection.getOpposite(), pipeSourceBlock.type);
-    		}
-    		
-    		if(hasPushed)
-    		{
-    			PipeBranchIterator.DescendingPipeBranchIterator iterator = new PipeBranchIterator.DescendingPipeBranchIterator(end.branch);
-    			PipeBranchIterator.Iteration iteration;
-    			while((iteration = iterator.narrowNext(world.rand)) != null)
-    			{
-    				Block receptorBlock = world.getBlock(iteration.previousPosition.x, iteration.previousPosition.y, iteration.previousPosition.z);
-    				int receptorMetadata = world.getBlockMetadata(iteration.previousPosition.x, iteration.previousPosition.y, iteration.previousPosition.z);
-    				Block giverBlock = world.getBlock(iteration.currentPosition.x, iteration.currentPosition.y, iteration.currentPosition.z);
-    				
-    				if(receptorBlock != giverBlock)
-    				{
-    					world.setBlock(iteration.previousPosition.x, iteration.previousPosition.y, iteration.previousPosition.z, giverBlock, receptorMetadata, 3);
-    				}
-    			}
-    			
-    			int thisMetadata = world.getBlockMetadata(x, y, z);
-    			world.setBlock(x, y, z, gasType.pipeBlock, thisMetadata, 3);
-    			
-    			return true;
-    		}
-    	}
-    	
-    	return false;
-	}
-    
-    @Override
-	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
-	{
-    	return true;
-	}
 	
 	/**
 	 * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
@@ -361,13 +306,15 @@ public class BlockGasPipe extends Block implements IGasReceptor
 		final byte[] res = new byte[6];
 		final IVec pipePosition = new IVec(x, y, z);
 		
-		PipeSearch.PropellorSearch pumpSearch = new PipeSearch.PropellorSearch(world, x, y, z, 15);
+		GasTransporterSearch.PropellorSearch pumpSearch = new GasTransporterSearch.PropellorSearch(world, x, y, z, 31);
 		
-		for(PipeSearch.PipeEnd propellor : pumpSearch.propellors)
+		for(GasTransporterSearch.End propellor : pumpSearch.propellors)
 		{
+			IGasPropellor propellorBlock = (IGasPropellor)world.getBlock(propellor.endPosition.x, propellor.endPosition.y, propellor.endPosition.z);
+			int pressure = propellorBlock.getPressureFromSide(world, propellor.endPosition.x, propellor.endPosition.y, propellor.endPosition.z, propellor.endDirection);
 			IVec pipePos = propellor.branch.getPosition();
-			PipeSearch.ReceptorSearch search = new PipeSearch.ReceptorSearch(world, pipePos.x, pipePos.y, pipePos.z, 15);
-			ArrayList<PipeSearch.PipeEnd> listToSearch = search.looseEnds.isEmpty() ? search.ends : search.looseEnds;
+			GasTransporterSearch.ReceptorSearch search = new GasTransporterSearch.ReceptorSearch(world, pipePos.x, pipePos.y, pipePos.z, pressure);
+			ArrayList<GasTransporterSearch.End> listToSearch = search.looseEnds.isEmpty() ? search.ends : search.looseEnds;
 			
 			if(listToSearch.size() > 0)
 			{
@@ -376,10 +323,10 @@ public class BlockGasPipe extends Block implements IGasReceptor
 					res[propellor.endDirection.getOpposite().ordinal()] |= 2;
 				}
 				
-				for(PipeSearch.PipeEnd end : listToSearch)
+				for(GasTransporterSearch.End end : listToSearch)
 				{
-					PipeBranchIterator.DescendingPipeBranchIterator iterator = new PipeBranchIterator.DescendingPipeBranchIterator(end.branch);
-					PipeBranchIterator.Iteration iteration;
+					GasTransporterIterator.DescendingGasTransporterIterator iterator = new GasTransporterIterator.DescendingGasTransporterIterator(end.branch);
+					GasTransporterIterator.Iteration iteration;
 					while((iteration = iterator.next()) != null)
 					{
 						if(iteration.currentPosition.equals(pipePosition))
@@ -401,5 +348,31 @@ public class BlockGasPipe extends Block implements IGasReceptor
 		}
 		
 		return res;
+	}
+
+	@Override
+	public GasType getCarriedType(World world, int x, int y, int z)
+	{
+		return type;
+	}
+
+	@Override
+	public IGasTransporter setCarriedType(World world, int x, int y, int z, GasType type)
+	{
+		if (this.type != type)
+		{
+			world.setBlock(x, y, z, type.pipeBlock, world.getBlockMetadata(x, y, z), 3);
+			return (IGasTransporter)type.pipeBlock;
+		}
+		else
+		{
+			return this;
+		}
+	}
+
+	@Override
+	public void handlePressure(World world, Random random, int x, int y, int z, int pressure)
+	{
+		
 	}
 }

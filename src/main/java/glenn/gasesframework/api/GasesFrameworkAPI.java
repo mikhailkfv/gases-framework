@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * <b>The Gases Framework API</b>
@@ -294,6 +295,45 @@ public class GasesFrameworkAPI
 	public static void placeGas(World world, int x, int y, int z, GasType type, int volume)
 	{
 		modInstance.placeGas(world, x, y, z, type, volume);
+	}
+	
+	/**
+	 * Pump gas into an IGasTransporter or an IGasReceptor with a certain direction and pressure.
+	 * If the block is an IGasTransporter, the gas will be pumped as far as the pressure allows it.
+	 * This method is unsafe to call when Gases Framework is not present.
+	 * @param world
+	 * @param random
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param type
+	 * @param direction
+	 * @param pressure
+	 * @return Whether the pumping action succeeded or not.
+	 */
+	public static boolean pumpGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
+	{
+		return modInstance.pumpGas(world, random, x, y, z, type, direction, pressure);
+	}
+
+	/**
+	 * Push gas to a coordinate with a certain direction and pressure.
+	 * If the block is an IGasTransporter or IGasReceptor, {@link glenn.gasesframework.api.IGasesFramework#pumpGas(World,int,int,int,GasType,ForgeDirection,int) pumpGas(World,int,int,int,GasType,ForgeDirection,int)} is returned.
+	 * Else, {@link glenn.gasesframework.api.IGasesFramework#fillWithGas(World,int,int,int,GasType) fillWithGas(World,int,int,int,GasType)} is returned.
+	 * This method is unsafe to call when Gases Framework is not present.
+	 * @param world
+	 * @param random
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param type
+	 * @param direction
+	 * @param pressure
+	 * @return Whether the pushing action succeeded or not.
+	 */
+	public static boolean pushGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
+	{
+		return modInstance.pushGas(world, random, x, y, z, type, direction, pressure);
 	}
 	
 	/**
