@@ -24,6 +24,7 @@ tile.gf_gasSmoke.name=Smoke
 tile.gf_gasFire.name=Ignited Gas
 tile.gf_gasPipe.iron.name=Iron Gas Pipe
 tile.gf_gasPipe.glass.name=Glass Gas Pipe
+tile.gf_gasPipe.wood.name=Poor Man's Wooden Gas Pipe
 tile.gf_gasPipe.waila.body=Content: %s
 tile.gf_gasPump.name=Gas Pump
 tile.gf_gasPump.waila.body.content=Content: %s

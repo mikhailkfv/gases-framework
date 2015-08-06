@@ -32,6 +32,7 @@ import glenn.gasesframework.common.item.ItemGasPipe;
 import glenn.gasesframework.common.item.ItemGasSampler;
 import glenn.gasesframework.common.pipetype.PipeTypeGlass;
 import glenn.gasesframework.common.pipetype.PipeTypeIron;
+import glenn.gasesframework.common.pipetype.PipeTypeWood;
 import glenn.gasesframework.common.reaction.ReactionIgnition;
 import glenn.gasesframework.common.tileentity.TileEntityGasCollector;
 import glenn.gasesframework.common.tileentity.TileEntityGasDynamo;
@@ -112,6 +113,7 @@ public class GasesFramework implements IGasesFramework
 	
 	public static final PipeType pipeTypeIron = new PipeTypeIron(0, "iron", true, "gasesframework:pipe_iron");
 	public static final PipeType pipeTypeGlass = new PipeTypeGlass(1, "glass", false, "gasesframework:pipe_glass");
+	public static final PipeType pipeTypeWood = new PipeTypeWood(2, "wood", true, "gasesframework:pipe_wood");
 	
 	public static final WorldGeneratorGasesFramework worldGenerator = new WorldGeneratorGasesFramework();
 	
