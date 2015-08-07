@@ -1,4 +1,4 @@
-package glenn.moddingutils;
+package glenn.moddingutils.configuration;
 
 import java.io.File;
 import java.lang.annotation.Retention;
