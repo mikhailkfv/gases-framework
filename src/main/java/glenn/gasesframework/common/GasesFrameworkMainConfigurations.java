@@ -1,7 +1,7 @@
 package glenn.gasesframework.common;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.moddingutils.Configurations;
+import glenn.moddingutils.configuration.Configurations;
 
 import java.io.File;
 
