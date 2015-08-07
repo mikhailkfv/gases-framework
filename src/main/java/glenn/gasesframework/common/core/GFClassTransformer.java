@@ -31,6 +31,9 @@ import static org.objectweb.asm.Opcodes.RETURN;
 import static org.objectweb.asm.Opcodes.SIPUSH;
 import static org.objectweb.asm.Opcodes.NEW;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
+import static org.objectweb.asm.Opcodes.IFEQ;
+import static org.objectweb.asm.Opcodes.F_SAME;
+import static org.objectweb.asm.Opcodes.POP;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +45,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
@@ -371,6 +375,10 @@ public class GFClassTransformer implements IClassTransformer
 						{
 							if (method.instructions.get(j + 1).getOpcode() == IRETURN)
 							{
+								newInstructions.add(new FrameNode(F_SAME, 0, null, 0, null));
+								newInstructions.add(new VarInsnNode(ILOAD, 8));
+								LabelNode label = new LabelNode();
+								newInstructions.add(new JumpInsnNode(IFEQ, label));
 								newInstructions.add(new FieldInsnNode(GETSTATIC, classMinecraftForge, "EVENT_BUS", "L" + classEventBus + ";"));
 								newInstructions.add(new TypeInsnNode(NEW, classPostBlockBreakEvent));
 								newInstructions.add(new InsnNode(DUP));
@@ -385,6 +393,8 @@ public class GFClassTransformer implements IClassTransformer
 								newInstructions.add(new FieldInsnNode(GETFIELD, classItemInWorldManager, fieldThisPlayerMP, "L" + classEntityPlayerMP + ";"));
 								newInstructions.add(new MethodInsnNode(INVOKESPECIAL, classPostBlockBreakEvent, "<init>", "(IIIL" + classWorld +";L" + classBlock + ";IL" + classEntityPlayerMP + ";)V", false));
 								newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classEventBus, "post", "(L" + classEvent + ";)Z", false));
+								newInstructions.add(new InsnNode(POP));
+								newInstructions.add(label);
 							}
 						}
 					}
