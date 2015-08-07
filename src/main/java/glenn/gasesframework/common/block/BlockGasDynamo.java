@@ -22,16 +22,16 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityProvider
+public abstract class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityProvider
 {
     @SideOnly(Side.CLIENT)
     private IIcon iconFront;
     @SideOnly(Side.CLIENT)
     private IIcon iconFrontBurning;
     
-	public BlockGasDynamo()
+	public BlockGasDynamo(Material material)
 	{
-		super(Material.iron);
+		super(material);
 	}
 	
 	 /**
@@ -161,12 +161,6 @@ public class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityPr
 		{
 			return false;
 		}
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world, int metadata)
-	{
-		return new TileEntityGasDynamo();
 	}
 
 	@Override

@@ -18,17 +18,23 @@ import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import glenn.gasesframework.GasesFramework;
 
-public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider, ISidedInventory
+public abstract class TileEntityGasDynamo extends TileEntity implements IEnergyProvider, ISidedInventory
 {
-	private EnergyStorage energyStorage;
+	private final EnergyStorage energyStorage;
+	private final int maxFuelLevel;
+	private final int fuelPerTick;
+
 	private int fuelLevel;
 	private String invName;
 	
 	public boolean isBurning;
 	
-	public TileEntityGasDynamo()
+	public TileEntityGasDynamo(int maxEnergy, int maxEnergyTransfer, int maxFuelLevel, int fuelPerTick)
 	{
-		energyStorage = new EnergyStorage(GasesFramework.configurations.gasDynamo_maxEnergy, GasesFramework.configurations.gasDynamo_maxEnergyTransfer);
+		this.energyStorage = new EnergyStorage(maxEnergy, maxEnergyTransfer);
+		this.maxFuelLevel = maxFuelLevel;
+		this.fuelPerTick = fuelPerTick;
+
 		setFuelLevel(0);
 	}
 	
@@ -72,7 +78,7 @@ public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider, 
 	private void burnFuel()
 	{
 		int capacity = Math.min(energyStorage.getMaxEnergyStored() - energyStorage.getEnergyStored(), energyStorage.getMaxReceive());
-		int burnableUnits = Math.min(fuelLevel, GasesFramework.configurations.gasDynamo_energyPerFuel);
+		int burnableUnits = Math.min(fuelLevel, fuelPerTick);
 		int energyCreated = Math.min(capacity, burnableUnits * GasesFramework.configurations.gasDynamo_energyPerFuel);
 		
 		setFuelLevel(fuelLevel - energyCreated / GasesFramework.configurations.gasDynamo_energyPerFuel);
@@ -158,7 +164,7 @@ public class TileEntityGasDynamo extends TileEntity implements IEnergyProvider, 
 	
 	public int getMaxFuelStored()
 	{
-		return GasesFramework.configurations.gasDynamo_maxFuel;
+		return maxFuelLevel;
 	}
 	
 	@Override

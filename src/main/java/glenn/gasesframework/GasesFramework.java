@@ -25,6 +25,7 @@ import glenn.gasesframework.common.block.BlockGasTank;
 import glenn.gasesframework.common.block.BlockGasTransposer;
 import glenn.gasesframework.common.block.BlockInfiniteGasDrain;
 import glenn.gasesframework.common.block.BlockInfiniteGasPump;
+import glenn.gasesframework.common.block.BlockIronGasDynamo;
 import glenn.gasesframework.common.block.BlockLantern;
 import glenn.gasesframework.common.entity.EntityDelayedExplosion;
 import glenn.gasesframework.common.item.ItemGasBottle;
@@ -143,7 +144,7 @@ public class GasesFramework implements IGasesFramework
 		GameRegistry.registerBlock(infiniteGasPump = new BlockInfiniteGasPump().setHardness(-1.0F).setBlockName("gf_infiniteGasPump").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:pump_infinite"), "infiniteGasPump");
 		GameRegistry.registerBlock(infiniteGasDrain = new BlockInfiniteGasDrain().setHardness(-1.0F).setBlockName("gf_infiniteGasDrain").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:drain"), "infiniteGasDrain");
 		GameRegistry.registerBlock(gasTransposer = new BlockGasTransposer().setHardness(2.5F).setBlockName("gf_gasTransposer").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:transposer"), "gasTransposer");
-		GameRegistry.registerBlock(gasDynamo = new BlockGasDynamo().setHardness(2.5F).setBlockName("gf_gasDynamo").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:gas_dynamo"), "gf_gasDynamo");
+		GameRegistry.registerBlock(gasDynamo = new BlockIronGasDynamo().setHardness(2.5F).setBlockName("gf_gasDynamo").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:gas_dynamo"), "gf_gasDynamo");
 		
 		GasesFrameworkAPI.registerLanternType(GasesFrameworkAPI.lanternTypeEmpty, GasesFrameworkAPI.creativeTab);
 		for(int i = 0; i < GasesFrameworkAPI.lanternTypesGas.length; i++)
