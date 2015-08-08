@@ -3,12 +3,11 @@ package glenn.moddingutils.configuration;
 import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import com.google.common.base.Strings;
-
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.config.Configuration;
@@ -183,159 +182,75 @@ public abstract class Configurations
 		
 		try
 		{
-			Class<?> c = field.getType();
-			Object fieldValue = null;
+			Class<?> clazz = field.getType();
+			ConfigurationsValueParser parser = ConfigurationsValueParser.getParser(clazz);
 			
-			if(c == int.class)
+			if (parser != null)
 			{
-				int def = 0;
 				try
 				{
-					def = Integer.parseInt(defaultValue);
+					parser.parse(defaultValue, clazz);
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
-					throw new RuntimeException("Invalid default value for field " + subPath);
+					FMLLog.severe("Failed to parse the default value '%s' of configuration field %s in config file %s", defaultValue, subPath.toString(), innerConfig.getConfigFile().getAbsolutePath());
 				}
-				Property property = innerConfig.get(category, name, def, comment);
-				fieldValue = new Integer(property.getInt(def));
-				if(configField.autoReset()) property.set(def);
-			}
-			else if(c == float.class)
-			{
-				float def = 0.0f;
-				try
-				{
-					def = Float.parseFloat(defaultValue);
-				}
-				catch(Exception e)
-				{
-					throw new RuntimeException("Invalid default value for field " + subPath);
-				}
-				Property property = innerConfig.get(category, name, def, comment);
-				fieldValue = new Float((float)property.getDouble(def));
-				if(configField.autoReset()) property.set(def);
-			}
-			else if(c == double.class)
-			{
-				double def = 0.0D;
-				try
-				{
-					def = Double.parseDouble(defaultValue);
-				}
-				catch(Exception e)
-				{
-					throw new RuntimeException("Invalid default value for field " + subPath);
-				}
-				Property property = innerConfig.get(category, name, def, comment);
-				fieldValue = new Double(property.getDouble(def));
-				if(configField.autoReset()) property.set(def);
-			}
-			else if(c == boolean.class)
-			{
-				boolean def = false;
-				try
-				{
-					def = Boolean.parseBoolean(defaultValue);
-				}
-				catch(Exception e)
-				{
-					throw new RuntimeException("Invalid default value for field " + subPath);
-				}
-				Property property = innerConfig.get(category, name, def, comment);
-				fieldValue = new Boolean(property.getBoolean(def));
-				if(configField.autoReset()) property.set(def);
-			}
-			else if(c == String.class)
-			{
-				Property property = innerConfig.get(category, name, defaultValue, comment);
-				fieldValue = innerConfig.get(category, name, defaultValue, comment).getString();
-				if(configField.autoReset()) property.set(defaultValue);
-			}
-			else if(c.isArray())
-			{
-				Class<?> arrayC = c.getComponentType();
-				String[] defStrings = defaultValue.equals("") ? new String[0] : defaultValue.split("\n");
-				String[] stringValues = innerConfig.getStringList(name, category, defStrings, comment);
 				
-				if(arrayC == Integer.class)
+				Property property = innerConfig.get(category, name, defaultValue, comment, parser.propertyType);
+				String stringValue = property.getString();
+
+				try
 				{
-					int[] typeValues = new int[stringValues.length];
-					for(int i = 0; i < stringValues.length; i++)
+					Object value = parser.parse(stringValue, clazz);
+					field.set(categoryObject, value);
+				}
+				catch (Exception e)
+				{
+					FMLLog.warning("Failed to parse the value '%s' of configuration field %s in config file %s", stringValue, subPath.toString(), innerConfig.getConfigFile().getAbsolutePath());
+				}
+
+				if (configField.autoReset())
+				{
+					property.set(defaultValue);
+				}
+			}
+			else if (clazz.isArray())
+			{
+				Class<?> componentClazz = clazz.getComponentType();
+				parser = ConfigurationsValueParser.getParser(componentClazz);
+				if (parser != null)
+				{
+					String[] defaultValues = defaultValue.split("\n");
+					String[] stringValues = innerConfig.getStringList(name, category, defaultValues, comment);
+					Object valuesArray = Array.newInstance(componentClazz, stringValues.length);
+					field.set(categoryObject, valuesArray);
+					for (int i = 0; i < stringValues.length; i++)
 					{
 						try
 						{
-							typeValues[i] = Integer.parseInt(stringValues[i]);
+							parser.parse(defaultValues[i], componentClazz);
 						}
-						catch(Exception e)
+						catch (Exception e)
 						{
-						
-							typeValues[i] = 0;
+							FMLLog.severe("Failed to parse the default value '%s' of configuration field %s[%d] in config file %s", defaultValue, subPath.toString(), i, innerConfig.getConfigFile().getAbsolutePath());
 						}
-					}
-					fieldValue = typeValues;
-				}
-				else if(arrayC == Float.class)
-				{
-					float[] typeValues = new float[stringValues.length];
-					for(int i = 0; i < stringValues.length; i++)
-					{
+
 						try
 						{
-							typeValues[i] = Float.parseFloat(stringValues[i]);
+							Object value = parser.parse(stringValues[i], componentClazz);
+							Array.set(valuesArray, i, value);
 						}
-						catch(Exception e)
+						catch (Exception e)
 						{
-							typeValues[i] = 0.0f;
+							FMLLog.warning("Failed to parse the value '%s' of configuration field %s[%d] in config file %s", stringValues[i], subPath.toString(), i, innerConfig.getConfigFile().getAbsolutePath());
 						}
 					}
-					fieldValue = typeValues;
-				}
-				else if(arrayC == Double.class)
-				{
-					double[] typeValues = new double[stringValues.length];
-					for(int i = 0; i < stringValues.length; i++)
-					{
-						try
-						{
-							typeValues[i] = Double.parseDouble(stringValues[i]);
-						}
-						catch(Exception e)
-						{
-							typeValues[i] = 0.0D;
-						}
-					}
-					fieldValue = typeValues;
-				}
-				else if(arrayC == Boolean.class)
-				{
-					boolean[] typeValues = new boolean[stringValues.length];
-					for(int i = 0; i < stringValues.length; i++)
-					{
-						try
-						{
-							typeValues[i] = Boolean.parseBoolean(stringValues[i]);
-						}
-						catch(Exception e)
-						{
-							typeValues[i] = false;
-						}
-					}
-					fieldValue = typeValues;
-				}
-				else if(arrayC == String.class)
-				{
-					fieldValue = stringValues;
 				}
 			}
 			
-			if(fieldValue != null)
+			if (parser == null)
 			{
-				field.set(categoryObject, fieldValue);
-			}
-			else
-			{
-				throw new RuntimeException("Failed to read config field " + subPath + " because of unknown value type " + c.getName());
+				throw new RuntimeException(String.format("Could not parse ConfigField of type %s. You must register a ConfigurationsValueParser.", clazz));
 			}
 		}
 		catch(Exception e)
