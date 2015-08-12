@@ -160,7 +160,7 @@ public class BlockGasPump extends Block implements IGasReceptor, IGasPropellor, 
 	@Override
 	public int getPressureFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		return side == ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z) % 6) ? GasesFramework.configurations.piping_iron_maxPressure : 0;
+		return side == ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z) % 6) ? GasesFramework.configurations.piping.ironMaterial.maxPressure : 0;
 	}
 	
 	@Override

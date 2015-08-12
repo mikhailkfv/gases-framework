@@ -76,7 +76,7 @@ public class BlockInfiniteGasPump extends Block implements ISample, IGasPropello
 	@Override
 	public int getPressureFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		return GasesFramework.configurations.piping_iron_maxPressure;
+		return GasesFramework.configurations.piping.ironMaterial.maxPressure;
 	}
 
 	@Override

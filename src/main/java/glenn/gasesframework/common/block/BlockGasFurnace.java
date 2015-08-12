@@ -355,7 +355,7 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 		if(side == ForgeDirection.UP)
 		{
 			TileEntityGasFurnace gasFurnace = (TileEntityGasFurnace)world.getTileEntity(x, y, z);
-			return gasFurnace.isBurning() ? GasesFramework.configurations.piping_iron_maxPressure : 0;
+			return gasFurnace.isBurning() ? GasesFramework.configurations.piping.ironMaterial.maxPressure : 0;
 		}
 		return 0;
 	}

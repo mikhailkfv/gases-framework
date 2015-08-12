@@ -12,6 +12,6 @@ public class PipeTypeIron extends PipeType
 	
 	public int getPressureTolerance()
 	{
-		return GasesFramework.configurations.piping_iron_pressureTolerance;
+		return GasesFramework.configurations.piping.ironMaterial.pressureTolerance;
 	}
 }

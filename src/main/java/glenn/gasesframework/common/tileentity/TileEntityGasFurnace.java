@@ -374,11 +374,11 @@ public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
 		if (this.furnaceBurnTime > 0)
 		{
 			--this.furnaceBurnTime;
-			this.furnaceCookSpeed += GasesFramework.configurations.other_gasFurnaceHeatingSpeed;
+			this.furnaceCookSpeed += GasesFramework.configurations.blocks.gasFurnace.heatingSpeed;
 		}
 		else
 		{
-			this.furnaceCookSpeed -= GasesFramework.configurations.other_gasFurnaceHeatingSpeed;
+			this.furnaceCookSpeed -= GasesFramework.configurations.blocks.gasFurnace.heatingSpeed;
 		}
 		
 		if(this.furnaceCookSpeed < 0)

@@ -12,6 +12,6 @@ public class PipeTypeGlass extends PipeType
 	
 	public int getPressureTolerance()
 	{
-		return GasesFramework.configurations.piping_glass_pressureTolerance;
+		return GasesFramework.configurations.piping.glassMaterial.pressureTolerance;
 	}
 }

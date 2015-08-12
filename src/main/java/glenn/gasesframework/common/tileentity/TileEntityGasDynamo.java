@@ -79,9 +79,9 @@ public abstract class TileEntityGasDynamo extends TileEntity implements IEnergyP
 	{
 		int capacity = Math.min(energyStorage.getMaxEnergyStored() - energyStorage.getEnergyStored(), energyStorage.getMaxReceive());
 		int burnableUnits = Math.min(fuelLevel, fuelPerTick);
-		int energyCreated = Math.min(capacity, burnableUnits * GasesFramework.configurations.gasDynamo_energyPerFuel);
+		int energyCreated = Math.min(capacity, burnableUnits * GasesFramework.configurations.blocks.gasDynamo.energyPerFuel);
 		
-		setFuelLevel(fuelLevel - energyCreated / GasesFramework.configurations.gasDynamo_energyPerFuel);
+		setFuelLevel(fuelLevel - energyCreated / GasesFramework.configurations.blocks.gasDynamo.energyPerFuel);
 		energyStorage.modifyEnergyStored(energyCreated);
 	}
 	

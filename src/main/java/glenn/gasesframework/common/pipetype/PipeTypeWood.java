@@ -12,6 +12,6 @@ public class PipeTypeWood extends PipeType
 	
 	public int getPressureTolerance()
 	{
-		return GasesFramework.configurations.piping_wood_pressureTolerance;
+		return GasesFramework.configurations.piping.woodMaterial.pressureTolerance;
 	}
 }

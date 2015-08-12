@@ -100,19 +100,151 @@ public abstract class Configurations
 	}
 	
 	@Retention(RetentionPolicy.RUNTIME)
+	protected @interface AbstractConfig
+	{
+		
+	}
+	
+	@Retention(RetentionPolicy.RUNTIME)
+	protected @interface DelegateConfig
+	{
+		public String delegateFor();
+	}
+	
+	@Retention(RetentionPolicy.RUNTIME)
 	protected @interface ConfigField
 	{
-		public String path();
+		public String name() default "";
 		public String comment() default "";
 		public String defaultValue() default "";
-		public boolean autoReset() default false;
+		public int autoReset() default -1;
+	}
+	
+	private class ConfigFieldSettings
+	{
+		public Field field;
+
+		public String name = "";
+		public String comment = "";
+		public String defaultValue = "";
+		public Boolean autoReset = false;
+
+		public ConfigFieldSettings(Field field, Object categoryObject)
+		{
+			AbstractConfig abstractConfigField = field.getAnnotation(AbstractConfig.class);
+			if (abstractConfigField == null)
+			{
+				apply(field, categoryObject);
+			}
+		}
+		
+		public boolean isValid()
+		{
+			return field != null && name.length() > 0;
+		}
+		
+		private void apply(Field field, Object categoryObject)
+		{
+			this.field = field;
+			
+			ConfigField configField = field.getAnnotation(ConfigField.class);
+			DelegateConfig delegateConfig = field.getAnnotation(DelegateConfig.class);
+			
+			if (delegateConfig != null)
+			{
+				try
+				{
+					Field delegatedField = categoryObject.getClass().getField(delegateConfig.delegateFor());
+					apply(delegatedField, categoryObject);
+				}
+				catch (Exception e)
+				{
+					FMLLog.severe("Could not find delegated field %s for delegate field %s. The field must exist and be accessible.", delegateConfig.delegateFor(), field.getName());
+				}
+			}
+
+			if (configField != null)
+			{
+				if (configField.name().length() > 0)
+				{
+					this.name = configField.name();
+				}
+				if (configField.comment().length() > 0)
+				{
+					this.comment = configField.comment();
+				}
+				if (configField.defaultValue().length() > 0)
+				{
+					this.defaultValue = configField.defaultValue();
+				}
+				if (configField.autoReset() != -1)
+				{
+					this.autoReset = configField.autoReset() > 0;
+				}
+			}
+		}
 	}
 	
 	@Retention(RetentionPolicy.RUNTIME)
 	protected @interface ConfigCategory
 	{
-		public String path();
+		public String name() default "";
 		public String comment() default "";
+	}
+	
+	private class ConfigCategorySettings
+	{
+		public Field field;
+		
+		public String name = "";
+		public String comment = "";
+
+		public ConfigCategorySettings(Field field, Object categoryObject)
+		{
+			AbstractConfig abstractConfigField = field.getAnnotation(AbstractConfig.class);
+			if (abstractConfigField == null)
+			{
+				apply(field, categoryObject);
+			}
+		}
+		
+		public boolean isValid()
+		{
+			return field != null && name.length() > 0;
+		}
+		
+		private void apply(Field field, Object categoryObject)
+		{
+			this.field = field;
+			
+			ConfigCategory configCategory = field.getAnnotation(ConfigCategory.class);
+			DelegateConfig delegateConfig = field.getAnnotation(DelegateConfig.class);
+			
+			if (delegateConfig != null)
+			{
+				try
+				{
+					Field delegatedField = categoryObject.getClass().getField(delegateConfig.delegateFor());
+					apply(delegatedField, categoryObject);
+				}
+				catch (Exception e)
+				{
+					FMLLog.severe("Could not find delegated field %s for delegate field %s. The field must exist and be accessible.", delegateConfig.delegateFor(), field.getName());
+				}
+			}
+
+			if (configCategory != null)
+			{
+				if (configCategory.name().length() > 0)
+				{
+					this.name = configCategory.name();
+				}
+				if (configCategory.comment().length() > 0)
+				{
+					this.comment = configCategory.comment();
+				}
+			}
+		}
 	}
 	
 	public final Configuration innerConfig;
@@ -130,8 +262,6 @@ public abstract class Configurations
 		setConfigFieldsAndCategories(new ConfigPath(), this);
 		
 		innerConfig.save();
-		
-		onLoaded();
 	}
 	
 	protected void setConfigFieldsAndCategories(ConfigPath basePath, Object categoryObject)
@@ -141,27 +271,43 @@ public abstract class Configurations
 			ConfigField configField = field.getAnnotation(ConfigField.class);
 			if(configField != null)
 			{
-				instantiateConfigField(basePath, field, configField, categoryObject);
+				ConfigFieldSettings settings = new ConfigFieldSettings(field, categoryObject);
+				if (settings.isValid())
+				{
+					instantiateConfigField(basePath, settings, categoryObject);
+				}
+				else
+				{
+					FMLLog.severe("Config field '%s' has invalid settings", settings.name);
+				}
 			}
 			
 			ConfigCategory configCategory = field.getAnnotation(ConfigCategory.class);
 			if (configCategory != null)
 			{
-				instantiateConfigCategory(basePath, field, configCategory, categoryObject);
+				ConfigCategorySettings settings = new ConfigCategorySettings(field, categoryObject);
+				if (settings.isValid())
+				{
+					instantiateConfigCategory(basePath, settings, categoryObject);
+				}
+				else
+				{
+					FMLLog.severe("Config category '%s' has invalid settings", settings.name);
+				}
 			}
 		}
 	}
 	
-	protected void instantiateConfigCategory(ConfigPath basePath, Field field, ConfigCategory configCategory, Object categoryObject)
+	protected void instantiateConfigCategory(ConfigPath basePath, ConfigCategorySettings settings, Object categoryObject)
 	{
-		ConfigPath subPath = basePath.getSubPath(configCategory.path());
+		ConfigPath subPath = basePath.getSubPath(settings.name);
 		try
 		{
-			Object subCategoryObject = field.getType().newInstance();
-			field.set(categoryObject, subCategoryObject);
-			if (configCategory.comment().length() > 0)
+			Object subCategoryObject = settings.field.getType().newInstance();
+			settings.field.set(categoryObject, subCategoryObject);
+			if (settings.comment.length() > 0)
 			{
-				innerConfig.addCustomCategoryComment(subPath.toString(), configCategory.comment());
+				innerConfig.addCustomCategoryComment(subPath.toString(), settings.comment);
 			}
 			setConfigFieldsAndCategories(subPath, subCategoryObject);
 		}
@@ -171,47 +317,42 @@ public abstract class Configurations
 		}
 	}
 	
-	protected void instantiateConfigField(ConfigPath basePath, Field field, ConfigField configField, Object categoryObject)
+	protected void instantiateConfigField(ConfigPath basePath, ConfigFieldSettings settings, Object categoryObject)
 	{
-		ConfigPath subPath = basePath.getSubPath(configField.path());
+		ConfigPath subPath = basePath.getSubPath(settings.name);
 		String category = subPath.getCategory();
-		String name = subPath.getName();
-		String comment = configField.comment();
-		
-		String defaultValue = configField.defaultValue();
-		
 		try
 		{
-			Class<?> clazz = field.getType();
+			Class<?> clazz = settings.field.getType();
 			ConfigurationsValueParser parser = ConfigurationsValueParser.getParser(clazz);
 			
 			if (parser != null)
 			{
 				try
 				{
-					parser.parse(defaultValue, clazz);
+					parser.parse(settings.defaultValue, clazz);
 				}
 				catch (Exception e)
 				{
-					FMLLog.severe("Failed to parse the default value '%s' of configuration field %s in config file %s", defaultValue, subPath.toString(), innerConfig.getConfigFile().getAbsolutePath());
+					FMLLog.severe("Failed to parse the default value '%s' of configuration field %s in config file %s", settings.defaultValue, subPath.toString(), innerConfig.getConfigFile().getAbsolutePath());
 				}
 				
-				Property property = innerConfig.get(category, name, defaultValue, comment, parser.propertyType);
+				Property property = innerConfig.get(category, subPath.getName(), settings.defaultValue, settings.comment, parser.propertyType);
 				String stringValue = property.getString();
 
 				try
 				{
 					Object value = parser.parse(stringValue, clazz);
-					field.set(categoryObject, value);
+					settings.field.set(categoryObject, value);
 				}
 				catch (Exception e)
 				{
 					FMLLog.warning("Failed to parse the value '%s' of configuration field %s in config file %s", stringValue, subPath.toString(), innerConfig.getConfigFile().getAbsolutePath());
 				}
 
-				if (configField.autoReset())
+				if (settings.autoReset)
 				{
-					property.set(defaultValue);
+					property.set(settings.autoReset);
 				}
 			}
 			else if (clazz.isArray())
@@ -220,10 +361,10 @@ public abstract class Configurations
 				parser = ConfigurationsValueParser.getParser(componentClazz);
 				if (parser != null)
 				{
-					String[] defaultValues = defaultValue.split("\n");
-					String[] stringValues = innerConfig.getStringList(name, category, defaultValues, comment);
+					String[] defaultValues = settings.defaultValue.split("\n");
+					String[] stringValues = innerConfig.getStringList(subPath.getName(), category, defaultValues, settings.comment);
 					Object valuesArray = Array.newInstance(componentClazz, stringValues.length);
-					field.set(categoryObject, valuesArray);
+					settings.field.set(categoryObject, valuesArray);
 					for (int i = 0; i < stringValues.length; i++)
 					{
 						try
@@ -232,7 +373,7 @@ public abstract class Configurations
 						}
 						catch (Exception e)
 						{
-							FMLLog.severe("Failed to parse the default value '%s' of configuration field %s[%d] in config file %s", defaultValue, subPath.toString(), i, innerConfig.getConfigFile().getAbsolutePath());
+							FMLLog.severe("Failed to parse the default value '%s' of configuration field %s[%d] in config file %s", settings.defaultValue, subPath.toString(), i, innerConfig.getConfigFile().getAbsolutePath());
 						}
 
 						try
@@ -255,9 +396,7 @@ public abstract class Configurations
 		}
 		catch(Exception e)
 		{
-			System.out.println(e.toString() + " Failed to set value for configuration field " + subPath);
+			FMLLog.warning("%s Failed to set value for configuration field %s", e.toString(), subPath.toString());
 		}
 	}
-	
-	protected abstract void onLoaded();
 }

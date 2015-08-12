@@ -13,7 +13,6 @@ import glenn.gasesframework.api.pipetype.PipeType;
 import glenn.gasesframework.common.CommonProxy;
 import glenn.gasesframework.common.ConfigGasFurnaceRecipes;
 import glenn.gasesframework.common.GasBottleTransposerHandler;
-import glenn.gasesframework.common.GasesFrameworkMainConfigurations;
 import glenn.gasesframework.common.GuiHandler;
 import glenn.gasesframework.common.block.BlockGas;
 import glenn.gasesframework.common.block.BlockGasCollector;
@@ -27,6 +26,7 @@ import glenn.gasesframework.common.block.BlockInfiniteGasDrain;
 import glenn.gasesframework.common.block.BlockInfiniteGasPump;
 import glenn.gasesframework.common.block.BlockIronGasDynamo;
 import glenn.gasesframework.common.block.BlockLantern;
+import glenn.gasesframework.common.configuration.GasesFrameworkMainConfigurations;
 import glenn.gasesframework.common.entity.EntityDelayedExplosion;
 import glenn.gasesframework.common.item.ItemGasBottle;
 import glenn.gasesframework.common.item.ItemGasPipe;
@@ -245,25 +245,25 @@ public class GasesFramework implements IGasesFramework
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		for(String s : configurations.other_additionalIgnitionBlocks)
+		for(String s : configurations.gases.ignition.addedBlocks)
 		{
 			Block block = Block.getBlockFromName(s);
 			if(block != null) GasesFrameworkAPI.registerIgnitionBlock(block);
 		}
 		
-		for(String s : configurations.other_additionalIgnitionItems)
+		for(String s : configurations.gases.ignition.removedBlocks)
 		{
 			Item item = (Item)Item.itemRegistry.getObject(s);
 			if(item != null) GasesFrameworkAPI.registerIgnitionItem(item);
 		}
 		
-		for(String s : configurations.other_removedIgnitionBlocks)
+		for(String s : configurations.gases.ignition.addedItems)
 		{
 			Block block = Block.getBlockFromName(s);
 			if(block != null) GasesFrameworkAPI.unregisterIgnitionBlock(block);
 		}
 		
-		for(String s : configurations.other_removedIgnitionItems)
+		for(String s : configurations.gases.ignition.removedItems)
 		{
 			Item item = (Item)Item.itemRegistry.getObject(s);
 			if(item != null) GasesFrameworkAPI.unregisterIgnitionItem(item);
@@ -694,7 +694,7 @@ public class GasesFramework implements IGasesFramework
 	@Override
 	public float getGasExplosionPowerFactor()
 	{
-		return configurations.gases_gasExplosionFactor;
+		return configurations.gases.explosionFactor;
 	}
 	
 	/**
@@ -704,7 +704,7 @@ public class GasesFramework implements IGasesFramework
 	@Override
 	public int getFireSmokeAmount()
 	{
-		return configurations.gases_fireSmokeAmount;
+		return configurations.gases.smoke.fireSmokeAmount;
 	}
 	
 	/**

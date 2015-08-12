@@ -179,7 +179,7 @@ public class BlockGasTransposer extends Block implements ITileEntityProvider, IG
 		if(side == ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z)))
 		{
 			TileEntityGasTransposer tileEntity = (TileEntityGasTransposer)world.getTileEntity(x, y, z);
-			return tileEntity.mode.canPropelGas(tileEntity) ? GasesFramework.configurations.piping_iron_maxPressure : 0;
+			return tileEntity.mode.canPropelGas(tileEntity) ? GasesFramework.configurations.piping.ironMaterial.maxPressure : 0;
 		}
 		else
 		{

@@ -45,7 +45,7 @@ public class ClientProxy extends CommonProxy
 		super.registerEventHandlers();
 		MinecraftForge.EVENT_BUS.register(new ForgeClientEvents());
 		
-		if(GasesFramework.configurations.other_enableUpdateCheck)
+		if(GasesFramework.configurations.updateChecker.enable)
 		{
 			MinecraftForge.EVENT_BUS.register(new UpdateChecker("https://www.jamieswhiteshirt.com/trackable/gasesFramework.php", "Gases Framework", GasesFramework.MODID, GasesFramework.VERSION, GasesFramework.TARGETVERSION));
 		}

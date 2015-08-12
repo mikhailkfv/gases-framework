@@ -64,7 +64,7 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 	    	GL11.glEnable(GL11.GL_BLEND);
 	    	GL11.glColor4f(red, green, blue, 1.0F);
 	    	
-	    	if(GasesFramework.configurations.other_fancyTank)
+	    	if(GasesFramework.configurations.blocks.gasTank.fancyTank)
 	    	{
 		    	double scale = 12.0D / 16.0D;
 		    	
