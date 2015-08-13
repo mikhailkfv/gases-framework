@@ -23,17 +23,19 @@ public abstract class TileEntityGasDynamo extends TileEntity implements IEnergyP
 	private final EnergyStorage energyStorage;
 	private final int maxFuelLevel;
 	private final int fuelPerTick;
+	private final int energyPerFuel;
 
 	private int fuelLevel;
 	private String invName;
 	
 	public boolean isBurning;
 	
-	public TileEntityGasDynamo(int maxEnergy, int maxEnergyTransfer, int maxFuelLevel, int fuelPerTick)
+	public TileEntityGasDynamo(int maxEnergy, int maxEnergyTransfer, int maxFuelLevel, int fuelPerTick, int energyPerFuel)
 	{
 		this.energyStorage = new EnergyStorage(maxEnergy, maxEnergyTransfer);
 		this.maxFuelLevel = maxFuelLevel;
 		this.fuelPerTick = fuelPerTick;
+		this.energyPerFuel = energyPerFuel;
 
 		setFuelLevel(0);
 	}
@@ -79,9 +81,9 @@ public abstract class TileEntityGasDynamo extends TileEntity implements IEnergyP
 	{
 		int capacity = Math.min(energyStorage.getMaxEnergyStored() - energyStorage.getEnergyStored(), energyStorage.getMaxReceive());
 		int burnableUnits = Math.min(fuelLevel, fuelPerTick);
-		int energyCreated = Math.min(capacity, burnableUnits * GasesFramework.configurations.blocks.gasDynamo.energyPerFuel);
+		int energyCreated = Math.min(capacity, burnableUnits * energyPerFuel);
 		
-		setFuelLevel(fuelLevel - energyCreated / GasesFramework.configurations.blocks.gasDynamo.energyPerFuel);
+		setFuelLevel(fuelLevel - energyCreated / energyPerFuel);
 		energyStorage.modifyEnergyStored(energyCreated);
 	}
 	

@@ -80,24 +80,77 @@ public class GasesFrameworkMainConfigurations extends Configurations
 			public boolean fancyTank;
 		}
 		
-		@ConfigCategory(name = "Gas Dynamo")
-		public GasDynamo gasDynamo;
 		public static class GasDynamo
 		{
-			@ConfigField(name = "Max fuel", comment = "The maximal amount of fuel contained by a gas dynamo", defaultValue = "1000")
+			@ConfigField(name = "Max fuel", comment = "The maximal amount of fuel contained by a gas dynamo")
+			@AbstractConfig
 			public int maxFuel;
 			
-			@ConfigField(name = "Fuel per tick", comment = "The maximal amount of fuel consumed per tick by a gas dynamo", defaultValue = "4")
+			@ConfigField(name = "Fuel per tick", comment = "The maximal amount of fuel consumed per tick by a gas dynamo")
+			@AbstractConfig
 			public int fuelPerTick;
 			
-			@ConfigField(name = "RF per fuel", comment = "The RF (Redstone Flux) generated per unit of fuel", defaultValue = "16")
+			@ConfigField(name = "RF per fuel", comment = "The RF (Redstone Flux) generated per unit of fuel")
+			@AbstractConfig
 			public int energyPerFuel;
 			
-			@ConfigField(name = "Max RF", comment = "The maximal amount of RF (Redstone Flux) contained by a gas dynamo", defaultValue = "60000")
+			@ConfigField(name = "Max RF", comment = "The maximal amount of RF (Redstone Flux) contained by a gas dynamo")
+			@AbstractConfig
 			public int maxEnergy;
 			
-			@ConfigField(name = "Max RF transfer", comment = "The maximal amount of RF (Redstone Flux) that can be evently transmitted from a gas dynamo each tick", defaultValue = "80")
+			@ConfigField(name = "Max RF transfer", comment = "The maximal amount of RF (Redstone Flux) that can be evently transmitted from a gas dynamo each tick")
+			@AbstractConfig
 			public int maxEnergyTransfer;
+		}
+		
+		@ConfigCategory(name = "Iron Gas Dynamo")
+		public IronGasDynamo ironGasDynamo;
+		public static class IronGasDynamo extends GasDynamo
+		{
+			@ConfigField(defaultValue = "1000")
+			@DelegateConfig(delegateFor = "maxFuel")
+			private int _maxFuel;
+			
+			@ConfigField(defaultValue = "4")
+			@DelegateConfig(delegateFor = "fuelPerTick")
+			private int _fuelPerTick;
+			
+			@ConfigField(defaultValue = "16")
+			@DelegateConfig(delegateFor = "energyPerFuel")
+			private int _energyPerFuel;
+			
+			@ConfigField(defaultValue = "60000")
+			@DelegateConfig(delegateFor = "maxEnergy")
+			private int _maxEnergy;
+			
+			@ConfigField(defaultValue = "80")
+			@DelegateConfig(delegateFor = "maxEnergyTransfer")
+			private int _maxEnergyTransfer;
+		}
+
+		@ConfigCategory(name = "Wooden Gas Dynamo")
+		public WoodGasDynamo woodGasDynamo;
+		public static class WoodGasDynamo extends GasDynamo
+		{
+			@ConfigField(defaultValue = "1000")
+			@DelegateConfig(delegateFor = "maxFuel")
+			private int _maxFuel;
+			
+			@ConfigField(defaultValue = "4")
+			@DelegateConfig(delegateFor = "fuelPerTick")
+			private int _fuelPerTick;
+			
+			@ConfigField(defaultValue = "8")
+			@DelegateConfig(delegateFor = "energyPerFuel")
+			private int _energyPerFuel;
+			
+			@ConfigField(defaultValue = "30000")
+			@DelegateConfig(delegateFor = "maxEnergy")
+			private int _maxEnergy;
+			
+			@ConfigField(defaultValue = "40")
+			@DelegateConfig(delegateFor = "maxEnergyTransfer")
+			private int _maxEnergyTransfer;
 		}
 	}
 	
@@ -114,6 +167,14 @@ public class GasesFrameworkMainConfigurations extends Configurations
 			@ConfigField(name = "Pipe pressure tolerance", comment = "The amount of pressure pipes can take before breaking")
 			@AbstractConfig
 			public int pressureTolerance;
+
+			@ConfigField(name = "Pump rate", comment = "The tick rate at which pumps and collectors will pump")
+			@AbstractConfig
+			public int pumpRate;
+
+			@ConfigField(name = "Collection range", comment = "The radius of block the range gas collectors can search for gases")
+			@AbstractConfig
+			public int collectionRange;
 		}
 		
 		@ConfigCategory(name = "Iron Material")
@@ -122,11 +183,19 @@ public class GasesFrameworkMainConfigurations extends Configurations
 		{
 			@ConfigField(defaultValue = "31")
 			@DelegateConfig(delegateFor = "maxPressure")
-			public int _maxPressure;
+			private int _maxPressure;
 
 			@ConfigField(defaultValue = "31")
 			@DelegateConfig(delegateFor = "pressureTolerance")
-			public int _pressureTolerance;
+			private int _pressureTolerance;
+
+			@ConfigField(defaultValue = "20")
+			@DelegateConfig(delegateFor = "pumpRate")
+			private int _pumpRate;
+
+			@ConfigField(defaultValue = "4")
+			@DelegateConfig(delegateFor = "collectionRange")
+			private int _collectionRange;
 		}
 
 		@ConfigCategory(name = "Glass Material")
@@ -135,7 +204,7 @@ public class GasesFrameworkMainConfigurations extends Configurations
 		{
 			@ConfigField(defaultValue = "31")
 			@DelegateConfig(delegateFor = "maxPressure")
-			public int _maxPressure;
+			private int _maxPressure;
 		}
 
 		@ConfigCategory(name = "Wood Material")
@@ -144,11 +213,28 @@ public class GasesFrameworkMainConfigurations extends Configurations
 		{
 			@ConfigField(defaultValue = "7")
 			@DelegateConfig(delegateFor = "maxPressure")
-			public int _maxPressure;
+			private int _maxPressure;
 
 			@ConfigField(defaultValue = "7")
 			@DelegateConfig(delegateFor = "pressureTolerance")
-			public int _pressureTolerance;
+			private int _pressureTolerance;
+
+			@ConfigField(defaultValue = "30")
+			@DelegateConfig(delegateFor = "pumpRate")
+			private int _pumpRate;
+
+			@ConfigField(defaultValue = "2")
+			@DelegateConfig(delegateFor = "collectionRange")
+			private int _collectionRange;
+		}
+
+		@ConfigCategory(name = "Infinite Material")
+		public InfiniteMaterial infiniteMaterial;
+		public static class InfiniteMaterial extends Material
+		{
+			@ConfigField(defaultValue = "20")
+			@DelegateConfig(delegateFor = "pumpRate")
+			private int _pumpRate;
 		}
 	}
 	

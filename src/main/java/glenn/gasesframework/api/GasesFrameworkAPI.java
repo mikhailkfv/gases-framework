@@ -122,6 +122,16 @@ public class GasesFrameworkAPI
 	 * If Gases Framework is not installed, this is null.
 	 */
 	public static Item gasSamplerExcluder;
+	/**
+	 * Used in crafting.
+	 * If Gases Framework is not installed, this is null.
+	 */
+	public static Item adhesive;
+	/**
+	 * It's duct tape. If you can't fix it with duct tape, it's not worth fixing.
+	 * If Gases Framework is not installed, this is null.
+	 */
+	public static Item ductTape;
 	
 	/**
 	 * The damage source used when a player asphyxiates in gas.
