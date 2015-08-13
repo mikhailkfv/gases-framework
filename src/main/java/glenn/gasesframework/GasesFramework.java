@@ -188,7 +188,7 @@ public class GasesFramework implements IGasesFramework
 		
 		GasesFrameworkAPI.modInstance = instance;
 		
-		GasesFrameworkAPI.creativeTab = new CreativeTabs("tabGases")
+		GasesFrameworkAPI.creativeTab = new CreativeTabs("tabGasesFramework")
 		{
 			public Item getTabIconItem()
 			{

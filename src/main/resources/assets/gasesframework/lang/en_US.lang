@@ -48,7 +48,7 @@ tile.gf_gasTransposer.name=Gas Transposer
 tile.gf_ironGasDynamo.name=Gas Dynamo
 tile.gf_woodGasDynamo.name=Poor Man's Wooden Gas Dynamo
 
-itemGroup.tabGases=Glenn's Gases
+itemGroup.tabGasesFramework=Gases Framework
 
 container.gasFurnace=Gas Furnace
 container.gasTransposer.insert.name=Gas Transposer (Insert)
