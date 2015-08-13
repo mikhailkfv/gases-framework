@@ -3,6 +3,7 @@ package glenn.gasesframework.common.tileentity;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.common.block.BlockGas;
+import glenn.gasesframework.common.block.BlockGasCollector;
 import glenn.moddingutils.IVec;
 import glenn.moddingutils.KeyPair;
 
@@ -14,14 +15,18 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityGasCollector extends TileEntityGasPump
+public class TileEntityGasCollector extends TileEntityDirectionalGasPropellor
 {
+	private final int collectionRange;
+	
 	private GasType pendingGasType;
 	private int pendingGasAmount;
 	
-	public TileEntityGasCollector()
+	public TileEntityGasCollector(int pumpRate, int collectionRange)
 	{
-		super();
+		super(pumpRate);
+		this.collectionRange = collectionRange;
+		
 		pendingGasType = null;
 		pendingGasAmount = 0;
 	}
@@ -79,7 +84,7 @@ public class TileEntityGasCollector extends TileEntityGasPump
 					}
 				}
 				
-				if(pos.first <= 4)
+				if(pos.first <= collectionRange)
 				{
 					getBranching(pos, queue, checked);
 				}
@@ -109,7 +114,7 @@ public class TileEntityGasCollector extends TileEntityGasPump
     	if(pendingGasType != null)
     	{
 	    	Block block = worldObj.getBlock(x, y, z);
-	    	if(block == GasesFramework.gasCollector)
+	    	if(block instanceof BlockGasCollector)
 	    	{
 	    		TileEntityGasCollector tileEntity = (TileEntityGasCollector)worldObj.getTileEntity(x, y, z);
 	    		

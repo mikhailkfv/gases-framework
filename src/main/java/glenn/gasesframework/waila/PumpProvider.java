@@ -1,6 +1,6 @@
 package glenn.gasesframework.waila;
 
-import glenn.gasesframework.common.tileentity.TileEntityGasPump;
+import glenn.gasesframework.common.tileentity.TileEntityDirectionalGasPropellor;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class PumpProvider implements IWailaDataProvider
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
-		TileEntityGasPump pump = (TileEntityGasPump)accessor.getTileEntity();
+		TileEntityDirectionalGasPropellor pump = (TileEntityDirectionalGasPropellor)accessor.getTileEntity();
 		if (pump.filterType == null)
 		{
 			currenttip.add(StatCollector.translateToLocal("tile.gf_gasPump.waila.body.filter.none"));

@@ -167,6 +167,14 @@ public class GasesFrameworkMainConfigurations extends Configurations
 			@ConfigField(name = "Pipe pressure tolerance", comment = "The amount of pressure pipes can take before breaking")
 			@AbstractConfig
 			public int pressureTolerance;
+
+			@ConfigField(name = "Pump rate", comment = "The tick rate at which pumps and collectors will pump")
+			@AbstractConfig
+			public int pumpRate;
+
+			@ConfigField(name = "Collection range", comment = "The radius of block the range gas collectors can search for gases")
+			@AbstractConfig
+			public int collectionRange;
 		}
 		
 		@ConfigCategory(name = "Iron Material")
@@ -180,6 +188,14 @@ public class GasesFrameworkMainConfigurations extends Configurations
 			@ConfigField(defaultValue = "31")
 			@DelegateConfig(delegateFor = "pressureTolerance")
 			private int _pressureTolerance;
+
+			@ConfigField(defaultValue = "20")
+			@DelegateConfig(delegateFor = "pumpRate")
+			private int _pumpRate;
+
+			@ConfigField(defaultValue = "4")
+			@DelegateConfig(delegateFor = "collectionRange")
+			private int _collectionRange;
 		}
 
 		@ConfigCategory(name = "Glass Material")
@@ -202,6 +218,14 @@ public class GasesFrameworkMainConfigurations extends Configurations
 			@ConfigField(defaultValue = "7")
 			@DelegateConfig(delegateFor = "pressureTolerance")
 			private int _pressureTolerance;
+
+			@ConfigField(defaultValue = "30")
+			@DelegateConfig(delegateFor = "pumpRate")
+			private int _pumpRate;
+
+			@ConfigField(defaultValue = "2")
+			@DelegateConfig(delegateFor = "collectionRange")
+			private int _collectionRange;
 		}
 	}
 	

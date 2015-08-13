@@ -1,8 +1,8 @@
 package glenn.gasesframework.client.render;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.common.block.BlockGasPump;
-import glenn.gasesframework.common.tileentity.TileEntityGasPump;
+import glenn.gasesframework.common.block.BlockDirectionalGasPropellor;
+import glenn.gasesframework.common.tileentity.TileEntityDirectionalGasPropellor;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
-public class RenderBlockGasPump implements ISimpleBlockRenderingHandler
+public class RenderBlockDirectionGasPropellor implements ISimpleBlockRenderingHandler
 {
 	public static final int RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
 	
@@ -170,7 +170,7 @@ public class RenderBlockGasPump implements ISimpleBlockRenderingHandler
 		tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, us[2], vs[2]);
 	}
 	
-	private void renderFace(BlockGasPump block, IBlockAccess blockAccess, int x, int y, int z, Tessellator tessellator, double[] us, double[] vs, ForgeDirection blockDirection, ForgeDirection faceDirection, IIcon icon, float r, float g, float b)
+	private void renderFace(BlockDirectionalGasPropellor block, IBlockAccess blockAccess, int x, int y, int z, Tessellator tessellator, double[] us, double[] vs, ForgeDirection blockDirection, ForgeDirection faceDirection, IIcon icon, float r, float g, float b)
 	{
 		switch(faceDirection)
 		{
@@ -207,7 +207,7 @@ public class RenderBlockGasPump implements ISimpleBlockRenderingHandler
 	public boolean renderWorldBlock(IBlockAccess blockAccess, int x, int y, int z, Block bblock, int modelId, RenderBlocks renderer)
 	{
 		ForgeDirection blockDirection = ForgeDirection.getOrientation(blockAccess.getBlockMetadata(x, y, z) % 6);
-		BlockGasPump block = (BlockGasPump)bblock;
+		BlockDirectionalGasPropellor block = (BlockDirectionalGasPropellor)bblock;
 
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.addTranslation(x, y, z);
@@ -222,7 +222,7 @@ public class RenderBlockGasPump implements ISimpleBlockRenderingHandler
 			
 			if(faceDirection == blockDirection)
 			{
-				TileEntityGasPump tileEntity = (TileEntityGasPump)blockAccess.getTileEntity(x, y, z);
+				TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)blockAccess.getTileEntity(x, y, z);
 				
 				if(tileEntity.filterType != null && tileEntity.filterType != GasesFrameworkAPI.gasTypeAir)
 				{
