@@ -435,7 +435,7 @@ public class WorldGeneratorGasesFramework implements IWorldGenerator
 				retrogenData.add(previouslyGeneratedTypesList.getStringTagAt(i));
 			}
 			
-			if(GasesFramework.configurations.retrogenEnabled)
+			if(GasesFramework.configurations.worldGeneration.retrogen.enabled)
 			{
 				tryQueueRetrogen(event.world, dimensionKey, positionKey);
 			}

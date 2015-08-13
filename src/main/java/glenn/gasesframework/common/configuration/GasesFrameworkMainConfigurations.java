@@ -122,11 +122,11 @@ public class GasesFrameworkMainConfigurations extends Configurations
 		{
 			@ConfigField(defaultValue = "31")
 			@DelegateConfig(delegateFor = "maxPressure")
-			public int _maxPressure;
+			private int _maxPressure;
 
 			@ConfigField(defaultValue = "31")
 			@DelegateConfig(delegateFor = "pressureTolerance")
-			public int _pressureTolerance;
+			private int _pressureTolerance;
 		}
 
 		@ConfigCategory(name = "Glass Material")
@@ -135,7 +135,7 @@ public class GasesFrameworkMainConfigurations extends Configurations
 		{
 			@ConfigField(defaultValue = "31")
 			@DelegateConfig(delegateFor = "maxPressure")
-			public int _maxPressure;
+			private int _maxPressure;
 		}
 
 		@ConfigCategory(name = "Wood Material")
@@ -144,11 +144,11 @@ public class GasesFrameworkMainConfigurations extends Configurations
 		{
 			@ConfigField(defaultValue = "7")
 			@DelegateConfig(delegateFor = "maxPressure")
-			public int _maxPressure;
+			private int _maxPressure;
 
 			@ConfigField(defaultValue = "7")
 			@DelegateConfig(delegateFor = "pressureTolerance")
-			public int _pressureTolerance;
+			private int _pressureTolerance;
 		}
 	}
 	
