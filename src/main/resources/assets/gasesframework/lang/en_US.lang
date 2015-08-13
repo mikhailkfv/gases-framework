@@ -41,7 +41,8 @@ tile.gf_infiniteGasPump.name=Infinite Gas Pump
 tile.gf_infiniteGasPump.waila.body.side=Side emits: %s
 tile.gf_infiniteGasDrain.name=Infinite Gas Drain
 tile.gf_gasTransposer.name=Gas Transposer
-tile.gf_gasDynamo.name=Gas Dynamo
+tile.gf_ironGasDynamo.name=Gas Dynamo
+tile.gf_woodGasDynamo.name=Poor Man's Wooden Gas Dynamo
 
 itemGroup.tabGases=Glenn's Gases
 

@@ -80,24 +80,77 @@ public class GasesFrameworkMainConfigurations extends Configurations
 			public boolean fancyTank;
 		}
 		
-		@ConfigCategory(name = "Gas Dynamo")
-		public GasDynamo gasDynamo;
 		public static class GasDynamo
 		{
-			@ConfigField(name = "Max fuel", comment = "The maximal amount of fuel contained by a gas dynamo", defaultValue = "1000")
+			@ConfigField(name = "Max fuel", comment = "The maximal amount of fuel contained by a gas dynamo")
+			@AbstractConfig
 			public int maxFuel;
 			
-			@ConfigField(name = "Fuel per tick", comment = "The maximal amount of fuel consumed per tick by a gas dynamo", defaultValue = "4")
+			@ConfigField(name = "Fuel per tick", comment = "The maximal amount of fuel consumed per tick by a gas dynamo")
+			@AbstractConfig
 			public int fuelPerTick;
 			
-			@ConfigField(name = "RF per fuel", comment = "The RF (Redstone Flux) generated per unit of fuel", defaultValue = "16")
+			@ConfigField(name = "RF per fuel", comment = "The RF (Redstone Flux) generated per unit of fuel")
+			@AbstractConfig
 			public int energyPerFuel;
 			
-			@ConfigField(name = "Max RF", comment = "The maximal amount of RF (Redstone Flux) contained by a gas dynamo", defaultValue = "60000")
+			@ConfigField(name = "Max RF", comment = "The maximal amount of RF (Redstone Flux) contained by a gas dynamo")
+			@AbstractConfig
 			public int maxEnergy;
 			
-			@ConfigField(name = "Max RF transfer", comment = "The maximal amount of RF (Redstone Flux) that can be evently transmitted from a gas dynamo each tick", defaultValue = "80")
+			@ConfigField(name = "Max RF transfer", comment = "The maximal amount of RF (Redstone Flux) that can be evently transmitted from a gas dynamo each tick")
+			@AbstractConfig
 			public int maxEnergyTransfer;
+		}
+		
+		@ConfigCategory(name = "Iron Gas Dynamo")
+		public IronGasDynamo ironGasDynamo;
+		public static class IronGasDynamo extends GasDynamo
+		{
+			@ConfigField(defaultValue = "1000")
+			@DelegateConfig(delegateFor = "maxFuel")
+			private int _maxFuel;
+			
+			@ConfigField(defaultValue = "4")
+			@DelegateConfig(delegateFor = "fuelPerTick")
+			private int _fuelPerTick;
+			
+			@ConfigField(defaultValue = "16")
+			@DelegateConfig(delegateFor = "energyPerFuel")
+			private int _energyPerFuel;
+			
+			@ConfigField(defaultValue = "60000")
+			@DelegateConfig(delegateFor = "maxEnergy")
+			private int _maxEnergy;
+			
+			@ConfigField(defaultValue = "80")
+			@DelegateConfig(delegateFor = "maxEnergyTransfer")
+			private int _maxEnergyTransfer;
+		}
+
+		@ConfigCategory(name = "Wooden Gas Dynamo")
+		public WoodGasDynamo woodGasDynamo;
+		public static class WoodGasDynamo extends GasDynamo
+		{
+			@ConfigField(defaultValue = "1000")
+			@DelegateConfig(delegateFor = "maxFuel")
+			private int _maxFuel;
+			
+			@ConfigField(defaultValue = "4")
+			@DelegateConfig(delegateFor = "fuelPerTick")
+			private int _fuelPerTick;
+			
+			@ConfigField(defaultValue = "8")
+			@DelegateConfig(delegateFor = "energyPerFuel")
+			private int _energyPerFuel;
+			
+			@ConfigField(defaultValue = "30000")
+			@DelegateConfig(delegateFor = "maxEnergy")
+			private int _maxEnergy;
+			
+			@ConfigField(defaultValue = "40")
+			@DelegateConfig(delegateFor = "maxEnergyTransfer")
+			private int _maxEnergyTransfer;
 		}
 	}
 	
