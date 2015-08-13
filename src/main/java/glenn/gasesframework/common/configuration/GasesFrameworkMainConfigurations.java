@@ -227,6 +227,15 @@ public class GasesFrameworkMainConfigurations extends Configurations
 			@DelegateConfig(delegateFor = "collectionRange")
 			private int _collectionRange;
 		}
+
+		@ConfigCategory(name = "Infinite Material")
+		public InfiniteMaterial infiniteMaterial;
+		public static class InfiniteMaterial extends Material
+		{
+			@ConfigField(defaultValue = "20")
+			@DelegateConfig(delegateFor = "pumpRate")
+			private int _pumpRate;
+		}
 	}
 	
 	@ConfigCategory(name = "Update checker")

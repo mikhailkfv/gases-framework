@@ -1,5 +1,6 @@
 package glenn.gasesframework.common.tileentity;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
@@ -14,14 +15,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityInfiniteGasPump extends TileEntity
 {
-	public static final int PUMP_FREQUENCY = 20;
+	private final int pumpRate;
 	
 	private int pumpTime;
 	private GasType[] types = new GasType[6];
 	
 	public TileEntityInfiniteGasPump()
 	{
-		pumpTime = PUMP_FREQUENCY;
+		pumpRate = GasesFramework.configurations.piping.infiniteMaterial.pumpRate;
+		pumpTime = pumpRate;
 		for(int i = 0; i < types.length; i++)
 		{
 			types[i] = GasesFrameworkAPI.gasTypeAir;
@@ -82,7 +84,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
 				}
 			}
 			
-			pumpTime = PUMP_FREQUENCY;
+			pumpTime = pumpRate;
 		}
 	}
 	
