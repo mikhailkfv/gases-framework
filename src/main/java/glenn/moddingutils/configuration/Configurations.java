@@ -266,7 +266,7 @@ public abstract class Configurations
 	
 	protected void setConfigFieldsAndCategories(ConfigPath basePath, Object categoryObject)
 	{
-		for(Field field : categoryObject.getClass().getFields())
+		for(Field field : categoryObject.getClass().getDeclaredFields())
 		{
 			ConfigField configField = field.getAnnotation(ConfigField.class);
 			if(configField != null)
