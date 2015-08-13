@@ -7,6 +7,8 @@ item.gf_gasSamplerExcluder.name.filled=Excluding %1$s Sampler
 item.gf_lanternEmpty.name=Lantern
 item.gf_gasBottle.name=Bottle
 item.gf_gasBottle.name.filled=%1$s Bottle
+item.gf_ductTape.name=Duct Tape
+item.gf_adhesive.name=Adhesive
 
 gf_gas.air.name=Air
 gf_gas.smoke.name=Smoke

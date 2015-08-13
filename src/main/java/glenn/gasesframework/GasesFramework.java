@@ -33,9 +33,11 @@ import glenn.gasesframework.common.block.BlockWoodGasDynamo;
 import glenn.gasesframework.common.block.BlockWoodGasPump;
 import glenn.gasesframework.common.configuration.GasesFrameworkMainConfigurations;
 import glenn.gasesframework.common.entity.EntityDelayedExplosion;
+import glenn.gasesframework.common.item.ItemDuctTape;
 import glenn.gasesframework.common.item.ItemGasBottle;
 import glenn.gasesframework.common.item.ItemGasPipe;
 import glenn.gasesframework.common.item.ItemGasSampler;
+import glenn.gasesframework.common.item.ItemPrimitiveAdhesive;
 import glenn.gasesframework.common.pipetype.PipeTypeGlass;
 import glenn.gasesframework.common.pipetype.PipeTypeIron;
 import glenn.gasesframework.common.pipetype.PipeTypeWood;
@@ -145,10 +147,10 @@ public class GasesFramework implements IGasesFramework
 	private void initBlocksAndItems()
 	{
 		GameRegistry.registerItem(GasesFrameworkAPI.gasBottle = (new ItemGasBottle()).setUnlocalizedName("gf_gasBottle").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:gas_bottle"), "gasBottle");
-
-		
 		GameRegistry.registerItem(GasesFrameworkAPI.gasSamplerIncluder = (new ItemGasSampler(false)).setUnlocalizedName("gf_gasSamplerIncluder").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:sampler"), "gasSamplerIncluder");
 		GameRegistry.registerItem(GasesFrameworkAPI.gasSamplerExcluder = (new ItemGasSampler(true)).setUnlocalizedName("gf_gasSamplerExcluder").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:sampler"), "gasSamplerExcluder");
+		GameRegistry.registerItem(GasesFrameworkAPI.adhesive = (new ItemPrimitiveAdhesive()).setUnlocalizedName("gf_adhesive").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:adhesive"), "adhesive");
+		GameRegistry.registerItem(GasesFrameworkAPI.ductTape = (new ItemDuctTape()).setUnlocalizedName("gf_ductTape").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:duct_tape"), "ductTape");
 		
 		GameRegistry.registerBlock(ironGasPump = new BlockIronGasPump().setHardness(2.5F).setStepSound(Block.soundTypeStone).setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockName("gf_ironGasPump").setBlockTextureName("gasesframework:pump_iron"), "gasPump");
 		GameRegistry.registerBlock(woodGasPump = new BlockWoodGasPump().setHardness(2.5F).setStepSound(Block.soundTypeStone).setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockName("gf_woodGasPump").setBlockTextureName("gasesframework:pump_wood"), "woodGasPump");
@@ -223,6 +225,8 @@ public class GasesFramework implements IGasesFramework
 		GameRegistry.addRecipe(new ItemStack(gasTransposer), " P ", "PHP", " P ", 'P', GasesFrameworkAPI.gasTypeAir.pipeBlock, 'H', Blocks.hopper);
 		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.gasSamplerExcluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 0));
 		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.gasSamplerIncluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 15));
+		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.adhesive), new ItemStack(Items.water_bucket), Items.rotten_flesh, Items.sugar);
+		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.ductTape, 32), "SSS", "SAS", "SSS", 'S', Items.string, 'A', GasesFrameworkAPI.adhesive);
 		
 		for(LanternType lanternType : LanternType.getAllLanternTypes())
 		{
