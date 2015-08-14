@@ -54,7 +54,7 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
 		tagCompound.setInteger("pumpTime", pumpTime);
 		tagCompound.setBoolean("excludes", excludes);
 		tagCompound.setInteger("containedType", containedType != null ? containedType.gasID : -1);
-		tagCompound.setInteger("filterType", filterType != null ? filterType.gasID : -1);
+		tagCompound.setInteger("filterType", filterType != GasesFrameworkAPI.gasTypeAir ? filterType.gasID : -1);
 	}
 	
 	/**
@@ -88,15 +88,15 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
 		if(this.excludes == excludes && this.filterType == filterType)
 		{
 			this.excludes = false;
-			this.filterType = null;
+			this.filterType = GasesFrameworkAPI.gasTypeAir;
 		}
 		else
 		{
 			this.excludes = excludes;
-			this.filterType = filterType;
+			this.filterType = filterType != null ? filterType : GasesFrameworkAPI.gasTypeAir;
 		}
 		
-		int eventParam = filterType.gasID & 0x7fffffff;
+		int eventParam = this.filterType.gasID  & 0x7fffffff;
 		if(excludes) eventParam |= 0x80000000;
 		worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), SET_FILTER_EVENT, eventParam);
 	}
