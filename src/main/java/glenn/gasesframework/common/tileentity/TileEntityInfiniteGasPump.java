@@ -41,7 +41,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
 		int ordinal = side.ordinal();
 		if(newType == types[ordinal]) newType = GasesFrameworkAPI.gasTypeAir;
 		
-		worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), ordinal, newType != null ? newType.gasID : -1);
+		worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), ordinal, GasType.getGasID(newType));
 		types[ordinal] = newType;
 	}
 	
@@ -110,8 +110,8 @@ public class TileEntityInfiniteGasPump extends TileEntity
 		int[] gasIDArray = new int[6];
 		for(int i = 0; i < types.length; i++)
 		{
-			GasType type = types[i];
-			gasIDArray[i] = type.gasID;
+			GasType gasType = types[i];
+			gasIDArray[i] = GasType.getGasID(gasType);
 		}
 		tagCompound.setIntArray("types", gasIDArray);
 	}

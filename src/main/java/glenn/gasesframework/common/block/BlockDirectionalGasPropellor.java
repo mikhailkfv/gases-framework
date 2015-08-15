@@ -2,11 +2,14 @@ package glenn.gasesframework.common.block;
 
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.block.IGasFilter;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.ISample;
+import glenn.gasesframework.api.filter.GasTypeFilter;
+import glenn.gasesframework.api.filter.GasTypeFilterSimple;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.client.render.RenderBlockDirectionGasPropellor;
+import glenn.gasesframework.client.render.RenderBlockDirectionalGasPropellor;
 import glenn.gasesframework.common.tileentity.TileEntityDirectionalGasPropellor;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -23,7 +26,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class BlockDirectionalGasPropellor extends Block implements IGasReceptor, IGasPropellor, ITileEntityProvider, ISample
+public abstract class BlockDirectionalGasPropellor extends Block implements IGasReceptor, IGasPropellor, ITileEntityProvider, IGasFilter
 {
 	private boolean isBottomUnique;
 	private int maxPressure;
@@ -86,7 +89,7 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
     @Override
     public int getRenderType()
     {
-        return RenderBlockDirectionGasPropellor.RENDER_ID;
+        return RenderBlockDirectionalGasPropellor.RENDER_ID;
     }
 	
 	@SideOnly(Side.CLIENT)
@@ -166,20 +169,6 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
 		return side == ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z) % 6) ? maxPressure : 0;
 	}
 	
-	@Override
-	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes, ForgeDirection side)
-	{
-		TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)world.getTileEntity(x, y, z);
-		
-		if(!world.isRemote && tileEntity != null)
-		{
-			world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "random.click", 0.3F, 0.6F);
-			tileEntity.setFilter(in, excludes);
-		}
-		
-		return in;
-	}
-    
     @Override
     public boolean onBlockEventReceived(World world, int x, int y, int z, int eventID, int eventParam)
     {
@@ -192,5 +181,27 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
 	public boolean connectToPipe(IBlockAccess blockaccess, int x, int y, int z, ForgeDirection side)
 	{
 		return true;
+	}
+	
+	@Override
+	public GasTypeFilter getFilter(World world, int x, int y, int z, ForgeDirection side)
+	{
+		TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)world.getTileEntity(x, y, z);
+		return tileEntity != null ? tileEntity.filter : null;
+	}
+	
+	@Override
+	public GasTypeFilter setFilter(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter)
+	{
+		if (filter instanceof GasTypeFilterSimple)
+		{
+			GasTypeFilterSimple simpleFilter = (GasTypeFilterSimple)filter;
+			TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)world.getTileEntity(x, y, z);
+			if (tileEntity != null)
+			{
+				return tileEntity.setFilter(simpleFilter);
+			}
+		}
+		return null;
 	}
 }

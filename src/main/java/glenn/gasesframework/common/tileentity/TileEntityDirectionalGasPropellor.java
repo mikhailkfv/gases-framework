@@ -4,6 +4,11 @@ import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasSource;
+import glenn.gasesframework.api.filter.GasTypeFilter;
+import glenn.gasesframework.api.filter.GasTypeFilterOpen;
+import glenn.gasesframework.api.filter.GasTypeFilterSimple;
+import glenn.gasesframework.api.filter.GasTypeFilterSingleExcluding;
+import glenn.gasesframework.api.filter.GasTypeFilterSingleIncluding;
 import glenn.gasesframework.api.gastype.GasType;
 
 import java.util.Random;
@@ -19,22 +24,20 @@ import net.minecraftforge.common.util.ForgeDirection;
 public abstract class TileEntityDirectionalGasPropellor extends TileEntity
 {
 	public static final int PUMP_EVENT = 0;
-	public static final int SET_FILTER_EVENT = 1;
 	public static final int FAILED_PUMP = 0;
 	public static final int SUCCESSFUL_PUMP = 1;
 	
 	private final int pumpRate;
 	
 	public int pumpTime;
-	public boolean excludes;
 	public GasType containedType;
-	public GasType filterType;
+	public GasTypeFilterSimple filter;
 	
 	public TileEntityDirectionalGasPropellor(int pumpRate)
 	{
 		this.pumpRate = pumpRate;
 		pumpTime = pumpRate;
-		excludes = false;
+		filter = new GasTypeFilterOpen();
 	}
 
 	@Override
@@ -42,9 +45,8 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
 	{
 		super.readFromNBT(tagCompound);
 		pumpTime = tagCompound.getInteger("pumpTime");
-		excludes = tagCompound.getBoolean("excludes");
 		containedType = GasType.getGasTypeByID(tagCompound.getInteger("containedType"));
-		filterType = GasType.getGasTypeByID(tagCompound.getInteger("filterType"));
+		filter = GasTypeFilterSimple.readFromNBT(tagCompound.getCompoundTag("filter"));
 	}
 
 	@Override
@@ -52,9 +54,10 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
 	{
 		super.writeToNBT(tagCompound);
 		tagCompound.setInteger("pumpTime", pumpTime);
-		tagCompound.setBoolean("excludes", excludes);
-		tagCompound.setInteger("containedType", containedType != null ? containedType.gasID : -1);
-		tagCompound.setInteger("filterType", filterType != GasesFrameworkAPI.gasTypeAir ? filterType.gasID : -1);
+		tagCompound.setInteger("containedType", GasType.getGasID(containedType));
+		NBTTagCompound filterTagCompound = new NBTTagCompound();
+		filter.writeToNBT(filterTagCompound);
+		tagCompound.setTag("filter", filterTagCompound);
 	}
 	
 	/**
@@ -83,22 +86,19 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
     	readFromNBT(packet.func_148857_g());
     }
 	
-	public void setFilter(GasType filterType, boolean excludes)
+	public GasTypeFilter setFilter(GasTypeFilterSimple filter)
 	{
-		if(this.excludes == excludes && this.filterType == filterType)
+		if (!this.filter.equals(filter))
 		{
-			this.excludes = false;
-			this.filterType = GasesFrameworkAPI.gasTypeAir;
+			this.filter = filter;
 		}
 		else
 		{
-			this.excludes = excludes;
-			this.filterType = filterType != null ? filterType : GasesFrameworkAPI.gasTypeAir;
+			this.filter = new GasTypeFilterOpen();
 		}
 		
-		int eventParam = this.filterType.gasID  & 0x7fffffff;
-		if(excludes) eventParam |= 0x80000000;
-		worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), SET_FILTER_EVENT, eventParam);
+		worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+		return this.filter;
 	}
     
 	/**
@@ -108,14 +108,7 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
 	 */
     public boolean acceptsType(GasType gasType)
     {
-    	if(filterType == null)
-    	{
-    		return true;
-    	}
-    	else
-    	{
-    		return (filterType == gasType ^ excludes) | gasType == GasesFrameworkAPI.gasTypeAir;
-    	}
+    	return filter.accept(gasType);
     }
     
     /**
@@ -276,11 +269,6 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
 				{
 					
 				}
-				break;
-			case SET_FILTER_EVENT:
-				excludes = (eventParam & 0x80000000) != 0;
-				filterType = GasType.getGasTypeByID(eventParam & 0x7fffffff);
-				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 				break;
 			}
 		}

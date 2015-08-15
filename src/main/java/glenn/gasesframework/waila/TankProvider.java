@@ -7,11 +7,11 @@ import java.util.List;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 public class TankProvider implements IWailaDataProvider
@@ -34,13 +34,13 @@ public class TankProvider implements IWailaDataProvider
 		TileEntityGasTank tank = (TileEntityGasTank)accessor.getTileEntity();
 		if (tank.containedType == null)
 		{
-			currenttip.add(StatCollector.translateToLocal("tile.gf_gasTank.waila.body.empty"));
+			currenttip.add(I18n.format("tile.gf_gasTank.waila.body.empty"));
 		}
 		else
 		{
-			String gasName = StatCollector.translateToLocal(tank.containedType.getUnlocalizedName() + ".name");
+			String gasName = I18n.format(tank.containedType.getUnlocalizedName() + ".name");
 			String amount = 100 * tank.amount / tank.getGasCap() + "%";
-			currenttip.add(StatCollector.translateToLocalFormatted("tile.gf_gasTank.waila.body.filled", gasName, amount));
+			currenttip.add(I18n.format("tile.gf_gasTank.waila.body.filled", gasName, amount));
 		}
 		return currenttip;
 	}

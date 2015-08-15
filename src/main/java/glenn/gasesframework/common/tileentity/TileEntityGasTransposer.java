@@ -486,7 +486,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 		
 		tagCompound.setString("Mode", mode.toString());
 		tagCompound.setInteger("time", time);
-		tagCompound.setInteger("containedType", containedType != null ? containedType.gasID : -1);
+		tagCompound.setInteger("containedType", GasType.getGasID(containedType));
 	}
 	
 	@Override

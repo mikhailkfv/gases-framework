@@ -116,7 +116,7 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
     }
 
 	@Override
-	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes, ForgeDirection side)
+	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, ForgeDirection side)
 	{
 		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
 		return tileEntity.containedType;

@@ -3,7 +3,7 @@ package glenn.gasesframework.client;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.client.render.RenderBlockGas;
 import glenn.gasesframework.client.render.RenderBlockGasPipe;
-import glenn.gasesframework.client.render.RenderBlockDirectionGasPropellor;
+import glenn.gasesframework.client.render.RenderBlockDirectionalGasPropellor;
 import glenn.gasesframework.client.render.RenderBlockGasTank;
 import glenn.gasesframework.client.render.RenderBlockInfiniteGasPump;
 import glenn.gasesframework.client.render.RenderBlockLantern;
@@ -34,7 +34,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerBlockHandler(RenderBlockGas.RENDER_ID, new RenderBlockGas());
 		RenderingRegistry.registerBlockHandler(RenderBlockLantern.RENDER_ID, new RenderBlockLantern());
 		RenderingRegistry.registerBlockHandler(RenderBlockGasPipe.RENDER_ID, new RenderBlockGasPipe());
-		RenderingRegistry.registerBlockHandler(RenderBlockDirectionGasPropellor.RENDER_ID, new RenderBlockDirectionGasPropellor());
+		RenderingRegistry.registerBlockHandler(RenderBlockDirectionalGasPropellor.RENDER_ID, new RenderBlockDirectionalGasPropellor());
 		RenderingRegistry.registerBlockHandler(RenderBlockGasTank.RENDER_ID, new RenderBlockGasTank());
 		RenderingRegistry.registerBlockHandler(RenderBlockInfiniteGasPump.RENDER_ID, new RenderBlockInfiniteGasPump());
 	}

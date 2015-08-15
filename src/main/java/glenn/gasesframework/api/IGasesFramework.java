@@ -1,5 +1,6 @@
 package glenn.gasesframework.api;
 
+import glenn.gasesframework.api.filter.GasTypeFilter;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
@@ -119,6 +120,18 @@ public interface IGasesFramework
 	 * @param isSmoking
 	 */
 	public void spawnDelayedExplosion(World world, double x, double y, double z, int delay, float power, boolean isFlaming, boolean isSmoking);
+	
+	/**
+	 * Sent a filter update packet for {@link glenn.gasesframework.api.block.IGasFilter IGasFilter} blocks to clients.
+	 * This will call {@link glenn.gasesframework.api.block.IGasFilter#setFilter(World,int,int,int,ForgeDirection,GasTypeFilter) setFilter(World,int,int,int,ForgeDirection,GasTypeFilter)}.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param side
+	 * @param filter
+	 */
+	public void sendFilterUpdatePacket(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter);
 	
 	/**
 	 * Gets the gas type of the gas block at the location, if any. If no gas block is present, null is returned.

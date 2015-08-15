@@ -47,7 +47,7 @@ public class BlockInfiniteGasPump extends Block implements ISample, IGasPropello
     }
 
     @Override
-	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes, ForgeDirection side)
+	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, ForgeDirection side)
 	{
     	if(!world.isRemote)
     	{
