@@ -229,11 +229,11 @@ public class RenderBlockDirectionalGasPropellor implements ISimpleBlockRendering
 				if(tileEntity.filter instanceof GasTypeFilterSingle)
 				{
 					GasTypeFilterSingle filter = (GasTypeFilterSingle)tileEntity.filter;
-					if (filter.filterType != null && filter.filterType != GasesFrameworkAPI.gasTypeAir)
+					if (filter.getFilterType() != null && filter.getFilterType() != GasesFrameworkAPI.gasTypeAir)
 					{
 						icon = filter instanceof GasTypeFilterSingleExcluding ? block.topExcludingIcon : block.topIncludingIcon;
 						
-						int color = filter.filterType.color;
+						int color = filter.getFilterType().color;
 						float gasRed = 0.25F + (float)((color >> 24) & 0xFF) / 510.0F;
 						float gasGreen = 0.25F + (float)((color >> 16) & 0xFF) / 510.0F;
 						float gasBlue = 0.25F + (float)((color >> 8) & 0xFF) / 510.0F;
