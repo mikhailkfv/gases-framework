@@ -1,5 +1,10 @@
 death.attack.gf_asphyxiation=%1$s asphyxiated
 
+filter.open.desc=Includes all gases
+filter.closed.desc=Excludes all gases
+filter.including.desc=Includes (%s)
+filter.excluding.desc=Excludes (%s)
+
 item.gf_gasSamplerIncluder.name=Including Sampler
 item.gf_gasSamplerIncluder.name.filled=Including %1$s Sampler
 item.gf_gasSamplerExcluder.name=Excluding Sampler

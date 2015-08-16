@@ -958,7 +958,7 @@ public class BlockGas extends Block implements ISample
 	}
 
 	@Override
-	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes, ForgeDirection side)
+	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, ForgeDirection side)
 	{
 		return type;
 	}

@@ -5,6 +5,7 @@ import glenn.gasesframework.api.IGasesFramework;
 import glenn.gasesframework.api.ItemKey;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasTransporter;
+import glenn.gasesframework.api.filter.GasTypeFilter;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
@@ -15,11 +16,8 @@ import glenn.gasesframework.common.ConfigGasFurnaceRecipes;
 import glenn.gasesframework.common.GasBottleTransposerHandler;
 import glenn.gasesframework.common.GuiHandler;
 import glenn.gasesframework.common.block.BlockGas;
-import glenn.gasesframework.common.block.BlockGasCollector;
-import glenn.gasesframework.common.block.BlockGasDynamo;
 import glenn.gasesframework.common.block.BlockGasFurnace;
 import glenn.gasesframework.common.block.BlockGasPipe;
-import glenn.gasesframework.common.block.BlockGasPump;
 import glenn.gasesframework.common.block.BlockGasTank;
 import glenn.gasesframework.common.block.BlockGasTransposer;
 import glenn.gasesframework.common.block.BlockInfiniteGasDrain;
@@ -36,17 +34,15 @@ import glenn.gasesframework.common.entity.EntityDelayedExplosion;
 import glenn.gasesframework.common.item.ItemDuctTape;
 import glenn.gasesframework.common.item.ItemGasBottle;
 import glenn.gasesframework.common.item.ItemGasPipe;
-import glenn.gasesframework.common.item.ItemGasSampler;
+import glenn.gasesframework.common.item.ItemGasSamplerExcluding;
+import glenn.gasesframework.common.item.ItemGasSamplerIncluding;
 import glenn.gasesframework.common.item.ItemPrimitiveAdhesive;
 import glenn.gasesframework.common.pipetype.PipeTypeGlass;
 import glenn.gasesframework.common.pipetype.PipeTypeIron;
 import glenn.gasesframework.common.pipetype.PipeTypeWood;
 import glenn.gasesframework.common.reaction.ReactionIgnition;
-import glenn.gasesframework.common.tileentity.TileEntityGasCollector;
-import glenn.gasesframework.common.tileentity.TileEntityGasDynamo;
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace;
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace.SpecialFurnaceRecipe;
-import glenn.gasesframework.common.tileentity.TileEntityDirectionalGasPropellor;
 import glenn.gasesframework.common.tileentity.TileEntityGasTank;
 import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
 import glenn.gasesframework.common.tileentity.TileEntityInfiniteGasDrain;
@@ -59,6 +55,7 @@ import glenn.gasesframework.common.tileentity.TileEntityWoodGasDynamo;
 import glenn.gasesframework.common.tileentity.TileEntityWoodGasPump;
 import glenn.gasesframework.common.worldgen.WorldGeneratorGasesFramework;
 import glenn.gasesframework.network.message.MessageGasEffects;
+import glenn.gasesframework.network.message.MessageSetBlockGasTypeFilter;
 import glenn.gasesframework.network.message.MessageSetTransposerMode;
 import glenn.gasesframework.util.GasTransporterIterator;
 import glenn.gasesframework.util.GasTransporterSearch;
@@ -90,7 +87,6 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * <b>Gases Framework</b>
@@ -147,8 +143,8 @@ public class GasesFramework implements IGasesFramework
 	private void initBlocksAndItems()
 	{
 		GameRegistry.registerItem(GasesFrameworkAPI.gasBottle = (new ItemGasBottle()).setUnlocalizedName("gf_gasBottle").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:gas_bottle"), "gasBottle");
-		GameRegistry.registerItem(GasesFrameworkAPI.gasSamplerIncluder = (new ItemGasSampler(false)).setUnlocalizedName("gf_gasSamplerIncluder").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:sampler"), "gasSamplerIncluder");
-		GameRegistry.registerItem(GasesFrameworkAPI.gasSamplerExcluder = (new ItemGasSampler(true)).setUnlocalizedName("gf_gasSamplerExcluder").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:sampler"), "gasSamplerExcluder");
+		GameRegistry.registerItem(GasesFrameworkAPI.gasSamplerIncluder = (new ItemGasSamplerIncluding()).setUnlocalizedName("gf_gasSamplerIncluder").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:sampler_including"), "gasSamplerIncluder");
+		GameRegistry.registerItem(GasesFrameworkAPI.gasSamplerExcluder = (new ItemGasSamplerExcluding()).setUnlocalizedName("gf_gasSamplerExcluder").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:sampler_excluding"), "gasSamplerExcluder");
 		GameRegistry.registerItem(GasesFrameworkAPI.adhesive = (new ItemPrimitiveAdhesive()).setUnlocalizedName("gf_adhesive").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:adhesive"), "adhesive");
 		GameRegistry.registerItem(GasesFrameworkAPI.ductTape = (new ItemDuctTape()).setUnlocalizedName("gf_ductTape").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:duct_tape"), "ductTape");
 		
@@ -185,6 +181,7 @@ public class GasesFramework implements IGasesFramework
 		networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 		proxy.registerMessage(MessageGasEffects.Handler.class, MessageGasEffects.class, 0);
 		proxy.registerMessage(MessageSetTransposerMode.Handler.class, MessageSetTransposerMode.class, 1);
+		proxy.registerMessage(MessageSetBlockGasTypeFilter.Handler.class, MessageSetBlockGasTypeFilter.class, 2);
 		
 		GasesFrameworkAPI.modInstance = instance;
 		
@@ -651,6 +648,12 @@ public class GasesFramework implements IGasesFramework
         explosionEntity.setPosition(x, y, z);
         
         world.spawnEntityInWorld(explosionEntity);
+	}
+
+	@Override
+	public void sendFilterUpdatePacket(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter)
+	{
+		networkWrapper.sendToDimension(new MessageSetBlockGasTypeFilter(x, y, z, side, filter), world.provider.dimensionId);
 	}
 	
 	/**

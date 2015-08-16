@@ -18,9 +18,8 @@ public interface ISample
 	 * @param y
 	 * @param z
 	 * @param in - The current gas type of the sampler
-	 * @param excludes - True if the sampler is an excluding one
 	 * @param side - The local side of the block the sampler is applied to
 	 * @return
 	 */
-	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes, ForgeDirection side);
+	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, ForgeDirection side);
 }

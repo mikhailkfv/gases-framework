@@ -1,6 +1,8 @@
 package glenn.gasesframework.client.render;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.filter.GasTypeFilterSingle;
+import glenn.gasesframework.api.filter.GasTypeFilterSingleExcluding;
 import glenn.gasesframework.common.block.BlockDirectionalGasPropellor;
 import glenn.gasesframework.common.tileentity.TileEntityDirectionalGasPropellor;
 import net.minecraft.block.Block;
@@ -15,7 +17,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
-public class RenderBlockDirectionGasPropellor implements ISimpleBlockRenderingHandler
+public class RenderBlockDirectionalGasPropellor implements ISimpleBlockRenderingHandler
 {
 	public static final int RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
 	
@@ -224,16 +226,24 @@ public class RenderBlockDirectionGasPropellor implements ISimpleBlockRenderingHa
 			{
 				TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)blockAccess.getTileEntity(x, y, z);
 				
-				if(tileEntity.filterType != null && tileEntity.filterType != GasesFrameworkAPI.gasTypeAir)
+				if(tileEntity.filter instanceof GasTypeFilterSingle)
 				{
-					icon = tileEntity.excludes ? block.topExcludingIcon : block.topIncludingIcon;
-					
-					int color = tileEntity.filterType.color;
-					float gasRed = 0.25F + (float)((color >> 24) & 0xFF) / 510.0F;
-					float gasGreen = 0.25F + (float)((color >> 16) & 0xFF) / 510.0F;
-					float gasBlue = 0.25F + (float)((color >> 8) & 0xFF) / 510.0F;
-					
-					renderFace(block, blockAccess, x, y, z, tessellator, us, vs, blockDirection, faceDirection, block.topIndicatorIcon, gasRed, gasGreen, gasBlue);
+					GasTypeFilterSingle filter = (GasTypeFilterSingle)tileEntity.filter;
+					if (filter.getFilterType() != null && filter.getFilterType() != GasesFrameworkAPI.gasTypeAir)
+					{
+						icon = filter instanceof GasTypeFilterSingleExcluding ? block.topExcludingIcon : block.topIncludingIcon;
+						
+						int color = filter.getFilterType().color;
+						float gasRed = 0.25F + (float)((color >> 24) & 0xFF) / 510.0F;
+						float gasGreen = 0.25F + (float)((color >> 16) & 0xFF) / 510.0F;
+						float gasBlue = 0.25F + (float)((color >> 8) & 0xFF) / 510.0F;
+						
+						renderFace(block, blockAccess, x, y, z, tessellator, us, vs, blockDirection, faceDirection, block.topIndicatorIcon, gasRed, gasGreen, gasBlue);
+					}
+					else
+					{
+						icon = block.topIcon;
+					}
 				}
 				else
 				{

@@ -1,6 +1,7 @@
 package glenn.gasesframework.api;
 
 import glenn.gasesframework.api.ExtendedGasEffectsBase.EffectType;
+import glenn.gasesframework.api.filter.GasTypeFilter;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gastype.GasTypeAir;
 import glenn.gasesframework.api.gastype.GasTypeFire;
@@ -376,6 +377,22 @@ public class GasesFrameworkAPI
 	public static void spawnDelayedExplosion(World world, double x, double y, double z, int delay, float power, boolean isFlaming, boolean isSmoking)
 	{
 		modInstance.spawnDelayedExplosion(world, x, y, z, delay, power, isFlaming, isSmoking);
+	}
+	
+	/**
+	 * Sent a filter update packet for {@link glenn.gasesframework.api.block.IGasFilter IGasFilter} blocks to clients.
+	 * This will call {@link glenn.gasesframework.api.block.IGasFilter#setFilter(World,int,int,int,ForgeDirection,GasTypeFilter) setFilter(World,int,int,int,ForgeDirection,GasTypeFilter)}.
+	 * This method is unsafe to call when Gases Framework is not present.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param side
+	 * @param filter
+	 */
+	public static void sendFilterUpdatePacket(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter)
+	{
+		modInstance.sendFilterUpdatePacket(world, x, y, z, side, filter);
 	}
 	
 	/**
