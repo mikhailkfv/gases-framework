@@ -3,6 +3,11 @@ package glenn.gasesframework.api.filter;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
 
+/**
+ * A filter that only accepts null, air, or a specific gas type.
+ * @author Erlend
+ *
+ */
 public class GasTypeFilterSingleIncluding extends GasTypeFilterSingle
 {
 	public static final byte TYPE = 1;
@@ -21,7 +26,7 @@ public class GasTypeFilterSingleIncluding extends GasTypeFilterSingle
 	@Override
 	public boolean accept(GasType gasType)
 	{
-		return gasType == null || gasType == GasesFrameworkAPI.gasTypeAir || gasType == filterType;
+		return super.accept(gasType) || gasType == filterType;
 	}
 
 	@Override

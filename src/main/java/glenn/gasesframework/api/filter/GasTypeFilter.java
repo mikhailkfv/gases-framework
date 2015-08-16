@@ -1,13 +1,25 @@
 package glenn.gasesframework.api.filter;
 
 import net.minecraft.nbt.NBTTagCompound;
+import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
 
+/**
+ * A module for gas type filtering. It has several implementations with their own rules.
+ * All filters will accept air or null.
+ * All filters are immutable.
+ * All filters are NBT compatible.
+ * @author Erlend
+ *
+ */
 public abstract class GasTypeFilter
 {
 	public abstract byte getType();
 	
-	public abstract boolean accept(GasType gasType);
+	public  boolean accept(GasType gasType)
+	{
+		return gasType == null || gasType == GasesFrameworkAPI.gasTypeAir;
+	}
 	
 	public void writeToNBT(NBTTagCompound tagCompound)
 	{

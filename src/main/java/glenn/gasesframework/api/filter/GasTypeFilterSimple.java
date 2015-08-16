@@ -2,10 +2,15 @@ package glenn.gasesframework.api.filter;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+/**
+ * Abstract filter involving one or less gas types.
+ * @author Erlend
+ *
+ */
 public abstract class GasTypeFilterSimple extends GasTypeFilter
 {
 	public abstract boolean equals(GasTypeFilterSimple other);
-
+	
 	public static GasTypeFilterSimple readFromNBT(NBTTagCompound tagCompound)
 	{
 		if (tagCompound != null && tagCompound.hasKey("type"))

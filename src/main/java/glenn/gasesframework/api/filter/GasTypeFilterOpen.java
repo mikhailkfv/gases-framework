@@ -2,6 +2,11 @@ package glenn.gasesframework.api.filter;
 
 import glenn.gasesframework.api.gastype.GasType;
 
+/**
+ * A filter that accepts any gas type.
+ * @author Erlend
+ *
+ */
 public class GasTypeFilterOpen extends GasTypeFilterSimple
 {
 	public static final byte TYPE = 0;
