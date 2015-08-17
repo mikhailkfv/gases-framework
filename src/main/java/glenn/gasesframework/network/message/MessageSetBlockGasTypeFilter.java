@@ -1,18 +1,16 @@
 package glenn.gasesframework.network.message;
 
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import net.minecraft.block.Block;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
-import io.netty.buffer.ByteBuf;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.block.IGasFilter;
 import glenn.gasesframework.api.filter.GasTypeFilter;
-import glenn.moddingutils.AbstractSerialMessage;
-import glenn.moddingutils.AbstractMessageHandler;
-import glenn.moddingutils.AbstractMessage;
+import glenn.moddingutils.network.AbstractMessage;
+import glenn.moddingutils.network.AbstractMessageHandler;
+import glenn.moddingutils.network.AbstractSerialMessage;
+import net.minecraft.block.Block;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageSetBlockGasTypeFilter extends AbstractSerialMessage
 {

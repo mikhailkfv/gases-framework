@@ -1,15 +1,13 @@
 package glenn.gasesframework.network.message;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
-import glenn.moddingutils.AbstractMessage;
-import glenn.moddingutils.AbstractMessageHandler;
-import glenn.moddingutils.AbstractSerialMessage;
+import glenn.moddingutils.network.AbstractMessage;
+import glenn.moddingutils.network.AbstractMessageHandler;
+import glenn.moddingutils.network.AbstractSerialMessage;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.world.World;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 public class MessageGasEffects extends AbstractSerialMessage

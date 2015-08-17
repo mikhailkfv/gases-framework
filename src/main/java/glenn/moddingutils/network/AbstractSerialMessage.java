@@ -1,4 +1,4 @@
-package glenn.moddingutils;
+package glenn.moddingutils.network;
 
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;

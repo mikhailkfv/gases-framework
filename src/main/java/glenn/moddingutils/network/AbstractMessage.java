@@ -1,4 +1,4 @@
-package glenn.moddingutils;
+package glenn.moddingutils.network;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import net.minecraft.entity.player.EntityPlayer;
