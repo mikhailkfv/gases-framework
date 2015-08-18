@@ -203,8 +203,8 @@ public class GasesFrameworkMainConfigurations extends Configurations
 		public static class GlassMaterial extends Material
 		{
 			@ConfigField(defaultValue = "31")
-			@DelegateConfig(delegateFor = "maxPressure")
-			private int _maxPressure;
+			@DelegateConfig(delegateFor = "pressureTolerance")
+			private int _pressureTolerance;
 		}
 
 		@ConfigCategory(name = "Wood Material")
