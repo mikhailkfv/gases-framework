@@ -68,29 +68,32 @@ public class ForgeCommonEvents
 			ForgeDirection side = ForgeDirection.getOrientation(event.face);
 			Block block = event.world.getBlock(event.x, event.y, event.z);
 			ItemStack itemstack = event.entityPlayer.getHeldItem();
-			Item item = itemstack.getItem();
-
-			if (item instanceof IFilterProvider)
+			if (itemstack != null)
 			{
-				IFilterProvider filterProvider = (IFilterProvider)itemstack.getItem();
-				
-				if (block instanceof IGasFilter)
+				Item item = itemstack.getItem();
+
+				if (item instanceof IFilterProvider)
 				{
-					IGasFilter gasFilterBlock = (IGasFilter)block;
-					GasTypeFilter filter = filterProvider.getFilter(itemstack);
+					IFilterProvider filterProvider = (IFilterProvider)itemstack.getItem();
 					
-					gasFilterBlock.setFilter(event.world, event.x, event.y, event.z, side, filter);
+					if (block instanceof IGasFilter)
+					{
+						IGasFilter gasFilterBlock = (IGasFilter)block;
+						GasTypeFilter filter = filterProvider.getFilter(itemstack);
+						
+						gasFilterBlock.setFilter(event.world, event.x, event.y, event.z, side, filter);
+					}
 				}
-			}
 
-			if(item instanceof ISampler)
-			{
-				ISampler sampler = (ISampler)item;
-				
-				if (block instanceof ISample)
+				if(item instanceof ISampler)
 				{
-					ISample sample = (ISample)block;
-					sampler.setGasType(itemstack, sample.sampleInteraction(event.world, event.x, event.y, event.z, sampler.getGasType(itemstack), side));
+					ISampler sampler = (ISampler)item;
+					
+					if (block instanceof ISample)
+					{
+						ISample sample = (ISample)block;
+						sampler.setGasType(itemstack, sample.sampleInteraction(event.world, event.x, event.y, event.z, sampler.getGasType(itemstack), side));
+					}
 				}
 			}
 		}
