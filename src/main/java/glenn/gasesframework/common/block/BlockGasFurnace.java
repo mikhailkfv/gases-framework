@@ -31,7 +31,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGasPropellor
+public abstract class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGasPropellor
 {
 	/**
 	 * Is the random generator used by furnace to drop the inventory contents in random directions.
@@ -46,16 +46,21 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 	 * furnace block changes from idle to active and vice-versa.
 	 */
 	private static boolean keepFurnaceInventory;
+
 	@SideOnly(Side.CLIENT)
 	private IIcon furnaceIconTop;
 	@SideOnly(Side.CLIENT)
 	private IIcon[] furnaceIconFront;
 
-	public BlockGasFurnace(boolean isActive)
+	public BlockGasFurnace(Material material, boolean isActive)
 	{
-		super(Material.iron);
+		super(material);
 		this.isActive = isActive;
 	}
+	
+	protected abstract Block getIdleBlock();
+
+	protected abstract Block getActiveBlock();
 
 	/**
 	 * Called whenever the block is added into the world. Args: world, x, y, z
@@ -95,9 +100,9 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 	 */
 	@SideOnly(Side.CLIENT)
 	@Override
-	public IIcon getIcon(int par1, int par2)
+	public IIcon getIcon(int side, int metadata)
 	{
-		return par1 == 1 ? this.furnaceIconTop : (par1 == 0 ? this.furnaceIconTop : (par1 == 4 ? this.furnaceIconFront[0] : this.blockIcon));
+		return side == 1 ? this.furnaceIconTop : (side == 0 ? this.furnaceIconTop : (side == 4 ? this.furnaceIconFront[0] : this.blockIcon));
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -149,10 +154,7 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 		}
 	}
 
-	/**
-	 * Update which block ID the furnace is using depending on whether or not it is burning
-	 */
-	public static void updateFurnaceBlockState(int stage, World world, int x, int y, int z)
+	public void updateFurnaceBlockState(int stage, World world, int x, int y, int z)
 	{
 		int l = world.getBlockMetadata(x, y, z);
 		TileEntity tileentity = world.getTileEntity(x, y, z);
@@ -160,11 +162,11 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 
 		if(stage == 0)
 		{
-			world.setBlock(x, y, z, GasesFramework.gasFurnaceIdle);
+			world.setBlock(x, y, z, getIdleBlock());
 		}
 		else
 		{
-			world.setBlock(x, y, z, GasesFramework.gasFurnaceActive);
+			world.setBlock(x, y, z, getActiveBlock());
 		}
 
 		keepFurnaceInventory = false;
@@ -175,15 +177,6 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 			tileentity.validate();
 			world.setTileEntity(x, y, z, tileentity);
 		}
-	}
-
-	/**
-	 * Returns a new instance of a block's tile entity class. Called on placing the block.
-	 */
-	@Override
-	public TileEntity createNewTileEntity(World world, int metadata)
-	{
-		return new TileEntityGasFurnace();
 	}
 
 	/**
@@ -305,13 +298,13 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 	@Override
 	public Item getItem(World world, int x, int y, int z)
 	{
-		return Item.getItemFromBlock(GasesFramework.gasFurnaceIdle);
+		return Item.getItemFromBlock(getIdleBlock());
 	}
 	
 	@Override
 	public Item getItemDropped(int par1, Random random, int par3)
 	{
-		return Item.getItemFromBlock(GasesFramework.gasFurnaceIdle);
+		return Item.getItemFromBlock(getIdleBlock());
 	}
 	
 	@Override
@@ -326,7 +319,7 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 		{
 			return false;
 		}
-		else if(gasFurnace.furnaceBurnTime + 100 * gasType.combustibility.burnRate <= TileEntityGasFurnace.maxFurnaceBurnTime)
+		else if(gasFurnace.getFuelStored() + 100 * gasType.combustibility.burnRate <= gasFurnace.getMaxFuelStored())
 		{
 			return true;
 		}
@@ -340,7 +333,7 @@ public class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGa
 		if(canReceiveGas(world, x, y, z, side, gasType))
 		{
 			TileEntityGasFurnace gasFurnace = (TileEntityGasFurnace)world.getTileEntity(x, y, z);
-			gasFurnace.furnaceBurnTime += 100 * gasType.combustibility.burnRate;
+			gasFurnace.fuelLevel += 100 * gasType.combustibility.burnRate;
 			return true;
 		}
 		else

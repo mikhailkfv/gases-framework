@@ -64,20 +64,76 @@ public class GasesFrameworkMainConfigurations extends Configurations
 	public Blocks blocks;
 	public static class Blocks
 	{
-		@ConfigCategory(name = "Gas Furnace")
-		public GasFurnace gasFurnace;
-		public static class GasFurnace
-		{
-			@ConfigField(name = "Heating speed", comment = "The speed at which gas furnaces heat up and cool down", defaultValue = "2")
-			public int heatingSpeed;
-		}
-
 		@ConfigCategory(name = "Gas Tank")
 		public GasTank gasTank;
 		public static class GasTank
 		{
 			@ConfigField(name = "Fancy tanks", comment = "Whether or not gas tanks will be rendered with fancy fluid physics", defaultValue = "true")
 			public boolean fancyTank;
+		}
+		
+		public static class GasFurnace
+		{
+			@ConfigField(name = "Smoke emission interval", comment = "The interval at which smoke is emitted from a gas furnace")
+			@AbstractConfig
+			public int smokeEmissionInterval;
+
+			@ConfigField(name = "Max fuel", comment = "The maximal amount of fuel contained by a gas furnace")
+			@AbstractConfig
+			public int maxFuel;
+			
+			@ConfigField(name = "Temperature per fuel", comment = "The speed at which a gas furnaces heats up and cools down")
+			@AbstractConfig
+			public int temperaturePerFuel;
+			
+			@ConfigField(name = "Temperature falloff", comment = "The speed at which a gas furnace cools down")
+			@AbstractConfig
+			public int temperatureFalloff;
+		}
+		
+		@ConfigCategory(name = "Iron Gas Furnace")
+		public IronGasFurnace ironGasFurnace;
+		public static class IronGasFurnace extends GasFurnace
+		{
+			@ConfigField(defaultValue = "100")
+			@DelegateConfig(delegateFor = "smokeEmissionInterval")
+			private int _smokeEmissionInterval;
+
+			@ConfigField(defaultValue = "1000")
+			@DelegateConfig(delegateFor = "maxFuel")
+			private int _maxFuel;
+			
+			@ConfigField(defaultValue = "4")
+			@DelegateConfig(delegateFor = "temperaturePerFuel")
+			private int _heatingSpeed;
+			
+			@ConfigField(defaultValue = "2")
+			@DelegateConfig(delegateFor = "temperatureFalloff")
+			private int _temperatureFalloff;
+		}
+		
+		@ConfigCategory(name = "Wood Gas Furnace")
+		public WoodGasFurnace woodGasFurnace;
+		public static class WoodGasFurnace extends GasFurnace
+		{
+			@ConfigField(name = "Catches Fire", comment = "Combustion in a wooden housing is a great idea.", defaultValue = "true")
+			public boolean catchesFire;
+
+			@ConfigField(defaultValue = "75")
+			@DelegateConfig(delegateFor = "smokeEmissionInterval")
+			private int _smokeEmissionInterval;
+			
+			@ConfigField(defaultValue = "1000")
+			@DelegateConfig(delegateFor = "maxFuel")
+			private int _maxFuel;
+
+			@ConfigField(defaultValue = "4")
+			@DelegateConfig(delegateFor = "temperaturePerFuel")
+			private int _heatingSpeed;
+			
+			@ConfigField(defaultValue = "3")
+			@DelegateConfig(delegateFor = "temperatureFalloff")
+			private int _temperatureFalloff;
 		}
 		
 		public static class GasDynamo
@@ -132,6 +188,9 @@ public class GasesFrameworkMainConfigurations extends Configurations
 		public WoodGasDynamo woodGasDynamo;
 		public static class WoodGasDynamo extends GasDynamo
 		{
+			@ConfigField(name = "Catches Fire", comment = "Combustion in a wooden housing is a great idea.", defaultValue = "true")
+			public boolean catchesFire;
+
 			@ConfigField(defaultValue = "1000")
 			@DelegateConfig(delegateFor = "maxFuel")
 			private int _maxFuel;
