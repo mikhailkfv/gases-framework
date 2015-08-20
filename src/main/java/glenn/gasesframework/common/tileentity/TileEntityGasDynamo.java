@@ -169,6 +169,11 @@ public abstract class TileEntityGasDynamo extends TileEntity implements IEnergyP
 		return maxFuelLevel;
 	}
 	
+	public boolean isBurning()
+	{
+		return fuelLevel > 0;
+	}
+	
 	@Override
 	public boolean canConnectEnergy(ForgeDirection from)
 	{

@@ -296,6 +296,17 @@ public class GasesFramework implements IGasesFramework
 			Item item = (Item)Item.itemRegistry.getObject(s);
 			if(item != null) GasesFrameworkAPI.unregisterIgnitionItem(item);
 		}
+		
+		if (configurations.blocks.woodGasFurnace.catchesFire)
+		{
+			Blocks.fire.setFireInfo(woodGasFurnaceIdle, 5, 5);
+			Blocks.fire.setFireInfo(woodGasFurnaceActive, 5, 5);
+		}
+		
+		if (configurations.blocks.woodGasDynamo.catchesFire)
+		{
+			Blocks.fire.setFireInfo(woodGasDynamo, 5, 5);
+		}
 	}
 	
 	/**
