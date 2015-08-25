@@ -17,6 +17,20 @@ public class DVec
 		this.z = 0.0D;
 	}
 	
+	public DVec(IVec vec)
+	{
+		this.x = vec.x;
+		this.y = vec.y;
+		this.z = vec.z;
+	}
+	
+	public DVec(FVec vec)
+	{
+		this.x = vec.x;
+		this.y = vec.y;
+		this.z = vec.z;
+	}
+	
 	public DVec(DVec vec)
 	{
 		this.x = vec.x;
@@ -320,5 +334,15 @@ public class DVec
 	public static DVec randomNormalizedVec(Random random)
 	{
 		return new DVec(random.nextDouble() - 0.5D, random.nextDouble() - 0.5D, random.nextDouble() - 0.5D).normalized();
+	}
+
+	public static DVec cross(DVec a, DVec b)
+	{
+		return new DVec(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+	}
+	
+	public static double dot(DVec a, DVec b)
+	{
+		return a.x * b.x + a.y * b.y + a.z * b.z;
 	}
 }

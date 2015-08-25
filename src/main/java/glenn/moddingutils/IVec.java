@@ -22,6 +22,20 @@ public class IVec
 		this.z = vec.z;
 	}
 	
+	public IVec(FVec vec)
+	{
+		this.x = (int)vec.x;
+		this.y = (int)vec.y;
+		this.z = (int)vec.z;
+	}
+	
+	public IVec(DVec vec)
+	{
+		this.x = (int)vec.x;
+		this.y = (int)vec.y;
+		this.z = (int)vec.z;
+	}
+	
 	public IVec(int x, int y, int z)
 	{
 		this.x = x;
@@ -192,7 +206,7 @@ public class IVec
 	{
 		return this.x == 0.0D & this.y == 0.0D & this.z == 0.0D;
 	}
-	
+
 	@Override
 	public boolean equals(Object otherObject)
 	{
@@ -205,5 +219,15 @@ public class IVec
 			IVec other = (IVec)otherObject;
 			return this.x == other.x && this.y == other.y && this.z == other.z;
 		}
+	}
+	
+	public static IVec cross(IVec a, IVec b)
+	{
+		return new IVec(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+	}
+	
+	public static int dot(IVec a, IVec b)
+	{
+		return a.x * b.x + a.y * b.y + a.z * b.z;
 	}
 }
