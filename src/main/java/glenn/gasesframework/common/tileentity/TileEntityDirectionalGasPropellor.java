@@ -10,6 +10,7 @@ import glenn.gasesframework.api.filter.GasTypeFilterSimple;
 import glenn.gasesframework.api.filter.GasTypeFilterSingleExcluding;
 import glenn.gasesframework.api.filter.GasTypeFilterSingleIncluding;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.moddingutils.blockrotation.BlockRotation;
 
 import java.util.Random;
 
@@ -178,7 +179,8 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
     {
 		if(containedType != null)
 		{
-			ForgeDirection direction = ForgeDirection.getOrientation(worldObj.getBlockMetadata(xCoord, yCoord, zCoord) % 6);
+			BlockRotation rotation = BlockRotation.getRotation(getBlockMetadata());
+			ForgeDirection direction = rotation.rotate(ForgeDirection.NORTH);
 			if(pumpToBlock(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, direction))
 			{
 				containedType = null;

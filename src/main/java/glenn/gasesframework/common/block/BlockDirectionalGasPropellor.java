@@ -7,10 +7,15 @@ import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.filter.GasTypeFilter;
+import glenn.gasesframework.api.filter.GasTypeFilterOpen;
 import glenn.gasesframework.api.filter.GasTypeFilterSimple;
+import glenn.gasesframework.api.filter.GasTypeFilterSingleExcluding;
+import glenn.gasesframework.api.filter.GasTypeFilterSingleIncluding;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.client.render.RenderBlockDirectionalGasPropellor;
+import glenn.gasesframework.client.render.RenderRotatedBlock;
 import glenn.gasesframework.common.tileentity.TileEntityDirectionalGasPropellor;
+import glenn.moddingutils.blockrotation.BlockRotation;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -31,7 +36,6 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
 	private boolean isBottomUnique;
 	private int maxPressure;
 
-	public IIcon sideIcon;
 	public IIcon bottomIcon;
 	public IIcon topIcon;
 	public IIcon topIncludingIcon;
@@ -51,36 +55,7 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemstack)
     {
-    	int metadata;
-    	
-    	if(entity.rotationPitch < -45.0f)
-    	{
-    		metadata = 0;
-    	}
-    	else if(entity.rotationPitch > 45.0f)
-    	{
-    		metadata = 1;
-    	}
-    	else
-    	{
-    		int side = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-    		switch(side)
-    		{
-    		case 0:
-    			metadata = 2;
-    			break;
-    		case 1:
-    			metadata = 5;
-    			break;
-    		case 2:
-    			metadata = 3;
-    			break;
-    		default:
-    			metadata = 4;
-    		}
-    	}
-    	
-    	world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
+    	world.setBlockMetadataWithNotify(x, y, z, BlockRotation.getRotation(-entity.rotationYaw, entity.rotationPitch).ordinal(), 2);
     }
 
     /**
@@ -89,11 +64,17 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
     @Override
     public int getRenderType()
     {
-        return RenderBlockDirectionalGasPropellor.RENDER_ID;
+    	if (!RenderRotatedBlock.isRenderingInventoryBlock)
+    	{
+			return RenderRotatedBlock.RENDER_ID;
+    	}
+    	else
+    	{
+    		return super.getRenderType();
+    	}
     }
 	
 	@SideOnly(Side.CLIENT)
-
     /**
      * When this method is called, your block should register all the icons it needs with the given IconRegister. This
      * is the only chance you get to register icons.
@@ -101,7 +82,7 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
     @Override
     public void registerBlockIcons(IIconRegister iconRegister)
     {
-        sideIcon = iconRegister.registerIcon(this.getTextureName() + "_side");
+        blockIcon = iconRegister.registerIcon(this.getTextureName() + "_side");
         bottomIcon = iconRegister.registerIcon(this.getTextureName() + (isBottomUnique ? "_bottom" : "_side"));
         topIcon = iconRegister.registerIcon(this.getTextureName() + "_top");
         topIncludingIcon = iconRegister.registerIcon(this.getTextureName() + "_top_including");
@@ -110,25 +91,51 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
     }
 	
 	@SideOnly(Side.CLIENT)
-    @Override
+	@Override
 	public IIcon getIcon(int side, int metadata)
-    {
-        ForgeDirection blockDirection = ForgeDirection.UP;
-        ForgeDirection sideDirection = ForgeDirection.getOrientation(side);
-        
-        if(sideDirection == blockDirection)
-        {
-        	return topIcon;
-        }
-        else if(sideDirection == blockDirection.getOpposite())
-        {
-        	return bottomIcon;
-        }
-        else
-        {
-        	return sideIcon;
-        }
-    }
+	{
+		return getIcon(side, metadata, new GasTypeFilterOpen());
+	}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int side)
+	{
+		int metadata = blockAccess.getBlockMetadata(x, y, z);
+		TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)blockAccess.getTileEntity(x, y, z);
+		GasTypeFilterSimple filter = tileEntity.filter;
+
+		return getIcon(side, metadata, filter);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(int side, int metadata, GasTypeFilterSimple filter)
+	{
+		BlockRotation rotation = BlockRotation.getRotation(metadata);
+		ForgeDirection sideDirection = ForgeDirection.getOrientation(side);
+		ForgeDirection actualSide = rotation.rotate(sideDirection);
+
+		switch (actualSide)
+		{
+		case NORTH:
+			if (filter instanceof GasTypeFilterSingleIncluding)
+			{
+				return topIncludingIcon;
+			}
+			else if (filter instanceof GasTypeFilterSingleExcluding)
+			{
+				return topExcludingIcon;
+			}
+			else
+			{
+				return topIcon;
+			}
+		case SOUTH:
+			return bottomIcon;
+		default:
+			return blockIcon;
+		}
+	}
 
 	@Override
 	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
@@ -151,7 +158,8 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
 	@Override
 	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		if(ForgeDirection.getOrientation((world.getBlockMetadata(x, y, z)) % 6) != side)
+		BlockRotation rotation = BlockRotation.getRotation(world.getBlockMetadata(x, y, z));
+		if(rotation.rotate(ForgeDirection.NORTH) != side)
 		{
 			TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)world.getTileEntity(x, y, z);
 			
@@ -166,7 +174,8 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
 	@Override
 	public int getPressureFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		return side == ForgeDirection.getOrientation(world.getBlockMetadata(x, y, z) % 6) ? maxPressure : 0;
+		BlockRotation rotation = BlockRotation.getRotation(world.getBlockMetadata(x, y, z));
+		return side == rotation.rotate(ForgeDirection.NORTH) ? maxPressure : 0;
 	}
 	
     @Override

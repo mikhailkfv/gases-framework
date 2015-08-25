@@ -256,7 +256,8 @@ public class RenderBlockDirectionalGasPropellor implements ISimpleBlockRendering
 			}
 			else
 			{
-				icon = block.sideIcon;
+				//icon = block.sideIcon;
+				icon = block.bottomIcon;
 			}
 			
 			renderFace(block, blockAccess, x, y, z, tessellator, us, vs, blockDirection, faceDirection, icon, 1.0F, 1.0F, 1.0F);
