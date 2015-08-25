@@ -29,6 +29,11 @@ import static org.objectweb.asm.Opcodes.ISUB;
 import static org.objectweb.asm.Opcodes.PUTFIELD;
 import static org.objectweb.asm.Opcodes.RETURN;
 import static org.objectweb.asm.Opcodes.SIPUSH;
+import static org.objectweb.asm.Opcodes.NEW;
+import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
+import static org.objectweb.asm.Opcodes.IFEQ;
+import static org.objectweb.asm.Opcodes.F_SAME;
+import static org.objectweb.asm.Opcodes.POP;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +45,7 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldInsnNode;
+import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
@@ -90,6 +96,8 @@ public class GFClassTransformer implements IClassTransformer
 		c.put("WorldClient", "bjf");
 		c.put("GuiIngame", "bbv");
 		c.put("IBlockAccess", "ahl");
+		c.put("ItemInWorldManager", "mx");
+		c.put("EntityPlayerMP", "mw");
 	}
 	
 	@Override
@@ -116,6 +124,16 @@ public class GFClassTransformer implements IClassTransformer
 		{
 			FMLLog.fine("[GasesFrameworkCore]Patching class: %s(EntityLivingBase)...", className);
 			newData = patchClassEntityLivingBase(data, false);
+		}
+		else if(className.equals(c.get("ItemInWorldManager")))
+		{
+			FMLLog.fine("[GasesFrameworkCore]Patching obfuscated class: %s(ItemInWorldManager)...", className);
+			newData = patchClassItemInWorldManager(data, true);
+		}
+		else if(className.equals("net.minecraft.server.management.ItemInWorldManager"))
+		{
+			FMLLog.fine("[GasesFrameworkCore]Patching class: %s(ItemInWorldManager)...", className);
+			newData = patchClassItemInWorldManager(data, false);
 		}
 
 		if(newData != data)
@@ -315,6 +333,82 @@ public class GFClassTransformer implements IClassTransformer
 
 		ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 		classNode.accept(writer);
+		return writer.toByteArray();
+	}
+
+	public byte[] patchClassItemInWorldManager(byte[] data, boolean obfuscated)
+	{
+		String classItemInWorldManager = obfuscated ? c.get("ItemInWorldManager") : "net/minecraft/server/management/ItemInWorldManager";
+		String classBlock = obfuscated ? c.get("Block") : "net/minecraft/block/Block";
+		String classWorld = obfuscated ? c.get("World") : "net/minecraft/world/World";
+		String classEntityPlayerMP = obfuscated ? c.get("EntityPlayerMP") : "net/minecraft/entity/player/EntityPlayerMP";
+		String classPostBlockBreakEvent = "glenn/gasesframework/api/event/PostBlockBreakEvent";
+		String classMinecraftForge = "net/minecraftforge/common/MinecraftForge";
+		String classEventBus = "cpw/mods/fml/common/eventhandler/EventBus";
+		String classEvent = "cpw/mods/fml/common/eventhandler/Event";
+
+		String methodTryHarvestBlock = obfuscated ? "b" : "tryHarvestBlock";
+		
+		String fieldTheWorld = obfuscated ? "a" : "theWorld";
+		String fieldThisPlayerMP = obfuscated ? "b" : "thisPlayerMP";
+		
+		String descriptor = "(III)Z";
+
+		ClassNode classNode = new ClassNode();
+		ClassReader classReader = new ClassReader(data);
+		classReader.accept(classNode, 0);
+		
+		for(int i = 0; i < classNode.methods.size(); i++)
+		{
+			MethodNode method = (MethodNode)classNode.methods.get(i);
+			if(method.name.equals(methodTryHarvestBlock) && method.desc.equals(descriptor))
+			{
+				InsnList newInstructions = new InsnList();
+				for(int j = 0; j < method.instructions.size(); j++)
+				{
+					AbstractInsnNode instruction = (AbstractInsnNode)method.instructions.get(j);
+					
+					if (instruction instanceof VarInsnNode)
+					{
+						VarInsnNode varInstruction = (VarInsnNode)instruction;
+						if (varInstruction.getOpcode() == ILOAD && varInstruction.var == 8)
+						{
+							if (method.instructions.get(j + 1).getOpcode() == IRETURN)
+							{
+								newInstructions.add(new FrameNode(F_SAME, 0, null, 0, null));
+								newInstructions.add(new VarInsnNode(ILOAD, 8));
+								LabelNode label = new LabelNode();
+								newInstructions.add(new JumpInsnNode(IFEQ, label));
+								newInstructions.add(new FieldInsnNode(GETSTATIC, classMinecraftForge, "EVENT_BUS", "L" + classEventBus + ";"));
+								newInstructions.add(new TypeInsnNode(NEW, classPostBlockBreakEvent));
+								newInstructions.add(new InsnNode(DUP));
+								newInstructions.add(new VarInsnNode(ILOAD, 1));
+								newInstructions.add(new VarInsnNode(ILOAD, 2));
+								newInstructions.add(new VarInsnNode(ILOAD, 3));
+								newInstructions.add(new VarInsnNode(ALOAD, 0));
+								newInstructions.add(new FieldInsnNode(GETFIELD, classItemInWorldManager, fieldTheWorld, "L" + classWorld + ";"));
+								newInstructions.add(new VarInsnNode(ALOAD, 6));
+								newInstructions.add(new VarInsnNode(ILOAD, 7));
+								newInstructions.add(new VarInsnNode(ALOAD, 0));
+								newInstructions.add(new FieldInsnNode(GETFIELD, classItemInWorldManager, fieldThisPlayerMP, "L" + classEntityPlayerMP + ";"));
+								newInstructions.add(new MethodInsnNode(INVOKESPECIAL, classPostBlockBreakEvent, "<init>", "(IIIL" + classWorld +";L" + classBlock + ";IL" + classEntityPlayerMP + ";)V", false));
+								newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classEventBus, "post", "(L" + classEvent + ";)Z", false));
+								newInstructions.add(new InsnNode(POP));
+								newInstructions.add(label);
+							}
+						}
+					}
+					
+					newInstructions.add(instruction);
+				}
+
+				method.instructions = newInstructions;
+			}
+		}
+
+		ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+		classNode.accept(writer);
+
 		return writer.toByteArray();
 	}
 }

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import glenn.moddingutils.IVec;
 import glenn.moddingutils.KeyVec;
 
-public class PipeBranch
+public class GasTransporterBranch
 {
 	private static final IVec[] offsets = new IVec[]{
 		new IVec(0, -1, 0),
@@ -29,11 +29,11 @@ public class PipeBranch
 		1, 0, 3, 2, 5, 4
 	};
 	
-	private static class Root extends PipeBranch
+	private static class Root extends GasTransporterBranch
 	{
 		public final IVec pos;
 		
-		public Root(HashMap<KeyVec, PipeBranch> branchMap, IVec pos)
+		public Root(HashMap<KeyVec, GasTransporterBranch> branchMap, IVec pos)
 		{
 			super(0, branchMap, pos);
 			this.pos = pos;
@@ -47,9 +47,9 @@ public class PipeBranch
 	}
 	
 	public final int depth;
-	public final PipeBranch[] connections;
+	public final GasTransporterBranch[] connections;
 	
-	protected PipeBranch(int depth, PipeBranch[] connections)
+	protected GasTransporterBranch(int depth, GasTransporterBranch[] connections)
 	{
 		this.depth = depth;
 		this.connections = connections;
@@ -63,15 +63,15 @@ public class PipeBranch
 		}
 	}
 	
-	public PipeBranch(int depth, HashMap<KeyVec, PipeBranch> branchMap, IVec pos)
+	public GasTransporterBranch(int depth, HashMap<KeyVec, GasTransporterBranch> branchMap, IVec pos)
 	{
 		this(depth, getConnectionsFromMap(branchMap, pos));
 		branchMap.put(new KeyVec(pos), this);
 	}
 	
-	private static PipeBranch[] getConnectionsFromMap(HashMap<KeyVec, PipeBranch> branchMap, IVec pos)
+	private static GasTransporterBranch[] getConnectionsFromMap(HashMap<KeyVec, GasTransporterBranch> branchMap, IVec pos)
 	{
-		PipeBranch[] connections = new PipeBranch[6];
+		GasTransporterBranch[] connections = new GasTransporterBranch[6];
 		
 		for(int i = 0; i < 6; i++)
 		{
@@ -95,9 +95,9 @@ public class PipeBranch
 		throw new RuntimeException("Attempted to get position of invalid branch!");
 	}
 	
-	public static PipeBranch makeRoot(int x, int y, int z, HashMap<KeyVec, PipeBranch> branchMap)
+	public static GasTransporterBranch makeRoot(int x, int y, int z, HashMap<KeyVec, GasTransporterBranch> branchMap)
 	{
-		PipeBranch root = new Root(branchMap, new IVec(x, y, z));
+		GasTransporterBranch root = new Root(branchMap, new IVec(x, y, z));
 		return root;
 	}
 	

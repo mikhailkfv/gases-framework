@@ -15,10 +15,10 @@ public class GuiGasFurnace extends GuiContainer
 	private static final ResourceLocation furnaceGuiTextures = new ResourceLocation("gasesframework:textures/gui/container/furnace_gas.png");
 	private TileEntityGasFurnace tileEntity;
 	
-	public GuiGasFurnace(InventoryPlayer inventoryPlayer, TileEntityGasFurnace par2TileEntityYourFurnace)
+	public GuiGasFurnace(InventoryPlayer inventoryPlayer, TileEntityGasFurnace tileEntity)
 	{
-		super(new ContainerGasFurnace(inventoryPlayer, par2TileEntityYourFurnace));
-		this.tileEntity = par2TileEntityYourFurnace;
+		super(new ContainerGasFurnace(inventoryPlayer, tileEntity));
+		this.tileEntity = tileEntity;
 	}
 	/**
 	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
@@ -42,9 +42,9 @@ public class GuiGasFurnace extends GuiContainer
 		
 		//GL11.glColor4f(1.0F, 1.0F, 1.0F, (this.furnaceInventory.furnaceBurnTime > 0 & this.furnaceInventory.canSmelt()) ? 1.0F : 0.5F);
 		int i1 = this.tileEntity.getStage();
-		this.drawTexturedModalRect(k + 55, l + 34, 176 + (this.tileEntity.furnaceBurnTime > 0 ? 0 : 18), 31 + i1 * 18, 18, 18);
+		this.drawTexturedModalRect(k + 55, l + 34, 176 + (this.tileEntity.fuelLevel > 0 ? 0 : 18), 31 + i1 * 18, 18, 18);
 		
-		i1 = 54 * this.tileEntity.furnaceBurnTime / TileEntityGasFurnace.maxFurnaceBurnTime;
+		i1 = 54 * this.tileEntity.fuelLevel / tileEntity.getMaxFuelStored();
 		this.drawTexturedModalRect(k + 29, l + 70 - i1, 212, 54 - i1, 26, i1);
 
 		i1 = this.tileEntity.getCookProgressScaled(24);

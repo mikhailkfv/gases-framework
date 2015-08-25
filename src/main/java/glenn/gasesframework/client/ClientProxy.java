@@ -10,7 +10,7 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.client.render.RenderBlockGas;
 import glenn.gasesframework.client.render.RenderBlockGasDynamo;
 import glenn.gasesframework.client.render.RenderBlockGasPipe;
-import glenn.gasesframework.client.render.RenderBlockGasPump;
+import glenn.gasesframework.client.render.RenderBlockDirectionalGasPropellor;
 import glenn.gasesframework.client.render.RenderBlockGasTank;
 import glenn.gasesframework.client.render.RenderBlockInfiniteGasPump;
 import glenn.gasesframework.client.render.RenderBlockLantern;
@@ -35,7 +35,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerBlockHandler(RenderBlockGas.RENDER_ID, new RenderBlockGas());
 		RenderingRegistry.registerBlockHandler(RenderBlockLantern.RENDER_ID, new RenderBlockLantern());
 		RenderingRegistry.registerBlockHandler(RenderBlockGasPipe.RENDER_ID, new RenderBlockGasPipe());
-		RenderingRegistry.registerBlockHandler(RenderBlockGasPump.RENDER_ID, new RenderBlockGasPump());
+		RenderingRegistry.registerBlockHandler(RenderBlockDirectionalGasPropellor.RENDER_ID, new RenderBlockDirectionalGasPropellor());
 		RenderingRegistry.registerBlockHandler(RenderBlockGasTank.RENDER_ID, new RenderBlockGasTank());
 		RenderingRegistry.registerBlockHandler(RenderBlockInfiniteGasPump.RENDER_ID, new RenderBlockInfiniteGasPump());
 		RenderingRegistry.registerBlockHandler(RenderBlockGasDynamo.RENDER_ID, new RenderBlockGasDynamo());
@@ -47,7 +47,7 @@ public class ClientProxy extends CommonProxy
 		super.registerEventHandlers();
 		MinecraftForge.EVENT_BUS.register(new ForgeClientEvents());
 		
-		if(GasesFramework.configurations.other_enableUpdateCheck)
+		if(GasesFramework.configurations.updateChecker.enable)
 		{
 			MinecraftForge.EVENT_BUS.register(new UpdateChecker("https://www.jamieswhiteshirt.com/trackable/gasesFramework.php", "Gases Framework", GasesFramework.MODID, GasesFramework.VERSION, GasesFramework.TARGETVERSION));
 		}

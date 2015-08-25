@@ -161,6 +161,16 @@ public class GasType
 		return res;
 	}
 	
+	/**
+	 * Get the ID of a gas type with support for null. If null, this returns -1.
+	 * @param gasType
+	 * @return
+	 */
+	public static int getGasID(GasType gasType)
+	{
+		return gasType != null ? gasType.gasID : -1;
+	}
+	
 	private void map()
 	{
 		GasType prev = getGasTypeByID(gasID);

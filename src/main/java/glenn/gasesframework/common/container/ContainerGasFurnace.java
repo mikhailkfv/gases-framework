@@ -18,8 +18,8 @@ public class ContainerGasFurnace extends Container
 	
 	private TileEntityGasFurnace furnace;
 	private int lastCookTime;
-	private int lastCookSpeed;
-	private int lastBurnTime;
+	private int lastTemperature;
+	private int lastFuelLevel;
 	
 	private boolean forceUpdate;
 
@@ -47,11 +47,12 @@ public class ContainerGasFurnace extends Container
 	}
 
 	@Override
-	public void addCraftingToCrafters(ICrafting par1ICrafting)
+	public void addCraftingToCrafters(ICrafting crafting)
 	{
-		super.addCraftingToCrafters(par1ICrafting);
-		par1ICrafting.sendProgressBarUpdate(this, 0, (int)this.furnace.furnaceCookTime);
-		par1ICrafting.sendProgressBarUpdate(this, 1, this.furnace.furnaceBurnTime);
+		super.addCraftingToCrafters(crafting);
+		crafting.sendProgressBarUpdate(this, 0, this.furnace.cookTime);
+		crafting.sendProgressBarUpdate(this, 1, this.furnace.temperature);
+		crafting.sendProgressBarUpdate(this, 2, this.furnace.fuelLevel);
 	}
 
 	/**
@@ -66,46 +67,46 @@ public class ContainerGasFurnace extends Container
 		{
 			ICrafting icrafting = (ICrafting)this.crafters.get(i);
 			
-			if (this.lastCookTime != this.furnace.furnaceCookTime | forceUpdate)
+			if (this.lastCookTime != this.furnace.cookTime | forceUpdate)
 			{
-				icrafting.sendProgressBarUpdate(this, 0, this.furnace.furnaceCookTime);
+				icrafting.sendProgressBarUpdate(this, 0, this.furnace.cookTime);
 			}
 			
-			if (this.lastCookSpeed != this.furnace.furnaceCookSpeed | forceUpdate)
+			if (this.lastTemperature != this.furnace.temperature | forceUpdate)
 			{
-				icrafting.sendProgressBarUpdate(this, 1, this.furnace.furnaceCookSpeed);
+				icrafting.sendProgressBarUpdate(this, 1, this.furnace.temperature);
 			}
 			
-			if (this.lastBurnTime != this.furnace.furnaceBurnTime | forceUpdate)
+			if (this.lastFuelLevel != this.furnace.fuelLevel | forceUpdate)
 			{
-				icrafting.sendProgressBarUpdate(this, 2, this.furnace.furnaceBurnTime);
+				icrafting.sendProgressBarUpdate(this, 2, this.furnace.fuelLevel);
 			}
 		}
 
-		this.lastCookTime = this.furnace.furnaceCookTime;
-		this.lastCookSpeed = this.furnace.furnaceCookSpeed;
-		this.lastBurnTime = this.furnace.furnaceBurnTime;
+		this.lastCookTime = this.furnace.cookTime;
+		this.lastTemperature = this.furnace.temperature;
+		this.lastFuelLevel = this.furnace.fuelLevel;
 		
 		forceUpdate = false;
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void updateProgressBar(int par1, int par2)
+	public void updateProgressBar(int parName, int parValue)
 	{
-		if (par1 == 0)
+		if (parName == 0)
 		{
-			this.furnace.furnaceCookTime = par2;
+			this.furnace.cookTime = parValue;
 		}
 		
-		if (par1 == 1)
+		if (parName == 1)
 		{
-			this.furnace.furnaceCookSpeed = par2;
+			this.furnace.temperature = parValue;
 		}
 
-		if (par1 == 2)
+		if (parName == 2)
 		{
-			this.furnace.furnaceBurnTime = par2;
+			this.furnace.fuelLevel = parValue;
 		}
 	}
 
@@ -119,7 +120,7 @@ public class ContainerGasFurnace extends Container
 	 * Called when a player shift-clicks on a slot. You must override this or you will crash when someone does that.
 	 */
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int slotIndex)
+	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
 	{
 		ItemStack itemstack = null;
 		Slot slot = (Slot)this.inventorySlots.get(slotIndex);
@@ -190,7 +191,7 @@ public class ContainerGasFurnace extends Container
 				return null;
 			}
 
-			slot.onPickupFromSlot(par1EntityPlayer, itemstack1);
+			slot.onPickupFromSlot(player, itemstack1);
 		}
 
 		return itemstack;

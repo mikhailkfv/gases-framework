@@ -1,12 +1,14 @@
 package glenn.gasesframework.api;
 
 import glenn.gasesframework.api.ExtendedGasEffectsBase.EffectType;
+import glenn.gasesframework.api.filter.GasTypeFilter;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gastype.GasTypeAir;
 import glenn.gasesframework.api.gastype.GasTypeFire;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
+import glenn.gasesframework.api.pipetype.PipeType;
 import glenn.gasesframework.api.reaction.Reaction;
 import glenn.gasesframework.api.reaction.ReactionEmpty;
 
@@ -22,6 +24,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * <b>The Gases Framework API</b>
@@ -120,6 +123,16 @@ public class GasesFrameworkAPI
 	 * If Gases Framework is not installed, this is null.
 	 */
 	public static Item gasSamplerExcluder;
+	/**
+	 * Used in crafting.
+	 * If Gases Framework is not installed, this is null.
+	 */
+	public static Item adhesive;
+	/**
+	 * It's duct tape. If you can't fix it with duct tape, it's not worth fixing.
+	 * If Gases Framework is not installed, this is null.
+	 */
+	public static Item ductTape;
 	
 	/**
 	 * The damage source used when a player asphyxiates in gas.
@@ -297,6 +310,45 @@ public class GasesFrameworkAPI
 	}
 	
 	/**
+	 * Pump gas into an IGasTransporter or an IGasReceptor with a certain direction and pressure.
+	 * If the block is an IGasTransporter, the gas will be pumped as far as the pressure allows it.
+	 * This method is unsafe to call when Gases Framework is not present.
+	 * @param world
+	 * @param random
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param type
+	 * @param direction
+	 * @param pressure
+	 * @return Whether the pumping action succeeded or not.
+	 */
+	public static boolean pumpGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
+	{
+		return modInstance.pumpGas(world, random, x, y, z, type, direction, pressure);
+	}
+
+	/**
+	 * Push gas to a coordinate with a certain direction and pressure.
+	 * If the block is an IGasTransporter or IGasReceptor, {@link glenn.gasesframework.api.IGasesFramework#pumpGas(World,int,int,int,GasType,ForgeDirection,int) pumpGas(World,int,int,int,GasType,ForgeDirection,int)} is returned.
+	 * Else, {@link glenn.gasesframework.api.IGasesFramework#fillWithGas(World,int,int,int,GasType) fillWithGas(World,int,int,int,GasType)} is returned.
+	 * This method is unsafe to call when Gases Framework is not present.
+	 * @param world
+	 * @param random
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param type
+	 * @param direction
+	 * @param pressure
+	 * @return Whether the pushing action succeeded or not.
+	 */
+	public static boolean pushGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
+	{
+		return modInstance.pushGas(world, random, x, y, z, type, direction, pressure);
+	}
+	
+	/**
 	 * If gas exists at this location, it will be ignited.
 	 * This method is unsafe to call when Gases Framework is not present.
 	 * @param world
@@ -325,6 +377,22 @@ public class GasesFrameworkAPI
 	public static void spawnDelayedExplosion(World world, double x, double y, double z, int delay, float power, boolean isFlaming, boolean isSmoking)
 	{
 		modInstance.spawnDelayedExplosion(world, x, y, z, delay, power, isFlaming, isSmoking);
+	}
+	
+	/**
+	 * Sent a filter update packet for {@link glenn.gasesframework.api.block.IGasFilter IGasFilter} blocks to clients.
+	 * This will call {@link glenn.gasesframework.api.block.IGasFilter#setFilter(World,int,int,int,ForgeDirection,GasTypeFilter) setFilter(World,int,int,int,ForgeDirection,GasTypeFilter)}.
+	 * This method is unsafe to call when Gases Framework is not present.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param side
+	 * @param filter
+	 */
+	public static void sendFilterUpdatePacket(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter)
+	{
+		modInstance.sendFilterUpdatePacket(world, x, y, z, side, filter);
 	}
 	
 	/**
@@ -484,6 +552,18 @@ public class GasesFrameworkAPI
 		if(isModInstalled())
 		{
 			modInstance.registerGasTransposerHandler(handler);
+		}
+	}
+	
+	/**
+	 * Registers a pipe type.
+	 * @param handler
+	 */
+	public static void registerPipeType(PipeType type)
+	{
+		if(isModInstalled())
+		{
+			modInstance.registerPipeType(type);
 		}
 	}
 }

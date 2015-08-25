@@ -1,5 +1,10 @@
 death.attack.gf_asphyxiation=%1$s asphyxiated
 
+filter.open.desc=Includes all gases
+filter.closed.desc=Excludes all gases
+filter.including.desc=Includes (%s)
+filter.excluding.desc=Excludes (%s)
+
 item.gf_gasSamplerIncluder.name=Including Sampler
 item.gf_gasSamplerIncluder.name.filled=Including %1$s Sampler
 item.gf_gasSamplerExcluder.name=Excluding Sampler
@@ -7,6 +12,8 @@ item.gf_gasSamplerExcluder.name.filled=Excluding %1$s Sampler
 item.gf_lanternEmpty.name=Lantern
 item.gf_gasBottle.name=Bottle
 item.gf_gasBottle.name.filled=%1$s Bottle
+item.gf_ductTape.name=Duct Tape
+item.gf_adhesive.name=Adhesive
 
 gf_gas.air.name=Air
 gf_gas.smoke.name=Smoke
@@ -24,8 +31,10 @@ tile.gf_gasSmoke.name=Smoke
 tile.gf_gasFire.name=Ignited Gas
 tile.gf_gasPipe.iron.name=Iron Gas Pipe
 tile.gf_gasPipe.glass.name=Glass Gas Pipe
+tile.gf_gasPipe.wood.name=Poor Man's Wooden Gas Pipe
 tile.gf_gasPipe.waila.body=Content: %s
-tile.gf_gasPump.name=Gas Pump
+tile.gf_ironGasPump.name=Gas Pump
+tile.gf_woodGasPump.name=Poor Man's Wooden Gas Pump
 tile.gf_gasPump.waila.body.content=Content: %s
 tile.gf_gasPump.waila.body.filter.none=Accepts all gases
 tile.gf_gasPump.waila.body.filter.including=Including: %s
@@ -33,16 +42,20 @@ tile.gf_gasPump.waila.body.filter.excluding=Excluding: %s
 tile.gf_gasTank.name=Gas Tank
 tile.gf_gasTank.waila.body.empty=Empty
 tile.gf_gasTank.waila.body.filled=Content: %s (%s)
-tile.gf_gasCollector.name=Gas Collector
-tile.gf_gasFurnace.name=Gas Furnace
-tile.gf_gasFurnaceWarm.name=Warm Gas Furnace
+tile.gf_ironGasCollector.name=Gas Collector
+tile.gf_woodGasCollector.name=Poor Man's Wooden Gas Collector
+tile.gf_ironGasFurnaceIdle.name=Gas Furnace
+tile.gf_ironGasFurnaceActive.name=Gas Furnace
+tile.gf_woodGasFurnaceIdle.name=Poor Man's Wooden Gas Furnace
+tile.gf_woodGasFurnaceActive.name=Poor Man's Wooden Gas Furnace
 tile.gf_infiniteGasPump.name=Infinite Gas Pump
 tile.gf_infiniteGasPump.waila.body.side=Side emits: %s
 tile.gf_infiniteGasDrain.name=Infinite Gas Drain
 tile.gf_gasTransposer.name=Gas Transposer
-tile.gf_gasDynamo.name=Gas Dynamo
+tile.gf_ironGasDynamo.name=Gas Dynamo
+tile.gf_woodGasDynamo.name=Poor Man's Wooden Gas Dynamo
 
-itemGroup.tabGases=Glenn's Gases
+itemGroup.tabGasesFramework=Gases Framework
 
 container.gasFurnace=Gas Furnace
 container.gasTransposer.insert.name=Gas Transposer (Insert)

@@ -1,19 +1,14 @@
 package glenn.gasesframework.common.block;
 
 import glenn.gasesframework.common.tileentity.TileEntityGasCollector;
+import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockGasCollector extends BlockGasPump
+public abstract class BlockGasCollector extends BlockDirectionalGasPropellor
 {
-	public BlockGasCollector()
+	public BlockGasCollector(Material material, int maxPressure)
 	{
-		super(false);
-	}
-	
-	@Override
-	public TileEntity createNewTileEntity(World world, int metadata)
-	{
-	   return new TileEntityGasCollector();
+		super(material, false, maxPressure);
 	}
 }

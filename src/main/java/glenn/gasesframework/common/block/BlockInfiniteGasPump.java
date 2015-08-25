@@ -1,5 +1,6 @@
 package glenn.gasesframework.common.block;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.gastype.GasType;
@@ -46,7 +47,7 @@ public class BlockInfiniteGasPump extends Block implements ISample, IGasPropello
     }
 
     @Override
-	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, boolean excludes, ForgeDirection side)
+	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, ForgeDirection side)
 	{
     	if(!world.isRemote)
     	{
@@ -73,9 +74,9 @@ public class BlockInfiniteGasPump extends Block implements ISample, IGasPropello
 	}
 
 	@Override
-	public boolean canPropelGasFromSide(World world, int x, int y, int z, ForgeDirection side)
+	public int getPressureFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		return true;
+		return GasesFramework.configurations.piping.ironMaterial.maxPressure;
 	}
 
 	@Override

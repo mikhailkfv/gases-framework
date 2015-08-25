@@ -22,7 +22,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
+public abstract class TileEntityGasFurnace extends TileEntity implements ISidedInventory
 {
 
 	public static class SpecialFurnaceRecipe
@@ -54,20 +54,30 @@ public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
 	 */
 	private ItemStack[] furnaceItemStacks = new ItemStack[2];
 
-	/** The number of ticks that the furnace will keep burning */
-	public int furnaceBurnTime;
+	private final int smokeEmissionInterval;
+	private final int maxFuelLevel;
+	private final int temperaturePerFuel;
+	private final int temperatureFalloff;
+	
+	public int fuelLevel;
 
 	/** The number of ticks that the current item has been cooking for */
-	public int furnaceCookTime = 0;
-	public int furnaceCookSpeed = 0;
+	public int cookTime = 0;
+	public int temperature = 0;
 	public int smokeTimer = 0;
 	private String invName;
 	
 	public int prevStage;
 	
+	private static final int maxTemperature = 8000;
 	
-	public static final int maxFurnaceBurnTime = 1000;
-	public static final int maxFurnaceCookSpeed = 8000;
+	public TileEntityGasFurnace(int smokeEmissionInterval, int maxFuelLevel, int temperaturePerFuel, int temperatureFalloff)
+	{
+		this.smokeEmissionInterval = smokeEmissionInterval;
+		this.maxFuelLevel = maxFuelLevel;
+		this.temperaturePerFuel = temperaturePerFuel;
+		this.temperatureFalloff = temperatureFalloff;
+	}
 
 	/**
 	 * Returns the number of slots in the inventory.
@@ -97,7 +107,7 @@ public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
 		return null;
 	}
 	
-	public int getCurrentItemBurnTime()
+	public int getCurrentItemCookTime()
 	{
 		if(this.furnaceItemStacks[0] == null)
 		{
@@ -232,9 +242,9 @@ public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
 			}
 		}
 
-		this.furnaceBurnTime = tagCompound.getShort("BurnTime");
-		this.furnaceCookTime = tagCompound.getShort("CookTime");
-		this.furnaceCookSpeed = tagCompound.getShort("CookSpeed");
+		this.fuelLevel = tagCompound.getShort("BurnTime");
+		this.cookTime = tagCompound.getShort("CookTime");
+		this.temperature = tagCompound.getShort("CookSpeed");
 		
 		if (tagCompound.hasKey("SmokeTimer"))
 		{
@@ -254,9 +264,9 @@ public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
 	public void writeToNBT(NBTTagCompound tagCompound)
 	{
 		super.writeToNBT(tagCompound);
-		tagCompound.setShort("BurnTime", (short)this.furnaceBurnTime);
-		tagCompound.setShort("CookTime", (short)this.furnaceCookTime);
-		tagCompound.setShort("CookSpeed", (short)this.furnaceCookSpeed);
+		tagCompound.setShort("BurnTime", (short)this.fuelLevel);
+		tagCompound.setShort("CookTime", (short)this.cookTime);
+		tagCompound.setShort("CookSpeed", (short)this.temperature);
 		tagCompound.setShort("SmokeTimer", (short)this.smokeTimer);
 		NBTTagList slotsTagList = new NBTTagList();
 
@@ -288,16 +298,15 @@ public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
 	{
 		return 64;
 	}
-
+	
 	@SideOnly(Side.CLIENT)
-
 	/**
 	 * Returns an integer between 0 and the passed value representing how close the current item is to being completely
 	 * cooked
 	 */
 	public int getCookProgressScaled(int scale)
 	{
-		return this.furnaceCookTime * scale / (getCurrentItemBurnTime() * 1000);
+		return this.cookTime * scale / (getCurrentItemCookTime() * 1000);
 	}
 
 	/**
@@ -305,31 +314,25 @@ public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
 	 */
 	public boolean isBurning()
 	{
-		return this.furnaceCookSpeed > 0;
+		return this.temperature > 0;
 	}
 	
 	public void handleSmoke()
 	{
 		if(isBurning() && smokeTimer++ > 100)
 		{
-			if(GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, xCoord, yCoord + 1, zCoord, GasesFrameworkAPI.gasTypeSmoke))
+			BlockGasFurnace block = (BlockGasFurnace)getBlockType();
+			int pressure = block.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, ForgeDirection.UP);
+			if (GasesFrameworkAPI.pushGas(worldObj, worldObj.rand, xCoord, yCoord + 1, zCoord, GasesFrameworkAPI.gasTypeSmoke, ForgeDirection.UP, pressure))
 			{
 				smokeTimer = 0;
-			}
-			else
-			{
-				Block blockAbove = worldObj.getBlock(xCoord, yCoord + 1, zCoord);
-				if(blockAbove instanceof IGasReceptor)
-				{
-					if(((IGasReceptor)blockAbove).receiveGas(worldObj, xCoord, yCoord + 1, zCoord, ForgeDirection.DOWN, GasesFrameworkAPI.gasTypeSmoke)) smokeTimer = 0;
-				}
 			}
 		}
 	}
 	
 	public int getStage()
 	{
-		return (int)Math.ceil(4.0D * furnaceCookSpeed / maxFurnaceCookSpeed);
+		return (int)Math.ceil(4.0D * temperature / maxTemperature);
 	}
 
 	/**
@@ -340,67 +343,73 @@ public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
 	public void updateEntity()
 	{
 		int stage = getStage();
+		boolean dirty = stage != prevStage;
 		
-		boolean flag1 = false;
+		burnFuel();
 
 		if (!this.worldObj.isRemote)
 		{
-			handleSmoke();
-			
-			if (smokeTimer <= 150 && this.canSmelt())
-			{
-				this.furnaceCookTime += this.furnaceCookSpeed;
+			cook();
 
-				if (this.furnaceCookTime >= getCurrentItemBurnTime() * 1000)
-				{
-					this.furnaceCookTime -= getCurrentItemBurnTime() * 1000;
-					this.smeltItem();
-					flag1 = true;
-				}
+			if (dirty)
+			{
+				BlockGasFurnace block = (BlockGasFurnace)getBlockType();
+				block.updateFurnaceBlockState(stage, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
 			}
-
-			if (prevStage != stage)
+		}
+		else
+		{
+			if (dirty)
 			{
-				flag1 = true;
-				BlockGasFurnace.updateFurnaceBlockState(stage, this.worldObj, this.xCoord, this.yCoord, this.zCoord);
+				worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			}
 		}
 		
 		if(!this.canSmelt())
 		{
-			this.furnaceCookTime = 0;
+			this.cookTime = 0;
 		}
 
-		if (this.furnaceBurnTime > 0)
-		{
-			--this.furnaceBurnTime;
-			this.furnaceCookSpeed += GasesFramework.configurations.other_gasFurnaceHeatingSpeed;
-		}
-		else
-		{
-			this.furnaceCookSpeed -= GasesFramework.configurations.other_gasFurnaceHeatingSpeed;
-		}
-		
-		if(this.furnaceCookSpeed < 0)
-		{
-			this.furnaceCookSpeed = 0;
-		}
-		else if(this.furnaceCookSpeed > maxFurnaceCookSpeed)
-		{
-			this.furnaceCookSpeed = maxFurnaceCookSpeed;
-		}
-
-		if (flag1)
-		{
-			this.markDirty();
-		}
-
-		if (prevStage != stage)
-		{
-			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
-		}
-		
 		prevStage = stage;
+	}
+	
+	private void burnFuel()
+	{
+		this.temperature -= temperatureFalloff;
+		if (temperature < 0)
+		{
+			temperature = 0;
+		}
+		
+		if (fuelLevel > 0)
+		{
+			if (temperature + temperaturePerFuel <= maxTemperature)
+			{
+				temperature += temperaturePerFuel;
+				fuelLevel--;
+			}
+		}
+	}
+	
+	private void cook()
+	{
+		handleSmoke();
+		
+		if (!isChoked() && this.canSmelt())
+		{
+			this.cookTime += this.temperature;
+
+			if (this.cookTime >= getCurrentItemCookTime() * 1000)
+			{
+				this.cookTime -= getCurrentItemCookTime() * 1000;
+				this.smeltItem();
+			}
+		}
+	}
+	
+	public boolean isChoked()
+	{
+		return smokeTimer > 150;
 	}
 
 	/**
@@ -489,9 +498,6 @@ public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
 		}
 	}
 
-	/**
-	 * Do not make give this method the name canInteractWith because it clashes with Container
-	 */
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer entityPlayer)
 	{
@@ -555,5 +561,15 @@ public class TileEntityGasFurnace extends TileEntity implements ISidedInventory
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
 		readFromNBT(packet.func_148857_g());
+	}
+	
+	public int getFuelStored()
+	{
+		return fuelLevel;
+	}
+	
+	public int getMaxFuelStored()
+	{
+		return maxFuelLevel;
 	}
 }

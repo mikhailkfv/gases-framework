@@ -1,6 +1,7 @@
 package glenn.gasesframework.client.render;
 
 import glenn.gasesframework.api.block.IGasInterface;
+import glenn.gasesframework.api.pipetype.PipeType;
 import glenn.gasesframework.common.block.BlockGasPipe;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -23,8 +24,8 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 	public void renderInventoryBlock(Block bblock, int metadata, int modelID,RenderBlocks renderer)
 	{
 		BlockGasPipe block = (BlockGasPipe)bblock;
-		BlockGasPipe.SubType subType = block.subTypes[metadata];
-		
+		PipeType pipeType = block.getPipeType(metadata);
+
 		Tessellator tessellator = Tessellator.instance;
 
         GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
@@ -38,7 +39,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 
         tessellator.startDrawingQuads();
     	
-        IIcon icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.solidIcon;
+        IIcon icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.solidIcon;
         double uvMinU = icon.getMinU();
         double uvMaxU = icon.getMaxU();
         double uvMinV = icon.getMinV();
@@ -51,7 +52,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 		tessellator.addVertexWithUV(1.0D, d2, 0.0D, uvMaxU, uvMaxV);
 		tessellator.addVertexWithUV(0.0D, d2, 0.0D, uvMinU, uvMaxV);
     	
-        icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.solidIcon;
+        icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.solidIcon;
         uvMinU = icon.getMinU();
         uvMaxU = icon.getMaxU();
         uvMinV = icon.getMinV();
@@ -63,7 +64,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 		tessellator.addVertexWithUV(1.0D, d1, 1.0D, uvMaxU, uvMinV);
 		tessellator.addVertexWithUV(0.0D, d1, 1.0D, uvMinU, uvMinV);
 		
-		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.solidIcon;
+		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.solidIcon;
         uvMinU = icon.getMinU();
         uvMaxU = icon.getMaxU();
         uvMinV = icon.getMinV();
@@ -75,7 +76,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 		tessellator.addVertexWithUV(d1, 1.0D, 0.0D, uvMaxU, uvMaxV);
 		tessellator.addVertexWithUV(d1, 0.0D, 0.0D, uvMinU, uvMaxV);
 		
-		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.solidIcon;
+		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.solidIcon;
         uvMinU = icon.getMinU();
         uvMaxU = icon.getMaxU();
         uvMinV = icon.getMinV();
@@ -87,7 +88,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 		tessellator.addVertexWithUV(d2, 1.0D, 1.0D, uvMaxU, uvMinV);
 		tessellator.addVertexWithUV(d2, 0.0D, 1.0D, uvMinU, uvMinV);
 		
-		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.solidIcon;
+		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.solidIcon;
         uvMinU = icon.getMinU();
         uvMaxU = icon.getMaxU();
         uvMinV = icon.getMinV();
@@ -99,7 +100,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 		tessellator.addVertexWithUV(1.0D, 0.0D, d1, uvMaxU, uvMaxV);
 		tessellator.addVertexWithUV(0.0D, 0.0D, d1, uvMinU, uvMaxV);
 		
-		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.solidIcon;
+		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.solidIcon;
         uvMinU = icon.getMinU();
         uvMaxU = icon.getMaxU();
         uvMinV = icon.getMinV();
@@ -111,7 +112,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 		tessellator.addVertexWithUV(1.0D, 1.0D, d2, uvMaxU, uvMinV);
 		tessellator.addVertexWithUV(0.0D, 1.0D, d2, uvMinU, uvMinV);
 		
-		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.endIcon;
+		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.endIcon;
         uvMinU = icon.getMinU();
         uvMaxU = icon.getMaxU();
         uvMinV = icon.getMinV();
@@ -166,7 +167,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 		int metadata = blockAccess.getBlockMetadata(x, y, z);
 		
 		BlockGasPipe block = (BlockGasPipe)bblock;
-		BlockGasPipe.SubType subType = block.subTypes[metadata];
+		PipeType pipeType = block.getPipeType(blockAccess, x, y, z);
 		
         int brightness = block.getMixedBrightnessForBlock(blockAccess, x, y, z);
 		Tessellator tessellator = Tessellator.instance;
@@ -225,7 +226,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
     	
     	if(collectionY | !collectionAll)
     	{
-    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.solidIcon;
+    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.solidIcon;
     		uvMinU = icon.getInterpolatedU(minX * 16.0D);
     		uvMaxU = icon.getInterpolatedU(maxX * 16.0D);
     		uvMinV = icon.getInterpolatedV(minZ * 16.0D);
@@ -238,9 +239,9 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
     		tessellator.addVertexWithUV(maxX, d1, maxZ, uvMaxU, uvMaxV);
     		tessellator.addVertexWithUV(minX, d1, maxZ, uvMinU, uvMaxV);
     		
-    		if(!subType.isSolid && block.type.isVisible())
+    		if(!pipeType.isSolid && block.type.isVisible())
     		{
-    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.gasContentIcon;
+    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.gasContentIcon;
         		uvMinU = icon.getInterpolatedU(minX * 16.0D);
         		uvMaxU = icon.getInterpolatedU(maxX * 16.0D);
         		uvMinV = icon.getInterpolatedV(minZ * 16.0D);
@@ -253,7 +254,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
         		tessellator.addVertexWithUV(minX, d1, maxZ, uvMinU, uvMaxV);
     		}
     		
-    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.solidIcon;
+    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.solidIcon;
     		uvMinU = icon.getInterpolatedU(minX * 16.0D);
     		uvMaxU = icon.getInterpolatedU(maxX * 16.0D);
     		uvMinV = icon.getInterpolatedV(minZ * 16.0D);
@@ -266,9 +267,9 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
     		tessellator.addVertexWithUV(maxX, d2, minZ, uvMaxU, uvMinV);
     		tessellator.addVertexWithUV(minX, d2, minZ, uvMinU, uvMinV);
     		
-    		if(!subType.isSolid && block.type.isVisible())
+    		if(!pipeType.isSolid && block.type.isVisible())
     		{
-    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.gasContentIcon;
+    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.gasContentIcon;
         		uvMinU = icon.getInterpolatedU(minX * 16.0D);
         		uvMaxU = icon.getInterpolatedU(maxX * 16.0D);
         		uvMinV = icon.getInterpolatedV(minZ * 16.0D);
@@ -284,7 +285,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
 
     	if(collectionX | !collectionAll)
     	{
-    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.solidIcon;
+    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.solidIcon;
     		uvMinU = icon.getInterpolatedU(minY * 16.0D);
     		uvMaxU = icon.getInterpolatedU(maxY * 16.0D);
     		uvMinV = icon.getInterpolatedV(minZ * 16.0D);
@@ -297,9 +298,9 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
     		tessellator.addVertexWithUV(d1, maxY, minZ, uvMaxU, uvMinV);
     		tessellator.addVertexWithUV(d1, minY, minZ, uvMinU, uvMinV);
     		
-    		if(!subType.isSolid && block.type.isVisible())
+    		if(!pipeType.isSolid && block.type.isVisible())
     		{
-    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.gasContentIcon;
+    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.gasContentIcon;
         		uvMinU = icon.getInterpolatedU(minY * 16.0D);
         		uvMaxU = icon.getInterpolatedU(maxY * 16.0D);
         		uvMinV = icon.getInterpolatedV(minZ * 16.0D);
@@ -312,7 +313,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
         		tessellator.addVertexWithUV(d1, minY, minZ, uvMinU, uvMinV);
     		}
 
-    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.solidIcon;
+    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.solidIcon;
     		uvMinU = icon.getInterpolatedU(minY * 16.0D);
     		uvMaxU = icon.getInterpolatedU(maxY * 16.0D);
     		uvMinV = icon.getInterpolatedV(minZ * 16.0D);
@@ -325,9 +326,9 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
     		tessellator.addVertexWithUV(d2, maxY, maxZ, uvMaxU, uvMaxV);
     		tessellator.addVertexWithUV(d2, minY, maxZ, uvMinU, uvMaxV);
     		
-    		if(!subType.isSolid && block.type.isVisible())
+    		if(!pipeType.isSolid && block.type.isVisible())
     		{
-    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.gasContentIcon;
+    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.gasContentIcon;
         		uvMinU = icon.getInterpolatedU(minY * 16.0D);
         		uvMaxU = icon.getInterpolatedU(maxY * 16.0D);
         		uvMinV = icon.getInterpolatedV(minZ * 16.0D);
@@ -343,7 +344,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
     	
     	if(collectionZ | !collectionAll)
     	{
-    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.solidIcon;
+    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.solidIcon;
     		uvMinU = icon.getInterpolatedU(minX * 16.0D);
     		uvMaxU = icon.getInterpolatedU(maxX * 16.0D);
     		uvMinV = icon.getInterpolatedV(minY * 16.0D);
@@ -356,9 +357,9 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
     		tessellator.addVertexWithUV(maxX, minY, d1, uvMaxU, uvMinV);
     		tessellator.addVertexWithUV(minX, minY, d1, uvMinU, uvMinV);
     		
-    		if(!subType.isSolid && block.type.isVisible())
+    		if(!pipeType.isSolid && block.type.isVisible())
     		{
-    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.gasContentIcon;
+    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.gasContentIcon;
         		uvMinU = icon.getInterpolatedU(minX * 16.0D);
         		uvMaxU = icon.getInterpolatedU(maxX * 16.0D);
         		uvMinV = icon.getInterpolatedV(minY * 16.0D);
@@ -371,7 +372,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
         		tessellator.addVertexWithUV(minX, minY, d1, uvMinU, uvMinV);
     		}
 
-    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.solidIcon;
+    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.solidIcon;
     		uvMinU = icon.getInterpolatedU(minX * 16.0D);
     		uvMaxU = icon.getInterpolatedU(maxX * 16.0D);
     		uvMinV = icon.getInterpolatedV(minY * 16.0D);
@@ -384,9 +385,9 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
     		tessellator.addVertexWithUV(maxX, maxY, d2, uvMaxU, uvMaxV);
     		tessellator.addVertexWithUV(minX, maxY, d2, uvMinU, uvMaxV);
     		
-    		if(!subType.isSolid && block.type.isVisible())
+    		if(!pipeType.isSolid && block.type.isVisible())
     		{
-    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.gasContentIcon;
+    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.gasContentIcon;
         		uvMinU = icon.getInterpolatedU(minX * 16.0D);
         		uvMaxU = icon.getInterpolatedU(maxX * 16.0D);
         		uvMinV = icon.getInterpolatedV(minY * 16.0D);
@@ -402,7 +403,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
     	
     	if(collectionAll)
     	{
-    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.endIcon;
+    		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.endIcon;
     		uvMinU = icon.getInterpolatedU(6.0D);
     		uvMaxU = icon.getInterpolatedU(10.0D);
     		uvMinV = icon.getInterpolatedV(6.0D);
@@ -468,7 +469,7 @@ public class RenderBlockGasPipe implements ISimpleBlockRenderingHandler
     		
     		if(((x ^ y ^ z) & 1) > 0)
     		{
-    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : subType.connectorsIcon;
+    			icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : pipeType.connectorsIcon;
             	
             	minX = sideOpaque[4] ? 0.0F : d1;
         		maxX = sideOpaque[5] ? 1.0F : d2;

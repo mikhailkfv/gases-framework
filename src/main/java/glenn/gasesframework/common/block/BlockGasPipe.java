@@ -2,11 +2,14 @@ package glenn.gasesframework.common.block;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasInterface;
+import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
+import glenn.gasesframework.api.block.IGasTransporter;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.api.pipetype.PipeType;
 import glenn.gasesframework.client.render.RenderBlockGasPipe;
-import glenn.gasesframework.util.PipeBranchIterator;
-import glenn.gasesframework.util.PipeSearch;
+import glenn.gasesframework.util.GasTransporterIterator;
+import glenn.gasesframework.util.GasTransporterSearch;
 import glenn.moddingutils.IVec;
 
 import java.util.ArrayList;
@@ -30,47 +33,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockGasPipe extends Block implements IGasReceptor
+public class BlockGasPipe extends Block implements IGasTransporter
 {
-	/**
-	 * A sub-type for pipes, defined by their metadata
-	 * @author Glenn
-	 *
-	 */
-	public static class SubType
-	{
-		public final int metadata;
-		public final String name;
-		public final boolean isSolid;
-		
-		public IIcon solidIcon;
-		public IIcon gasContentIcon;
-		public IIcon connectorsIcon;
-		public IIcon endIcon;
-		
-		public SubType(int metadata, String name, boolean isSolid)
-		{
-			this.metadata = metadata;
-			this.name = name;
-			this.isSolid = isSolid;
-		}
-		
-		public String baseTexture()
-		{
-			return "gasesframework:pipe_" + name;
-		}
-		
-		public void registerIcons(IIconRegister iconRegister)
-		{
-			solidIcon = iconRegister.registerIcon(baseTexture() + "_solid");
-			if(!isSolid) gasContentIcon = iconRegister.registerIcon(baseTexture() + "_gas_content");
-			connectorsIcon = iconRegister.registerIcon(baseTexture() + "_connectors");
-			endIcon = iconRegister.registerIcon(baseTexture() + "_end");
-		}
-	}
-	
-	public final SubType[] subTypes = new SubType[16];
-	
 	/**
 	 * The gas block contained by this gas pipe.
 	 */
@@ -89,9 +53,6 @@ public class BlockGasPipe extends Block implements IGasReceptor
 		this.setHardness(0.25F);
 		this.setBlockTextureName("gasesframework:pipe");
 		this.setStepSound(Block.soundTypeStone);
-		
-		subTypes[0] = new SubType(0, "iron", true);
-		subTypes[1] = new SubType(1, "glass", false);
 	}
 	
 	/**
@@ -101,13 +62,9 @@ public class BlockGasPipe extends Block implements IGasReceptor
 	@Override
 	public void registerBlockIcons(IIconRegister iconRegister)
 	{
-		for(int i = 0; i < subTypes.length; i++)
+		for(PipeType type : PipeType.getAllTypes())
 		{
-			SubType subType = subTypes[i];
-			if(subType != null)
-			{
-				subType.registerIcons(iconRegister);
-			}
+			type.registerIcons(iconRegister);
 		}
 	}
 	
@@ -117,7 +74,7 @@ public class BlockGasPipe extends Block implements IGasReceptor
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int metadata)
     {
-        return subTypes[metadata].solidIcon;
+        return PipeType.getPipeTypeByID(metadata).solidIcon;
     }
 	
 	/**
@@ -126,12 +83,9 @@ public class BlockGasPipe extends Block implements IGasReceptor
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item blockItem, CreativeTabs creativeTab, List list)
     {
-        for (int i = 0; i < 16; ++i)
+        for (PipeType type : PipeType.getAllTypes())
         {
-        	if(subTypes[i] != null)
-        	{
-        		list.add(new ItemStack(blockItem, 1, i));
-        	}
+        	list.add(new ItemStack(blockItem, 1, type.pipeID));
         }
     }
     
@@ -229,63 +183,6 @@ public class BlockGasPipe extends Block implements IGasReceptor
     	
     	this.setBlockBounds(bounds[4], bounds[0], bounds[2], bounds[5], bounds[1], bounds[3]);
     }
-
-    @Override
-	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
-	{
-		PipeSearch.ReceptorSearch search = new PipeSearch.ReceptorSearch(world, x, y, z, 15);
-    	
-		boolean isSearchingLooseEnds = !search.looseEnds.isEmpty();
-    	ArrayList<PipeSearch.PipeEnd> listToSearch = (ArrayList<PipeSearch.PipeEnd>)(isSearchingLooseEnds ? search.looseEnds : search.ends).clone();
-    	Collections.shuffle(listToSearch, world.rand);
-    	
-    	for(PipeSearch.PipeEnd end : listToSearch)
-    	{
-    		IVec branchPos = end.branch.getPosition();
-    		BlockGasPipe pipeSourceBlock = (BlockGasPipe)world.getBlock(branchPos.x, branchPos.y, branchPos.z);
-    		boolean hasPushed = false;
-    		
-    		if(isSearchingLooseEnds)
-    		{
-    			hasPushed = GasesFrameworkAPI.fillWithGas(world, world.rand, end.endPosition.x, end.endPosition.y, end.endPosition.z, pipeSourceBlock.type);
-    		}
-    		else
-    		{
-    			IGasReceptor receptor = (IGasReceptor)world.getBlock(end.endPosition.x, end.endPosition.y, end.endPosition.z);
-    			hasPushed = receptor.receiveGas(world, end.endPosition.x, end.endPosition.y, end.endPosition.z, end.endDirection.getOpposite(), pipeSourceBlock.type);
-    		}
-    		
-    		if(hasPushed)
-    		{
-    			PipeBranchIterator.DescendingPipeBranchIterator iterator = new PipeBranchIterator.DescendingPipeBranchIterator(end.branch);
-    			PipeBranchIterator.Iteration iteration;
-    			while((iteration = iterator.narrowNext(world.rand)) != null)
-    			{
-    				Block receptorBlock = world.getBlock(iteration.previousPosition.x, iteration.previousPosition.y, iteration.previousPosition.z);
-    				int receptorMetadata = world.getBlockMetadata(iteration.previousPosition.x, iteration.previousPosition.y, iteration.previousPosition.z);
-    				Block giverBlock = world.getBlock(iteration.currentPosition.x, iteration.currentPosition.y, iteration.currentPosition.z);
-    				
-    				if(receptorBlock != giverBlock)
-    				{
-    					world.setBlock(iteration.previousPosition.x, iteration.previousPosition.y, iteration.previousPosition.z, giverBlock, receptorMetadata, 3);
-    				}
-    			}
-    			
-    			int thisMetadata = world.getBlockMetadata(x, y, z);
-    			world.setBlock(x, y, z, gasType.pipeBlock, thisMetadata, 3);
-    			
-    			return true;
-    		}
-    	}
-    	
-    	return false;
-	}
-    
-    @Override
-	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
-	{
-    	return true;
-	}
 	
 	/**
 	 * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
@@ -335,11 +232,23 @@ public class BlockGasPipe extends Block implements IGasReceptor
     @Override
 	public void breakBlock(World world, int x, int y, int z, Block oldBlock, int oldBlockMetadata)
 	{
-		if(type.block != null && world.isAirBlock(x, y, z))
-		{
-			world.setBlock(x, y, z, type.block);
-		}
+    	if (world.isAirBlock(x, y, z))
+    	{
+		    burst(world, x, y, z);
+    	}
 	}
+    
+    public void burst(World world, int x, int y, int z)
+    {
+    	if (type != GasesFrameworkAPI.gasTypeAir)
+    	{
+			GasesFrameworkAPI.placeGas(world, x, y, z, type, 16);
+    	}
+    	else
+    	{
+    		world.setBlockToAir(x, y, z);
+    	}
+    }
 
 	@Override
 	public boolean connectToPipe(IBlockAccess blockaccess, int x, int y, int z, ForgeDirection side)
@@ -361,13 +270,15 @@ public class BlockGasPipe extends Block implements IGasReceptor
 		final byte[] res = new byte[6];
 		final IVec pipePosition = new IVec(x, y, z);
 		
-		PipeSearch.PropellorSearch pumpSearch = new PipeSearch.PropellorSearch(world, x, y, z, 15);
+		GasTransporterSearch.PropellorSearch pumpSearch = new GasTransporterSearch.PropellorSearch(world, x, y, z, 31);
 		
-		for(PipeSearch.PipeEnd propellor : pumpSearch.propellors)
+		for(GasTransporterSearch.End propellor : pumpSearch.propellors)
 		{
+			IGasPropellor propellorBlock = (IGasPropellor)world.getBlock(propellor.endPosition.x, propellor.endPosition.y, propellor.endPosition.z);
+			int pressure = propellorBlock.getPressureFromSide(world, propellor.endPosition.x, propellor.endPosition.y, propellor.endPosition.z, propellor.endDirection);
 			IVec pipePos = propellor.branch.getPosition();
-			PipeSearch.ReceptorSearch search = new PipeSearch.ReceptorSearch(world, pipePos.x, pipePos.y, pipePos.z, 15);
-			ArrayList<PipeSearch.PipeEnd> listToSearch = search.looseEnds.isEmpty() ? search.ends : search.looseEnds;
+			GasTransporterSearch.ReceptorSearch search = new GasTransporterSearch.ReceptorSearch(world, pipePos.x, pipePos.y, pipePos.z, pressure);
+			ArrayList<GasTransporterSearch.End> listToSearch = search.looseEnds.isEmpty() ? search.ends : search.looseEnds;
 			
 			if(listToSearch.size() > 0)
 			{
@@ -376,10 +287,10 @@ public class BlockGasPipe extends Block implements IGasReceptor
 					res[propellor.endDirection.getOpposite().ordinal()] |= 2;
 				}
 				
-				for(PipeSearch.PipeEnd end : listToSearch)
+				for(GasTransporterSearch.End end : listToSearch)
 				{
-					PipeBranchIterator.DescendingPipeBranchIterator iterator = new PipeBranchIterator.DescendingPipeBranchIterator(end.branch);
-					PipeBranchIterator.Iteration iteration;
+					GasTransporterIterator.DescendingGasTransporterIterator iterator = new GasTransporterIterator.DescendingGasTransporterIterator(end.branch);
+					GasTransporterIterator.Iteration iteration;
 					while((iteration = iterator.next()) != null)
 					{
 						if(iteration.currentPosition.equals(pipePosition))
@@ -401,5 +312,72 @@ public class BlockGasPipe extends Block implements IGasReceptor
 		}
 		
 		return res;
+	}
+	
+	public PipeType getPipeType(int metadata)
+	{
+		return PipeType.getPipeTypeByID(metadata);
+	}
+	
+	public PipeType getPipeType(IBlockAccess blockAccess, int x, int y, int z)
+	{
+		return getPipeType(blockAccess.getBlockMetadata(x, y, z));
+	}
+
+	@Override
+	public GasType getCarriedType(World world, int x, int y, int z)
+	{
+		return type;
+	}
+
+	@Override
+	public IGasTransporter setCarriedType(World world, int x, int y, int z, GasType type)
+	{
+		if (this.type != type)
+		{
+			world.setBlock(x, y, z, type.pipeBlock, world.getBlockMetadata(x, y, z), 3);
+			return (IGasTransporter)world.getBlock(x, y, z);
+		}
+		else
+		{
+			return this;
+		}
+	}
+
+	@Override
+	public void handlePressure(World world, Random random, int x, int y, int z, int pressure)
+	{
+		PipeType type = getPipeType(world, x, y, z);
+		int pressureTolerance = type.getPressureTolerance();
+		
+		if (pressureTolerance != -1 && pressureTolerance < pressure)
+		{
+			int burstChance = (pressureTolerance * 4 - pressure) * 10 + 20;
+			if (burstChance <= 0 || random.nextInt(burstChance * 2) == 0)
+			{
+				burst(world, x, y, z);
+				world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "random.break", 1.0F, random.nextFloat() * 0.1F + 0.9F);
+			}
+			else
+			{
+				float volume = 0.01F + random.nextFloat() * 0.01F + (pressure - pressureTolerance) * 0.001F;
+				if(random.nextInt(burstChance) == 0)
+				{
+					world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "random.chestopen", volume * 2.0F, 0.25F);
+				}
+				else if(random.nextInt(burstChance) == 0)
+				{
+					world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "mob.irongolem.death", volume * 2.0F, 0.25F);
+				}
+				else if(random.nextInt(burstChance * 2) == 0)
+				{
+					world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "minecart.base", volume, 0.25F);
+				}
+				else if(random.nextInt(burstChance * 2) == 0)
+				{
+					world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "minecart.inside", volume, 0.25F);
+				}
+			}
+		}
 	}
 }

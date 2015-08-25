@@ -1,7 +1,7 @@
 package glenn.gasesframework.common;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.moddingutils.Configurations.ItemRepresentation;
+import glenn.moddingutils.ItemRepresentation;
 
 import java.io.BufferedReader;
 import java.io.File;

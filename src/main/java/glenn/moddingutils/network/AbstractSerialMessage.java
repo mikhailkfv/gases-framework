@@ -1,4 +1,4 @@
-package glenn.moddingutils;
+package glenn.moddingutils.network;
 
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
@@ -8,6 +8,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTSizeTracker;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Uses reflection to automatically read from and write to the buffer.
@@ -59,6 +62,12 @@ public abstract class AbstractSerialMessage extends AbstractMessage
 				else if(c == String.class)
 				{
 					byte[] val = ((String)field.get(this)).getBytes();
+					buffer.writeShort(val.length);
+					buffer.writeBytes(val);
+				}
+				else if(c == NBTTagCompound.class)
+				{
+					byte[] val = CompressedStreamTools.compress((NBTTagCompound)field.get(this));
 					buffer.writeShort(val.length);
 					buffer.writeBytes(val);
 				}
@@ -189,6 +198,12 @@ public abstract class AbstractSerialMessage extends AbstractMessage
 					byte[] val = new byte[buffer.readShort()];
 					buffer.readBytes(val);
 					field.set(this, new String(val, "UTF-16"));
+				}
+				else if(c == NBTTagCompound.class)
+				{
+					byte[] val = new byte[buffer.readShort()];
+					buffer.readBytes(val);
+					field.set(this, CompressedStreamTools.func_152457_a(val, new NBTSizeTracker(Short.MAX_VALUE)));
 				}
 				else if(c.isArray())
 				{

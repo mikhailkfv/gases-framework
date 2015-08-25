@@ -1,9 +1,11 @@
 package glenn.gasesframework.api;
 
+import glenn.gasesframework.api.filter.GasTypeFilter;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
+import glenn.gasesframework.api.pipetype.PipeType;
 
 import java.util.Random;
 
@@ -11,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * An interface to connect the GasesFrameworkAPI to the actual GasesFramework mod.
@@ -65,6 +68,37 @@ public interface IGasesFramework
 	public void placeGas(World world, int x, int y, int z, GasType type, int volume);
 	
 	/**
+	 * Pump gas into an IGasTransporter or an IGasReceptor with a certain direction and pressure.
+	 * If the block is an IGasTransporter, the gas will be pumped as far as the pressure allows it.
+	 * @param world
+	 * @param random
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param type
+	 * @param direction
+	 * @param pressure
+	 * @return Whether the pumping action succeeded or not.
+	 */
+	public boolean pumpGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure);
+	
+	/**
+	 * Push gas to a coordinate with a certain direction and pressure.
+	 * If the block is an IGasTransporter or IGasReceptor, {@link glenn.gasesframework.api.IGasesFramework#pumpGas(World,int,int,int,GasType,ForgeDirection,int) pumpGas(World,int,int,int,GasType,ForgeDirection,int)} is returned.
+	 * Else, {@link glenn.gasesframework.api.IGasesFramework#fillWithGas(World,int,int,int,GasType) fillWithGas(World,int,int,int,GasType)} is returned.
+	 * @param world
+	 * @param random
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param type
+	 * @param direction
+	 * @param pressure
+	 * @return Whether the pushing action succeeded or not.
+	 */
+	public boolean pushGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure);
+	
+	/**
 	 * If gas exists at this location, it will be ignited.
 	 * @param world
 	 * @param x
@@ -86,6 +120,18 @@ public interface IGasesFramework
 	 * @param isSmoking
 	 */
 	public void spawnDelayedExplosion(World world, double x, double y, double z, int delay, float power, boolean isFlaming, boolean isSmoking);
+	
+	/**
+	 * Sent a filter update packet for {@link glenn.gasesframework.api.block.IGasFilter IGasFilter} blocks to clients.
+	 * This will call {@link glenn.gasesframework.api.block.IGasFilter#setFilter(World,int,int,int,ForgeDirection,GasTypeFilter) setFilter(World,int,int,int,ForgeDirection,GasTypeFilter)}.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param side
+	 * @param filter
+	 */
+	public void sendFilterUpdatePacket(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter);
 	
 	/**
 	 * Gets the gas type of the gas block at the location, if any. If no gas block is present, null is returned.
@@ -170,4 +216,10 @@ public interface IGasesFramework
 	 * @param handler
 	 */
 	public void registerGasTransposerHandler(IGasTransposerHandler handler);
+	
+	/**
+	 * Registers a pipe type.
+	 * @param type
+	 */
+	public void registerPipeType(PipeType type);
 }

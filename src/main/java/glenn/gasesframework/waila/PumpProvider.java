@@ -1,17 +1,18 @@
 package glenn.gasesframework.waila;
 
-import glenn.gasesframework.common.tileentity.TileEntityGasPump;
+import glenn.gasesframework.api.filter.GasTypeFilterSingle;
+import glenn.gasesframework.common.tileentity.TileEntityDirectionalGasPropellor;
 
 import java.util.List;
 
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 public class PumpProvider implements IWailaDataProvider
@@ -31,15 +32,10 @@ public class PumpProvider implements IWailaDataProvider
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
-		TileEntityGasPump pump = (TileEntityGasPump)accessor.getTileEntity();
-		if (pump.filterType == null)
-		{
-			currenttip.add(StatCollector.translateToLocal("tile.gf_gasPump.waila.body.filter.none"));
-		}
-		else
-		{
-			String gasName = StatCollector.translateToLocal(pump.filterType.getUnlocalizedName() + ".name");
-			currenttip.add(StatCollector.translateToLocalFormatted("tile.gf_gasPump.waila.body.filter." + (pump.excludes ? "excluding" : "including"), gasName));
+		TileEntityDirectionalGasPropellor pump = (TileEntityDirectionalGasPropellor)accessor.getTileEntity();
+		String filterString = GasTypeFilterUtil.getFilterString(pump.filter);
+		if (filterString != null) {
+			currenttip.add(filterString);
 		}
 		return currenttip;
 	}

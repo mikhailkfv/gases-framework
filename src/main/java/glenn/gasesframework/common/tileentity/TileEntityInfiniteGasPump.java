@@ -1,6 +1,8 @@
 package glenn.gasesframework.common.tileentity;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.gastype.GasType;
 import net.minecraft.block.Block;
@@ -13,14 +15,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class TileEntityInfiniteGasPump extends TileEntity
 {
-	public static final int PUMP_FREQUENCY = 20;
+	private final int pumpRate;
 	
 	private int pumpTime;
 	private GasType[] types = new GasType[6];
 	
 	public TileEntityInfiniteGasPump()
 	{
-		pumpTime = PUMP_FREQUENCY;
+		pumpRate = GasesFramework.configurations.piping.infiniteMaterial.pumpRate;
+		pumpTime = pumpRate;
 		for(int i = 0; i < types.length; i++)
 		{
 			types[i] = GasesFrameworkAPI.gasTypeAir;
@@ -38,7 +41,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
 		int ordinal = side.ordinal();
 		if(newType == types[ordinal]) newType = GasesFrameworkAPI.gasTypeAir;
 		
-		worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), ordinal, newType != null ? newType.gasID : -1);
+		worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), ordinal, GasType.getGasID(newType));
 		types[ordinal] = newType;
 	}
 	
@@ -47,6 +50,21 @@ public class TileEntityInfiniteGasPump extends TileEntity
 		return !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 	}
 	
+    /**
+     * Pump to a specified block. If the contained gas type is consumed, return true.
+     * @param x
+     * @param y
+     * @param z
+     * @param direction
+     * @return
+     */
+    protected boolean pumpToBlock(int x, int y, int z, GasType type, ForgeDirection direction)
+    {
+    	IGasPropellor propellor = (IGasPropellor)getBlockType();
+    	int pressure = propellor.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, direction);
+    	return GasesFrameworkAPI.pushGas(worldObj, worldObj.rand, x, y, z, type, direction, pressure);
+    }
+    
 	@Override
 	public void updateEntity()
 	{
@@ -61,21 +79,12 @@ public class TileEntityInfiniteGasPump extends TileEntity
 					int x = xCoord + side.offsetX;
 					int y = yCoord + side.offsetY;
 					int z = zCoord + side.offsetZ;
-					Block block = worldObj.getBlock(x, y, z);
 					
-					if(block instanceof IGasReceptor)
-					{
-						IGasReceptor receptor = (IGasReceptor)block;
-						receptor.receiveGas(worldObj, x, y, z, side.getOpposite(), type);
-					}
-					else
-					{
-						GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, x, y, z, type);
-					}
+					pumpToBlock(x, y, z, type, side);
 				}
 			}
 			
-			pumpTime = PUMP_FREQUENCY;
+			pumpTime = pumpRate;
 		}
 	}
 	
@@ -101,8 +110,8 @@ public class TileEntityInfiniteGasPump extends TileEntity
 		int[] gasIDArray = new int[6];
 		for(int i = 0; i < types.length; i++)
 		{
-			GasType type = types[i];
-			gasIDArray[i] = type.gasID;
+			GasType gasType = types[i];
+			gasIDArray[i] = GasType.getGasID(gasType);
 		}
 		tagCompound.setIntArray("types", gasIDArray);
 	}

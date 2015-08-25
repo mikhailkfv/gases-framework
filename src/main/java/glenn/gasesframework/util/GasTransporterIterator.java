@@ -5,7 +5,7 @@ import glenn.moddingutils.IVec;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class PipeBranchIterator
+public abstract class GasTransporterIterator
 {
 	private static final IVec[] offsets = new IVec[]{
 		new IVec(0, -1, 0),
@@ -16,29 +16,29 @@ public abstract class PipeBranchIterator
 		new IVec(1, 0, 0)
 	};
 	
-	public static class AscendingPipeBranchIterator extends PipeBranchIterator
+	public static class AscendingGasTransporterIterator extends GasTransporterIterator
 	{
-		public AscendingPipeBranchIterator(PipeBranch begin)
+		public AscendingGasTransporterIterator(GasTransporterBranch begin)
 		{
 			super(begin);
 		}
 		
 		@Override
-		protected boolean validate(PipeBranch previous, PipeBranch next)
+		protected boolean validate(GasTransporterBranch previous, GasTransporterBranch next)
 		{
 			return previous.depth < next.depth;
 		}
 	}
 	
-	public static class DescendingPipeBranchIterator extends PipeBranchIterator
+	public static class DescendingGasTransporterIterator extends GasTransporterIterator
 	{
-		public DescendingPipeBranchIterator(PipeBranch begin)
+		public DescendingGasTransporterIterator(GasTransporterBranch begin)
 		{
 			super(begin);
 		}
 		
 		@Override
-		protected boolean validate(PipeBranch previous, PipeBranch next)
+		protected boolean validate(GasTransporterBranch previous, GasTransporterBranch next)
 		{
 			return previous.depth > next.depth;
 		}
@@ -46,13 +46,13 @@ public abstract class PipeBranchIterator
 	
 	public static class Iteration
 	{
-		public final PipeBranch previous;
+		public final GasTransporterBranch previous;
 		public final IVec previousPosition;
-		public final PipeBranch current;
+		public final GasTransporterBranch current;
 		public final IVec currentPosition;
 		public final int direction;
 		
-		public Iteration(PipeBranch previous, IVec previousPosition, PipeBranch current, IVec currentPosition, int direction)
+		public Iteration(GasTransporterBranch previous, IVec previousPosition, GasTransporterBranch current, IVec currentPosition, int direction)
 		{
 			this.previous = previous;
 			this.previousPosition = previousPosition;
@@ -62,12 +62,12 @@ public abstract class PipeBranchIterator
 		}
 	}
 	
-	protected final PipeBranch begin;
+	protected final GasTransporterBranch begin;
 	private ArrayList<Iteration> currentQueue;
 	private int currentIndex = 0;
 	private ArrayList<Iteration> nextQueue = new ArrayList<Iteration>();
 	
-	protected PipeBranchIterator(PipeBranch begin)
+	protected GasTransporterIterator(GasTransporterBranch begin)
 	{
 		this.begin = begin;
 		
@@ -122,11 +122,11 @@ public abstract class PipeBranchIterator
 		if(!nextQueue.contains(iteration)) nextQueue.add(iteration);
 	}
 	
-	private void iterate(PipeBranch previous, IVec previousPosition)
+	private void iterate(GasTransporterBranch previous, IVec previousPosition)
 	{
 		for(int i = 0; i < 6; i++)
 		{
-			PipeBranch next = previous.connections[i];
+			GasTransporterBranch next = previous.connections[i];
 			if(next != null)
 			{
 				if(validate(previous, next))
@@ -137,5 +137,5 @@ public abstract class PipeBranchIterator
 		}
 	}
 	
-	protected abstract boolean validate(PipeBranch previous, PipeBranch next);
+	protected abstract boolean validate(GasTransporterBranch previous, GasTransporterBranch next);
 }

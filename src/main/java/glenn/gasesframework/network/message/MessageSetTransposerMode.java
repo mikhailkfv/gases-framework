@@ -2,9 +2,9 @@ package glenn.gasesframework.network.message;
 
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
-import glenn.moddingutils.AbstractMessage;
-import glenn.moddingutils.AbstractMessageHandler;
-import glenn.moddingutils.AbstractSerialMessage;
+import glenn.moddingutils.network.AbstractMessage;
+import glenn.moddingutils.network.AbstractMessageHandler;
+import glenn.moddingutils.network.AbstractSerialMessage;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;

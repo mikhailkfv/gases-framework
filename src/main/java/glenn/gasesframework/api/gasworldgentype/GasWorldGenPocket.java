@@ -1,14 +1,23 @@
 package glenn.gasesframework.api.gasworldgentype;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.oredict.OreDictionary;
 import glenn.gasesframework.api.gastype.GasType;
 
 public class GasWorldGenPocket extends GasWorldGenType
 {
-	public final Block replacedBlock;
+	public final Set<Block> replaceBlocks = Collections.newSetFromMap(new IdentityHashMap<Block, Boolean>());
 	
 	/**
 	 * Creates a new gas world gen pocket. Gas world gen types are necessary for adding gases to the terrain.
@@ -20,12 +29,32 @@ public class GasWorldGenPocket extends GasWorldGenType
 	 * @param evenness - The evenness of the gas pocket/cloud. 0.0f gives very uneven gas pockets/clouds. 1.0f gives completely round gas pockets/clouds.
 	 * @param minY - The minimal y coordinate of a gas pocket/cloud.
 	 * @param maxY - The maximal y coordiante of a gas pocket/cloud.
-	 * @param replacedBlock - The block that will be replaced by this gas pocket.
+	 * @param replaceBlocks - Blocks replaceable by this gas pocket. Strings will be interpreted as ore dictionary strings.
 	 */
-	public GasWorldGenPocket(String name, GasType gasType, float generationFrequency, float averageVolume, float evenness, int minY, int maxY, Block replacedBlock)
+	public GasWorldGenPocket(String name, GasType gasType, float generationFrequency, float averageVolume, float evenness, int minY, int maxY, Object... replaceBlocks)
 	{
 		super(name, gasType, generationFrequency, averageVolume, evenness, minY, maxY);
-		this.replacedBlock = replacedBlock;
+		
+		for (Object obj : replaceBlocks)
+		{
+			if (obj instanceof Block)
+			{
+				this.replaceBlocks.add((Block)obj);
+			}
+			else if (obj instanceof String)
+			{
+				ArrayList<ItemStack> itemstacks =  OreDictionary.getOres((String)obj);
+				for (ItemStack itemstack : itemstacks)
+				{
+					Item item = itemstack.getItem();
+					Block block = Block.getBlockFromItem(item);
+					if (block != null)
+					{
+						this.replaceBlocks.add(block);
+					}
+				}
+			}
+		}
 	}
 	
 	/**
@@ -40,7 +69,7 @@ public class GasWorldGenPocket extends GasWorldGenType
 	@Override
 	public int getPlacementVolume(World world, int x, int y, int z, float placementScore)
 	{
-		if(world.getBlock(x, y, z).isReplaceableOreGen(world, x, y, z, replacedBlock))
+		if(this.replaceBlocks.contains(world.getBlock(x, y, z)))
 		{
 			for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 	    	{

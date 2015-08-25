@@ -30,7 +30,7 @@ public class TileEntityGasTank extends TileEntity
 	{
 		amount = 0;
 		
-		if(GasesFramework.configurations.other_fancyTank)
+		if(GasesFramework.configurations.blocks.gasTank.fancyTank)
 		{
 			ps = new double[9][9];
 			vs = new double[9][9];
@@ -44,7 +44,7 @@ public class TileEntityGasTank extends TileEntity
 		amount = par1NBTTagCompound.getInteger("amount");
 		containedType = GasType.getGasTypeByID(par1NBTTagCompound.getInteger("containedType"));
 		
-		if(GasesFramework.configurations.other_fancyTank)
+		if(GasesFramework.configurations.blocks.gasTank.fancyTank)
 		{
 			double gasHeight = getGasCap() == 0 ? 0.0D : (double)amount / getGasCap();
 			for(double[] fs : ps)
@@ -59,7 +59,7 @@ public class TileEntityGasTank extends TileEntity
 	{
 		super.writeToNBT(par1NBTTagCompound);
 		par1NBTTagCompound.setInteger("amount", amount);
-		par1NBTTagCompound.setInteger("containedType", containedType != null ? containedType.gasID : -1);
+		par1NBTTagCompound.setInteger("containedType", GasType.getGasID(containedType));
 	}
 	
 	/**
@@ -99,7 +99,7 @@ public class TileEntityGasTank extends TileEntity
 	
 	private void wobble(boolean up)
 	{
-		if(!GasesFramework.configurations.other_fancyTank)
+		if(!GasesFramework.configurations.blocks.gasTank.fancyTank)
 		{
 			return;
 		}
@@ -131,7 +131,7 @@ public class TileEntityGasTank extends TileEntity
 			return;
 		}
 		
-		if(worldObj.isRemote && GasesFramework.configurations.other_fancyTank)
+		if(worldObj.isRemote && GasesFramework.configurations.blocks.gasTank.fancyTank)
 		{
 			double gasHeight = getGasCap() == 0 ? 0.0D : (double)amount / getGasCap();
 			for(int i = 0; i < 9; i++)
@@ -224,7 +224,7 @@ public class TileEntityGasTank extends TileEntity
 				if(!worldObj.isRemote)
 				{
 					worldObj.addBlockEvent(xCoord, yCoord, zCoord, GasesFramework.gasTank, SET_AMOUNT, amount);
-					worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), SET_TYPE, containedType == null ? -1 : containedType.gasID);
+					worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), SET_TYPE, GasType.getGasID(containedType));
 				}
 				return true;
 			}
@@ -256,7 +256,7 @@ public class TileEntityGasTank extends TileEntity
 			if(!worldObj.isRemote)
 			{
 				worldObj.addBlockEvent(xCoord, yCoord, zCoord, GasesFramework.gasTank, SET_AMOUNT, amount);
-				worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), SET_TYPE, containedType == null ? -1 : containedType.gasID);
+				worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), SET_TYPE, GasType.getGasID(containedType));
 			}
 			
 			return true;
