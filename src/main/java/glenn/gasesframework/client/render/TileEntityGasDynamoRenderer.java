@@ -6,6 +6,7 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.common.tileentity.TileEntityGasDynamo;
+import glenn.moddingutils.blockrotation.BlockRotation;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -30,40 +31,6 @@ public class TileEntityGasDynamoRenderer extends TileEntitySpecialRenderer
 		
 		GL11.glPopMatrix();
 	}
-
-	private int getRotationX(ForgeDirection direction)
-	{
-		switch (direction)
-		{
-		case UP:
-			return 90;
-		case DOWN:
-			return 270;
-		default:
-			return 0;
-		}
-	}
-	
-	private int getRotationY(ForgeDirection direction)
-	{
-		switch (direction)
-		{
-		case NORTH:
-			return 0;
-		case SOUTH:
-			return 180;
-		case WEST:
-			return 90;
-		case EAST:
-			return 270;
-		case UP:
-			return 180;
-		case DOWN:
-			return 0;
-		default:
-			return 0;
-		}
-	}
 	
 	public void renderGasDynamoAt(TileEntityGasDynamo tileEntity, int i, int j, int k)
 	{
@@ -76,10 +43,11 @@ public class TileEntityGasDynamoRenderer extends TileEntitySpecialRenderer
 		Block block = tileEntity.getBlockType();
 
 		int metadata = tileEntity.getWorldObj().getBlockMetadata(i, j, k);
-		ForgeDirection direction = ForgeDirection.getOrientation(metadata);
+		BlockRotation rotation = BlockRotation.getRotation(metadata);
+		ForgeDirection direction = rotation.getDirection();
 		int mixedBrightness = block.getMixedBrightnessForBlock(world, i + direction.offsetX, j + direction.offsetY, k + direction.offsetZ);
-		int rotationX = getRotationX(direction);
-		int rotationY = getRotationY(direction);
+		int rotationX = rotation.pitch.getRotationDegrees();
+		int rotationY = rotation.yaw.getRotationDegrees();
 		
 		double charge = (double)tileEntity.getEnergyStored(ForgeDirection.UNKNOWN) / tileEntity.getMaxEnergyStored(ForgeDirection.UNKNOWN);
 

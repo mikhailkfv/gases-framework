@@ -4,8 +4,11 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.client.render.RenderBlockGasDynamo;
 import glenn.gasesframework.common.container.ContainerGasDynamo;
 import glenn.gasesframework.common.tileentity.TileEntityGasDynamo;
+import glenn.moddingutils.blockrotation.BlockRotation;
+import glenn.moddingutils.blockrotation.AbstractRenderRotatedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -50,8 +53,12 @@ public class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityPr
     @Override
     public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-    	int metadata = blockAccess.getBlockMetadata(x, y, z);
-    	if(metadata == side)
+    	BlockRotation blockRotation = BlockRotation.getRotation(blockAccess.getBlockMetadata(x, y, z));
+
+    	ForgeDirection sideDirection = ForgeDirection.getOrientation(side);
+    	ForgeDirection actualSide = blockRotation.rotate(sideDirection);
+    	
+    	if(actualSide == ForgeDirection.NORTH)
     	{
     		TileEntityGasDynamo gasDynamo = (TileEntityGasDynamo)blockAccess.getTileEntity(x, y, z);
     		return gasDynamo.isBurning ? iconFrontBurning : iconFront;
@@ -68,36 +75,7 @@ public class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityPr
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemstack)
     {
-    	int metadata;
-    	
-    	if(entity.rotationPitch < -45.0f)
-    	{
-    		metadata = 0;
-    	}
-    	else if(entity.rotationPitch > 45.0f)
-    	{
-    		metadata = 1;
-    	}
-    	else
-    	{
-    		int side = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-    		switch(side)
-    		{
-    		case 0:
-    			metadata = 2;
-    			break;
-    		case 1:
-    			metadata = 5;
-    			break;
-    		case 2:
-    			metadata = 3;
-    			break;
-    		default:
-    			metadata = 4;
-    		}
-    	}
-    	
-    	world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
+    	world.setBlockMetadataWithNotify(x, y, z, BlockRotation.getRotation(-entity.rotationYaw, entity.rotationPitch).ordinal(), 2);
     }
     
     @Override
@@ -128,6 +106,20 @@ public class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityPr
     	return tileEntity.blockEvent(eventID, eventParam);
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getRenderType()
+    {
+    	if (!AbstractRenderRotatedBlock.renderingInventoryBlock)
+    	{
+    		return RenderBlockGasDynamo.RENDER_ID;
+    	}
+    	else
+    	{
+    		return super.getRenderType();
+    	}
+    }
+    
 	@Override
     public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
     {

@@ -1,7 +1,14 @@
 package glenn.gasesframework.client;
 
+import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import cpw.mods.fml.relauncher.Side;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.client.render.RenderBlockGas;
+import glenn.gasesframework.client.render.RenderBlockGasDynamo;
 import glenn.gasesframework.client.render.RenderBlockGasPipe;
 import glenn.gasesframework.client.render.RenderBlockGasPump;
 import glenn.gasesframework.client.render.RenderBlockGasTank;
@@ -16,12 +23,6 @@ import glenn.moddingutils.UpdateChecker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
 
 public class ClientProxy extends CommonProxy
 {
@@ -37,6 +38,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerBlockHandler(RenderBlockGasPump.RENDER_ID, new RenderBlockGasPump());
 		RenderingRegistry.registerBlockHandler(RenderBlockGasTank.RENDER_ID, new RenderBlockGasTank());
 		RenderingRegistry.registerBlockHandler(RenderBlockInfiniteGasPump.RENDER_ID, new RenderBlockInfiniteGasPump());
+		RenderingRegistry.registerBlockHandler(RenderBlockGasDynamo.RENDER_ID, new RenderBlockGasDynamo());
 	}
 	
 	@Override
