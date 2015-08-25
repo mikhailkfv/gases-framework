@@ -1,14 +1,15 @@
 package glenn.gasesframework.common.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.client.render.RenderBlockGasDynamo;
+import glenn.gasesframework.client.render.RenderRotatedBlock;
 import glenn.gasesframework.common.container.ContainerGasDynamo;
 import glenn.gasesframework.common.tileentity.TileEntityGasDynamo;
 import glenn.moddingutils.blockrotation.BlockRotation;
-import glenn.moddingutils.blockrotation.AbstractRenderRotatedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -16,14 +17,10 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityProvider
 {
@@ -51,21 +48,36 @@ public abstract class BlockGasDynamo extends Block implements IGasReceptor, ITil
     
     @SideOnly(Side.CLIENT)
     @Override
+    public IIcon getIcon(int side, int metadata)
+    {
+    	return getIcon(side, metadata, false);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
     public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int side)
     {
-    	BlockRotation blockRotation = BlockRotation.getRotation(blockAccess.getBlockMetadata(x, y, z));
-
+	    TileEntityGasDynamo gasDynamo = (TileEntityGasDynamo)blockAccess.getTileEntity(x, y, z);
+	    int metadata = blockAccess.getBlockMetadata(x, y, z);
+	    boolean isBurning = gasDynamo.isBurning;
+	    
+	    return getIcon(side, metadata, isBurning);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    protected IIcon getIcon(int side, int metadata, boolean isBurning)
+    {
+    	BlockRotation blockRotation = BlockRotation.getRotation(metadata);
     	ForgeDirection sideDirection = ForgeDirection.getOrientation(side);
     	ForgeDirection actualSide = blockRotation.rotate(sideDirection);
     	
-    	if(actualSide == ForgeDirection.NORTH)
-    	{
-    		TileEntityGasDynamo gasDynamo = (TileEntityGasDynamo)blockAccess.getTileEntity(x, y, z);
-    		return gasDynamo.isBurning ? iconFrontBurning : iconFront;
-    	}
+    	if (actualSide == ForgeDirection.NORTH)
+	    {
+    		return isBurning ? iconFrontBurning : iconFront;
+	    }
     	else
     	{
-    		return this.blockIcon;
+    		return blockIcon;
     	}
     }
     
@@ -110,9 +122,9 @@ public abstract class BlockGasDynamo extends Block implements IGasReceptor, ITil
     @Override
     public int getRenderType()
     {
-    	if (!AbstractRenderRotatedBlock.renderingInventoryBlock)
+    	if (!RenderRotatedBlock.isRenderingInventoryBlock)
     	{
-    		return RenderBlockGasDynamo.RENDER_ID;
+    		return RenderRotatedBlock.RENDER_ID;
     	}
     	else
     	{

@@ -8,16 +8,20 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class AbstractRenderRotatedBlock implements ISimpleBlockRenderingHandler
 {
-	public static boolean renderingInventoryBlock = false;
+	public abstract BlockRotation getItemRotation(int metadata);
 	
 	public abstract BlockRotation getRotation(IBlockAccess world, int x, int y, int z);
+	
+	public abstract void beginRenderInventoryBlock();
+	
+	public abstract void endRenderInventoryBlock();
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
-		renderingInventoryBlock = true;
-		renderer.renderBlockAsItem(block, metadata, 1.0f);
-		renderingInventoryBlock = false;
+		beginRenderInventoryBlock();
+		renderer.renderBlockAsItem(block, getItemRotation(metadata).ordinal(), 1.0f);
+		endRenderInventoryBlock();
 	}
 
 	@Override

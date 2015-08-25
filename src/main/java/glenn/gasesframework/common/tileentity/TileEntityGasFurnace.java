@@ -4,6 +4,7 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.common.block.BlockGasFurnace;
+import glenn.moddingutils.blockrotation.BlockRotation;
 
 import java.util.ArrayList;
 
@@ -321,9 +322,16 @@ public abstract class TileEntityGasFurnace extends TileEntity implements ISidedI
 	{
 		if(isBurning() && smokeTimer++ > 100)
 		{
+			BlockRotation rotation = BlockRotation.getRotation(getBlockMetadata());
+			ForgeDirection pushDirection = rotation.rotate(ForgeDirection.NORTH);
+			
+			int x = xCoord + pushDirection.offsetX;
+			int y = yCoord + pushDirection.offsetY;
+			int z = zCoord + pushDirection.offsetZ;
+
 			BlockGasFurnace block = (BlockGasFurnace)getBlockType();
-			int pressure = block.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, ForgeDirection.UP);
-			if (GasesFrameworkAPI.pushGas(worldObj, worldObj.rand, xCoord, yCoord + 1, zCoord, GasesFrameworkAPI.gasTypeSmoke, ForgeDirection.UP, pressure))
+			int pressure = block.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, pushDirection);
+			if (GasesFrameworkAPI.pushGas(worldObj, worldObj.rand, x, y, z, GasesFrameworkAPI.gasTypeSmoke, pushDirection, pressure))
 			{
 				smokeTimer = 0;
 			}

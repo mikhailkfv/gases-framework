@@ -8,7 +8,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.client.render.RenderBlockGas;
-import glenn.gasesframework.client.render.RenderBlockGasDynamo;
+import glenn.gasesframework.client.render.RenderRotatedBlock;
 import glenn.gasesframework.client.render.RenderBlockGasPipe;
 import glenn.gasesframework.client.render.RenderBlockDirectionalGasPropellor;
 import glenn.gasesframework.client.render.RenderBlockGasTank;
@@ -38,7 +38,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerBlockHandler(RenderBlockDirectionalGasPropellor.RENDER_ID, new RenderBlockDirectionalGasPropellor());
 		RenderingRegistry.registerBlockHandler(RenderBlockGasTank.RENDER_ID, new RenderBlockGasTank());
 		RenderingRegistry.registerBlockHandler(RenderBlockInfiniteGasPump.RENDER_ID, new RenderBlockInfiniteGasPump());
-		RenderingRegistry.registerBlockHandler(RenderBlockGasDynamo.RENDER_ID, new RenderBlockGasDynamo());
+		RenderingRegistry.registerBlockHandler(RenderRotatedBlock.RENDER_ID, new RenderRotatedBlock());
 	}
 	
 	@Override

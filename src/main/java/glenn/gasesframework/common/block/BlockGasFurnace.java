@@ -5,8 +5,10 @@ import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.client.render.RenderRotatedBlock;
 import glenn.gasesframework.common.container.ContainerGasFurnace;
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace;
+import glenn.moddingutils.blockrotation.BlockRotation;
 
 import java.util.Random;
 
@@ -94,7 +96,6 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 		}
 	}
 
-
 	/**
 	 * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
 	 */
@@ -102,16 +103,37 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	@Override
 	public IIcon getIcon(int side, int metadata)
 	{
-		return side == 1 ? this.furnaceIconTop : (side == 0 ? this.furnaceIconTop : (side == 4 ? this.furnaceIconFront[0] : this.blockIcon));
+		return getIcon(side, metadata, 0);
 	}
 	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int side)
 	{
-		int metadata = blockAccess.getBlockMetadata(x, y, z);
 		TileEntityGasFurnace tileEntity = (TileEntityGasFurnace)blockAccess.getTileEntity(x, y, z);
-		return side == 1 ? this.furnaceIconTop : (side == 0 ? this.furnaceIconTop : (metadata != side ? this.blockIcon : this.furnaceIconFront[tileEntity.prevStage]));
+		int metadata = blockAccess.getBlockMetadata(x, y, z);
+		int stage = tileEntity.prevStage;
+
+		return getIcon(side, metadata, stage);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	protected IIcon getIcon(int side, int metadata, int stage)
+	{
+		BlockRotation rotation = BlockRotation.getRotation(metadata);
+		ForgeDirection sideDirection = ForgeDirection.getOrientation(side);
+		ForgeDirection actualSide = rotation.rotate(sideDirection);
+
+		switch (actualSide)
+		{
+		case NORTH:
+		case SOUTH:
+			return this.furnaceIconTop;
+		case DOWN:
+			return this.furnaceIconFront[stage];
+		default:
+			return this.blockIcon;
+		}
 	}
 
 	/**
@@ -131,6 +153,20 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 		}
 	}
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public int getRenderType()
+    {
+    	if (!RenderRotatedBlock.isRenderingInventoryBlock)
+    	{
+    		return RenderRotatedBlock.RENDER_ID;
+    	}
+    	else
+    	{
+    		return super.getRenderType();
+    	}
+    }
+    
 	/**
 	 * Called upon block activation (right click on the block.)
 	 */
@@ -183,29 +219,9 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	 * Called when the block is placed in the world.
 	 */
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entityLivingBase, ItemStack itemStack)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemStack)
 	{
-		int l = MathHelper.floor_double((double)(entityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-
-		if (l == 0)
-		{
-			world.setBlockMetadataWithNotify(x, y, z, 2, 2);
-		}
-
-		if (l == 1)
-		{
-			world.setBlockMetadataWithNotify(x, y, z, 5, 2);
-		}
-
-		if (l == 2)
-		{
-			world.setBlockMetadataWithNotify(x, y, z, 3, 2);
-		}
-
-		if (l == 3)
-		{
-			world.setBlockMetadataWithNotify(x, y, z, 4, 2);
-		}
+		world.setBlockMetadataWithNotify(x, y, z, BlockRotation.getRotation(-entity.rotationYaw, entity.rotationPitch + 90.0F).ordinal(), 2);
 
 		if (itemStack.hasDisplayName())
 		{
@@ -345,7 +361,8 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	@Override
 	public int getPressureFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		if(side == ForgeDirection.UP)
+		BlockRotation rotation = BlockRotation.getRotation(world.getBlockMetadata(x, y, z));
+		if(side == rotation.rotate(ForgeDirection.NORTH))
 		{
 			TileEntityGasFurnace gasFurnace = (TileEntityGasFurnace)world.getTileEntity(x, y, z);
 			return gasFurnace.isBurning() ? GasesFramework.configurations.piping.ironMaterial.maxPressure : 0;
