@@ -160,7 +160,7 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
 	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
 		BlockRotation rotation = BlockRotation.getRotation(world.getBlockMetadata(x, y, z));
-		if(rotation.rotate(ForgeDirection.NORTH) != side)
+		if(rotation.rotateInverse(ForgeDirection.NORTH) != side)
 		{
 			TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)world.getTileEntity(x, y, z);
 			
@@ -176,7 +176,7 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
 	public int getPressureFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
 		BlockRotation rotation = BlockRotation.getRotation(world.getBlockMetadata(x, y, z));
-		return side == rotation.rotate(ForgeDirection.NORTH) ? maxPressure : 0;
+		return side == rotation.rotateInverse(ForgeDirection.NORTH) ? maxPressure : 0;
 	}
 	
     @Override

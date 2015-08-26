@@ -176,7 +176,7 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
     {
 		if(containedType != null)
 		{
-			BlockRotation rotation = ((BlockDirectionalGasPropellor)getBlockType()).getBlockRotation(worldObj, xCoord, yCoord, zCoord);
+			BlockRotation rotation = BlockRotation.getRotation(getBlockMetadata());
 			ForgeDirection direction = rotation.rotateInverse(ForgeDirection.NORTH);
 			if(pumpToBlock(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, direction))
 			{
