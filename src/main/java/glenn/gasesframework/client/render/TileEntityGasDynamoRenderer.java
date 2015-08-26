@@ -44,7 +44,7 @@ public class TileEntityGasDynamoRenderer extends TileEntitySpecialRenderer
 
 		int metadata = tileEntity.getWorldObj().getBlockMetadata(i, j, k);
 		BlockRotation rotation = BlockRotation.getRotation(metadata);
-		ForgeDirection direction = rotation.getDirection();
+		ForgeDirection direction = rotation.rotateInverse(ForgeDirection.NORTH);
 		int mixedBrightness = block.getMixedBrightnessForBlock(world, i + direction.offsetX, j + direction.offsetY, k + direction.offsetZ);
 		int rotationX = rotation.pitch.getRotationDegrees();
 		int rotationY = rotation.yaw.getRotationDegrees();
