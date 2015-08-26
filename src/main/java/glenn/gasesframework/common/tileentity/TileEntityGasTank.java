@@ -1,36 +1,45 @@
 package glenn.gasesframework.common.tileentity;
 
-import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.gastype.GasType;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import glenn.gasesframework.GasesFramework;
+import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.gastype.GasType;
+import glenn.moddingutils.ForgeDirectionUtil;
+import glenn.moddingutils.IVec;
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 
-public class TileEntityGasTank extends TileEntity
+public abstract class TileEntityGasTank extends TileEntity
 {
 	public static final int SET_AMOUNT = 0;
 	public static final int SET_TYPE = 1;
 	
-	public GasType containedType;
-	public int amount;
+	private final int storageMultiplier;
+	
+	private GasType gasTypeStored;
+	private int gasStored;
 	
 	public double[][] ps;
 	public double[][] vs;
 	
 	private static Random rand = new Random();
 	
-	public TileEntityGasTank()
+	public TileEntityGasTank(int storageMultiplier)
 	{
-		amount = 0;
+		this.storageMultiplier = storageMultiplier;
 		
-		if(GasesFramework.configurations.blocks.gasTank.fancyTank)
+		this.gasTypeStored = null;
+		this.gasStored = 0;
+		
+		if(GasesFramework.configurations.blocks.gasTanks.fancyTank)
 		{
 			ps = new double[9][9];
 			vs = new double[9][9];
@@ -38,15 +47,15 @@ public class TileEntityGasTank extends TileEntity
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
+	public void readFromNBT(NBTTagCompound tagCompound)
 	{
-		super.readFromNBT(par1NBTTagCompound);
-		amount = par1NBTTagCompound.getInteger("amount");
-		containedType = GasType.getGasTypeByID(par1NBTTagCompound.getInteger("containedType"));
+		super.readFromNBT(tagCompound);
+		gasStored = tagCompound.getInteger("amount");
+		gasTypeStored = GasType.getGasTypeByID(tagCompound.getInteger("containedType"));
 		
-		if(GasesFramework.configurations.blocks.gasTank.fancyTank)
+		if(GasesFramework.configurations.blocks.gasTanks.fancyTank)
 		{
-			double gasHeight = getGasCap() == 0 ? 0.0D : (double)amount / getGasCap();
+			double gasHeight = getRelativeGasStored();
 			for(double[] fs : ps)
 			{
 				Arrays.fill(fs, gasHeight);
@@ -55,11 +64,11 @@ public class TileEntityGasTank extends TileEntity
 	}
 
 	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
+	public void writeToNBT(NBTTagCompound tagCompound)
 	{
-		super.writeToNBT(par1NBTTagCompound);
-		par1NBTTagCompound.setInteger("amount", amount);
-		par1NBTTagCompound.setInteger("containedType", GasType.getGasID(containedType));
+		super.writeToNBT(tagCompound);
+		tagCompound.setInteger("amount", gasStored);
+		tagCompound.setInteger("containedType", GasType.getGasID(gasTypeStored));
 	}
 	
 	/**
@@ -97,9 +106,9 @@ public class TileEntityGasTank extends TileEntity
 		return ps[x][y];
 	}
 	
-	private void wobble(boolean up)
+	private void wobble(double direction)
 	{
-		if(!GasesFramework.configurations.blocks.gasTank.fancyTank)
+		if(!GasesFramework.configurations.blocks.gasTanks.fancyTank)
 		{
 			return;
 		}
@@ -108,7 +117,7 @@ public class TileEntityGasTank extends TileEntity
 		{
 			for(int j = 0; j < 9; j++)
 			{
-				vs[i][j] += (up ? -0.005D : 0.005D) * (1.0D - rand.nextDouble() * 3.0D);
+				vs[i][j] += direction * (rand.nextDouble() * 3.0D - 1.0D);
 			}
 		}
 	}
@@ -118,91 +127,176 @@ public class TileEntityGasTank extends TileEntity
     {
 		if(!worldObj.isRemote)
 		{
-			if(amount > 0)
-			{
-				TileEntity belowTileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
-				if(belowTileEntity != null && belowTileEntity instanceof TileEntityGasTank)
-				{
-					TileEntityGasTank tankEntity = (TileEntityGasTank)belowTileEntity;
-					if(!tankEntity.isFull() && tankEntity.increment(containedType)) decrement();
-				}
-			}
-			
-			return;
+			tryFlowDown();
 		}
 		
-		if(worldObj.isRemote && GasesFramework.configurations.blocks.gasTank.fancyTank)
+		if(worldObj.isRemote && GasesFramework.configurations.blocks.gasTanks.fancyTank)
 		{
-			double gasHeight = getGasCap() == 0 ? 0.0D : (double)amount / getGasCap();
-			for(int i = 0; i < 9; i++)
-			{
-				for(int j = 0; j < 9; j++)
-				{
-					vs[i][j] = vs[i][j];
-					vs[i][j] += (gasHeight - ps[i][j]) * 0.4D;
-					vs[i][j] += (get(i - 1, j) + get(i, j + 1) + get(i + 1, j) + get(i, j - 1) - ps[i][j] * 4) * 0.05D;
-					vs[i][j] += (get(i - 1, j) + get(i, j + 1) + get(i + 1, j) + get(i, j- 1) - ps[i][j] * 4) * 0.035355D;
-					vs[i][j] *= 0.9D;
-				}
-			}
-			
-			for(int i = 0; i < 9; i++)
-			{
-				for(int j = 0; j < 9; j++)
-				{
-					ps[i][j] += vs[i][j];
-					
-					if(ps[i][j] < 0.0D)
-					{
-						ps[i][j] = 0.0D;
-						vs[i][j] = -vs[i][j];
-					}
-					else if(ps[i][j] > 1.0D)
-					{
-						ps[i][j] = 1.0D;
-						vs[i][j] = -vs[i][j];
-					}
-				}
-			}
+			updateFancyTank();
 		}
     }
 	
-	public int getGasCap()
+	private void updateFancyTank()
 	{
-		if(containedType == null)
+		double gasHeight = getRelativeGasStored();
+		for(int i = 0; i < 9; i++)
 		{
-			return 0;
+			for(int j = 0; j < 9; j++)
+			{
+				vs[i][j] = vs[i][j];
+				vs[i][j] += (gasHeight - ps[i][j]) * 0.4D;
+				vs[i][j] += (get(i - 1, j) + get(i, j + 1) + get(i + 1, j) + get(i, j - 1) - ps[i][j] * 4) * 0.05D;
+				vs[i][j] += (get(i - 1, j) + get(i, j + 1) + get(i + 1, j) + get(i, j- 1) - ps[i][j] * 4) * 0.035355D;
+				vs[i][j] *= 0.9D;
+			}
+		}
+		
+		for(int i = 0; i < 9; i++)
+		{
+			for(int j = 0; j < 9; j++)
+			{
+				ps[i][j] += vs[i][j];
+				
+				if(ps[i][j] < 0.0D)
+				{
+					ps[i][j] = 0.0D;
+					vs[i][j] = -vs[i][j];
+				}
+				else if(ps[i][j] > 1.0D)
+				{
+					ps[i][j] = 1.0D;
+					vs[i][j] = -vs[i][j];
+				}
+			}
+		}
+	}
+	
+	private void tryFlowDown()
+	{
+		if(!isEmpty())
+		{
+			TileEntity tileEntity = worldObj.getTileEntity(xCoord, yCoord - 1, zCoord);
+			if(tileEntity instanceof TileEntityGasTank)
+			{
+				TileEntityGasTank tileEntityTank = (TileEntityGasTank)tileEntity;
+				if(tileEntityTank.increment(gasTypeStored))
+				{
+					decrement();
+				}
+			}
+		}
+	}
+	
+	public void emptyInAir()
+	{
+	    ArrayList<IVec> stack = new ArrayList<IVec>();
+	    stack.add(new IVec(xCoord, yCoord, zCoord));
+	    int pos = 0;
+	    
+	    while(!isEmpty() && pos < stack.size())
+	    {
+		    IVec current = stack.get(pos++);
+		    
+		    GasesFrameworkAPI.placeGas(worldObj, current.x, current.y, current.z, gasTypeStored, 16);
+		    gasStored--;
+		    
+		    for (ForgeDirection direction : ForgeDirectionUtil.shuffledList(worldObj.rand))
+		    {
+		    	IVec branch = current.added(ForgeDirectionUtil.getOffsetVec(direction));
+		    	Block block = worldObj.getBlock(branch.x, branch.y, branch.z);
+		    	if (block.isReplaceable(worldObj, branch.x, branch.y, branch.z))
+		    	{
+		    		stack.add(branch);
+		    	}
+		    }
+	    }
+	}
+	
+	public int getMaxGasStored()
+	{
+		if(gasTypeStored != null)
+		{
+			return ((64 - gasTypeStored.density) * 2 + 16) * storageMultiplier;
 		}
 		else
 		{
-			return (64 - containedType.density) * 2 + 16;
+			return 0;
 		}
+	}
+	
+	public double getRelativeGasStored()
+	{
+		return getMaxGasStored() != 0 ? (double)getGasStored() / getMaxGasStored() : 0.0D;
+	}
+	
+	public int getGasStored()
+	{
+		if (gasTypeStored != null)
+		{
+			return gasStored;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
+	public GasType getGasTypeStored()
+	{
+		return gasTypeStored;
+	}
+	
+	public boolean isEmpty()
+	{
+		return getGasStored() <= 0;
 	}
 	
 	public boolean isFull()
 	{
-		if(containedType == null) return false;
-		else return amount >= getGasCap();
+		if (gasTypeStored != null)
+		{
+			return gasStored >= getMaxGasStored();
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	public boolean canIncrement(GasType gasType)
 	{
-		if(gasType == GasesFrameworkAPI.gasTypeAir)
+		if(gasType == null || gasType == GasesFrameworkAPI.gasTypeAir)
 		{
 			return true;
 		}
-		else if(containedType == null | containedType == gasType)
+		else if(isEmpty())
 		{
-			containedType = gasType;
-			if(amount + 1 <= getGasCap())
+			return true;
+		}
+		else if(gasTypeStored == gasType)
+		{
+			if(gasStored < getMaxGasStored())
 			{
 				return true;
 			}
 			else
 			{
-				TileEntity aboveTileEntity = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
-				return aboveTileEntity != null && aboveTileEntity instanceof TileEntityGasTank && ((TileEntityGasTank)aboveTileEntity).canIncrement(gasType);
+				return canOverincrement(gasType);
 			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	private boolean canOverincrement(GasType gasType)
+	{
+		TileEntity tileEntity = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
+		if (tileEntity instanceof TileEntityGasTank)
+		{
+			TileEntityGasTank tileEntityGasTank = (TileEntityGasTank)tileEntity;
+			return tileEntityGasTank.canIncrement(gasType);
 		}
 		else
 		{
@@ -212,28 +306,30 @@ public class TileEntityGasTank extends TileEntity
 	
 	public boolean increment(GasType gasType)
 	{
-		if(gasType == GasesFrameworkAPI.gasTypeAir)
+		if(gasType == null || gasType == GasesFrameworkAPI.gasTypeAir)
 		{
 			return true;
 		}
-		else if(containedType == null | containedType == gasType)
+		else if(isEmpty())
 		{
-			containedType = gasType;
-			if(++amount <= getGasCap())
+			gasTypeStored = gasType;
+			gasStored++;
+			sync();
+
+			return true;
+		}
+		else if(gasTypeStored == gasType)
+		{
+			if (gasStored < getMaxGasStored())
 			{
-				if(!worldObj.isRemote)
-				{
-					worldObj.addBlockEvent(xCoord, yCoord, zCoord, GasesFramework.gasTank, SET_AMOUNT, amount);
-					worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), SET_TYPE, GasType.getGasID(containedType));
-				}
+				gasStored++;
+				sync();
+
 				return true;
 			}
 			else
 			{
-				amount = getGasCap();
-				
-				TileEntity aboveTileEntity = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
-				return aboveTileEntity != null && aboveTileEntity instanceof TileEntityGasTank && ((TileEntityGasTank)aboveTileEntity).increment(gasType);
+				return overincrement(gasType);
 			}
 		}
 		else
@@ -242,29 +338,50 @@ public class TileEntityGasTank extends TileEntity
 		}
 	}
 	
+	private boolean overincrement(GasType gasType)
+	{
+		TileEntity tileEntity = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
+		if (tileEntity instanceof TileEntityGasTank)
+		{
+			TileEntityGasTank tileEntityGasTank = (TileEntityGasTank)tileEntity;
+			return tileEntityGasTank.increment(gasType);
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	public boolean canDecrement()
+	{
+		return !isEmpty();
+	}
+	
 	public boolean decrement()
 	{
-		if(worldObj.isRemote) return amount > 0;
-		
-		if(amount-- > 0)
+		if (gasStored > 0)
 		{
-			if(amount == 0)
+			gasStored--;
+			if (isEmpty())
 			{
-				containedType = null;
+				gasTypeStored = null;
 			}
-			
-			if(!worldObj.isRemote)
-			{
-				worldObj.addBlockEvent(xCoord, yCoord, zCoord, GasesFramework.gasTank, SET_AMOUNT, amount);
-				worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), SET_TYPE, GasType.getGasID(containedType));
-			}
-			
+			sync();
+
 			return true;
 		}
 		else
 		{
-			amount = 0;
 			return false;
+		}
+	}
+	
+	private void sync()
+	{
+		if (!worldObj.isRemote)
+		{
+			worldObj.addBlockEvent(xCoord, yCoord, zCoord, getBlockType(), SET_AMOUNT, gasStored);
+			worldObj.addBlockEvent(xCoord, yCoord, zCoord, getBlockType(), SET_TYPE, GasType.getGasID(gasTypeStored));
 		}
 	}
 	
@@ -275,12 +392,12 @@ public class TileEntityGasTank extends TileEntity
 		switch(eventID)
 		{
 		case SET_AMOUNT:
-			if(amount < eventParam) wobble(true);
-			else if(amount > eventParam) wobble(false);
-			amount = eventParam;
+			if(gasStored < eventParam) wobble(0.005D);
+			else if(gasStored > eventParam) wobble(-0.005D);
+			gasStored = eventParam;
 			break;
 		case SET_TYPE:
-			containedType = GasType.getGasTypeByID(eventParam);
+			gasTypeStored = GasType.getGasTypeByID(eventParam);
 			break;
 		}
 		return true;

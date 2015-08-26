@@ -31,7 +31,7 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 	
 	public void renderTankAt(TileEntityGasTank tileEntity, int i, int j, int k)
 	{
-		double gasHeight = (double)tileEntity.amount / (double)tileEntity.getGasCap();
+		double gasHeight = tileEntity.getRelativeGasStored();
 		World world = tileEntity.getWorldObj();
 		Block block = tileEntity.getBlockType();
 		int mixedBrightness = block.getMixedBrightnessForBlock(world, i, j, k);
@@ -40,10 +40,13 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 		{
 			bindTexture(texture);
 			
-			GasType containedType = tileEntity.containedType;
-			if(containedType == null) containedType = GasesFrameworkAPI.gasTypeAir;
-			int color = containedType.color;
-			
+			GasType gasType = tileEntity.getGasTypeStored();
+			if(gasType == null)
+			{
+				gasType = GasesFrameworkAPI.gasTypeAir;
+			}
+
+			int color = gasType.color;
 			float red = (float)((color >> 24) & 0xFF) / 255.0F;
 			float green = (float)((color >> 16) & 0xFF) / 255.0F;
 			float blue = (float)((color >> 8) & 0xFF) / 255.0F;
@@ -64,7 +67,7 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 	    	GL11.glEnable(GL11.GL_BLEND);
 	    	GL11.glColor4f(red, green, blue, 1.0F);
 	    	
-	    	if(GasesFramework.configurations.blocks.gasTank.fancyTank)
+	    	if(GasesFramework.configurations.blocks.gasTanks.fancyTank)
 	    	{
 		    	double scale = 12.0D / 16.0D;
 		    	

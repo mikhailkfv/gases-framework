@@ -31,15 +31,15 @@ public class TankProvider implements IWailaDataProvider
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
-		TileEntityGasTank tank = (TileEntityGasTank)accessor.getTileEntity();
-		if (tank.containedType == null)
+		TileEntityGasTank tileEntity = (TileEntityGasTank)accessor.getTileEntity();
+		if (tileEntity.isEmpty())
 		{
 			currenttip.add(I18n.format("tile.gf_gasTank.waila.body.empty"));
 		}
 		else
 		{
-			String gasName = I18n.format(tank.containedType.getUnlocalizedName() + ".name");
-			String amount = 100 * tank.amount / tank.getGasCap() + "%";
+			String gasName = I18n.format(tileEntity.getGasTypeStored().getUnlocalizedName() + ".name");
+			String amount = 100.0D * tileEntity.getRelativeGasStored() + "%";
 			currenttip.add(I18n.format("tile.gf_gasTank.waila.body.filled", gasName, amount));
 		}
 		return currenttip;

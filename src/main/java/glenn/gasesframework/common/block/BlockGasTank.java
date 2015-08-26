@@ -27,15 +27,15 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITileEntityProvider, ISample
+public abstract class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITileEntityProvider, ISample
 {
 	public IIcon side;
 	public IIcon top;
 	public IIcon inside;
 	
-	public BlockGasTank()
+	public BlockGasTank(Material material)
 	{
-		super(Material.iron);
+		super(material);
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -65,15 +65,16 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
 	public GasType getGasTypeFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
 		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
+		GasType gasType = tileEntity.getGasTypeStored();
 		
-		return tileEntity.containedType != null ? tileEntity.containedType : GasesFrameworkAPI.gasTypeAir;
+		return gasType != null ? gasType : GasesFrameworkAPI.gasTypeAir;
 	}
 
 	@Override
 	public GasType takeGasTypeFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
 		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
-		GasType gasType = tileEntity.containedType;
+		GasType gasType = tileEntity.getGasTypeStored();
 		tileEntity.decrement();
 		
 		return gasType != null ? gasType : GasesFrameworkAPI.gasTypeAir;
@@ -93,12 +94,6 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
 		return tileEntity.increment(gasType);
 	}
 	
-	@Override
-	public TileEntity createNewTileEntity(World world, int metadata)
-	{
-	   return new TileEntityGasTank();
-	}
-
     @Override
 	public boolean isOpaqueCube()
 	{
@@ -119,15 +114,18 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
 	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, ForgeDirection side)
 	{
 		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
-		return tileEntity.containedType;
+		return tileEntity.getGasTypeStored();
 	}
     
     @Override
     public boolean onBlockEventReceived(World world, int x, int y, int z, int eventID, int eventParam)
     {
     	TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
-    	if(tileEntity == null) return false;
-    	return tileEntity.blockEvent(eventID, eventParam);
+    	if (tileEntity != null)
+    	{
+		    return tileEntity.blockEvent(eventID, eventParam);
+    	}
+    	return false;
     }
     
     /**
@@ -139,33 +137,9 @@ public class BlockGasTank extends Block implements IGasSource, IGasReceptor, ITi
 	public void breakBlock(World world, int x, int y, int z, Block oldBlock, int oldBlockMetadata)
 	{
     	TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
+    	tileEntity.emptyInAir();
+
     	super.breakBlock(world, x, y, z, oldBlock, oldBlockMetadata);
-    	
-    	if(tileEntity.containedType != null)
-    	{
-	    	ArrayList<IVec> stack = new ArrayList<IVec>();
-	    	stack.add(new IVec(x, y, z));
-	    	int pos = 0;
-	    	
-	    	while(pos < stack.size())
-	    	{
-	    		if(tileEntity.amount-- <= 0) break;
-	    		
-	    		IVec current = stack.get(pos++);
-	    		
-	    		
-	    		world.setBlock(current.x, current.y, current.z, tileEntity.containedType.block);
-	    		
-	    		for(int side = 0; side < 6; side++)
-	    		{
-					int xDirection = current.x + (side == 4 ? 1 : (side == 5 ? -1 : 0));
-			    	int yDirection = current.y + (side == 0 ? 1 : (side == 1 ? -1 : 0));
-			    	int zDirection = current.z + (side == 2 ? 1 : (side == 3 ? -1 : 0));
-			    	
-			    	if(world.isAirBlock(xDirection, yDirection, zDirection)) stack.add(new IVec(xDirection, yDirection, zDirection));
-	    		}
-	    	}
-    	}
 	}
 
 	@Override

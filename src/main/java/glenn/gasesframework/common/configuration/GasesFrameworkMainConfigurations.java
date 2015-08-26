@@ -64,9 +64,9 @@ public class GasesFrameworkMainConfigurations extends Configurations
 	public Blocks blocks;
 	public static class Blocks
 	{
-		@ConfigCategory(name = "Gas Tank")
-		public GasTank gasTank;
-		public static class GasTank
+		@ConfigCategory(name = "Gas Tanks")
+		public GasTanks gasTanks;
+		public static class GasTanks
 		{
 			@ConfigField(name = "Fancy tanks", comment = "Whether or not gas tanks will be rendered with fancy fluid physics", defaultValue = "true")
 			public boolean fancyTank;
@@ -210,6 +210,31 @@ public class GasesFrameworkMainConfigurations extends Configurations
 			@ConfigField(defaultValue = "40")
 			@DelegateConfig(delegateFor = "maxEnergyTransfer")
 			private int _maxEnergyTransfer;
+		}
+		
+		public static class GasTank
+		{
+			@ConfigField(name = "Storage multiplier", comment = "Multiplier for the amount of gas the block can store")
+			@AbstractConfig
+			public int storageMultiplier;
+		}
+		
+		@ConfigCategory(name = "Wood Gas Tank")
+		public WoodGasTank woodGasTank;
+		public static class WoodGasTank extends GasTank
+		{
+			@ConfigField(defaultValue = "1")
+			@DelegateConfig(delegateFor = "storageMultiplier")
+			private int _storageMultiplier;
+		}
+		
+		@ConfigCategory(name = "Iron Gas Tank")
+		public IronGasTank ironGasTank;
+		public static class IronGasTank extends GasTank
+		{
+			@ConfigField(defaultValue = "2")
+			@DelegateConfig(delegateFor = "storageMultiplier")
+			private int _storageMultiplier;
 		}
 	}
 	
