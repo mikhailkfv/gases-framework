@@ -1,5 +1,6 @@
 package glenn.moddingutils.blockrotation;
 
+import glenn.moddingutils.ForgeDirectionUtil;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public enum Yaw
@@ -33,6 +34,6 @@ public enum Yaw
 	
 	public static Yaw getYaw(int rotationIndex)
 	{
-		return values()[Math.floorMod(rotationIndex, 4)];
+		return values()[ForgeDirectionUtil.mod4(rotationIndex)];
 	}
 }

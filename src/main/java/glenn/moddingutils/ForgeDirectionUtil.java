@@ -68,7 +68,7 @@ public class ForgeDirectionUtil
 	
 	public static ForgeDirection rotate(ForgeDirection direction, ForgeDirection axis, int units)
 	{
-		return rotationLookup[axis.ordinal()][direction.ordinal()][Math.floorMod(units, 4)];
+		return rotationLookup[axis.ordinal()][direction.ordinal()][mod4(units)];
 	}
 
 	public static List<ForgeDirection> shuffledList(Random random)
@@ -81,5 +81,11 @@ public class ForgeDirectionUtil
 		List<ForgeDirection> directions = Arrays.asList(directionsArray);
 		Collections.shuffle(directions, random);
 		return directions;
+	}
+	
+	public static int mod4(int a)
+	{
+		int mod = a % 4;
+		return mod >= 0 ? mod : (4 - mod);
 	}
 }

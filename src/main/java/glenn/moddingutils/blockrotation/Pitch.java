@@ -1,5 +1,6 @@
 package glenn.moddingutils.blockrotation;
 
+import glenn.moddingutils.ForgeDirectionUtil;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public enum Pitch
@@ -37,6 +38,6 @@ public enum Pitch
 	
 	public static Pitch getPitch(int rotationIndex)
 	{
-		return values()[Math.floorMod(rotationIndex, 4)];
+		return values()[ForgeDirectionUtil.mod4(rotationIndex)];
 	}
 }
