@@ -50,9 +50,11 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	private static boolean keepFurnaceInventory;
 
 	@SideOnly(Side.CLIENT)
-	private IIcon furnaceIconTop;
+	private IIcon iconTop;
 	@SideOnly(Side.CLIENT)
-	private IIcon[] furnaceIconFront;
+	private IIcon iconBottom;
+	@SideOnly(Side.CLIENT)
+	private IIcon[] iconsFront;
 
 	public BlockGasFurnace(Material material, boolean isActive)
 	{
@@ -127,10 +129,11 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 		switch (actualSide)
 		{
 		case NORTH:
+			return this.iconTop;
 		case SOUTH:
-			return this.furnaceIconTop;
+			return this.iconBottom;
 		case DOWN:
-			return this.furnaceIconFront[stage];
+			return this.iconsFront[stage];
 		default:
 			return this.blockIcon;
 		}
@@ -144,12 +147,13 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	@Override
 	public void registerBlockIcons(IIconRegister iconRegister)
 	{
-		this.furnaceIconFront = new IIcon[5];
+		this.iconsFront = new IIcon[5];
 		this.blockIcon = iconRegister.registerIcon(getTextureName() + "_side");
-		this.furnaceIconTop = iconRegister.registerIcon(getTextureName() + "_top");
+		this.iconTop = iconRegister.registerIcon(getTextureName() + "_top");
+		this.iconBottom = iconRegister.registerIcon(getTextureName() + "_bottom");
 		for(int i = 0; i < 5; i++)
 		{
-			this.furnaceIconFront[i] = iconRegister.registerIcon(getTextureName() + "_front_" + i);
+			this.iconsFront[i] = iconRegister.registerIcon(getTextureName() + "_front_" + i);
 		}
 	}
 
