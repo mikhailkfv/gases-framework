@@ -1,19 +1,16 @@
 package glenn.gasesframework.common.tileentity;
 
+import java.util.Random;
+
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
-import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasSource;
 import glenn.gasesframework.api.filter.GasTypeFilter;
 import glenn.gasesframework.api.filter.GasTypeFilterOpen;
 import glenn.gasesframework.api.filter.GasTypeFilterSimple;
-import glenn.gasesframework.api.filter.GasTypeFilterSingleExcluding;
-import glenn.gasesframework.api.filter.GasTypeFilterSingleIncluding;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.common.block.BlockDirectionalGasPropellor;
 import glenn.moddingutils.blockrotation.BlockRotation;
-
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -179,7 +176,7 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
     {
 		if(containedType != null)
 		{
-			BlockRotation rotation = BlockRotation.getRotation(getBlockMetadata());
+			BlockRotation rotation = ((BlockDirectionalGasPropellor)getBlockType()).getBlockRotation(worldObj, xCoord, yCoord, zCoord);
 			ForgeDirection direction = rotation.rotate(ForgeDirection.NORTH);
 			if(pumpToBlock(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, direction))
 			{

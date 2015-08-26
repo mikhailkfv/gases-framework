@@ -9,6 +9,7 @@ import glenn.gasesframework.client.render.RenderRotatedBlock;
 import glenn.gasesframework.common.container.ContainerGasFurnace;
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace;
 import glenn.moddingutils.blockrotation.BlockRotation;
+import glenn.moddingutils.blockrotation.IRotatedBlock;
 
 import java.util.Random;
 
@@ -33,7 +34,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGasPropellor
+public abstract class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGasPropellor, IRotatedBlock
 {
 	/**
 	 * Is the random generator used by furnace to drop the inventory contents in random directions.
@@ -124,9 +125,9 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	{
 		BlockRotation rotation = BlockRotation.getRotation(metadata);
 		ForgeDirection sideDirection = ForgeDirection.getOrientation(side);
-		ForgeDirection actualSide = rotation.rotate(sideDirection);
+		ForgeDirection blockSide = rotation.rotate(sideDirection);
 
-		switch (actualSide)
+		switch (blockSide)
 		{
 		case NORTH:
 			return this.iconTop;
@@ -365,7 +366,7 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	@Override
 	public int getPressureFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
-		BlockRotation rotation = BlockRotation.getRotation(world.getBlockMetadata(x, y, z));
+		BlockRotation rotation = getBlockRotation(world, x, y, z);
 		if(side == rotation.rotate(ForgeDirection.NORTH))
 		{
 			TileEntityGasFurnace gasFurnace = (TileEntityGasFurnace)world.getTileEntity(x, y, z);
@@ -378,5 +379,17 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	public boolean connectToPipe(IBlockAccess blockaccess, int x, int y, int z, ForgeDirection side)
 	{
 		return true;
+	}
+	
+	@Override
+	public BlockRotation getBlockRotationAsItem(int metadata)
+	{
+		return BlockRotation.EAST_FORWARD;
+	}
+	
+	@Override
+	public BlockRotation getBlockRotation(IBlockAccess blockAccess, int x, int y, int z)
+	{
+		return BlockRotation.getRotation(blockAccess.getBlockMetadata(x, y, z));
 	}
 }

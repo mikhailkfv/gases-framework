@@ -8,6 +8,7 @@ import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.mechanical.IGasTransposerExtractHandler;
 import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
 import glenn.gasesframework.api.mechanical.IGasTransposerInsertHandler;
+import glenn.moddingutils.blockrotation.BlockRotation;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -274,7 +275,8 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				
 				if(handler.completeExtraction(tileEntity.itemStacks[1], tileEntity.itemStacks[outputSlot], tileEntity.pendingType))
 				{
-					ForgeDirection direction = ForgeDirection.getOrientation(tileEntity.getBlockMetadata());
+					BlockRotation rotation = BlockRotation.getRotation(tileEntity.getBlockMetadata());
+					ForgeDirection direction = rotation.rotateInverse(ForgeDirection.NORTH);
 					int x = tileEntity.xCoord + direction.offsetX;
 					int y = tileEntity.yCoord + direction.offsetY;
 					int z = tileEntity.zCoord + direction.offsetZ;

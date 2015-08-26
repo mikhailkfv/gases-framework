@@ -323,7 +323,7 @@ public abstract class TileEntityGasFurnace extends TileEntity implements ISidedI
 		if(isBurning() && smokeTimer++ > 100)
 		{
 			BlockRotation rotation = BlockRotation.getRotation(getBlockMetadata());
-			ForgeDirection pushDirection = rotation.rotate(ForgeDirection.NORTH);
+			ForgeDirection pushDirection = rotation.rotateInverse(ForgeDirection.NORTH);
 			
 			int x = xCoord + pushDirection.offsetX;
 			int y = yCoord + pushDirection.offsetY;

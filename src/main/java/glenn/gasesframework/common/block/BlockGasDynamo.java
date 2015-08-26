@@ -10,6 +10,7 @@ import glenn.gasesframework.client.render.RenderRotatedBlock;
 import glenn.gasesframework.common.container.ContainerGasDynamo;
 import glenn.gasesframework.common.tileentity.TileEntityGasDynamo;
 import glenn.moddingutils.blockrotation.BlockRotation;
+import glenn.moddingutils.blockrotation.IRotatedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -22,7 +23,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public abstract class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityProvider
+public abstract class BlockGasDynamo extends Block implements IGasReceptor, ITileEntityProvider, IRotatedBlock
 {
     @SideOnly(Side.CLIENT)
     private IIcon iconFront;
@@ -69,9 +70,9 @@ public abstract class BlockGasDynamo extends Block implements IGasReceptor, ITil
     {
     	BlockRotation blockRotation = BlockRotation.getRotation(metadata);
     	ForgeDirection sideDirection = ForgeDirection.getOrientation(side);
-    	ForgeDirection actualSide = blockRotation.rotate(sideDirection);
+    	ForgeDirection blockSide = blockRotation.rotate(sideDirection);
     	
-    	if (actualSide == ForgeDirection.NORTH)
+    	if (blockSide == ForgeDirection.NORTH)
 	    {
     		return isBurning ? iconFrontBurning : iconFront;
 	    }
@@ -171,5 +172,17 @@ public abstract class BlockGasDynamo extends Block implements IGasReceptor, ITil
 	public boolean connectToPipe(IBlockAccess blockaccess, int x, int y, int z, ForgeDirection side)
 	{
 		return true;
+	}
+	
+	@Override
+	public BlockRotation getBlockRotationAsItem(int metadata)
+	{
+		return BlockRotation.EAST_FORWARD;
+	}
+	
+	@Override
+	public BlockRotation getBlockRotation(IBlockAccess blockAccess, int x, int y, int z)
+	{
+		return BlockRotation.getRotation(blockAccess.getBlockMetadata(x, y, z));
 	}
 }

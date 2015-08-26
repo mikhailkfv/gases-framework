@@ -56,10 +56,14 @@ public enum BlockRotation
 		2, 2, 3, 3, 3, 3
 	});
 	
+	public static final BlockRotation PASSIVE_ROTATION;
+	
 	private static final BlockRotation[][] lookup = new BlockRotation[Yaw.values().length][Pitch.values().length];
 	
 	static
 	{
+		PASSIVE_ROTATION = SOUTH_UP;
+		
 		for (BlockRotation blockFacing : BlockRotation.values())
 		{
 			registerBlockFacing(blockFacing);
@@ -70,6 +74,7 @@ public enum BlockRotation
 	public final Pitch pitch;
 	private final int[] uvRotations;
 	private final ForgeDirection[] rotations = new ForgeDirection[ForgeDirection.values().length];
+	private final ForgeDirection[] rotationsInverse = new ForgeDirection[ForgeDirection.values().length];
 	
 	private BlockRotation(Yaw yaw, Pitch pitch, int[] uvRotations)
 	{
@@ -85,12 +90,22 @@ public enum BlockRotation
 			direction = ForgeDirectionUtil.rotate(direction, ForgeDirection.UP, yaw.getRotationIndex());
 			direction = ForgeDirectionUtil.rotate(direction, ForgeDirection.EAST, pitch.getRotationIndex());
 			this.rotations[i] = direction;
+
+			ForgeDirection directionInverse = ForgeDirection.values()[i];
+			directionInverse = ForgeDirectionUtil.rotate(directionInverse, ForgeDirection.EAST, -pitch.getRotationIndex());
+			directionInverse = ForgeDirectionUtil.rotate(directionInverse, ForgeDirection.UP, -yaw.getRotationIndex());
+			this.rotationsInverse[i] = directionInverse;
 		}
 	}
 	
 	public ForgeDirection rotate(ForgeDirection direction)
 	{
 		return rotations[direction.ordinal()];
+	}
+	
+	public ForgeDirection rotateInverse(ForgeDirection direction)
+	{
+		return rotationsInverse[direction.ordinal()];
 	}
 	
 	public int getUvRotation(ForgeDirection direction)

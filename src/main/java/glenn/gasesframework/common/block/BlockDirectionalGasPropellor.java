@@ -16,6 +16,7 @@ import glenn.gasesframework.client.render.RenderBlockDirectionalGasPropellor;
 import glenn.gasesframework.client.render.RenderRotatedBlock;
 import glenn.gasesframework.common.tileentity.TileEntityDirectionalGasPropellor;
 import glenn.moddingutils.blockrotation.BlockRotation;
+import glenn.moddingutils.blockrotation.IRotatedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -31,7 +32,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class BlockDirectionalGasPropellor extends Block implements IGasReceptor, IGasPropellor, ITileEntityProvider, IGasFilter
+public abstract class BlockDirectionalGasPropellor extends Block implements IGasReceptor, IGasPropellor, ITileEntityProvider, IGasFilter, IRotatedBlock
 {
 	private boolean isBottomUnique;
 	private int maxPressure;
@@ -113,9 +114,9 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
 	{
 		BlockRotation rotation = BlockRotation.getRotation(metadata);
 		ForgeDirection sideDirection = ForgeDirection.getOrientation(side);
-		ForgeDirection actualSide = rotation.rotate(sideDirection);
+		ForgeDirection blockSide = rotation.rotate(sideDirection);
 
-		switch (actualSide)
+		switch (blockSide)
 		{
 		case NORTH:
 			if (filter instanceof GasTypeFilterSingleIncluding)
@@ -212,5 +213,17 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public BlockRotation getBlockRotationAsItem(int metadata)
+	{
+		return BlockRotation.EAST_FORWARD;
+	}
+	
+	@Override
+	public BlockRotation getBlockRotation(IBlockAccess blockAccess, int x, int y, int z)
+	{
+		return BlockRotation.getRotation(blockAccess.getBlockMetadata(x, y, z));
 	}
 }

@@ -18,18 +18,6 @@ public class RenderRotatedBlock extends AbstractRenderRotatedBlock
 	}
 	
 	@Override
-	public BlockRotation getItemRotation(int metadata)
-	{
-		return BlockRotation.WEST_UP;
-	}
-
-	@Override
-	public BlockRotation getRotation(IBlockAccess world, int x, int y, int z)
-	{
-		return BlockRotation.getRotation(world.getBlockMetadata(x, y, z));
-	}
-
-	@Override
 	public void beginRenderInventoryBlock()
 	{
 		isRenderingInventoryBlock = true;
