@@ -86,6 +86,6 @@ public class ForgeDirectionUtil
 	public static int mod4(int a)
 	{
 		int mod = a % 4;
-		return mod >= 0 ? mod : (4 - mod);
+		return mod >= 0 ? mod : (4 + mod);
 	}
 }
