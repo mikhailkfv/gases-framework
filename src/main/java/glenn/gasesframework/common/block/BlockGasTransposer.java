@@ -6,8 +6,11 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.client.render.RenderRotatedBlock;
 import glenn.gasesframework.common.container.ContainerGasTransposer;
 import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
+import glenn.moddingutils.blockrotation.BlockRotation;
+import glenn.moddingutils.blockrotation.IRotatedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
@@ -24,7 +27,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class BlockGasTransposer extends Block implements ITileEntityProvider, IGasReceptor, IGasPropellor
+public class BlockGasTransposer extends Block implements ITileEntityProvider, IGasReceptor, IGasPropellor, IRotatedBlock
 {
 	@SideOnly(Side.CLIENT)
 	protected IIcon frontIcon;
@@ -46,42 +49,37 @@ public class BlockGasTransposer extends Block implements ITileEntityProvider, IG
 	@Override
 	public IIcon getIcon(int side, int metadata)
 	{
-		return side == metadata ? frontIcon : blockIcon;
+		BlockRotation rotation = BlockRotation.getRotation(metadata);
+		ForgeDirection sideDirection = ForgeDirection.getOrientation(side);
+		ForgeDirection blockSide = rotation.rotate(sideDirection);
+
+		switch (blockSide)
+		{
+		case NORTH:
+			return frontIcon;
+		default:
+			return blockIcon;
+		}
 	}
 	
+    @SideOnly(Side.CLIENT)
     @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemstack)
+    public int getRenderType()
     {
-    	int metadata;
-    	
-    	if(entity.rotationPitch < -45.0f)
+    	if (!RenderRotatedBlock.isRenderingInventoryBlock)
     	{
-    		metadata = 0;
-    	}
-    	else if(entity.rotationPitch > 45.0f)
-    	{
-    		metadata = 1;
+    		return RenderRotatedBlock.RENDER_ID;
     	}
     	else
     	{
-    		int side = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-    		switch(side)
-    		{
-    		case 0:
-    			metadata = 2;
-    			break;
-    		case 1:
-    			metadata = 5;
-    			break;
-    		case 2:
-    			metadata = 3;
-    			break;
-    		default:
-    			metadata = 4;
-    		}
+    		return super.getRenderType();
     	}
-    	
-    	world.setBlockMetadataWithNotify(x, y, z, metadata, 2);
+    }
+    
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemstack)
+    {
+		world.setBlockMetadataWithNotify(x, y, z, BlockRotation.getRotation(-entity.rotationYaw, entity.rotationPitch).ordinal(), 2);
     }
 	
 	@Override
@@ -191,5 +189,17 @@ public class BlockGasTransposer extends Block implements ITileEntityProvider, IG
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{
 		return new TileEntityGasTransposer();
+	}
+
+	@Override
+	public BlockRotation getBlockRotationAsItem(int metadata)
+	{
+		return BlockRotation.EAST_FORWARD;
+	}
+
+	@Override
+	public BlockRotation getBlockRotation(IBlockAccess blockAccess, int x, int y, int z)
+	{
+		return BlockRotation.getRotation(blockAccess.getBlockMetadata(x, y, z));
 	}
 }
