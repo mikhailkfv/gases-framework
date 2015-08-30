@@ -380,8 +380,8 @@ public class GasesFrameworkAPI
 	}
 	
 	/**
-	 * Sent a filter update packet for {@link glenn.gasesframework.api.block.IGasTypeFilter IGasFilter} blocks to clients.
-	 * This will call {@link glenn.gasesframework.api.block.IGasTypeFilter#setFilter(World,int,int,int,ForgeDirection,GasTypeFilter) setFilter(World,int,int,int,ForgeDirection,GasTypeFilter)}.
+	 * Sent a filter update packet for {@link glenn.gasesframework.api.block.IGasTypeFilter IGasTypeFilter} blocks to clients.
+	 * This will call {@link glenn.gasesframework.api.block.IGasTypeFilter#setFilter(IBlockAccess,int,int,int,ForgeDirection,GasTypeFilter) setFilter(Wo.rld,int,int,int,ForgeDirection,GasTypeFilter)}.
 	 * This method is unsafe to call when Gases Framework is not present.
 	 * @param world
 	 * @param x
