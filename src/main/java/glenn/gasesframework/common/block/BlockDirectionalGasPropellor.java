@@ -1,18 +1,16 @@
 package glenn.gasesframework.common.block;
 
-import glenn.gasesframework.GasesFramework;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.block.IGasFilter;
+import glenn.gasesframework.api.block.IGasTypeFilter;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
-import glenn.gasesframework.api.block.ISample;
+import glenn.gasesframework.api.block.IRenderedGasTypeFilter;
 import glenn.gasesframework.api.filter.GasTypeFilter;
-import glenn.gasesframework.api.filter.GasTypeFilterOpen;
 import glenn.gasesframework.api.filter.GasTypeFilterSimple;
-import glenn.gasesframework.api.filter.GasTypeFilterSingleExcluding;
-import glenn.gasesframework.api.filter.GasTypeFilterSingleIncluding;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.client.render.RenderBlockDirectionalGasPropellor;
+import glenn.gasesframework.client.render.RenderBlockGasTypeFilter;
 import glenn.gasesframework.client.render.RenderRotatedBlock;
 import glenn.gasesframework.common.tileentity.TileEntityDirectionalGasPropellor;
 import glenn.moddingutils.blockrotation.BlockRotation;
@@ -23,25 +21,21 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class BlockDirectionalGasPropellor extends Block implements IGasReceptor, IGasPropellor, ITileEntityProvider, IGasFilter, IRotatedBlock
+public abstract class BlockDirectionalGasPropellor extends Block implements IGasReceptor, IGasPropellor, ITileEntityProvider, IGasTypeFilter, IRenderedGasTypeFilter, IRotatedBlock
 {
 	private boolean isBottomUnique;
 	private int maxPressure;
 
 	public IIcon bottomIcon;
 	public IIcon topIcon;
-	public IIcon topIncludingIcon;
-	public IIcon topExcludingIcon;
-	public IIcon topIndicatorIcon;
+	
+	private boolean renderFilter = true;
+	private boolean renderRotated = true;
 	
 	public BlockDirectionalGasPropellor(Material material, boolean isBottomUnique, int maxPressure)
 	{
@@ -65,13 +59,20 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
     @Override
     public int getRenderType()
     {
-    	if (!RenderRotatedBlock.isRenderingInventoryBlock)
+    	if (renderFilter)
     	{
-			return RenderRotatedBlock.RENDER_ID;
+    		return RenderBlockGasTypeFilter.RENDER_ID;
     	}
     	else
     	{
-    		return super.getRenderType();
+		    if (renderRotated)
+		    {
+				return RenderRotatedBlock.RENDER_ID;
+		    }
+		    else
+		    {
+			    return super.getRenderType();
+		    }
     	}
     }
 	
@@ -86,31 +87,10 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
         blockIcon = iconRegister.registerIcon(this.getTextureName() + "_side");
         bottomIcon = iconRegister.registerIcon(this.getTextureName() + (isBottomUnique ? "_bottom" : "_side"));
         topIcon = iconRegister.registerIcon(this.getTextureName() + "_top");
-        topIncludingIcon = iconRegister.registerIcon(this.getTextureName() + "_top_including");
-        topExcludingIcon = iconRegister.registerIcon(this.getTextureName() + "_top_excluding");
-        topIndicatorIcon = iconRegister.registerIcon(this.getTextureName() + "_top_indicator");
     }
 	
 	@SideOnly(Side.CLIENT)
-	@Override
 	public IIcon getIcon(int side, int metadata)
-	{
-		return getIcon(side, metadata, new GasTypeFilterOpen());
-	}
-	
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int side)
-	{
-		int metadata = blockAccess.getBlockMetadata(x, y, z);
-		TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)blockAccess.getTileEntity(x, y, z);
-		GasTypeFilterSimple filter = tileEntity.filter;
-
-		return getIcon(side, metadata, filter);
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int metadata, GasTypeFilterSimple filter)
 	{
 		BlockRotation rotation = BlockRotation.getRotation(metadata);
 		ForgeDirection sideDirection = ForgeDirection.getOrientation(side);
@@ -119,25 +99,14 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
 		switch (blockSide)
 		{
 		case NORTH:
-			if (filter instanceof GasTypeFilterSingleIncluding)
-			{
-				return topIncludingIcon;
-			}
-			else if (filter instanceof GasTypeFilterSingleExcluding)
-			{
-				return topExcludingIcon;
-			}
-			else
-			{
-				return topIcon;
-			}
+			return topIcon;
 		case SOUTH:
 			return bottomIcon;
 		default:
 			return blockIcon;
 		}
 	}
-
+	
 	@Override
 	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
@@ -194,25 +163,45 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
 	}
 	
 	@Override
-	public GasTypeFilter getFilter(World world, int x, int y, int z, ForgeDirection side)
+	public GasTypeFilter getFilter(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection side)
 	{
-		TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)world.getTileEntity(x, y, z);
+		TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)blockAccess.getTileEntity(x, y, z);
 		return tileEntity != null ? tileEntity.filter : null;
 	}
 	
 	@Override
-	public GasTypeFilter setFilter(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter)
+	public GasTypeFilter setFilter(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection side, GasTypeFilter filter)
 	{
 		if (filter instanceof GasTypeFilterSimple)
 		{
 			GasTypeFilterSimple simpleFilter = (GasTypeFilterSimple)filter;
-			TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)world.getTileEntity(x, y, z);
+			TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)blockAccess.getTileEntity(x, y, z);
 			if (tileEntity != null)
 			{
 				return tileEntity.setFilter(simpleFilter);
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	public GasTypeFilter getRenderedFilter(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection side)
+	{
+		BlockRotation rotation = getBlockRotation(blockAccess, x, y, z);
+		if (side == rotation.rotateInverse(ForgeDirection.NORTH))
+		{
+			return getFilter(blockAccess, x, y, z, side);
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	@Override
+	public void swapRenderedGasTypeFilterRenderType()
+	{
+		renderFilter = !renderFilter;
 	}
 	
 	@Override
@@ -225,5 +214,11 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
 	public BlockRotation getBlockRotation(IBlockAccess blockAccess, int x, int y, int z)
 	{
 		return BlockRotation.getRotation(blockAccess.getBlockMetadata(x, y, z));
+	}
+	
+	@Override
+	public void swapRotatedBlockRenderType()
+	{
+		renderRotated = !renderRotated;
 	}
 }

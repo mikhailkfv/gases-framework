@@ -32,6 +32,8 @@ public class BlockGasTransposer extends Block implements ITileEntityProvider, IG
 	@SideOnly(Side.CLIENT)
 	protected IIcon frontIcon;
 	
+	private boolean renderRotated = true;
+	
     public BlockGasTransposer()
 	{
 		super(Material.iron);
@@ -66,7 +68,7 @@ public class BlockGasTransposer extends Block implements ITileEntityProvider, IG
     @Override
     public int getRenderType()
     {
-    	if (!RenderRotatedBlock.isRenderingInventoryBlock)
+    	if (renderRotated)
     	{
     		return RenderRotatedBlock.RENDER_ID;
     	}
@@ -202,5 +204,11 @@ public class BlockGasTransposer extends Block implements ITileEntityProvider, IG
 	public BlockRotation getBlockRotation(IBlockAccess blockAccess, int x, int y, int z)
 	{
 		return BlockRotation.getRotation(blockAccess.getBlockMetadata(x, y, z));
+	}
+	
+	@Override
+	public void swapRotatedBlockRenderType()
+	{
+		renderRotated = !renderRotated;
 	}
 }

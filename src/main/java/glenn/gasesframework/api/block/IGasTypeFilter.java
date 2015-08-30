@@ -1,7 +1,7 @@
 package glenn.gasesframework.api.block;
 
 import glenn.gasesframework.api.filter.GasTypeFilter;
-import net.minecraft.world.World;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
@@ -9,23 +9,23 @@ import net.minecraftforge.common.util.ForgeDirection;
  * @author Erlend
  *
  */
-public interface IGasFilter
+public interface IGasTypeFilter
 {
 	/**
 	 * Get the block's filter on the specific side.
-	 * @param world
+	 * @param blockAccess
 	 * @param x
 	 * @param y
 	 * @param z
 	 * @param side
 	 * @return
 	 */
-	public GasTypeFilter getFilter(World world, int x, int y, int z, ForgeDirection side);
+	public GasTypeFilter getFilter(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection side);
 
 	/**
 	 * Set the block's filter on the specific side.
 	 * Return the new filter.
-	 * @param world
+	 * @param blockAccess
 	 * @param x
 	 * @param y
 	 * @param z
@@ -33,5 +33,5 @@ public interface IGasFilter
 	 * @param filter
 	 * @return
 	 */
-	public GasTypeFilter setFilter(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter);
+	public GasTypeFilter setFilter(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection side, GasTypeFilter filter);
 }

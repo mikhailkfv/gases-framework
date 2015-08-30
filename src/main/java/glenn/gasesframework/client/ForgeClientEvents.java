@@ -20,6 +20,7 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 
 import org.lwjgl.opengl.GL11;
 
@@ -123,6 +124,16 @@ public class ForgeClientEvents
 	private final ResourceLocation flow_indicator = new ResourceLocation("gasesframework", "textures/misc/flow_indicator.png");
 	private final ResourceLocation flow_indicator_reverse = new ResourceLocation("gasesframework", "textures/misc/flow_indicator_reverse.png");
 	private final ResourceLocation flow_indicator_dual = new ResourceLocation("gasesframework", "textures/misc/flow_indicator_dual.png");
+	
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onPreTextureStitch(TextureStitchEvent.Pre event)
+	{
+		if (event.map == Minecraft.getMinecraft().getTextureMapBlocks())
+		{
+			SharedBlockIcons.registerIcons(event.map);
+		}
+	}
 	
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent

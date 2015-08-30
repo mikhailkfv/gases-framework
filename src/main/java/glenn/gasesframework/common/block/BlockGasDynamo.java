@@ -30,6 +30,8 @@ public abstract class BlockGasDynamo extends Block implements IGasReceptor, ITil
     @SideOnly(Side.CLIENT)
     private IIcon iconFrontBurning;
     
+    private boolean renderRotated = true;
+    
 	public BlockGasDynamo(Material material)
 	{
 		super(material);
@@ -123,7 +125,7 @@ public abstract class BlockGasDynamo extends Block implements IGasReceptor, ITil
     @Override
     public int getRenderType()
     {
-    	if (!RenderRotatedBlock.isRenderingInventoryBlock)
+    	if (renderRotated)
     	{
     		return RenderRotatedBlock.RENDER_ID;
     	}
@@ -184,5 +186,11 @@ public abstract class BlockGasDynamo extends Block implements IGasReceptor, ITil
 	public BlockRotation getBlockRotation(IBlockAccess blockAccess, int x, int y, int z)
 	{
 		return BlockRotation.getRotation(blockAccess.getBlockMetadata(x, y, z));
+	}
+	
+	@Override
+	public void swapRotatedBlockRenderType()
+	{
+		renderRotated = !renderRotated;
 	}
 }

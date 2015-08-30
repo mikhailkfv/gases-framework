@@ -7,4 +7,6 @@ public interface IRotatedBlock
 	BlockRotation getBlockRotationAsItem(int metadata);
 	
 	BlockRotation getBlockRotation(IBlockAccess blockAccess, int x, int y, int z);
+	
+	void swapRotatedBlockRenderType();
 }

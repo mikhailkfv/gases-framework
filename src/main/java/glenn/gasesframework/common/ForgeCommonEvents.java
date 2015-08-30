@@ -3,7 +3,7 @@ package glenn.gasesframework.common;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.block.IGasFilter;
+import glenn.gasesframework.api.block.IGasTypeFilter;
 import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.filter.GasTypeFilter;
 import glenn.gasesframework.api.item.IFilterProvider;
@@ -76,9 +76,9 @@ public class ForgeCommonEvents
 				{
 					IFilterProvider filterProvider = (IFilterProvider)itemstack.getItem();
 					
-					if (block instanceof IGasFilter)
+					if (block instanceof IGasTypeFilter)
 					{
-						IGasFilter gasFilterBlock = (IGasFilter)block;
+						IGasTypeFilter gasFilterBlock = (IGasTypeFilter)block;
 						GasTypeFilter filter = filterProvider.getFilter(itemstack);
 						
 						gasFilterBlock.setFilter(event.world, event.x, event.y, event.z, side, filter);

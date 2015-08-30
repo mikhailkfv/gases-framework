@@ -380,8 +380,8 @@ public class GasesFrameworkAPI
 	}
 	
 	/**
-	 * Sent a filter update packet for {@link glenn.gasesframework.api.block.IGasFilter IGasFilter} blocks to clients.
-	 * This will call {@link glenn.gasesframework.api.block.IGasFilter#setFilter(World,int,int,int,ForgeDirection,GasTypeFilter) setFilter(World,int,int,int,ForgeDirection,GasTypeFilter)}.
+	 * Sent a filter update packet for {@link glenn.gasesframework.api.block.IGasTypeFilter IGasFilter} blocks to clients.
+	 * This will call {@link glenn.gasesframework.api.block.IGasTypeFilter#setFilter(World,int,int,int,ForgeDirection,GasTypeFilter) setFilter(World,int,int,int,ForgeDirection,GasTypeFilter)}.
 	 * This method is unsafe to call when Gases Framework is not present.
 	 * @param world
 	 * @param x
@@ -455,6 +455,16 @@ public class GasesFrameworkAPI
 	public static int getFireSmokeAmount()
 	{
 		return modInstance.getFireSmokeAmount();
+	}
+	
+	/**
+	 * Get the block rendering ID for blocks that implement {@link glenn.gasesframework.api.block.IRenderedGasTypeFilter IRenderedGasTypeFilter}.
+	 * This method is unsafe to call when Gases Framework is not present.
+	 * @return
+	 */
+	public static int getRenderedGasTypeFilterBlockRenderType()
+	{
+		return modInstance.getRenderedGasTypeFilterBlockRenderType();
 	}
 	
 	/**
@@ -533,6 +543,7 @@ public class GasesFrameworkAPI
 	
 	/**
 	 * Registers a gas world generator for generation in certain dimensions.
+	 * This method will do nothing if Gases Framework is not installed, and the type will not be marked as registered.
 	 * @param type
 	 */
 	public static void registerGasWorldGenType(GasWorldGenType type, String ... dimensionNames)
@@ -545,6 +556,7 @@ public class GasesFrameworkAPI
 	
 	/**
 	 * Registers a gas transposer handler.
+	 * This method will do nothing if Gases Framework is not installed, and the type will not be marked as registered.
 	 * @param handler
 	 */
 	public static void registerGasTransposerHandler(IGasTransposerHandler handler)
@@ -557,6 +569,7 @@ public class GasesFrameworkAPI
 	
 	/**
 	 * Registers a pipe type.
+	 * This method will do nothing if Gases Framework is not installed, and the type will not be marked as registered.
 	 * @param handler
 	 */
 	public static void registerPipeType(PipeType type)

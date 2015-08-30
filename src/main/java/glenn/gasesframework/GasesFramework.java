@@ -27,6 +27,7 @@ import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
 import glenn.gasesframework.api.pipetype.PipeType;
+import glenn.gasesframework.client.render.RenderBlockGasTypeFilter;
 import glenn.gasesframework.common.CommonProxy;
 import glenn.gasesframework.common.ConfigGasFurnaceRecipes;
 import glenn.gasesframework.common.GasBottleTransposerHandler;
@@ -754,6 +755,16 @@ public class GasesFramework implements IGasesFramework
 	public int getFireSmokeAmount()
 	{
 		return configurations.gases.smoke.fireSmokeAmount;
+	}
+	
+	/**
+	 * Get the block rendering ID for blocks that implement {@link glenn.gasesframework.api.block.IRenderedGasTypeFilter IRenderedGasTypeFilter}.
+	 * @return
+	 */
+	@Override
+	public int getRenderedGasTypeFilterBlockRenderType()
+	{
+		return RenderBlockGasTypeFilter.RENDER_ID;
 	}
 	
 	/**

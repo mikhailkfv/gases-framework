@@ -1,7 +1,7 @@
 package glenn.gasesframework.network.message;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.block.IGasFilter;
+import glenn.gasesframework.api.block.IGasTypeFilter;
 import glenn.gasesframework.api.filter.GasTypeFilter;
 import glenn.moddingutils.network.AbstractMessage;
 import glenn.moddingutils.network.AbstractMessageHandler;
@@ -22,9 +22,9 @@ public class MessageSetBlockGasTypeFilter extends AbstractSerialMessage
 			World world = GasesFramework.proxy.getPlayerEntity(ctx).worldObj;
 			
 			Block block = world.getBlock(message.blockX, message.blockY, message.blockZ);
-			if(block instanceof IGasFilter)
+			if(block instanceof IGasTypeFilter)
 			{
-				((IGasFilter)block).setFilter(world, message.blockX, message.blockY, message.blockZ, message.getSide(), message.getFilter());
+				((IGasTypeFilter)block).setFilter(world, message.blockX, message.blockY, message.blockZ, message.getSide(), message.getFilter());
 			}
 			
 			return null;

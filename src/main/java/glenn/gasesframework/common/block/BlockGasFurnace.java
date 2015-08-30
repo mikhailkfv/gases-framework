@@ -56,6 +56,8 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	private IIcon iconBottom;
 	@SideOnly(Side.CLIENT)
 	private IIcon[] iconsFront;
+	
+	private boolean renderRotated = true;
 
 	public BlockGasFurnace(Material material, boolean isActive)
 	{
@@ -162,7 +164,7 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
     @Override
     public int getRenderType()
     {
-    	if (!RenderRotatedBlock.isRenderingInventoryBlock)
+    	if (renderRotated)
     	{
     		return RenderRotatedBlock.RENDER_ID;
     	}
@@ -391,5 +393,11 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	public BlockRotation getBlockRotation(IBlockAccess blockAccess, int x, int y, int z)
 	{
 		return BlockRotation.getRotation(blockAccess.getBlockMetadata(x, y, z));
+	}
+	
+	@Override
+	public void swapRotatedBlockRenderType()
+	{
+		renderRotated = !renderRotated;
 	}
 }

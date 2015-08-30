@@ -122,8 +122,8 @@ public interface IGasesFramework
 	public void spawnDelayedExplosion(World world, double x, double y, double z, int delay, float power, boolean isFlaming, boolean isSmoking);
 	
 	/**
-	 * Sent a filter update packet for {@link glenn.gasesframework.api.block.IGasFilter IGasFilter} blocks to clients.
-	 * This will call {@link glenn.gasesframework.api.block.IGasFilter#setFilter(World,int,int,int,ForgeDirection,GasTypeFilter) setFilter(World,int,int,int,ForgeDirection,GasTypeFilter)}.
+	 * Sent a filter update packet for {@link glenn.gasesframework.api.block.IGasTypeFilter IGasFilter} blocks to clients.
+	 * This will call {@link glenn.gasesframework.api.block.IGasTypeFilter#setFilter(World,int,int,int,ForgeDirection,GasTypeFilter) setFilter(World,int,int,int,ForgeDirection,GasTypeFilter)}.
 	 * @param world
 	 * @param x
 	 * @param y
@@ -174,6 +174,12 @@ public interface IGasesFramework
 	 * @return
 	 */
 	public int getFireSmokeAmount();
+	
+	/**
+	 * Get the block rendering ID for blocks that implement {@link glenn.gasesframework.api.block.IRenderedGasTypeFilter IRenderedGasTypeFilter}.
+	 * @return
+	 */
+	public int getRenderedGasTypeFilterBlockRenderType();
 	
 	/**
 	 * Registers a gas type. This involves creating and registering the blocks necessary for a gas type.

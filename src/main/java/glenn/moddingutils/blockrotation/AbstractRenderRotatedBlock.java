@@ -10,10 +10,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public abstract class AbstractRenderRotatedBlock implements ISimpleBlockRenderingHandler
 {
-	public abstract void beginRenderInventoryBlock();
-	
-	public abstract void endRenderInventoryBlock();
-
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
@@ -24,9 +20,9 @@ public abstract class AbstractRenderRotatedBlock implements ISimpleBlockRenderin
 		GL11.glRotatef(rotation.yaw.getRotationDegrees(), 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(rotation.pitch.getRotationDegrees(), 1.0F, 0.0F, 0.0F);
 
-		beginRenderInventoryBlock();
+		rotatedBlock.swapRotatedBlockRenderType();
 		renderer.renderBlockAsItem(block, BlockRotation.PASSIVE_ROTATION.ordinal(), 1.0f);
-		endRenderInventoryBlock();
+		rotatedBlock.swapRotatedBlockRenderType();
 		
 		GL11.glPopMatrix();
 	}
