@@ -290,7 +290,7 @@ public abstract class TileEntityGasTank extends TileEntity
 		}
 	}
 	
-	private boolean canOverincrement(GasType gasType)
+	protected boolean canOverincrement(GasType gasType)
 	{
 		TileEntity tileEntity = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
 		if (tileEntity instanceof TileEntityGasTank)
@@ -338,7 +338,7 @@ public abstract class TileEntityGasTank extends TileEntity
 		}
 	}
 	
-	private boolean overincrement(GasType gasType)
+	protected boolean overincrement(GasType gasType)
 	{
 		TileEntity tileEntity = worldObj.getTileEntity(xCoord, yCoord + 1, zCoord);
 		if (tileEntity instanceof TileEntityGasTank)
