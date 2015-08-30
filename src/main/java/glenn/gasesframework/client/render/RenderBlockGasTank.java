@@ -129,7 +129,6 @@ public class RenderBlockGasTank implements ISimpleBlockRenderingHandler
 	{
 		BlockGasTank block = (BlockGasTank)bblock;
 		Tessellator tessellator = Tessellator.instance;
-		tessellator.addTranslation(x, y, z);
 		
 		renderer.renderStandardBlock(bblock, x, y, z);
 		renderer.renderFromInside = true;
@@ -138,6 +137,8 @@ public class RenderBlockGasTank implements ISimpleBlockRenderingHandler
 		renderer.renderFromInside = false;
 		renderer.renderAllFaces = false;
 		
+		tessellator.addTranslation(x, y, z);
+
 		double uMin = block.inside.getInterpolatedU(0.0D);
 		double uMax = block.inside.getInterpolatedU(16.0D);
 		double vMin = block.inside.getInterpolatedV(0.0D);
