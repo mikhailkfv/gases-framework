@@ -18,11 +18,14 @@ public class TileEntityWoodGasTank extends TileEntityGasTank
 	{
 		if (!super.canOverincrement(gasType))
 		{
-			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+			if (GasesFramework.configurations.blocks.woodGasTank.leaky)
 			{
-				if (GasesFrameworkAPI.canFillWithGas(worldObj, xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, gasType))
+				for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 				{
-					return true;
+					if (GasesFrameworkAPI.canFillWithGas(worldObj, xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, gasType))
+					{
+						return true;
+					}
 				}
 			}
 
@@ -39,11 +42,14 @@ public class TileEntityWoodGasTank extends TileEntityGasTank
 	{
 		if (!super.overincrement(gasType))
 		{
-			for (ForgeDirection direction : ForgeDirectionUtil.shuffledList(worldObj.rand))
+			if (GasesFramework.configurations.blocks.woodGasTank.leaky)
 			{
-				if (GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, gasType))
+				for (ForgeDirection direction : ForgeDirectionUtil.shuffledList(worldObj.rand))
 				{
-					return true;
+					if (GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, gasType))
+					{
+						return true;
+					}
 				}
 			}
 			

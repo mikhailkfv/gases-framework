@@ -226,6 +226,9 @@ public class GasesFrameworkMainConfigurations extends Configurations
 			@ConfigField(defaultValue = "1")
 			@DelegateConfig(delegateFor = "storageMultiplier")
 			private int _storageMultiplier;
+			
+			@ConfigField(name = "Leaky", comment = "If true, the gas tank will leak when overfilled", defaultValue = "true")
+			public boolean leaky;
 		}
 		
 		@ConfigCategory(name = "Iron Gas Tank")
