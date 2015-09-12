@@ -2,7 +2,6 @@ package glenn.gasesframework.common;
 
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
-import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasTypeFilter;
 import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.filter.GasTypeFilter;
@@ -14,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
@@ -95,6 +95,19 @@ public class ForgeCommonEvents
 						sampler.setGasType(itemstack, sample.sampleInteraction(event.world, event.x, event.y, event.z, sampler.getGasType(itemstack), side));
 					}
 				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onPlaySoundAtEntity(PlaySoundAtEntityEvent event)
+	{
+		if (event.entity instanceof EntityLivingBase)
+		{
+			EntityLivingBase entity = (EntityLivingBase)event.entity;
+			if (DuctTapeGag.isGagged(entity))
+			{
+				event.setCanceled(true);
 			}
 		}
 	}

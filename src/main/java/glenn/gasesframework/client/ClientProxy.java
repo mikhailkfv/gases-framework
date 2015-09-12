@@ -7,13 +7,14 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.relauncher.Side;
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.client.render.RenderBlockGasTypeFilter;
 import glenn.gasesframework.client.render.RenderBlockGas;
 import glenn.gasesframework.client.render.RenderBlockGasPipe;
 import glenn.gasesframework.client.render.RenderBlockGasTank;
+import glenn.gasesframework.client.render.RenderBlockGasTypeFilter;
 import glenn.gasesframework.client.render.RenderBlockInfiniteGasPump;
 import glenn.gasesframework.client.render.RenderBlockLantern;
 import glenn.gasesframework.client.render.RenderRotatedBlock;
+import glenn.gasesframework.client.render.RenderVillagerGag;
 import glenn.gasesframework.client.render.TileEntityGasDynamoRenderer;
 import glenn.gasesframework.client.render.TileEntityTankRenderer;
 import glenn.gasesframework.common.CommonProxy;
@@ -21,11 +22,14 @@ import glenn.gasesframework.common.tileentity.TileEntityGasDynamo;
 import glenn.gasesframework.common.tileentity.TileEntityGasTank;
 import glenn.moddingutils.UpdateChecker;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy
 {
+    public RenderVillagerGag renderVillagerGag;
+
 	@Override
 	public void registerRenderers()
 	{
@@ -39,6 +43,7 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerBlockHandler(RenderBlockGasTank.RENDER_ID, new RenderBlockGasTank());
 		RenderingRegistry.registerBlockHandler(RenderBlockInfiniteGasPump.RENDER_ID, new RenderBlockInfiniteGasPump());
 		RenderingRegistry.registerBlockHandler(RenderRotatedBlock.RENDER_ID, new RenderRotatedBlock());
+		RenderingRegistry.registerEntityRenderingHandler(Entity.class, renderVillagerGag = new RenderVillagerGag());
 	}
 	
 	@Override

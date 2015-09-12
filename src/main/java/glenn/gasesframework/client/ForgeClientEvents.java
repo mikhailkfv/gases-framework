@@ -1,15 +1,26 @@
 package glenn.gasesframework.client;
 
+import org.lwjgl.opengl.GL11;
+
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.MaterialGas;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.client.render.RenderVillagerGag;
+import glenn.gasesframework.common.DuctTapeGag;
 import glenn.gasesframework.common.block.BlockGasPipe;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderVillager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
@@ -20,13 +31,8 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ForgeClientEvents
 {
@@ -79,43 +85,43 @@ public class ForgeClientEvents
 			if(player != null && player.isInsideOfMaterial(MaterialGas.INSTANCE))
 			{
 				int blockX = MathHelper.floor_double(player.posX);
-		        int blockY = MathHelper.floor_double(player.posY + player.getEyeHeight());
-		        int blockZ = MathHelper.floor_double(player.posZ);
+				int blockY = MathHelper.floor_double(player.posY + player.getEyeHeight());
+				int blockZ = MathHelper.floor_double(player.posZ);
 				
 				GasType type = GasesFrameworkAPI.getGasType(player.worldObj, blockX, blockY, blockZ);
 				
 				if(type.overlayImage != null && type.isVisible())
 				{
 					mc.getTextureManager().bindTexture(type.overlayImage);
-			        Tessellator tessellator = Tessellator.instance;
-			        float brightness = player.getBrightness(event.partialTicks);
-			        
-			        float red = brightness * (float)((type.color >> 24) & 0xFF) / 255.0F;
+					Tessellator tessellator = Tessellator.instance;
+					float brightness = player.getBrightness(event.partialTicks);
+					
+					float red = brightness * (float)((type.color >> 24) & 0xFF) / 255.0F;
 					float green = brightness * (float)((type.color >> 16) & 0xFF) / 255.0F;
 					float blue = brightness * (float)((type.color >> 8) & 0xFF) / 255.0F;
 					float alpha = (float)(type.color & 0xFF) / 255.0f;
-			        
-			        GL11.glColor4f(red, green, blue, alpha);
-			        GL11.glEnable(GL11.GL_BLEND);
-			        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-			        GL11.glPushMatrix();
-			        float f2 = 4.0F;
-			        float f3 = -1.0F;
-			        float f4 = 1.0F;
-			        float f5 = -1.0F;
-			        float f6 = 1.0F;
-			        float f7 = -0.5F;
-			        float f8 = -player.rotationYaw / 64.0F + (float)player.posX / 2.0f;
-			        float f9 = player.rotationPitch / 64.0F + (float)player.posZ / 2.0f;
-			        tessellator.startDrawingQuads();
-			        tessellator.addVertexWithUV((double)f3, (double)f5, (double)f7, (double)(f2 + f8), (double)(f2 + f9));
-			        tessellator.addVertexWithUV((double)f4, (double)f5, (double)f7, (double)(0.0F + f8), (double)(f2 + f9));
-			        tessellator.addVertexWithUV((double)f4, (double)f6, (double)f7, (double)(0.0F + f8), (double)(0.0F + f9));
-			        tessellator.addVertexWithUV((double)f3, (double)f6, (double)f7, (double)(f2 + f8), (double)(0.0F + f9));
-			        tessellator.draw();
-			        GL11.glPopMatrix();
-			        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			        GL11.glDisable(GL11.GL_BLEND);
+					
+					GL11.glColor4f(red, green, blue, alpha);
+					GL11.glEnable(GL11.GL_BLEND);
+					OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+					GL11.glPushMatrix();
+					float f2 = 4.0F;
+					float f3 = -1.0F;
+					float f4 = 1.0F;
+					float f5 = -1.0F;
+					float f6 = 1.0F;
+					float f7 = -0.5F;
+					float f8 = -player.rotationYaw / 64.0F + (float)player.posX / 2.0f;
+					float f9 = player.rotationPitch / 64.0F + (float)player.posZ / 2.0f;
+					tessellator.startDrawingQuads();
+					tessellator.addVertexWithUV((double)f3, (double)f5, (double)f7, (double)(f2 + f8), (double)(f2 + f9));
+					tessellator.addVertexWithUV((double)f4, (double)f5, (double)f7, (double)(0.0F + f8), (double)(f2 + f9));
+					tessellator.addVertexWithUV((double)f4, (double)f6, (double)f7, (double)(0.0F + f8), (double)(0.0F + f9));
+					tessellator.addVertexWithUV((double)f3, (double)f6, (double)f7, (double)(f2 + f8), (double)(0.0F + f9));
+					tessellator.draw();
+					GL11.glPopMatrix();
+					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+					GL11.glDisable(GL11.GL_BLEND);
 				}
 			}
 		}
@@ -143,8 +149,8 @@ public class ForgeClientEvents
 		int y = event.target.blockY;
 		int z = event.target.blockZ;
 		double xd = x - (event.player.lastTickPosX + (event.player.posX - event.player.lastTickPosX) * (double)event.partialTicks);
-        double yd = y - (event.player.lastTickPosY + (event.player.posY - event.player.lastTickPosY) * (double)event.partialTicks);
-        double zd = z - (event.player.lastTickPosZ + (event.player.posZ - event.player.lastTickPosZ) * (double)event.partialTicks);
+		double yd = y - (event.player.lastTickPosY + (event.player.posY - event.player.lastTickPosY) * (double)event.partialTicks);
+		double zd = z - (event.player.lastTickPosZ + (event.player.posZ - event.player.lastTickPosZ) * (double)event.partialTicks);
 		World world = event.player.worldObj;
 		Block block = world.getBlock(x, y, z);
 		if(block instanceof BlockGasPipe)
@@ -179,11 +185,11 @@ public class ForgeClientEvents
 				GL11.glPushMatrix();
 				GL11.glTranslated(xd, yd, zd);
 	
-	            GL11.glEnable(GL11.GL_BLEND);
-	            OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+				GL11.glEnable(GL11.GL_BLEND);
+				OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 				GL11.glEnable(GL11.GL_ALPHA_TEST);
-	            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-	            GL11.glEnable(GL11.GL_TEXTURE_2D);
+				GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+				GL11.glEnable(GL11.GL_TEXTURE_2D);
 				
 				drawOverlay(flowSides, flow_indicator);
 				drawOverlay(reverseFlowSides, flow_indicator_reverse);
@@ -257,5 +263,19 @@ public class ForgeClientEvents
 		
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		tessellator.draw();
+	}
+
+	@SubscribeEvent
+	public void onRenderLiving(RenderLivingEvent.Post event)
+	{
+		if (event.renderer instanceof RenderVillager && !(event.renderer instanceof RenderVillagerGag))
+		{
+			EntityVillager entity = (EntityVillager)event.entity;
+			if (DuctTapeGag.isGagged(entity))
+			{
+				RenderVillagerGag gagRenderer = ((ClientProxy)GasesFramework.proxy).renderVillagerGag;
+				gagRenderer.doRender((Entity)entity, event.x, event.y, event.z, entity.rotationYaw, 1.0F);
+			}
+		}
 	}
 }
