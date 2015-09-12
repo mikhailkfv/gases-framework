@@ -4,12 +4,24 @@ This is the Gases Framework. It allows you to add gases to Minecraft that will a
 
 To use the Gases Framework in your mod, you must install the [Gases Framework API](https://bitbucket.org/jamieswhiteshirt/gases-framework-api). Consult the javadoc documentation or the [information database](http://jamieswhiteshirt.com/minecraft/mods/gases/information/) for information on how to use it. You should also have a look at how [Glenn's Gases](https://bitbucket.org/jamieswhiteshirt/glenns-gases) uses it.
 
-**To be able to run and develop the Gases Framework in your workspace using Eclipse, you must follow these steps:**
+## To be able to run and develop the Gases Framework in your workspace, you must follow these steps ##
 
-* Download a forge distribution and copy the eclipse folder into this workspace.
-* Run *gradlew setupDevWorkspace* in your workspace.
+**For Eclipse users:**
+
+* Download a Minecraft Forge distribution and copy its eclipse folder into the workspace.
+* Run *gradlew setupDevWorkspace* or *gradlew setupDecompWorkspace* in your workspace.
 * Run *gradlew eclipse* in your workspace.
 * Open the workspace with Eclipse.
 * Open your run configurations and add the following VM argument to both Client and Server: *-Dfml.coreMods.load=glenn.gasesframework.common.core.GFFMLLoadingPlugin*
 
-If you would like to compile a development build of Gases Framework, run *gradlew jar* in your workspace. The jar will be located in /build/libs/ .
+**For IntelliJ IDEA users:**
+
+* Run *gradlew setupDevWorkspace* or *gradlew setupDecompWorkspace* in your workspace.
+* Run *gradlew idea* in your workspace.
+* Open the generated project file in IntelliJ IDEA.
+* Open Run/Debug Configurations.
+* Add the following argument to both Client and Server application VM options: *-Dfml.coreMods.load=glenn.gasesframework.common.core.GFFMLLoadingPlugin*
+
+## Making a development build ##
+
+* Run *gradlew jar* in your workspace. The development build will be placed in the /build/libs folder in your workspace.
