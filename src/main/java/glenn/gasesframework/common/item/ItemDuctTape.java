@@ -16,7 +16,16 @@ public class ItemDuctTape extends Item
 	{
 		if (entity instanceof EntityVillager)
 		{
-			DuctTapeGag.gag(entity);
+			if (!DuctTapeGag.isGagged(entity))
+			{
+				if (!player.capabilities.isCreativeMode)
+				{
+					itemStack.stackSize--;
+				}
+
+				entity.worldObj.playSoundAtEntity(entity, "gasesframework:effect.duct_tape", 1.0F, 1.0F);
+				DuctTapeGag.gag(entity);
+			}
 			return true;
 		}
 		return false;
