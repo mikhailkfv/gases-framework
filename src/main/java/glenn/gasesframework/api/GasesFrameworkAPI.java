@@ -60,7 +60,7 @@ public class GasesFrameworkAPI
 	 * The mod instance of Gases Framework. This serves as a connection point between the API and the mod itself.
 	 * If the mod is not installed, this field is null.
 	 */
-	public static IGasesFramework modInstance;
+	public static IGasesFramework implementation;
 	
 	/**
 	 * The default overlay image used when the player is submerged in gas.
@@ -124,7 +124,7 @@ public class GasesFrameworkAPI
 	 */
 	public static boolean isModInstalled()
 	{
-		return modInstance != null;
+		return implementation != null;
 	}
 	
 	/**
@@ -230,7 +230,8 @@ public class GasesFrameworkAPI
 	{
 		if(isModInstalled())
 		{
-			modInstance.addSpecialFurnaceRecipe(ingredient, result, cookTime, exp);
+			implementation.addSpecialFurnaceRecipe(ingredient, result, cookTime,
+					exp);
 		}
 	}
 	
@@ -247,7 +248,7 @@ public class GasesFrameworkAPI
 	 */
 	public static boolean canFillWithGas(World world, int x, int y, int z, GasType type)
 	{
-		return modInstance.canFillWithGas(world, x, y, z, type);
+		return implementation.canFillWithGas(world, x, y, z, type);
 	}
 	
 	/**
@@ -264,7 +265,7 @@ public class GasesFrameworkAPI
 	 */
 	public static boolean fillWithGas(World world, Random random, int x, int y, int z, GasType type)
 	{
-		return modInstance.fillWithGas(world, random, x, y, z, type);
+		return implementation.fillWithGas(world, random, x, y, z, type);
 	}
 	
 	/**
@@ -280,7 +281,7 @@ public class GasesFrameworkAPI
 	 */
 	public static void placeGas(World world, int x, int y, int z, GasType type, int volume)
 	{
-		modInstance.placeGas(world, x, y, z, type, volume);
+		implementation.placeGas(world, x, y, z, type, volume);
 	}
 	
 	/**
@@ -299,7 +300,7 @@ public class GasesFrameworkAPI
 	 */
 	public static boolean pumpGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
 	{
-		return modInstance.pumpGas(world, random, x, y, z, type, direction, pressure);
+		return implementation.pumpGas(world, random, x, y, z, type, direction, pressure);
 	}
 
 	/**
@@ -319,7 +320,7 @@ public class GasesFrameworkAPI
 	 */
 	public static boolean pushGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
 	{
-		return modInstance.pushGas(world, random, x, y, z, type, direction, pressure);
+		return implementation.pushGas(world, random, x, y, z, type, direction, pressure);
 	}
 	
 	/**
@@ -333,7 +334,7 @@ public class GasesFrameworkAPI
 	 */
 	public static void ignite(World world, int x, int y, int z, Random random)
 	{
-		modInstance.ignite(world, x, y, z, random);
+		implementation.ignite(world, x, y, z, random);
 	}
 
 	/**
@@ -350,7 +351,8 @@ public class GasesFrameworkAPI
 	 */
 	public static void spawnDelayedExplosion(World world, double x, double y, double z, int delay, float power, boolean isFlaming, boolean isSmoking)
 	{
-		modInstance.spawnDelayedExplosion(world, x, y, z, delay, power, isFlaming, isSmoking);
+		implementation.spawnDelayedExplosion(world, x, y, z, delay, power,
+				isFlaming, isSmoking);
 	}
 	
 	/**
@@ -366,7 +368,7 @@ public class GasesFrameworkAPI
 	 */
 	public static void sendFilterUpdatePacket(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter)
 	{
-		modInstance.sendFilterUpdatePacket(world, x, y, z, side, filter);
+		implementation.sendFilterUpdatePacket(world, x, y, z, side, filter);
 	}
 	
 	/**
@@ -380,7 +382,7 @@ public class GasesFrameworkAPI
 	 */
 	public static GasType getGasType(World world, int x, int y, int z)
 	{
-		return modInstance.getGasType(world, x, y, z);
+		return implementation.getGasType(world, x, y, z);
 	}
 	
 	/**
@@ -394,7 +396,7 @@ public class GasesFrameworkAPI
 	 */
 	public static GasType getGasPipeType(World world, int x, int y, int z)
 	{
-		return modInstance.getGasPipeType(world, x, y, z);
+		return implementation.getGasPipeType(world, x, y, z);
 	}
 	
 	/**
@@ -408,7 +410,7 @@ public class GasesFrameworkAPI
 	 */
 	public static int getGasVolume(World world, int x, int y, int z)
 	{
-		return modInstance.getGasVolume(world, x, y, z);
+		return implementation.getGasVolume(world, x, y, z);
 	}
 	
 	/**
@@ -418,7 +420,7 @@ public class GasesFrameworkAPI
 	 */
 	public static float getGasExplosionPowerFactor()
 	{
-		return modInstance.getGasExplosionPowerFactor();
+		return implementation.getGasExplosionPowerFactor();
 	}
 	
 	/**
@@ -428,7 +430,7 @@ public class GasesFrameworkAPI
 	 */
 	public static int getFireSmokeAmount()
 	{
-		return modInstance.getFireSmokeAmount();
+		return implementation.getFireSmokeAmount();
 	}
 	
 	/**
@@ -438,7 +440,7 @@ public class GasesFrameworkAPI
 	 */
 	public static int getRenderedGasTypeFilterBlockRenderType()
 	{
-		return modInstance.getRenderedGasTypeFilterBlockRenderType();
+		return implementation.getRenderedGasTypeFilterBlockRenderType();
 	}
 	
 	/**
@@ -451,7 +453,7 @@ public class GasesFrameworkAPI
 	{
 		if(isModInstalled())
 		{
-			return modInstance.registerGasType(type);
+			return implementation.registerGasType(type);
 		}
 		else
 		{
@@ -470,7 +472,7 @@ public class GasesFrameworkAPI
 	{
 		if(isModInstalled())
 		{
-			return modInstance.registerGasType(type, creativeTab);
+			return implementation.registerGasType(type, creativeTab);
 		}
 		else
 		{
@@ -488,7 +490,7 @@ public class GasesFrameworkAPI
 	{
 		if(isModInstalled())
 		{
-			return modInstance.registerLanternType(type);
+			return implementation.registerLanternType(type);
 		}
 		else
 		{
@@ -507,7 +509,7 @@ public class GasesFrameworkAPI
 	{
 		if(isModInstalled())
 		{
-			return modInstance.registerLanternType(type, creativeTab);
+			return implementation.registerLanternType(type, creativeTab);
 		}
 		else
 		{
@@ -524,7 +526,7 @@ public class GasesFrameworkAPI
 	{
 		if(isModInstalled())
 		{
-			modInstance.registerGasWorldGenType(type, dimensionNames);
+			implementation.registerGasWorldGenType(type, dimensionNames);
 		}
 	}
 	
@@ -537,7 +539,7 @@ public class GasesFrameworkAPI
 	{
 		if(isModInstalled())
 		{
-			modInstance.registerGasTransposerHandler(handler);
+			implementation.registerGasTransposerHandler(handler);
 		}
 	}
 	
@@ -550,7 +552,7 @@ public class GasesFrameworkAPI
 	{
 		if(isModInstalled())
 		{
-			modInstance.registerPipeType(type);
+			implementation.registerPipeType(type);
 		}
 	}
 }
