@@ -185,6 +185,7 @@ public class GasesFramework implements IGasesFramework
 		
 		GasesFrameworkAPI.registerPipeType(pipeTypeIron);
 		GasesFrameworkAPI.registerPipeType(pipeTypeGlass);
+		GasesFrameworkAPI.registerPipeType(pipeTypeWood);
 	}
 	
 	@EventHandler
