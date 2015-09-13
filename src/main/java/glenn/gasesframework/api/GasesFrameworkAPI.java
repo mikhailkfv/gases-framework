@@ -107,33 +107,7 @@ public class GasesFrameworkAPI
 		new LanternType("gas_4", 1.0f, "gasesframework:lantern_gas_4", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 4),
 		new LanternType("gas_5", 1.0f, "gasesframework:lantern_gas_5", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 5)
 	};
-	
-	/**
-	 * The item used for glass bottles containing gas. These bottles are registered automatically for each gas type created, unless it is specified as non-industrial.
-	 * If Gases Framework is not installed, this is null.
-	 */
-	public static Item gasBottle;
-	/**
-	 * The item used for including gas sampling. Sub-types of the samplers are registered automatically for each gas type created, unless it is specified as non-industrial.
-	 * If Gases Framework is not installed, this is null.
-	 */
-	public static Item gasSamplerIncluder;
-	/**
-	 * The item used for excluding gas sampling. Sub-types of the samplers are registered automatically for each gas type created, unless it is specified as non-industrial.
-	 * If Gases Framework is not installed, this is null.
-	 */
-	public static Item gasSamplerExcluder;
-	/**
-	 * Used in crafting.
-	 * If Gases Framework is not installed, this is null.
-	 */
-	public static Item adhesive;
-	/**
-	 * It's duct tape. If you can't fix it with duct tape, it's not worth fixing.
-	 * If Gases Framework is not installed, this is null.
-	 */
-	public static Item ductTape;
-	
+
 	/**
 	 * The damage source used when a player asphyxiates in gas.
 	 */

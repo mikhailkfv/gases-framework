@@ -24,13 +24,13 @@ public class BlockIronGasFurnace extends BlockGasFurnace
 	@Override
 	protected Block getIdleBlock()
 	{
-		return GasesFramework.ironGasFurnaceIdle;
+		return GasesFramework.blocks.gasFurnaceIdle;
 	}
 
 	@Override
 	protected Block getActiveBlock()
 	{
-		return GasesFramework.ironGasFurnaceActive;
+		return GasesFramework.blocks.gasFurnaceActive;
 	}
 
 }

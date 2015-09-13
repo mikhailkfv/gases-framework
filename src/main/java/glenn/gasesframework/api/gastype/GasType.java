@@ -1,5 +1,6 @@
 package glenn.gasesframework.api.gastype;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.ExtendedGasEffectsBase.EffectType;
 import glenn.gasesframework.api.GasesFrameworkAPI;
@@ -307,7 +308,7 @@ public class GasType
 	 */
 	public ItemStack getBottledItem()
 	{
-		return new ItemStack(GasesFrameworkAPI.gasBottle, 1, gasID);
+		return new ItemStack(GasesFramework.items.gasBottle, 1, gasID);
 	}
 	
 	/**

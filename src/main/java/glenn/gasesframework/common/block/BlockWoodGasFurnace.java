@@ -24,13 +24,13 @@ public class BlockWoodGasFurnace extends BlockGasFurnace
 	@Override
 	protected Block getIdleBlock()
 	{
-		return GasesFramework.woodGasFurnaceIdle;
+		return GasesFramework.blocks.woodGasFurnaceIdle;
 	}
 
 	@Override
 	protected Block getActiveBlock()
 	{
-		return GasesFramework.woodGasFurnaceActive;
+		return GasesFramework.blocks.woodGasFurnaceActive;
 	}
 
 }

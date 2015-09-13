@@ -34,28 +34,12 @@ import glenn.gasesframework.common.GasBottleTransposerHandler;
 import glenn.gasesframework.common.GuiHandler;
 import glenn.gasesframework.common.block.BlockGas;
 import glenn.gasesframework.common.block.BlockGasPipe;
-import glenn.gasesframework.common.block.BlockGasTransposer;
-import glenn.gasesframework.common.block.BlockInfiniteGasDrain;
-import glenn.gasesframework.common.block.BlockInfiniteGasPump;
-import glenn.gasesframework.common.block.BlockIronGasCollector;
-import glenn.gasesframework.common.block.BlockIronGasDynamo;
-import glenn.gasesframework.common.block.BlockIronGasFurnace;
-import glenn.gasesframework.common.block.BlockIronGasPump;
-import glenn.gasesframework.common.block.BlockIronGasTank;
 import glenn.gasesframework.common.block.BlockLantern;
-import glenn.gasesframework.common.block.BlockWoodGasCollector;
-import glenn.gasesframework.common.block.BlockWoodGasDynamo;
-import glenn.gasesframework.common.block.BlockWoodGasFurnace;
-import glenn.gasesframework.common.block.BlockWoodGasPump;
-import glenn.gasesframework.common.block.BlockWoodGasTank;
+import glenn.gasesframework.init.GFBlocks;
 import glenn.gasesframework.common.configuration.GasesFrameworkMainConfigurations;
 import glenn.gasesframework.common.entity.EntityDelayedExplosion;
-import glenn.gasesframework.common.item.ItemDuctTape;
-import glenn.gasesframework.common.item.ItemGasBottle;
+import glenn.gasesframework.init.GFItems;
 import glenn.gasesframework.common.item.ItemGasPipe;
-import glenn.gasesframework.common.item.ItemGasSamplerExcluding;
-import glenn.gasesframework.common.item.ItemGasSamplerIncluding;
-import glenn.gasesframework.common.item.ItemPrimitiveAdhesive;
 import glenn.gasesframework.common.pipetype.PipeTypeGlass;
 import glenn.gasesframework.common.pipetype.PipeTypeIron;
 import glenn.gasesframework.common.pipetype.PipeTypeWood;
@@ -132,47 +116,15 @@ public class GasesFramework implements IGasesFramework
 	public static final PipeType pipeTypeWood = new PipeTypeWood(2, "wood", true, "gasesframework:pipe_wood");
 	
 	public static final WorldGeneratorGasesFramework worldGenerator = new WorldGeneratorGasesFramework();
-	
-	public static Block ironGasPump;
-	public static Block woodGasPump;
-	public static Block ironGasTank;
-	public static Block woodGasTank;
-	public static Block ironGasCollector;
-	public static Block woodGasCollector;
-	public static Block ironGasFurnaceIdle;
-	public static Block ironGasFurnaceActive;
-	public static Block woodGasFurnaceIdle;
-	public static Block woodGasFurnaceActive;
-	public static Block infiniteGasPump;
-	public static Block infiniteGasDrain;
-	public static Block gasTransposer;
-	public static Block ironGasDynamo;
-	public static Block woodGasDynamo;
-	
+
+	public static GFItems items;
+	public static GFBlocks blocks;
+
 	private void initBlocksAndItems()
 	{
-		GameRegistry.registerItem(GasesFrameworkAPI.gasBottle = (new ItemGasBottle()).setUnlocalizedName("gf_gasBottle").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:gas_bottle"), "gasBottle");
-		GameRegistry.registerItem(GasesFrameworkAPI.gasSamplerIncluder = (new ItemGasSamplerIncluding()).setUnlocalizedName("gf_gasSamplerIncluder").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:sampler_including"), "gasSamplerIncluder");
-		GameRegistry.registerItem(GasesFrameworkAPI.gasSamplerExcluder = (new ItemGasSamplerExcluding()).setUnlocalizedName("gf_gasSamplerExcluder").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:sampler_excluding"), "gasSamplerExcluder");
-		GameRegistry.registerItem(GasesFrameworkAPI.adhesive = (new ItemPrimitiveAdhesive()).setUnlocalizedName("gf_adhesive").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:adhesive"), "adhesive");
-		GameRegistry.registerItem(GasesFrameworkAPI.ductTape = (new ItemDuctTape()).setUnlocalizedName("gf_ductTape").setCreativeTab(GasesFrameworkAPI.creativeTab).setTextureName("gasesframework:duct_tape"), "ductTape");
-		
-		GameRegistry.registerBlock(ironGasPump = new BlockIronGasPump().setHardness(2.5F).setStepSound(Block.soundTypeStone).setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockName("gf_ironGasPump").setBlockTextureName("gasesframework:pump_iron"), "gasPump");
-		GameRegistry.registerBlock(woodGasPump = new BlockWoodGasPump().setHardness(2.5F).setStepSound(Block.soundTypeWood).setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockName("gf_woodGasPump").setBlockTextureName("gasesframework:pump_wood"), "woodGasPump");
-		GameRegistry.registerBlock(ironGasTank = new BlockIronGasTank().setHardness(3.5F).setStepSound(Block.soundTypeStone).setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockName("gf_ironGasTank").setBlockTextureName("gasesframework:tank_iron"), "gasTank");
-		GameRegistry.registerBlock(woodGasTank = new BlockWoodGasTank().setHardness(3.5F).setStepSound(Block.soundTypeWood).setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockName("gf_woodGasTank").setBlockTextureName("gasesframework:tank_wood"), "woodGasTank");
-		GameRegistry.registerBlock(ironGasCollector = new BlockIronGasCollector().setHardness(2.5F).setStepSound(Block.soundTypeStone).setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockName("gf_ironGasCollector").setBlockTextureName("gasesframework:collector_iron"), "gasCollector");
-		GameRegistry.registerBlock(woodGasCollector = new BlockWoodGasCollector().setHardness(2.5F).setStepSound(Block.soundTypeWood).setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockName("gf_woodGasCollector").setBlockTextureName("gasesframework:collector_wood"), "woodGasCollector");
-		GameRegistry.registerBlock(ironGasFurnaceIdle = new BlockIronGasFurnace(false).setHardness(3.5F).setStepSound(Block.soundTypeStone).setBlockName("gf_ironGasFurnaceIdle").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:gas_furnace_iron"), "gasFurnaceIdle");
-		GameRegistry.registerBlock(ironGasFurnaceActive = new BlockIronGasFurnace(true).setHardness(3.5F).setStepSound(Block.soundTypeStone).setLightLevel(0.25F).setBlockName("gf_ironGasFurnaceActive").setBlockTextureName("gasesframework:gas_furnace_iron"), "gasFurnaceActive");
-		GameRegistry.registerBlock(woodGasFurnaceIdle = new BlockWoodGasFurnace(false).setHardness(3.5F).setStepSound(Block.soundTypeWood).setBlockName("gf_woodGasFurnaceIdle").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:gas_furnace_wood"), "woodGasFurnaceIdle");
-		GameRegistry.registerBlock(woodGasFurnaceActive = new BlockWoodGasFurnace(true).setHardness(3.5F).setStepSound(Block.soundTypeWood).setLightLevel(0.25F).setBlockName("gf_woodGasFurnaceActive").setBlockTextureName("gasesframework:gas_furnace_wood"), "woodGasFurnaceActive");
-		GameRegistry.registerBlock(infiniteGasPump = new BlockInfiniteGasPump().setHardness(-1.0F).setBlockName("gf_infiniteGasPump").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:pump_infinite"), "infiniteGasPump");
-		GameRegistry.registerBlock(infiniteGasDrain = new BlockInfiniteGasDrain().setHardness(-1.0F).setBlockName("gf_infiniteGasDrain").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:drain"), "infiniteGasDrain");
-		GameRegistry.registerBlock(gasTransposer = new BlockGasTransposer().setHardness(2.5F).setBlockName("gf_gasTransposer").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:transposer"), "gasTransposer");
-		GameRegistry.registerBlock(ironGasDynamo = new BlockIronGasDynamo().setHardness(2.5F).setBlockName("gf_ironGasDynamo").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:gas_dynamo_iron"), "ironGasDynamo");
-		GameRegistry.registerBlock(woodGasDynamo = new BlockWoodGasDynamo().setHardness(2.5F).setBlockName("gf_woodGasDynamo").setCreativeTab(GasesFrameworkAPI.creativeTab).setBlockTextureName("gasesframework:gas_dynamo_wood"), "woodGasDynamo");
-		
+		items = new GFItems();
+		blocks = new GFBlocks();
+
 		GasesFrameworkAPI.registerLanternType(GasesFrameworkAPI.lanternTypeEmpty, GasesFrameworkAPI.creativeTab);
 		for(int i = 0; i < GasesFrameworkAPI.lanternTypesGas.length; i++)
 		{
@@ -196,22 +148,22 @@ public class GasesFramework implements IGasesFramework
 		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.lanternTypeEmpty.block, 4), "I", "G", 'I', Items.iron_ingot, 'G', Blocks.glass);
 		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.gasTypeAir.pipeBlock, 24), "III", 'I', Items.iron_ingot);
 		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.gasTypeAir.pipeBlock, 24, 1), "GGG", "III", "GGG", 'I', Items.iron_ingot, 'G', Blocks.glass_pane);
-		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.gasTypeAir.pipeBlock, 24, 2), " D ", "LLL", " D ", 'L', Blocks.log, 'D', GasesFrameworkAPI.ductTape);
-		GameRegistry.addRecipe(new ItemStack(ironGasPump), " I ", "PRP", " I ", 'I', Items.iron_ingot, 'P', pipeIron, 'R', Items.redstone);
-		GameRegistry.addRecipe(new ItemStack(woodGasPump), " W ", "PDP", " W ", 'W', Blocks.planks, 'P', pipeWood, 'D', GasesFrameworkAPI.ductTape);
-		GameRegistry.addRecipe(new ItemStack(ironGasCollector), " P ", "PUP", " P ", 'U', ironGasPump, 'P', pipeIron);
-		GameRegistry.addRecipe(new ItemStack(woodGasCollector), "DPD", "PUP", "DPD", 'U', woodGasPump, 'P', pipeWood, 'D', GasesFrameworkAPI.ductTape);
-		GameRegistry.addRecipe(new ItemStack(ironGasTank), "IPI", "P P", "IPI", 'I', Items.iron_ingot, 'P', pipeIron);
-		GameRegistry.addRecipe(new ItemStack(woodGasTank), "WPW", "P P", "WPW", 'W', Blocks.planks, 'P', pipeWood);
-		GameRegistry.addRecipe(new ItemStack(ironGasFurnaceIdle), " P ", "PFP", " P ", 'P', pipeIron, 'F', Blocks.furnace);
-		GameRegistry.addRecipe(new ItemStack(woodGasFurnaceIdle), "DPD", "PLP", "DPD", 'P', pipeWood, 'L', Blocks.log, 'D', GasesFrameworkAPI.ductTape);
-		GameRegistry.addRecipe(new ItemStack(ironGasDynamo), " R ", "RFR", " R ", 'R', Items.redstone, 'F', ironGasFurnaceIdle);
-		GameRegistry.addRecipe(new ItemStack(woodGasDynamo), " R ", "RFR", " R ", 'R', Items.redstone, 'F', woodGasFurnaceIdle);
-		GameRegistry.addRecipe(new ItemStack(gasTransposer), " P ", "PHP", " P ", 'P', pipeIron, 'H', Blocks.hopper);
-		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.gasSamplerExcluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 0));
-		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.gasSamplerIncluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 15));
-		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.adhesive), new ItemStack(Items.water_bucket), Items.rotten_flesh, Items.sugar);
-		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.ductTape, 32), "SSS", "SAS", "SSS", 'S', Items.string, 'A', GasesFrameworkAPI.adhesive);
+		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.gasTypeAir.pipeBlock, 24, 2), " D ", "LLL", " D ", 'L', Blocks.log, 'D', items.ductTape);
+		GameRegistry.addRecipe(new ItemStack(blocks.ironGasPump), " I ", "PRP", " I ", 'I', Items.iron_ingot, 'P', pipeIron, 'R', Items.redstone);
+		GameRegistry.addRecipe(new ItemStack(blocks.woodGasPump), " W ", "PDP", " W ", 'W', Blocks.planks, 'P', pipeWood, 'D', items.ductTape);
+		GameRegistry.addRecipe(new ItemStack(blocks.gasCollector), " P ", "PUP", " P ", 'U', blocks.ironGasPump, 'P', pipeIron);
+		GameRegistry.addRecipe(new ItemStack(blocks.woodGasCollector), "DPD", "PUP", "DPD", 'U', blocks.woodGasPump, 'P', pipeWood, 'D', items.ductTape);
+		GameRegistry.addRecipe(new ItemStack(blocks.gasTank), "IPI", "P P", "IPI", 'I', Items.iron_ingot, 'P', pipeIron);
+		GameRegistry.addRecipe(new ItemStack(blocks.woodGasTank), "WPW", "P P", "WPW", 'W', Blocks.planks, 'P', pipeWood);
+		GameRegistry.addRecipe(new ItemStack(blocks.gasFurnaceIdle), " P ", "PFP", " P ", 'P', pipeIron, 'F', Blocks.furnace);
+		GameRegistry.addRecipe(new ItemStack(blocks.woodGasFurnaceIdle), "DPD", "PLP", "DPD", 'P', pipeWood, 'L', Blocks.log, 'D', items.ductTape);
+		GameRegistry.addRecipe(new ItemStack(blocks.ironGasDynamo), " R ", "RFR", " R ", 'R', Items.redstone, 'F', blocks.gasFurnaceIdle);
+		GameRegistry.addRecipe(new ItemStack(blocks.woodGasDynamo), " R ", "RFR", " R ", 'R', Items.redstone, 'F', blocks.woodGasFurnaceIdle);
+		GameRegistry.addRecipe(new ItemStack(blocks.gasTransposer), " P ", "PHP", " P ", 'P', pipeIron, 'H', Blocks.hopper);
+		GameRegistry.addShapelessRecipe(new ItemStack(items.gasSamplerExcluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 0));
+		GameRegistry.addShapelessRecipe(new ItemStack(items.gasSamplerIncluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 15));
+		GameRegistry.addShapelessRecipe(new ItemStack(items.adhesive), new ItemStack(Items.water_bucket), Items.rotten_flesh, Items.sugar);
+		GameRegistry.addRecipe(new ItemStack(items.ductTape, 32), "SSS", "SAS", "SSS", 'S', Items.string, 'A', items.adhesive);
 
 		for(LanternType lanternType : LanternType.getAllLanternTypes())
 		{
@@ -321,13 +273,13 @@ public class GasesFramework implements IGasesFramework
 		
 		if (configurations.blocks.woodGasFurnace.catchesFire)
 		{
-			Blocks.fire.setFireInfo(woodGasFurnaceIdle, 5, 5);
-			Blocks.fire.setFireInfo(woodGasFurnaceActive, 5, 5);
+			Blocks.fire.setFireInfo(blocks.woodGasFurnaceIdle, 5, 5);
+			Blocks.fire.setFireInfo(blocks.woodGasFurnaceActive, 5, 5);
 		}
 		
 		if (configurations.blocks.woodGasDynamo.catchesFire)
 		{
-			Blocks.fire.setFireInfo(woodGasDynamo, 5, 5);
+			Blocks.fire.setFireInfo(blocks.woodGasDynamo, 5, 5);
 		}
 	}
 	
@@ -812,7 +764,7 @@ public class GasesFramework implements IGasesFramework
 			LanternType lanternType = GasesFrameworkAPI.lanternTypesGas[type.combustibility.burnRate];
 			if(lanternType != GasesFrameworkAPI.lanternTypeGasEmpty)
 			{
-				lanternType.addItemIn(new ItemKey(GasesFrameworkAPI.gasBottle, type.gasID));
+				lanternType.addItemIn(new ItemKey(items.gasBottle, type.gasID));
 			}
 		}
 		

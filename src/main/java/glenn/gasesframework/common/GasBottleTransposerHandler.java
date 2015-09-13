@@ -1,5 +1,6 @@
 package glenn.gasesframework.common;
 
+import glenn.gasesframework.GasesFramework;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import glenn.gasesframework.api.GasesFrameworkAPI;
@@ -25,7 +26,7 @@ public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, 
 	@Override
 	public boolean completeInsertion(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
-		ItemStack result = new ItemStack(GasesFrameworkAPI.gasBottle, 1, gasType.gasID);
+		ItemStack result = new ItemStack(GasesFramework.items.gasBottle, 1, gasType.gasID);
 		
 		if(outputStack == null)
 		{
@@ -46,7 +47,7 @@ public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, 
 	@Override
 	public ItemStack getInsertionOutputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
-		ItemStack result = new ItemStack(GasesFrameworkAPI.gasBottle, 1, gasType.gasID);
+		ItemStack result = new ItemStack(GasesFramework.items.gasBottle, 1, gasType.gasID);
 		
 		if(outputStack == null)
 		{
@@ -68,13 +69,13 @@ public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, 
 	@Override
 	public boolean isValidExtractionInput(ItemStack itemstack)
 	{
-		return itemstack.getItem() == GasesFrameworkAPI.gasBottle;
+		return itemstack.getItem() == GasesFramework.items.gasBottle;
 	}
 
 	@Override
 	public GasType getExtractionOutputGasType(ItemStack inputStack)
 	{
-		return ((ItemGasBottle)GasesFrameworkAPI.gasBottle).getGasType(inputStack);
+		return ((ItemGasBottle)GasesFramework.items.gasBottle).getGasType(inputStack);
 	}
 
 	@Override
