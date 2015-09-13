@@ -1,5 +1,8 @@
 package glenn.gasesframework.common;
 
+import cpw.mods.fml.common.network.NetworkRegistry;
+import glenn.gasesframework.GasesFramework;
+import glenn.gasesframework.network.message.MessageDuctTapeGag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,58 +11,95 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 
 public class DuctTapeGag implements IExtendedEntityProperties
 {
-    public static final String EXT_PROP_NAME = "DuctTapeGag";
+	public static final String EXT_PROP_NAME = "DuctTapeGag";
 
-    private boolean gagged = true;
+	public final EntityLivingBase entity;
+	private boolean gagged = false;
 
-    @Override
-    public void saveNBTData(NBTTagCompound compound)
-    {
-        compound.setBoolean("gagged", gagged);
-    }
+	private DuctTapeGag(EntityLivingBase entity)
+	{
+		this.entity = entity;
+	}
 
-    @Override
-    public void loadNBTData(NBTTagCompound compound)
-    {
-        gagged = compound.getBoolean("gagged");
-    }
+	@Override
+	public void saveNBTData(NBTTagCompound compound)
+	{
+		NBTTagCompound properties = new NBTTagCompound();
+		properties.setBoolean("gagged", gagged);
+		compound.setTag(EXT_PROP_NAME, properties);
+	}
 
-    @Override
-    public void init(Entity entity, World world)
-    {
+	@Override
+	public void loadNBTData(NBTTagCompound compound)
+	{
+		NBTTagCompound properties = compound.getCompoundTag(EXT_PROP_NAME);
+		gagged = properties.getBoolean("gagged");
 
-    }
+		if (!entity.worldObj.isRemote)
+		{
+			sendMessage();
+		}
+	}
 
-    private static DuctTapeGag get(EntityLivingBase entity)
-    {
-        return (DuctTapeGag)entity.getExtendedProperties(EXT_PROP_NAME);
-    }
+	@Override
+	public void init(Entity entity, World world)
+	{}
 
-    public static void gag(EntityLivingBase entity)
-    {
-        DuctTapeGag gag = get(entity);
-        if (gag == null)
-        {
-            entity.registerExtendedProperties(EXT_PROP_NAME, new DuctTapeGag());
-        }
-        else
-        {
-            gag.gagged = true;
-        }
-    }
+	public void sendMessage()
+	{
+		GasesFramework.networkWrapper.sendToAllAround(
+				new MessageDuctTapeGag(entity, gagged),
+				new NetworkRegistry.TargetPoint(entity.worldObj.provider.dimensionId, entity.posX, entity.posY, entity.posZ, 50.0D)
+		);
+	}
+	
+	public static DuctTapeGag register(EntityLivingBase entity)
+	{
+		DuctTapeGag gag = new DuctTapeGag(entity);
+		entity.registerExtendedProperties(EXT_PROP_NAME, gag);
+		return gag;
+	}
 
-    public static void ungag(EntityLivingBase entity)
-    {
-        DuctTapeGag gag = get(entity);
-        if (gag != null)
-        {
-            gag.gagged = false;
-        }
-    }
+	public static DuctTapeGag get(EntityLivingBase entity)
+	{
+		return (DuctTapeGag)entity.getExtendedProperties(EXT_PROP_NAME);
+	}
 
-    public static boolean isGagged(EntityLivingBase entity)
-    {
-        DuctTapeGag gag = get(entity);
-        return gag != null && gag.gagged;
-    }
+	public static DuctTapeGag getOrRegister(EntityLivingBase entity)
+	{
+		DuctTapeGag gag = get(entity);
+		if (gag != null)
+		{
+			gag = register(entity);
+		}
+		return gag;
+	}
+
+	public static void gag(EntityLivingBase entity)
+	{
+		DuctTapeGag gag = getOrRegister(entity);
+		gag.gagged = true;
+
+		if (!entity.worldObj.isRemote)
+		{
+			gag.sendMessage();
+		}
+	}
+
+	public static void ungag(EntityLivingBase entity)
+	{
+		DuctTapeGag gag = getOrRegister(entity);
+		gag.gagged = false;
+
+		if (!entity.worldObj.isRemote)
+		{
+			gag.sendMessage();
+		}
+	}
+
+	public static boolean isGagged(EntityLivingBase entity)
+	{
+		DuctTapeGag gag = get(entity);
+		return gag != null && gag.gagged;
+	}
 }

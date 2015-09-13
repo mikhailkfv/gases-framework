@@ -9,12 +9,14 @@ import glenn.gasesframework.api.item.IFilterProvider;
 import glenn.gasesframework.api.item.ISampler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.ChunkEvent;
@@ -31,6 +33,41 @@ public class ForgeCommonEvents
 			if(ExtendedGasEffects.get(entityLivingBase) == null)
 			{
 				ExtendedGasEffects.register(entityLivingBase);
+			}
+
+			//Currently only applies to villagers.
+			if (entityLivingBase instanceof EntityVillager)
+			{
+				if(DuctTapeGag.get(entityLivingBase) == null)
+				{
+					DuctTapeGag.register(entityLivingBase);
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onStartTracking(PlayerEvent.StartTracking event)
+	{
+		if (!event.entity.worldObj.isRemote)
+		{
+			if (event.target instanceof EntityLivingBase)
+			{
+				EntityLivingBase entityLivingBase = (EntityLivingBase)event.target;
+				ExtendedGasEffectsBase extendedGasEffects = ExtendedGasEffects.get(entityLivingBase);
+				if (extendedGasEffects != null)
+				{
+					extendedGasEffects.sendMessage();
+				}
+
+				if (entityLivingBase instanceof EntityVillager)
+				{
+					DuctTapeGag gag = DuctTapeGag.get(entityLivingBase);
+					if (gag != null)
+					{
+						gag.sendMessage();
+					}
+				}
 			}
 		}
 	}

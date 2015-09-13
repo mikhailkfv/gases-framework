@@ -72,8 +72,15 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 
 	@Override
 	public void init(Entity entity, World world)
+	{}
+
+	@Override
+	public void sendMessage()
 	{
-		
+		GasesFramework.networkWrapper.sendToAllAround(
+				new MessageGasEffects(entity, (short)get(EffectType.BLINDNESS), (short)get(EffectType.SUFFOCATION), (short)get(EffectType.SUFFOCATION)),
+				new TargetPoint(entity.worldObj.provider.dimensionId, entity.posX, entity.posY, entity.posZ, 50.0D)
+		);
 	}
 	
 	private boolean protect(boolean[] appliedProtectors, IGasEffectProtector[] protectors, GasType gasType, EffectType effect)
@@ -173,9 +180,7 @@ public class ExtendedGasEffects extends ExtendedGasEffectsBase
 			
 			if(hasChanged())
 			{
-				GasesFramework.networkWrapper.sendToAllAround(
-						new MessageGasEffects(entity, (short)blindnessTimer, (short)suffocationTimer, (short)slownessTimer),
-						new TargetPoint(entity.worldObj.provider.dimensionId, entity.posX, entity.posY, entity.posZ, 50.0D));
+				sendMessage();
 				prevValues = values.clone();
 			}
 		}

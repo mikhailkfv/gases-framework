@@ -76,6 +76,7 @@ import glenn.gasesframework.common.tileentity.TileEntityWoodGasFurnace;
 import glenn.gasesframework.common.tileentity.TileEntityWoodGasPump;
 import glenn.gasesframework.common.tileentity.TileEntityWoodGasTank;
 import glenn.gasesframework.common.worldgen.WorldGeneratorGasesFramework;
+import glenn.gasesframework.network.message.MessageDuctTapeGag;
 import glenn.gasesframework.network.message.MessageGasEffects;
 import glenn.gasesframework.network.message.MessageSetBlockGasTypeFilter;
 import glenn.gasesframework.network.message.MessageSetTransposerMode;
@@ -193,6 +194,7 @@ public class GasesFramework implements IGasesFramework
 		proxy.registerMessage(MessageGasEffects.Handler.class, MessageGasEffects.class, 0);
 		proxy.registerMessage(MessageSetTransposerMode.Handler.class, MessageSetTransposerMode.class, 1);
 		proxy.registerMessage(MessageSetBlockGasTypeFilter.Handler.class, MessageSetBlockGasTypeFilter.class, 2);
+		proxy.registerMessage(MessageDuctTapeGag.Handler.class, MessageDuctTapeGag.class, 3);
 		
 		GasesFrameworkAPI.modInstance = instance;
 		
