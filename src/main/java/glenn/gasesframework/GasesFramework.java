@@ -187,6 +187,46 @@ public class GasesFramework implements IGasesFramework
 		GasesFrameworkAPI.registerPipeType(pipeTypeGlass);
 		GasesFrameworkAPI.registerPipeType(pipeTypeWood);
 	}
+
+	private void initRecipes()
+	{
+		ItemStack pipeIron = new ItemStack(GasesFrameworkAPI.gasTypeAir.pipeBlock, 1, 0);
+		ItemStack pipeWood = new ItemStack(GasesFrameworkAPI.gasTypeAir.pipeBlock, 1, 2);
+
+		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.lanternTypeEmpty.block, 4), "I", "G", 'I', Items.iron_ingot, 'G', Blocks.glass);
+		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.gasTypeAir.pipeBlock, 24), "III", 'I', Items.iron_ingot);
+		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.gasTypeAir.pipeBlock, 24, 1), "GGG", "III", "GGG", 'I', Items.iron_ingot, 'G', Blocks.glass_pane);
+		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.gasTypeAir.pipeBlock, 24, 2), " D ", "LLL", " D ", 'L', Blocks.log, 'D', GasesFrameworkAPI.ductTape);
+		GameRegistry.addRecipe(new ItemStack(ironGasPump), " I ", "PRP", " I ", 'I', Items.iron_ingot, 'P', pipeIron, 'R', Items.redstone);
+		GameRegistry.addRecipe(new ItemStack(woodGasPump), " W ", "PDP", " W ", 'W', Blocks.planks, 'P', pipeWood, 'D', GasesFrameworkAPI.ductTape);
+		GameRegistry.addRecipe(new ItemStack(ironGasCollector), " P ", "PUP", " P ", 'U', ironGasPump, 'P', pipeIron);
+		GameRegistry.addRecipe(new ItemStack(woodGasCollector), "DPD", "PUP", "DPD", 'U', woodGasPump, 'P', pipeWood, 'D', GasesFrameworkAPI.ductTape);
+		GameRegistry.addRecipe(new ItemStack(ironGasTank), "IPI", "P P", "IPI", 'I', Items.iron_ingot, 'P', pipeIron);
+		GameRegistry.addRecipe(new ItemStack(woodGasTank), "WPW", "P P", "WPW", 'W', Blocks.planks, 'P', pipeWood);
+		GameRegistry.addRecipe(new ItemStack(ironGasFurnaceIdle), " P ", "PFP", " P ", 'P', pipeIron, 'F', Blocks.furnace);
+		GameRegistry.addRecipe(new ItemStack(woodGasFurnaceIdle), "DPD", "PLP", "DPD", 'P', pipeWood, 'L', Blocks.log, 'D', GasesFrameworkAPI.ductTape);
+		GameRegistry.addRecipe(new ItemStack(ironGasDynamo), " R ", "RFR", " R ", 'R', Items.redstone, 'F', ironGasFurnaceIdle);
+		GameRegistry.addRecipe(new ItemStack(woodGasDynamo), " R ", "RFR", " R ", 'R', Items.redstone, 'F', woodGasFurnaceIdle);
+		GameRegistry.addRecipe(new ItemStack(gasTransposer), " P ", "PHP", " P ", 'P', pipeIron, 'H', Blocks.hopper);
+		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.gasSamplerExcluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 0));
+		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.gasSamplerIncluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 15));
+		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.adhesive), new ItemStack(Items.water_bucket), Items.rotten_flesh, Items.sugar);
+		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.ductTape, 32), "SSS", "SAS", "SSS", 'S', Items.string, 'A', GasesFrameworkAPI.adhesive);
+
+		for(LanternType lanternType : LanternType.getAllLanternTypes())
+		{
+			if(lanternType != GasesFrameworkAPI.lanternTypeEmpty)
+			{
+				for(ItemKey itemIn : lanternType.getAllAcceptedItems())
+				{
+					if(itemIn.item != null)
+					{
+						GameRegistry.addShapelessRecipe(new ItemStack(lanternType.block), new ItemStack(GasesFrameworkAPI.lanternTypeEmpty.block), new ItemStack(itemIn.item, 1, itemIn.damage));
+					}
+				}
+			}
+		}
+	}
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -224,35 +264,9 @@ public class GasesFramework implements IGasesFramework
 		proxy.registerRenderers();
 		
 		GameRegistry.registerWorldGenerator(worldGenerator, 10);
-		
-		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.lanternTypeEmpty.block, 4), "I", "G", 'I', Items.iron_ingot, 'G', Blocks.glass);
-		
-		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.gasTypeAir.pipeBlock, 24), "III", 'I', Items.iron_ingot);
-		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.gasTypeAir.pipeBlock, 24, 1), "GGG", "III", "GGG", 'I', Items.iron_ingot, 'G', Blocks.glass_pane);
-		GameRegistry.addRecipe(new ItemStack(ironGasPump), " I ", "PRP", " I ", 'I', Items.iron_ingot, 'P', GasesFrameworkAPI.gasTypeAir.pipeBlock, 'R', Items.redstone);
-		GameRegistry.addRecipe(new ItemStack(ironGasCollector), " P ", "PUP", " P ", 'U', ironGasPump, 'P', GasesFrameworkAPI.gasTypeAir.pipeBlock);
-		GameRegistry.addRecipe(new ItemStack(ironGasTank), "IPI", "P P", "IPI", 'I', Items.iron_ingot, 'P', GasesFrameworkAPI.gasTypeAir.pipeBlock);
-		GameRegistry.addRecipe(new ItemStack(ironGasFurnaceIdle), " I ", "IFI", " I ", 'I', Items.iron_ingot, 'F', Blocks.furnace);
-		GameRegistry.addRecipe(new ItemStack(gasTransposer), " P ", "PHP", " P ", 'P', GasesFrameworkAPI.gasTypeAir.pipeBlock, 'H', Blocks.hopper);
-		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.gasSamplerExcluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 0));
-		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.gasSamplerIncluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 15));
-		GameRegistry.addShapelessRecipe(new ItemStack(GasesFrameworkAPI.adhesive), new ItemStack(Items.water_bucket), Items.rotten_flesh, Items.sugar);
-		GameRegistry.addRecipe(new ItemStack(GasesFrameworkAPI.ductTape, 32), "SSS", "SAS", "SSS", 'S', Items.string, 'A', GasesFrameworkAPI.adhesive);
-		
-		for(LanternType lanternType : LanternType.getAllLanternTypes())
-		{
-			if(lanternType != GasesFrameworkAPI.lanternTypeEmpty)
-			{
-				for(ItemKey itemIn : lanternType.getAllAcceptedItems())
-				{
-					if(itemIn.item != null)
-					{
-						GameRegistry.addShapelessRecipe(new ItemStack(lanternType.block), new ItemStack(GasesFrameworkAPI.lanternTypeEmpty.block), new ItemStack(itemIn.item, 1, itemIn.damage));
-					}
-				}
-			}
-		}
-		
+
+		initRecipes();
+
 		GameRegistry.registerTileEntity(TileEntityIronGasPump.class, "gasPump");
 		GameRegistry.registerTileEntity(TileEntityWoodGasPump.class, "woodGasPump");
 		GameRegistry.registerTileEntity(TileEntityIronGasCollector.class, "gasCollector");
