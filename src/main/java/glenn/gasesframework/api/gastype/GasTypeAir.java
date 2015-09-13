@@ -2,6 +2,7 @@ package glenn.gasesframework.api.gastype;
 
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.gastype.GasType;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Items;
@@ -21,7 +22,6 @@ public class GasTypeAir extends GasType
 	@Override
 	public Block tweakPipeBlock(Block block)
 	{
-		block.setCreativeTab(GasesFrameworkAPI.creativeTab);
 		return super.tweakPipeBlock(block);
 	}
 	
@@ -32,16 +32,6 @@ public class GasTypeAir extends GasType
 	public boolean isVisible()
 	{
 		return false;
-	}
-
-	/**
-	 * Get the bottled item. Is {@link GasesFramework#gasBottle} by default.
-	 * @return
-	 */
-    @Override
-	public ItemStack getBottledItem()
-	{
-		return new ItemStack(Items.glass_bottle);
 	}
 
     /**

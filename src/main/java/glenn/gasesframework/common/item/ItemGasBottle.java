@@ -1,5 +1,6 @@
 package glenn.gasesframework.common.item;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
 
@@ -56,7 +57,7 @@ public class ItemGasBottle extends Item
 	@SideOnly(Side.CLIENT)
     public int getColorFromDamage(int par1)
     {
-		GasType gasType = GasType.getGasTypeByID(par1);
+		GasType gasType = GasesFramework.registry.getGasTypeByID(par1);
 		return gasType != null ? (gasType.color >> 8) : 0xFFFFFF;
     }
 	
@@ -96,7 +97,7 @@ public class ItemGasBottle extends Item
     @Override
     public void getSubItems(Item item, CreativeTabs creativeTabs, List itemList)
     {
-		GasType[] allTypes = GasType.getAllTypes();
+		GasType[] allTypes = GasesFramework.registry.getRegisteredGasTypes();
         for (GasType type : allTypes)
         {
         	if(type.isIndustrial && type != GasesFrameworkAPI.gasTypeAir)
@@ -114,6 +115,6 @@ public class ItemGasBottle extends Item
 	
 	public GasType getGasType(ItemStack itemStack)
 	{
-		return GasType.getGasTypeByID(itemStack.getItemDamage());
+		return GasesFramework.registry.getGasTypeByID(itemStack.getItemDamage());
 	}
 }

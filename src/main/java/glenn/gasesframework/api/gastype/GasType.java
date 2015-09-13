@@ -5,9 +5,7 @@ import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.ExtendedGasEffectsBase.EffectType;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -17,7 +15,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
@@ -25,23 +22,6 @@ import net.minecraft.world.World;
 
 public class GasType
 {
-	private static final GasType[] gasTypesByID = new GasType[256];
-	private static final HashMap<String, GasType> gasTypesByName = new HashMap<String, GasType>();
-	
-	/**
-	 * Is this gas type {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}?
-	 */
-	public boolean isRegistered = false;
-	/**
-	 * The gas block associated with this gas type.
-	 * Is set when the gas type is {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
-	 */
-	public Block block;
-	/**
-	 * The gas pipe block associated with this gas type. Can be null if the gas type is {@link #isIndustrial industrial}.
-	 * Is set when the gas type is {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
-	 */
-	public Block pipeBlock;
 	/**
 	 * Can this gas be used in pipe systems?
 	 */
@@ -114,54 +94,7 @@ public class GasType
 		noisyPeople.add("trentv4");
 		noisyPeople.add("username720");
 	}
-	
-	/**
-	 * Get a gas type by its gasID.
-	 * @param gasID
-	 * @return
-	 */
-	public static GasType getGasTypeByID(int gasID)
-	{
-		if(gasID >= 0 && gasID < gasTypesByID.length)
-		{
-			return gasTypesByID[gasID];
-		}
-		else
-		{
-			return null;
-		}
-	}
-	
-	/**
-	 * Get a gas type by its name.
-	 * @param name
-	 * @return
-	 */
-	public static GasType getGasTypeByName(String name)
-	{
-		return gasTypesByName.get(name);
-	}
-	
-	/**
-	 * Get an array of all gas types, registered or not.
-	 * @return
-	 */
-	public static GasType[] getAllTypes()
-	{
-		ArrayList<GasType> list = new ArrayList<GasType>();
-		for(GasType type : gasTypesByID)
-		{
-			if(type != null)
-			{
-				list.add(type);
-			}
-		}
-		
-		GasType[] res = new GasType[list.size()];
-		list.toArray(res);
-		return res;
-	}
-	
+
 	/**
 	 * Get the ID of a gas type with support for null. If null, this returns -1.
 	 * @param gasType
@@ -172,31 +105,8 @@ public class GasType
 		return gasType != null ? gasType.gasID : -1;
 	}
 	
-	private void map()
-	{
-		GasType prev = getGasTypeByID(gasID);
-		if(prev == null)
-		{
-			gasTypesByID[gasID] = this;
-		}
-		else
-		{
-			throw new RuntimeException("A gas type with name " + name + " attempted to override a gas type with name " + prev.name + " with gasID " + gasID);
-		}
-		
-		prev = getGasTypeByName(name);
-		if(prev == null)
-		{
-			gasTypesByName.put(name, this);
-		}
-		else
-		{
-			throw new RuntimeException("A gas type with name " + name + " attempted to override a gas type with the same name");
-		}
-	}
-	
 	/**
-	 * Creates a new gas type. Gas types must be {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
+	 * Creates a new gas type. Gas types must be {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerGasType(GasType) registered}.
 	 * @param isIndustrial - Can this gas be used in pipe systems?
 	 * @param gasID - The ID of this gas type. Must be unique. Limited to 0-255. Consult the Gases Framework documentation for unoccupied IDs.
 	 * @param name - An unique name for the gas type.
@@ -217,8 +127,6 @@ public class GasType
         this.opacity = opacity;
         this.density = density;
         this.combustibility = combustibility;
-		
-        map();
 	}
 	
 	/**
@@ -303,16 +211,7 @@ public class GasType
 	}
 	
 	/**
-	 * Get the bottled item. Is {@link GasesFramework#gasBottle} by default.
-	 * @return
-	 */
-	public ItemStack getBottledItem()
-	{
-		return new ItemStack(GasesFramework.items.gasBottle, 1, gasID);
-	}
-	
-	/**
-	 * This method is called upon gas block construction when the gas type is {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
+	 * This method is called upon gas block construction when the gas type is {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerGasType(GasType) registered}.
 	 * @return
 	 */
 	public Block tweakGasBlock(Block block)
@@ -321,7 +220,7 @@ public class GasType
 	}
 	
 	/**
-	 * This method is called upon gas pipe block construction when the gas type is {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
+	 * This method is called upon gas pipe block construction when the gas type is {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerGasType(GasType) registered}.
 	 * @return
 	 */
 	public Block tweakPipeBlock(Block block)
@@ -331,7 +230,7 @@ public class GasType
 	
 	/**
 	 * Apply effects onto an entity when breathed. A gas is breathed when the player runs out of air in their hidden air meter.
-	 * How quickly this happens, and how frequently this method is called depends on this gas type's {@link GasType#suffocationRate}.
+	 * How quickly this happens, and how frequently this method is called depends on this gas type's rate of suffocation.
 	 * @param entity
 	 */
 	public void onBreathed(EntityLivingBase entity)
@@ -414,11 +313,11 @@ public class GasType
     	}
     	else
     	{
-    		if(blockAccess.getBlock(x, y - 1, z) == block)
+    		if(GasesFramework.implementation.getGasType(blockAccess, x, y - 1, z) == this)
     		{
     			return 0.0D;
     		}
-    		boolean b = blockAccess.getBlock(x, y + 1, z) == block;
+    		boolean b = GasesFramework.implementation.getGasType(blockAccess, x, y + 1, z) == this;
     		double d = (0.5D - (double)(16 - metadata) / 8.0D) * (b ? 2.0D : 1.0D);
     		return d < 0.0D ? 0.0D : d;
     	}
@@ -445,11 +344,11 @@ public class GasType
     	}
     	else
     	{
-    		if(blockAccess.getBlock(x, y + 1, z) == block)
+    		if(GasesFramework.implementation.getGasType(blockAccess, x, y + 1, z) == this)
     		{
     			return 1.0D;
     		}
-    		boolean b = blockAccess.getBlock(x, y - 1, z) == block;
+    		boolean b = GasesFramework.implementation.getGasType(blockAccess, x, y - 1, z) == this;
     		double d = 1.0D - (0.5D - (double)(16 - metadata) / 8.0D) * (b ? 2.0D : 1.0D);
     		return d > 1.0D ? 1.0D : d;
     	}
@@ -478,10 +377,10 @@ public class GasType
 	 */
 	public boolean canFlowHere(int thisVolume, World world, int x, int y, int z)
 	{
-		GasType otherGasType = GasesFrameworkAPI.getGasType(world, x, y, z);
+		GasType otherGasType = GasesFramework.implementation.getGasType(world, x, y, z);
 		if(otherGasType != null)
 		{
-			return otherGasType.canBeDestroyedBy(GasesFrameworkAPI.getGasVolume(world, x, y, z), this, thisVolume);
+			return otherGasType.canBeDestroyedBy(GasesFramework.implementation.getGasVolume(world, x, y, z), this, thisVolume);
 		}
 		else
 		{

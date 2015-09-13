@@ -49,7 +49,7 @@ public class BlockGas extends Block implements ISample
 	
 	/**
 	 * Constructs a new gas block.
-	 * @param id - The block ID to be used by this gas block.
+	 * @param type
 	 */
 	public BlockGas(GasType type)
 	{
@@ -99,14 +99,14 @@ public class BlockGas extends Block implements ISample
 			ItemStack stack;
 			if((stack = playerEntity.getCurrentEquippedItem()) != null)
 			{
-				setOnFire = GasesFrameworkAPI.isIgnitionItem(stack.getItem());
+				setOnFire = GasesFramework.registry.isIgnitionItem(stack.getItem());
 			}
 			
 			for(int i = 0; i < 4; i++)
 			{
 				if((stack = playerEntity.inventory.armorItemInSlot(i)) != null)
 				{
-					setOnFire |= GasesFrameworkAPI.isIgnitionItem(stack.getItem());
+					setOnFire |= GasesFrameworkAPI.registry.isIgnitionItem(stack.getItem());
 				}
 			}
 		}
@@ -115,7 +115,7 @@ public class BlockGas extends Block implements ISample
 			EntityItem itemEntity = (EntityItem)entity;
 			
 			Item item = itemEntity.getEntityItem().getItem();
-			setOnFire = GasesFrameworkAPI.isIgnitionItem(item);
+			setOnFire = GasesFrameworkAPI.registry.isIgnitionItem(item);
 		}
 		
 		if(setOnFire)
@@ -299,7 +299,7 @@ public class BlockGas extends Block implements ISample
 						for (int localZ = -1; localZ <= 1; localZ++)
 						{
 							int z = localZ + k;
-							GasType type = GasesFrameworkAPI.getGasType(world, x, y, z);
+							GasType type = GasesFramework.implementation.getGasType(world, x, y, z);
 							if (type != null && type.combustibility.explosionPower > 0.0f)
 							{
 								float power = (16.0F - world.getBlockMetadata(x, y, z)) / 32.0F + 0.20F;
@@ -324,15 +324,15 @@ public class BlockGas extends Block implements ISample
 					
 					float power = (float)Math.sqrt(totalSqPower) * 0.75f;
 					
-					GasesFrameworkAPI.spawnDelayedExplosion(world, avgX, avgY, avgZ, 5, GasesFrameworkAPI.getGasExplosionPowerFactor() * power, true, false);
+					GasesFramework.implementation.spawnDelayedExplosion(world, avgX, avgY, avgZ, 5, GasesFramework.implementation.getGasExplosionPowerFactor() * power, true, false);
 				}
 			}
 			return true;
 		}
 		else if(type.combustibility.fireSpreadRate >= 0)
 		{
-			world.setBlock(i, j, k, GasesFrameworkAPI.gasTypeFire.block, metadata, 3);
-			
+			GasesFramework.implementation.placeGas(world, i, j, k, GasesFramework.gasTypeFire, 16 - metadata);
+
 			return true;
 		}
 
@@ -421,7 +421,7 @@ public class BlockGas extends Block implements ISample
 			int zDirection = z + (i >= 4 ? i * 2 - 9: 0);
 			
 			Block directionBlock = world.getBlock(xDirection, yDirection, zDirection);
-			Reaction reaction = GasesFrameworkAPI.getReactionForBlocks(world, this, x, y, z, directionBlock, xDirection, yDirection, zDirection);
+			Reaction reaction = GasesFramework.registry.getReactionForBlocks(world, this, x, y, z, directionBlock, xDirection, yDirection, zDirection);
 			for(int j = 0; j < reactions.length; j++)
 			{
 				Reaction reaction2 = reactions[j];
@@ -467,7 +467,7 @@ public class BlockGas extends Block implements ISample
 			int zDirection = z + (i >= 4 ? i * 2 - 9: 0);
 			
 			Block directionBlock = world.getBlock(xDirection, yDirection, zDirection);
-			Reaction reaction2 = GasesFrameworkAPI.getReactionForBlocks(world, this, x, y, z, directionBlock, xDirection, yDirection, zDirection);
+			Reaction reaction2 = GasesFramework.registry.getReactionForBlocks(world, this, x, y, z, directionBlock, xDirection, yDirection, zDirection);
 			
 			if(reaction.isErroneous() || reaction2.priority < reaction.priority)
 			{

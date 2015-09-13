@@ -32,7 +32,7 @@ public class ReactionUniqueIgnition extends ReactionBase
 		Block block = world.getBlock(blockX, blockY, blockZ);
 		if(block == reactionBlock1)
 		{
-			GasesFrameworkAPI.ignite(world, blockX, blockY, blockZ, random);
+			GasesFrameworkAPI.implementation.ignite(world, blockX, blockY, blockZ, random);
 			return true;
 		}
 		
@@ -45,7 +45,7 @@ public class ReactionUniqueIgnition extends ReactionBase
 		Block block = world.getBlock(blockX, blockY, blockZ);
 		if(block == reactionBlock1)
 		{
-			GasesFrameworkAPI.ignite(world, blockX, blockY, blockZ, random);
+			GasesFrameworkAPI.implementation.ignite(world, blockX, blockY, blockZ, random);
 			return true;
 		}
 		

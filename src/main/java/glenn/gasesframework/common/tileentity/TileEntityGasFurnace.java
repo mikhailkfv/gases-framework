@@ -331,7 +331,7 @@ public abstract class TileEntityGasFurnace extends TileEntity implements ISidedI
 
 			BlockGasFurnace block = (BlockGasFurnace)getBlockType();
 			int pressure = block.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, pushDirection);
-			if (GasesFrameworkAPI.pushGas(worldObj, worldObj.rand, x, y, z, GasesFrameworkAPI.gasTypeSmoke, pushDirection, pressure))
+			if (GasesFramework.implementation.pushGas(worldObj, worldObj.rand, x, y, z, GasesFramework.gasTypeSmoke, pushDirection, pressure))
 			{
 				smokeTimer = 0;
 			}

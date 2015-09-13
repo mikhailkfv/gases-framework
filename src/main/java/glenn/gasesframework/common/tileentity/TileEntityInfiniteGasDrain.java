@@ -1,5 +1,6 @@
 package glenn.gasesframework.common.tileentity;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasSource;
 import net.minecraft.block.Block;
@@ -54,7 +55,7 @@ public class TileEntityInfiniteGasDrain extends TileEntity
 				int y = yCoord + side.offsetY;
 				int z = zCoord + side.offsetZ;
 				
-				if(GasesFrameworkAPI.getGasType(worldObj, x, y, z) != null)
+				if(GasesFramework.implementation.getGasType(worldObj, x, y, z) != null)
 				{
 					worldObj.setBlockToAir(x, y, z);
 				}

@@ -1,5 +1,6 @@
 package glenn.gasesframework.common.reaction;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.reaction.Reaction;
 import glenn.gasesframework.common.block.BlockGas;
@@ -22,16 +23,16 @@ public class ReactionIgnition extends Reaction
 		Block block1 = world.getBlock(block1X, block1Y, block1Z);
 		Block block2 = world.getBlock(block2X, block2Y, block2Z);
 		
-		if(GasesFrameworkAPI.isIgnitionBlock(block2))
+		if(GasesFramework.registry.isIgnitionBlock(block2))
 		{
-			if(block1 instanceof BlockGas && block1 != GasesFrameworkAPI.gasTypeFire.block)
+			if(block1 instanceof BlockGas && block1 != GasesFramework.registry.getGasBlock(GasesFramework.gasTypeFire))
 			{
 				return ((BlockGas)block1).type.combustibility.fireSpreadRate;
 			}
 		}
-		else if(GasesFrameworkAPI.isIgnitionBlock(block1))
+		else if(GasesFrameworkAPI.registry.isIgnitionBlock(block1))
 		{
-			if(block2 instanceof BlockGas && block2 != GasesFrameworkAPI.gasTypeFire.block)
+			if(block2 instanceof BlockGas && block2 != GasesFramework.registry.getGasBlock(GasesFramework.gasTypeFire))
 			{
 				return ((BlockGas)block2).type.combustibility.fireSpreadRate;
 			}
@@ -49,11 +50,11 @@ public class ReactionIgnition extends Reaction
 	@Override
 	public boolean is(World world, Block block1, int block1X, int block1Y, int block1Z, Block block2, int block2X, int block2Y, int block2Z)
 	{
-		if(GasesFrameworkAPI.isIgnitionBlock(block2))
+		if(GasesFramework.registry.isIgnitionBlock(block2))
 		{
 			return block1 instanceof BlockGas && ((BlockGas)block1).canCombustNormally();
 		}
-		else if(GasesFrameworkAPI.isIgnitionBlock(block1))
+		else if(GasesFramework.registry.isIgnitionBlock(block1))
 		{
 			return block2 instanceof BlockGas && ((BlockGas)block2).canCombustNormally();
 		}
@@ -67,17 +68,17 @@ public class ReactionIgnition extends Reaction
 		Block block1 = world.getBlock(block1X, block1Y, block1Z);
 		Block block2 = world.getBlock(block2X, block2Y, block2Z);
 		
-		if(GasesFrameworkAPI.isIgnitionBlock(block2))
+		if(GasesFramework.registry.isIgnitionBlock(block2))
 		{
-			if(block1 instanceof BlockGas && block1 != GasesFrameworkAPI.gasTypeFire.block)
+			if(block1 instanceof BlockGas && block1 != GasesFramework.registry.getGasBlock(GasesFramework.gasTypeFire))
 			{
 				((BlockGas)block1).onFire(world, block1X, block1Y, block1Z, random, world.getBlockMetadata(block1X, block1Y, block1Z));
 				return true;
 			}
 		}
-		else if(GasesFrameworkAPI.isIgnitionBlock(block1))
+		else if(GasesFramework.registry.isIgnitionBlock(block1))
 		{
-			if(block2 instanceof BlockGas && block2 != GasesFrameworkAPI.gasTypeFire.block)
+			if(block2 instanceof BlockGas && block2 != GasesFramework.registry.getGasBlock(GasesFramework.gasTypeFire))
 			{
 				((BlockGas)block2).onFire(world, block2X, block2Y, block2Z, random, world.getBlockMetadata(block2X, block2Y, block2Z));
 				return true;

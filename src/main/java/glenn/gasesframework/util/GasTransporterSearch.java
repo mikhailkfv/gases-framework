@@ -1,5 +1,6 @@
 package glenn.gasesframework.util;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasInterface;
 import glenn.gasesframework.api.block.IGasPropellor;
@@ -70,7 +71,7 @@ public abstract class GasTransporterSearch
 		protected void inspectLooseEnd(GasTransporterBranch branch, World world, IVec blockPos, IGasTransporter block, IVec looseConnectionPos, ForgeDirection direction)
 		{
 			GasType carriedType = block.getCarriedType(world, blockPos.x, blockPos.y, blockPos.z);
-			if(GasesFrameworkAPI.canFillWithGas(world, looseConnectionPos.x, looseConnectionPos.y, looseConnectionPos.z, carriedType))
+			if(GasesFramework.implementation.canFillWithGas(world, looseConnectionPos.x, looseConnectionPos.y, looseConnectionPos.z, carriedType))
 			{
 				looseEnds.add(new End(branch, looseConnectionPos, direction));
 			}

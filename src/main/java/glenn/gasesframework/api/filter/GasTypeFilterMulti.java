@@ -1,5 +1,6 @@
 package glenn.gasesframework.api.filter;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.gastype.GasType;
 
 import java.util.Collections;
@@ -62,7 +63,7 @@ public abstract class GasTypeFilterMulti extends GasTypeFilter
 				filterTypes = new GasType[gasTypes.length];
 				for (int i = 0; i < gasTypes.length; i++)
 				{
-					filterTypes[i] = GasType.getGasTypeByID(gasTypes[i]);
+					filterTypes[i] = GasesFramework.registry.getGasTypeByID(gasTypes[i]);
 				}
 			}
 

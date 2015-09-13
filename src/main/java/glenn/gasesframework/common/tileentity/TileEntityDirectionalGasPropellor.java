@@ -2,6 +2,7 @@ package glenn.gasesframework.common.tileentity;
 
 import java.util.Random;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasSource;
@@ -43,7 +44,7 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
 	{
 		super.readFromNBT(tagCompound);
 		pumpTime = tagCompound.getInteger("pumpTime");
-		containedType = GasType.getGasTypeByID(tagCompound.getInteger("containedType"));
+		containedType = GasesFramework.registry.getGasTypeByID(tagCompound.getInteger("containedType"));
 		filter = GasTypeFilterSimple.readFromNBT(tagCompound.getCompoundTag("filter"));
 	}
 
@@ -165,7 +166,7 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
     {
     	IGasPropellor propellor = (IGasPropellor)getBlockType();
     	int pressure = propellor.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, direction);
-    	return GasesFrameworkAPI.pushGas(worldObj, worldObj.rand, x, y, z, containedType, direction, pressure);
+    	return GasesFramework.implementation.pushGas(worldObj, worldObj.rand, x, y, z, containedType, direction, pressure);
     }
     
     /**

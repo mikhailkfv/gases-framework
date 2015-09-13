@@ -62,7 +62,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
     {
     	IGasPropellor propellor = (IGasPropellor)getBlockType();
     	int pressure = propellor.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, direction);
-    	return GasesFrameworkAPI.pushGas(worldObj, worldObj.rand, x, y, z, type, direction, pressure);
+    	return GasesFrameworkAPI.implementation.pushGas(worldObj, worldObj.rand, x, y, z, type, direction, pressure);
     }
     
 	@Override
@@ -97,7 +97,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
 		
 		for(int i = 0; i < types.length; i++)
 		{
-			types[i] = GasType.getGasTypeByID(gasIDArray[i]);
+			types[i] = GasesFramework.registry.getGasTypeByID(gasIDArray[i]);
 			if(types[i] == null) types[i] = GasesFrameworkAPI.gasTypeAir; 
 		}
 	}
@@ -134,7 +134,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
 	{
 		if(worldObj.isRemote)
 		{
-			types[eventID] = GasType.getGasTypeByID(eventParam);
+			types[eventID] = GasesFramework.registry.getGasTypeByID(eventParam);
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 		

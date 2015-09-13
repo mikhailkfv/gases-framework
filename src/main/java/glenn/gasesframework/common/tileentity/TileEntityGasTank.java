@@ -51,7 +51,7 @@ public abstract class TileEntityGasTank extends TileEntity
 	{
 		super.readFromNBT(tagCompound);
 		gasStored = tagCompound.getInteger("amount");
-		gasTypeStored = GasType.getGasTypeByID(tagCompound.getInteger("containedType"));
+		gasTypeStored = GasesFramework.registry.getGasTypeByID(tagCompound.getInteger("containedType"));
 		
 		if(GasesFramework.configurations.blocks.gasTanks.fancyTank)
 		{
@@ -89,7 +89,7 @@ public abstract class TileEntityGasTank extends TileEntity
      * sending the packet.
      *
      * @param net The NetworkManager the packet originated from
-     * @param pkt The data packet
+     * @param packet The data packet
      */
 	@Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
@@ -197,7 +197,7 @@ public abstract class TileEntityGasTank extends TileEntity
 	    {
 		    IVec current = stack.get(pos++);
 		    
-		    GasesFrameworkAPI.placeGas(worldObj, current.x, current.y, current.z, gasTypeStored, 16);
+		    GasesFramework.implementation.placeGas(worldObj, current.x, current.y, current.z, gasTypeStored, 16);
 		    gasStored--;
 		    
 		    for (ForgeDirection direction : ForgeDirectionUtil.shuffledList(worldObj.rand))
@@ -397,7 +397,7 @@ public abstract class TileEntityGasTank extends TileEntity
 			gasStored = eventParam;
 			break;
 		case SET_TYPE:
-			gasTypeStored = GasType.getGasTypeByID(eventParam);
+			gasTypeStored = GasesFramework.registry.getGasTypeByID(eventParam);
 			break;
 		}
 		return true;

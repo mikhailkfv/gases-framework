@@ -1,5 +1,6 @@
 package glenn.gasesframework.common;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.moddingutils.ItemRepresentation;
 
@@ -34,7 +35,7 @@ public class ConfigGasFurnaceRecipes
 			
 			for(CustomGasFurnaceRecipe recipe : recipes)
 			{
-				GasesFrameworkAPI.addSpecialFurnaceRecipe(recipe.input.getItemStack(), recipe.output.getItemStack(), recipe.time <= 0 ? 200 : recipe.time, recipe.exp);
+				GasesFramework.implementation.addSpecialFurnaceRecipe(recipe.input.getItemStack(), recipe.output.getItemStack(), recipe.time <= 0 ? 200 : recipe.time, recipe.exp);
 			}
 		}
 		catch(IOException e)

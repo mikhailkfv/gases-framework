@@ -1,5 +1,6 @@
 package glenn.gasesframework.common.block;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasInterface;
 import glenn.gasesframework.api.block.IGasPropellor;
@@ -215,13 +216,13 @@ public class BlockGasPipe extends Block implements IGasTransporter
     @Override
 	public Item getItem(World par1World, int par2, int par3, int par4)
 	{
-	    return Item.getItemFromBlock(GasesFrameworkAPI.gasTypeAir.pipeBlock);
+	    return Item.getItemFromBlock(GasesFramework.registry.getGasPipeBlock(GasesFrameworkAPI.gasTypeAir));
 	}
     
     @Override
 	public Item getItemDropped(int par1, Random par2Random, int par3)
 	{
-	    return Item.getItemFromBlock(GasesFrameworkAPI.gasTypeAir.pipeBlock);
+		return Item.getItemFromBlock(GasesFramework.registry.getGasPipeBlock(GasesFrameworkAPI.gasTypeAir));
 	}
 	
 	/**
@@ -242,7 +243,7 @@ public class BlockGasPipe extends Block implements IGasTransporter
     {
     	if (type != GasesFrameworkAPI.gasTypeAir)
     	{
-			GasesFrameworkAPI.placeGas(world, x, y, z, type, 16);
+			GasesFramework.implementation.placeGas(world, x, y, z, type, 16);
     	}
     	else
     	{
@@ -259,9 +260,10 @@ public class BlockGasPipe extends Block implements IGasTransporter
 	@Override
     public void onBlockExploded(World world, int x, int y, int z, Explosion explosion)
     {
-		if(type.block != null)
+		BlockGas block = GasesFramework.registry.getGasBlock(type);
+		if(block != null)
 		{
-			((BlockGas)type.block).onFire(world, x, y, z, world.rand, 0);
+			block.onFire(world, x, y, z, world.rand, 0);
 		}
     }
 	
@@ -335,7 +337,7 @@ public class BlockGasPipe extends Block implements IGasTransporter
 	{
 		if (this.type != type)
 		{
-			world.setBlock(x, y, z, type.pipeBlock, world.getBlockMetadata(x, y, z), 3);
+			world.setBlock(x, y, z, GasesFramework.registry.getGasPipeBlock(type), world.getBlockMetadata(x, y, z), 3);
 			return (IGasTransporter)world.getBlock(x, y, z);
 		}
 		else

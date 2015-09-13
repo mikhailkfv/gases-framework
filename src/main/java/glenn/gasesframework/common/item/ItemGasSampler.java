@@ -1,25 +1,19 @@
 package glenn.gasesframework.common.item;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.block.ISample;
-import glenn.gasesframework.api.filter.GasTypeFilter;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.item.IFilterProvider;
 import glenn.gasesframework.api.item.ISampler;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -37,7 +31,7 @@ public abstract class ItemGasSampler extends Item implements ISampler, IFilterPr
 	@Override
 	public GasType getGasType(ItemStack itemstack)
 	{
-		return GasType.getGasTypeByID(itemstack.getItemDamage());
+		return GasesFramework.registry.getGasTypeByID(itemstack.getItemDamage());
 	}
 	
 	@Override
@@ -82,7 +76,7 @@ public abstract class ItemGasSampler extends Item implements ISampler, IFilterPr
 	@SideOnly(Side.CLIENT)
 	public int getColorFromDamage(int par1)
 	{
-		GasType gasType = GasType.getGasTypeByID(par1);
+		GasType gasType = GasesFramework.registry.getGasTypeByID(par1);
 		return gasType != null ? (gasType.color >> 8) : 0xFFFFFF;
 	}
 	
@@ -123,7 +117,7 @@ public abstract class ItemGasSampler extends Item implements ISampler, IFilterPr
 	@Override
 	public void getSubItems(Item item, CreativeTabs creativeTabs, List itemList)
 	{
-		GasType[] allTypes = GasType.getAllTypes();
+		GasType[] allTypes = GasesFramework.registry.getRegisteredGasTypes();
 		for (GasType type : allTypes)
 		{
 			if(type.isIndustrial)

@@ -22,7 +22,7 @@ public class TileEntityWoodGasTank extends TileEntityGasTank
 			{
 				for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 				{
-					if (GasesFrameworkAPI.canFillWithGas(worldObj, xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, gasType))
+					if (GasesFramework.implementation.canFillWithGas(worldObj, xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, gasType))
 					{
 						return true;
 					}
@@ -46,7 +46,7 @@ public class TileEntityWoodGasTank extends TileEntityGasTank
 			{
 				for (ForgeDirection direction : ForgeDirectionUtil.shuffledList(worldObj.rand))
 				{
-					if (GasesFrameworkAPI.fillWithGas(worldObj, worldObj.rand, xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, gasType))
+					if (GasesFramework.implementation.fillWithGas(worldObj, worldObj.rand, xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, gasType))
 					{
 						return true;
 					}

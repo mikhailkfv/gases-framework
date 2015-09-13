@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.IGasesFramework;
+import glenn.gasesframework.api.IGasesFrameworkImplementation;
 import glenn.gasesframework.api.ItemKey;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasTransporter;
@@ -19,11 +18,8 @@ import glenn.gasesframework.api.pipetype.PipeType;
 import glenn.gasesframework.client.render.RenderBlockGasTypeFilter;
 import glenn.gasesframework.common.block.BlockGas;
 import glenn.gasesframework.common.block.BlockGasPipe;
-import glenn.gasesframework.common.block.BlockLantern;
 import glenn.gasesframework.common.entity.EntityDelayedExplosion;
-import glenn.gasesframework.common.item.ItemGasPipe;
 import glenn.gasesframework.common.tileentity.TileEntityGasFurnace;
-import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
 import glenn.gasesframework.network.message.MessageSetBlockGasTypeFilter;
 import glenn.gasesframework.util.GasTransporterIterator;
 import glenn.gasesframework.util.GasTransporterSearch;
@@ -31,12 +27,12 @@ import glenn.moddingutils.IVec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class Implementation implements IGasesFramework
+public class Implementation implements IGasesFrameworkImplementation
 {
 	/**
 	 * Adds a special furnace recipe which can be used in a gas furnace. Special furnace recipes are notably different in the way the stack size of what is smelted matters.
@@ -206,28 +202,28 @@ public class Implementation implements IGasesFramework
 		}
 	}
 
-	private static void fill(World world, int x, int y, int z, GasType type, int amount)
+	private void fill(World world, int x, int y, int z, GasType type, int amount)
 	{
 		if(amount <= 0) return;
 
 		Block block = world.getBlock(x, y, z);
-		if(block == type.block)
+		if(block == GasesFramework.registry.getGasBlock(type))
 		{
 			int newMetadata = 16 - world.getBlockMetadata(x, y, z) + amount;
 			world.setBlockMetadataWithNotify(x, y, z, 16 - newMetadata, 3);
 		}
 		else
 		{
-			world.setBlock(x, y, z, type.block, 16 - amount, 3);
+			placeGas(world, x, y, z, type, amount);
 		}
 	}
 
-	private static int fillCapacity(World world, int x, int y, int z, GasType type)
+	private int fillCapacity(World world, int x, int y, int z, GasType type)
 	{
 		Block block = world.getBlock(x, y, z);
 		if(block instanceof BlockGas)
 		{
-			if(block == type.block)
+			if(block == GasesFramework.registry.getGasBlock(type))
 			{
 				return world.getBlockMetadata(x, y, z);
 			}
@@ -262,7 +258,7 @@ public class Implementation implements IGasesFramework
 		if(volume > 0)
 		{
 			if(volume > 16) volume = 16;
-			world.setBlock(x, y, z, type.block, 16 - volume, 3);
+			world.setBlock(x, y, z, GasesFramework.registry.getGasBlock(type), 16 - volume, 3);
 		}
 	}
 
@@ -295,11 +291,11 @@ public class Implementation implements IGasesFramework
 				IVec branchPos = end.branch.getPosition();
 				IGasTransporter sourceBlock = (IGasTransporter)world.getBlock(branchPos.x, branchPos.y, branchPos.z);
 				GasType sourceBlockType = sourceBlock.getCarriedType(world, x, y, z);
-				boolean hasPushed = false;
+				boolean hasPushed;
 
 				if(isSearchingLooseEnds)
 				{
-					hasPushed = GasesFrameworkAPI.fillWithGas(world, random, end.endPosition.x, end.endPosition.y, end.endPosition.z, sourceBlockType);
+					hasPushed = fillWithGas(world, random, end.endPosition.x, end.endPosition.y, end.endPosition.z, sourceBlockType);
 				}
 				else
 				{
@@ -346,8 +342,8 @@ public class Implementation implements IGasesFramework
 
 	/**
 	 * Push gas to a coordinate with a certain direction and pressure.
-	 * If the block is an IGasTransporter or IGasReceptor, {@link glenn.gasesframework.api.IGasesFramework#pumpGas(World,int,int,int,GasType,ForgeDirection,int) pumpGas(World,int,int,int,GasType,ForgeDirection,int)} is returned.
-	 * Else, {@link glenn.gasesframework.api.IGasesFramework#fillWithGas(World,int,int,int,GasType) fillWithGas(World,int,int,int,GasType)} is returned.
+	 * If the block is an IGasTransporter or IGasReceptor, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#pumpGas(World,int,int,int,GasType,ForgeDirection,int) pumpGas(World,int,int,int,GasType,ForgeDirection,int)} is returned.
+	 * Else, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#fillWithGas(World,int,int,int,GasType) fillWithGas(World,int,int,int,GasType)} is returned.
 	 * @param world
 	 * @param random
 	 * @param x
@@ -401,21 +397,23 @@ public class Implementation implements IGasesFramework
 	@Override
 	public void sendFilterUpdatePacket(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter)
 	{
-		GasesFramework.networkWrapper.sendToDimension(new MessageSetBlockGasTypeFilter(x, y, z, side, filter), world.provider.dimensionId);
+		GasesFramework.networkWrapper.sendToDimension(
+				new MessageSetBlockGasTypeFilter(x, y, z, side, filter),
+				world.provider.dimensionId);
 	}
 
 	/**
 	 * Gets the gas type of the gas block at the location, if any. If no gas block is present, null is returned.
-	 * @param world
+	 * @param blockAccess
 	 * @param x
 	 * @param y
 	 * @param z
 	 * @return
 	 */
 	@Override
-	public GasType getGasType(World world, int x, int y, int z)
+	public GasType getGasType(IBlockAccess blockAccess, int x, int y, int z)
 	{
-		Block block = world.getBlock(x, y, z);
+		Block block = blockAccess.getBlock(x, y, z);
 		if(block instanceof BlockGas)
 		{
 			return ((BlockGas)block).type;
@@ -428,15 +426,15 @@ public class Implementation implements IGasesFramework
 
 	/**
 	 * Gets the gas type of the gas pipe block at the location, if any. If no gas pipe block is present, null is returned.
-	 * @param world
+	 * @param blockAccess
 	 * @param x
 	 * @param y
 	 * @param z
 	 * @return
 	 */
-	public GasType getGasPipeType(World world, int x, int y, int z)
+	public GasType getGasPipeType(IBlockAccess blockAccess, int x, int y, int z)
 	{
-		Block block = world.getBlock(x, y, z);
+		Block block = blockAccess.getBlock(x, y, z);
 		if(block instanceof BlockGasPipe)
 		{
 			return ((BlockGasPipe)block).type;
@@ -449,16 +447,16 @@ public class Implementation implements IGasesFramework
 
 	/**
 	 * Gets the volume of a gas block ranging from 1 to 16.
-	 * @param world
+	 * @param blockAccess
 	 * @param x
 	 * @param y
 	 * @param z
 	 * @return
 	 */
 	@Override
-	public int getGasVolume(World world, int x, int y, int z)
+	public int getGasVolume(IBlockAccess blockAccess, int x, int y, int z)
 	{
-		return 16 - world.getBlockMetadata(x, y, z);
+		return 16 - blockAccess.getBlockMetadata(x, y, z);
 	}
 
 	/**
@@ -489,130 +487,5 @@ public class Implementation implements IGasesFramework
 	public int getRenderedGasTypeFilterBlockRenderType()
 	{
 		return RenderBlockGasTypeFilter.RENDER_ID;
-	}
-
-	/**
-	 * Registers a gas type. This involves creating and registering the blocks necessary for a gas type.
-	 * @param type
-	 * @return The gas block registered for this type, if any.
-	 */
-	@Override
-	public Block registerGasType(GasType type)
-	{
-		if(type.isRegistered)
-		{
-			throw new RuntimeException("Gas type named " + type.name + " was attempted registered while it was already registered.");
-		}
-
-		if(type != GasesFrameworkAPI.gasTypeAir)
-		{
-			type.block = GameRegistry.registerBlock(type.tweakGasBlock(new BlockGas(type)), "gas_" + type.name);
-			if(type.combustibility.fireSpreadRate >= 0 | type.combustibility.explosionPower > 0.0F)
-			{
-				Blocks.fire.setFireInfo(type.block, 1000, 1000);
-			}
-		}
-		if(type.isIndustrial)
-		{
-			type.pipeBlock = GameRegistry.registerBlock(type.tweakPipeBlock(new BlockGasPipe(type)), ItemGasPipe.class, "gasPipe_" + type.name);
-
-			LanternType lanternType = GasesFrameworkAPI.lanternTypesGas[type.combustibility.burnRate];
-			if(lanternType != GasesFrameworkAPI.lanternTypeGasEmpty)
-			{
-				lanternType.addItemIn(new ItemKey(GasesFramework.items.gasBottle, type.gasID));
-			}
-		}
-
-		type.isRegistered = true;
-		return type.block;
-	}
-
-	/**
-	 * Registers a gas type and places the gas block on a creative tab. This involves creating and registering the blocks necessary for a gas type.
-	 * @param type
-	 * @param creativeTab
-	 * @return The gas block registered for this type, if any.
-	 */
-	@Override
-	public Block registerGasType(GasType type, CreativeTabs creativeTab)
-	{
-		Block result = registerGasType(type);
-		if(result != null)
-		{
-			result.setCreativeTab(creativeTab);
-		}
-		return result;
-	}
-
-	/**
-	 * Registers a lantern type. This involves creating and registering the blocks necessary for a lantern type.
-	 * @param type
-	 * @return The lantern block registered for this type, if any.
-	 */
-	@Override
-	public Block registerLanternType(LanternType type)
-	{
-		if(type.isRegistered)
-		{
-			throw new RuntimeException("Lantern type named " + type.name + " was attempted registered while it was already registered.");
-		}
-
-		type.block = GameRegistry.registerBlock(type.tweakLanternBlock(new BlockLantern(type)), "lantern_" + type.name);
-
-		type.isRegistered = true;
-
-		return type.block;
-	}
-
-	/**
-	 * Registers a lantern type and places the lantern block on a creative tab. This involves creating and registering the blocks necessary for a lantern type.
-	 * @param type
-	 * @param creativeTab
-	 * @return The lantern block registered for this type, if any.
-	 */
-	@Override
-	public Block registerLanternType(LanternType type, CreativeTabs creativeTab)
-	{
-		Block result = registerLanternType(type);
-		if(result != null)
-		{
-			result.setCreativeTab(creativeTab);
-		}
-		return result;
-	}
-
-	/**
-	 * Registers a gas world generator for generation in certain dimensions.
-	 * @param type
-	 */
-	@Override
-	public void registerGasWorldGenType(GasWorldGenType type, String[] dimensionNames)
-	{
-		if(type.generationFrequency > 0.0f)
-		{
-			for(String dimensionName : dimensionNames)
-			{
-				GasesFramework.worldGenerator.registerGasWorldGenType(type, dimensionName);
-			}
-		}
-	}
-
-	/**
-	 * Registers a gas transposer handler.
-	 * @param handler
-	 */
-	@Override
-	public void registerGasTransposerHandler(IGasTransposerHandler handler)
-	{
-		TileEntityGasTransposer.registerHandler(handler);
-	}
-
-	/**
-	 * Registers a pipe type.
-	 * @param type
-	 */
-	public void registerPipeType(PipeType type)
-	{
-
 	}
 }

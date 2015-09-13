@@ -1,5 +1,6 @@
 package glenn.gasesframework.common.block;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.ItemKey;
@@ -76,7 +77,7 @@ public class BlockLantern extends Block implements IGasReceptor
 			int metadata = world.getBlockMetadata(x, y, z) + 1;
 			if(metadata >= 16)
 			{
-				world.setBlock(x, y, z, type.expirationLanternType.block);
+				world.setBlock(x, y, z, GasesFramework.registry.getLanternBlock(type.expirationLanternType));
 			}
 			else
 			{
@@ -94,18 +95,18 @@ public class BlockLantern extends Block implements IGasReceptor
     	ItemStack heldItem = entityPlayer.getCurrentEquippedItem();
     	ItemKey itemIn = new ItemKey(heldItem);
     	
-    	LanternType replacementType = LanternType.getLanternTypeByItemIn(itemIn);
+    	LanternType replacementType = GasesFramework.registry.getLanternTypeByItemIn(itemIn);
     	
     	if(replacementType == null)
     	{
-    		replacementType = GasesFrameworkAPI.lanternTypeEmpty;
+    		replacementType = GasesFramework.lanternTypeEmpty;
     	}
     	
-    	world.setBlock(x, y, z, replacementType.block);
+    	world.setBlock(x, y, z, GasesFramework.registry.getLanternBlock(replacementType));
     	
     	if(!entityPlayer.capabilities.isCreativeMode && !itemIn.equals(type.itemOut))
     	{
-    		if(heldItem != null && replacementType.accepts(itemIn) && --heldItem.stackSize <= 0)
+    		if(heldItem != null && --heldItem.stackSize <= 0)
     		{
     			entityPlayer.destroyCurrentEquippedItem();
     		}
@@ -207,7 +208,7 @@ public class BlockLantern extends Block implements IGasReceptor
     {
     	ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
     	
-    	ret.add(new ItemStack(GasesFrameworkAPI.lanternTypeEmpty.block));
+    	ret.add(new ItemStack(GasesFramework.registry.getLanternBlock(GasesFramework.lanternTypeEmpty)));
     	if(type.itemOut != null)
     	{
     		ret.add(new ItemStack(type.itemOut.item, 1, type.itemOut.damage));
@@ -221,7 +222,7 @@ public class BlockLantern extends Block implements IGasReceptor
     {
     	if(type.expirationLanternType != null)
     	{
-    		return Item.getItemFromBlock(type.expirationLanternType.block);
+    		return Item.getItemFromBlock(GasesFramework.registry.getLanternBlock(type.expirationLanternType));
     	}
     	else
     	{
@@ -259,7 +260,7 @@ public class BlockLantern extends Block implements IGasReceptor
 	{
 		if(canReceiveGas(world, x, y, z, side, gasType))
 		{
-			world.setBlock(x, y, z, GasesFrameworkAPI.lanternTypesGas[gasType.combustibility.burnRate].block);
+			world.setBlock(x, y, z, GasesFramework.registry.getLanternBlock(GasesFramework.lanternTypesGas[gasType.combustibility.burnRate]));
 			return true;
 		}
 		else
@@ -271,6 +272,6 @@ public class BlockLantern extends Block implements IGasReceptor
 	@Override
 	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		return type == GasesFrameworkAPI.lanternTypeGasEmpty && gasType.combustibility != Combustibility.NONE;
+		return type == GasesFramework.lanternTypeGasEmpty && gasType.combustibility != Combustibility.NONE;
 	}
 }

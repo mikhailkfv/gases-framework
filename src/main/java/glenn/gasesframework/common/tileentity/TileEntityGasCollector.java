@@ -143,7 +143,7 @@ public class TileEntityGasCollector extends TileEntityDirectionalGasPropellor
 	public void readFromNBT(NBTTagCompound tagCompound)
 	{
 		super.readFromNBT(tagCompound);
-		pendingGasType = GasType.getGasTypeByID(tagCompound.getInteger("pendingGasType"));
+		pendingGasType = GasesFramework.registry.getGasTypeByID(tagCompound.getInteger("pendingGasType"));
 		pendingGasAmount = tagCompound.getInteger("pendingGasAmount");
 	}
 }

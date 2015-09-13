@@ -88,7 +88,7 @@ public class ForgeClientEvents
 				int blockY = MathHelper.floor_double(player.posY + player.getEyeHeight());
 				int blockZ = MathHelper.floor_double(player.posZ);
 				
-				GasType type = GasesFrameworkAPI.getGasType(player.worldObj, blockX, blockY, blockZ);
+				GasType type = GasesFramework.implementation.getGasType(player.worldObj, blockX, blockY, blockZ);
 				
 				if(type.overlayImage != null && type.isVisible())
 				{
@@ -158,7 +158,7 @@ public class ForgeClientEvents
 			BlockGasPipe gasPipe = (BlockGasPipe)block;
 			
 			ItemStack currentPlayerItem = event.player.getCurrentEquippedItem();
-			if(GasesFrameworkAPI.gasTypeAir.pipeBlock != null && currentPlayerItem != null && currentPlayerItem.getItem() == Item.getItemFromBlock(GasesFrameworkAPI.gasTypeAir.pipeBlock))
+			if(currentPlayerItem != null && currentPlayerItem.getItem() == Item.getItemFromBlock(GasesFramework.registry.getGasPipeBlock(GasesFrameworkAPI.gasTypeAir)))
 			{
 				final byte[] pumpingDirections = gasPipe.getPossiblePropellingDirections(world, x, y, z);
 				

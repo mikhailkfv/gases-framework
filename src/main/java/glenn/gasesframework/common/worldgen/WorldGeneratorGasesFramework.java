@@ -146,7 +146,7 @@ public class WorldGeneratorGasesFramework implements IWorldGenerator
 								int volume = currentType.getPlacementVolume(currentWorld, x, y, z, score - 0.25f);
 								if(volume > 0)
 								{
-									currentWorld.setBlock(x, y, z, currentType.gasType.block, 16 - volume, 2);
+									GasesFramework.implementation.placeGas(currentWorld, x, y, z, currentType.gasType, volume);
 								}
 							}
 						}
@@ -313,27 +313,32 @@ public class WorldGeneratorGasesFramework implements IWorldGenerator
     {
     	
     }
+
+	public boolean isGasWorldGenTypeRegistered(GasWorldGenType type, String dimension)
+	{
+		String dimensionKey = dimension.toLowerCase();
+		HashMap<String, TypeValues> typeValuesMap = typesByDimension.get(dimensionKey);
+		return typeValuesMap != null && typeValuesMap.containsKey(type.name);
+	}
     
     public void registerGasWorldGenType(GasWorldGenType type, String dimension)
     {
-    	String dimensionKey = dimension.toLowerCase();
-    	
-    	HashMap<String, TypeValues> typeValuesMap = typesByDimension.get(dimensionKey);
-    	if(typeValuesMap == null)
-    	{
-    		typeValuesMap = new HashMap<String, TypeValues>();
-    		typesByDimension.put(dimension, typeValuesMap);
-    	}
+		if (isGasWorldGenTypeRegistered(type, dimension))
+		{
+			throw new RuntimeException("A gas world gen type was attempted registered to a dimension it was already registered to");
+		}
 
-    	TypeValues typeValues = new TypeValues(type);
-    	if(!typeValuesMap.containsKey(typeValues.type.name))
-    	{
-    		typeValuesMap.put(typeValues.type.name, typeValues);
-    	}
-    	else
-    	{
-    		throw new RuntimeException("A gas world gen type was attempted registered to a dimension it was already registered to");
-    	}
+		if (type.generationFrequency > 0.0F)
+		{
+			String dimensionKey = dimension.toLowerCase();
+			HashMap<String, TypeValues> typeValuesMap = typesByDimension.get(dimensionKey);
+			if (typeValuesMap == null)
+			{
+				typeValuesMap = new HashMap<String, TypeValues>();
+				typesByDimension.put(dimension, typeValuesMap);
+			}
+			typeValuesMap.put(type.name, new TypeValues(type));
+		}
     }
     
     private static int randomRound(float f, Random random)

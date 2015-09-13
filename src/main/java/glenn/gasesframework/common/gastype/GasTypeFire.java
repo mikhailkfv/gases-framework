@@ -1,13 +1,13 @@
-package glenn.gasesframework.api.gastype;
+package glenn.gasesframework.common.gastype;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.Combustibility;
-import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.block.MaterialGas;
 
 import java.util.Random;
 
+import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.gastype.GasType;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -24,7 +24,7 @@ public class GasTypeFire extends GasType
 	}
 	
 	/**
-	 * This method is called upon gas block construction when the gas type is {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
+	 * This method is called upon gas block construction when the gas type is {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerGasType(GasType) registered}.
 	 * @return
 	 */
 	@Override
@@ -61,9 +61,9 @@ public class GasTypeFire extends GasType
 			{
 				world.setBlock(x, y, z, Blocks.fire);
 			}
-			else if(GasesFrameworkAPI.getFireSmokeAmount() > 0 && world.rand.nextInt(4) == 0)
+			else if(GasesFramework.implementation.getFireSmokeAmount() > 0 && world.rand.nextInt(4) == 0)
 			{
-				world.setBlock(x, y, z, GasesFrameworkAPI.gasTypeSmoke.block, 16 - GasesFrameworkAPI.getFireSmokeAmount(), 3);
+				GasesFramework.implementation.placeGas(world, x, y, z, GasesFramework.gasTypeSmoke, GasesFramework.implementation.getFireSmokeAmount());
 			}
     	}
     }

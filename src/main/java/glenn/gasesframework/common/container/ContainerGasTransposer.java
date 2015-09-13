@@ -2,6 +2,7 @@ package glenn.gasesframework.common.container;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
 import glenn.gasesframework.common.tileentity.TileEntityGasTransposer.Mode;
@@ -77,10 +78,10 @@ public class ContainerGasTransposer extends Container
 		switch(id)
 		{
 		case 0:
-			tileEntity.containedType = GasType.getGasTypeByID(val);
+			tileEntity.containedType = GasesFramework.registry.getGasTypeByID(val);
 			break;
 		case 1:
-			tileEntity.pendingType = GasType.getGasTypeByID(val);
+			tileEntity.pendingType = GasesFramework.registry.getGasTypeByID(val);
 			break;
 		case 2:
 			tileEntity.setMode(val);

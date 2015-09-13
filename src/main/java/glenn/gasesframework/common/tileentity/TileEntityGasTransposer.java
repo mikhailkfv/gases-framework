@@ -1,5 +1,6 @@
 package glenn.gasesframework.common.tileentity;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
@@ -283,7 +284,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 					IGasPropellor propellor = (IGasPropellor)tileEntity.getBlockType();
 					int pressure = propellor.getPressureFromSide(tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, direction);
 					
-					if (GasesFrameworkAPI.pushGas(tileEntity.worldObj, tileEntity.worldObj.rand, x, y, z, tileEntity.pendingType, direction, pressure))
+					if (GasesFramework.implementation.pushGas(tileEntity.worldObj, tileEntity.worldObj.rand, x, y, z, tileEntity.pendingType, direction, pressure))
 					{
 						tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
 						tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
@@ -465,7 +466,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
         {}
         
         time = tagCompound.getInteger("time");
-        containedType = GasType.getGasTypeByID(tagCompound.getInteger("containedType"));
+        containedType = GasesFramework.registry.getGasTypeByID(tagCompound.getInteger("containedType"));
 	}
 	
 	@Override
