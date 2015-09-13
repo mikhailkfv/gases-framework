@@ -68,7 +68,7 @@ public class DuctTapeGag implements IExtendedEntityProperties
 	public static DuctTapeGag getOrRegister(EntityLivingBase entity)
 	{
 		DuctTapeGag gag = get(entity);
-		if (gag != null)
+		if (gag == null)
 		{
 			gag = register(entity);
 		}
