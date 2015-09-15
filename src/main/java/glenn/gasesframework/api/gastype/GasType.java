@@ -1,6 +1,5 @@
 package glenn.gasesframework.api.gastype;
 
-import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.ExtendedGasEffectsBase.EffectType;
 import glenn.gasesframework.api.GasesFrameworkAPI;
@@ -9,7 +8,6 @@ import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -326,11 +324,11 @@ public class GasType
     	}
     	else
     	{
-    		if(GasesFramework.implementation.getGasType(blockAccess, x, y - 1, z) == this)
+    		if(GasesFrameworkAPI.implementation.getGasType(blockAccess, x, y - 1, z) == this)
     		{
     			return 0.0D;
     		}
-    		boolean b = GasesFramework.implementation.getGasType(blockAccess, x, y + 1, z) == this;
+    		boolean b = GasesFrameworkAPI.implementation.getGasType(blockAccess, x, y + 1, z) == this;
     		double d = (0.5D - (double)(16 - metadata) / 8.0D) * (b ? 2.0D : 1.0D);
     		return d < 0.0D ? 0.0D : d;
     	}
@@ -357,11 +355,11 @@ public class GasType
     	}
     	else
     	{
-    		if(GasesFramework.implementation.getGasType(blockAccess, x, y + 1, z) == this)
+    		if(GasesFrameworkAPI.implementation.getGasType(blockAccess, x, y + 1, z) == this)
     		{
     			return 1.0D;
     		}
-    		boolean b = GasesFramework.implementation.getGasType(blockAccess, x, y - 1, z) == this;
+    		boolean b = GasesFrameworkAPI.implementation.getGasType(blockAccess, x, y - 1, z) == this;
     		double d = 1.0D - (0.5D - (double)(16 - metadata) / 8.0D) * (b ? 2.0D : 1.0D);
     		return d > 1.0D ? 1.0D : d;
     	}
@@ -390,10 +388,10 @@ public class GasType
 	 */
 	public boolean canFlowHere(int thisVolume, World world, int x, int y, int z)
 	{
-		GasType otherGasType = GasesFramework.implementation.getGasType(world, x, y, z);
+		GasType otherGasType = GasesFrameworkAPI.implementation.getGasType(world, x, y, z);
 		if(otherGasType != null)
 		{
-			return otherGasType.canBeDestroyedBy(GasesFramework.implementation.getGasVolume(world, x, y, z), this, thisVolume);
+			return otherGasType.canBeDestroyedBy(GasesFrameworkAPI.implementation.getGasVolume(world, x, y, z), this, thisVolume);
 		}
 		else
 		{

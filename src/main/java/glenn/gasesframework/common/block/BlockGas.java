@@ -60,6 +60,9 @@ public class BlockGas extends Block implements ISample
 		setTickRandomly(true);
 		disableStats();
 		setHardness(0.0F);
+		setLightOpacity(type.opacity);
+		setLightLevel(type.lightLevel);
+		setCreativeTab(type.creativeTab);
 		
 		setBlockTextureName(type.textureName);
 	}
@@ -486,10 +489,6 @@ public class BlockGas extends Block implements ISample
 	
 	/**
 	 * Gets the delay in ticks needed before the block should update again based on its density. Used internally only.
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
 	 * @return
 	 */
 	protected int getDelayForUpdateByDensity()

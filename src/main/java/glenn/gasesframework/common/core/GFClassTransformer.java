@@ -160,7 +160,7 @@ public class GFClassTransformer implements IClassTransformer
 		
 		for(int i = 0; i < classNode.methods.size(); i++)
 		{
-			MethodNode method = (MethodNode)classNode.methods.get(i);
+			MethodNode method = classNode.methods.get(i);
 			if(method.name.equals(methodOnEntityUpdate) & method.desc.equals("()V"))
 			{
 				InsnList newInstructions = new InsnList();
@@ -254,7 +254,7 @@ public class GFClassTransformer implements IClassTransformer
 
 		for(int i = 0; i < classNode.methods.size(); i++)
 		{
-			MethodNode method = (MethodNode)classNode.methods.get(i);
+			MethodNode method = classNode.methods.get(i);
 			if(method.name.equals(methodIsInsideOfMaterial) && method.desc.equals(descriptor))
 			{
 				InsnList newInstructions = new InsnList();

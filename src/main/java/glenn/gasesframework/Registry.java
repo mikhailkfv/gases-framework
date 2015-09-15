@@ -181,7 +181,7 @@ public class Registry implements IGasesFrameworkRegistry
 
 		if(type != GasesFrameworkAPI.gasTypeAir)
 		{
-			BlockGas gasBlock = (BlockGas)GameRegistry.registerBlock(new BlockGas(type).setLightLevel(type.lightLevel).setCreativeTab(type.creativeTab), "gas_" + type.name);
+			BlockGas gasBlock = (BlockGas)GameRegistry.registerBlock(new BlockGas(type), "gas_" + type.name);
 			gasTypeGasBlocks.put(type, gasBlock);
 
 			if(type.combustibility.fireSpreadRate >= 0 | type.combustibility.explosionPower > 0.0F)
@@ -262,7 +262,7 @@ public class Registry implements IGasesFrameworkRegistry
 			throw new RuntimeException("Lantern type named " + type.name + " has a name conflict with another lantern type.");
 		}
 
-		BlockLantern lanternBlock = (BlockLantern)GameRegistry.registerBlock(new BlockLantern(type).setCreativeTab(type.creativeTab), "lantern_" + type.name);
+		BlockLantern lanternBlock = (BlockLantern)GameRegistry.registerBlock(new BlockLantern(type), "lantern_" + type.name);
 
 		lanternTypeLanternBlocks.put(type, lanternBlock);
 

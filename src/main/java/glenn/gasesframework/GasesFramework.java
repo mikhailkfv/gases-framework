@@ -96,7 +96,7 @@ public class GasesFramework
 	
 	public static GasesFrameworkMainConfigurations configurations;
 
-	public static CreativeTabs creativeTab = new CreativeTab("tabGasesFramework");
+	public static final CreativeTabs creativeTab = new CreativeTab("tabGasesFramework");
 
 	public static final PipeType pipeTypeIron = new PipeTypeIron(0, "iron", true, "gasesframework:pipe_iron");
 	public static final PipeType pipeTypeGlass = new PipeTypeGlass(1, "glass", false, "gasesframework:pipe_glass");

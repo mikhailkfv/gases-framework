@@ -40,7 +40,8 @@ public class BlockLantern extends Block implements IGasReceptor
 		this.type = type;
 		setHardness(0.25F);
 		setLightLevel(type.lightLevel);
-		this.setBlockBounds(0.25F, 0.0F, 0.25F, 0.75F, 10.0F / 16.0F, 0.75F);
+		setBlockBounds(0.25F, 0.0F, 0.25F, 0.75F, 10.0F / 16.0F, 0.75F);
+		setCreativeTab(type.creativeTab);
 		
 		if(type.expirationRate > 0)
 		{

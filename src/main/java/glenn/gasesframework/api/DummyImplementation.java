@@ -4,6 +4,7 @@ import java.util.Random;
 
 import glenn.gasesframework.api.filter.GasTypeFilter;
 import glenn.gasesframework.api.gastype.GasType;
+import glenn.gasesframework.api.pipetype.PipeType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -48,6 +49,10 @@ public class DummyImplementation implements IGasesFrameworkImplementation
 	}
 
 	@Override
+	public void placePipe(World world, int x, int y, int z, PipeType pipeType, GasType gasType)
+	{}
+
+	@Override
 	public void ignite(World world, int x, int y, int z, Random random)
 	{}
 
@@ -65,8 +70,12 @@ public class DummyImplementation implements IGasesFrameworkImplementation
 		return null;
 	}
 
-	@Override
-	public GasType getGasPipeType(IBlockAccess blockAccess, int x, int y, int z)
+	@Override public GasType getGasTypeInPipe(IBlockAccess blockAccess, int x, int y, int z)
+	{
+		return null;
+	}
+
+	@Override public PipeType getPipeType(IBlockAccess blockAccess, int x, int y, int z)
 	{
 		return null;
 	}

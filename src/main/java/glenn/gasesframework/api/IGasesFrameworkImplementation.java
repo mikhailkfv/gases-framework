@@ -5,6 +5,7 @@ import glenn.gasesframework.api.gastype.GasType;
 
 import java.util.Random;
 
+import glenn.gasesframework.api.pipetype.PipeType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -92,6 +93,17 @@ public interface IGasesFrameworkImplementation
 	 * @return Whether the pushing action succeeded or not.
 	 */
 	boolean pushGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure);
+
+	/**
+	 * Place a pipe block of the specified type containing a gas.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param pipeType
+	 * @param gasType
+	 */
+	void placePipe(World world, int x, int y, int z, PipeType pipeType, GasType gasType);
 	
 	/**
 	 * If gas exists at this location, it will be ignited.
@@ -146,7 +158,17 @@ public interface IGasesFrameworkImplementation
 	 * @param z
 	 * @return
 	 */
-	GasType getGasPipeType(IBlockAccess blockAccess, int x, int y, int z);
+	GasType getGasTypeInPipe(IBlockAccess blockAccess, int x, int y, int z);
+
+	/**
+	 * Gets the pipe type of the gas pipe block at the location, if any. If no gas pipe block is present, null is returned.
+	 * @param blockAccess
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
+	PipeType getPipeType(IBlockAccess blockAccess, int x, int y, int z);
 
 	/**
 	 * Gets the volume of a gas block ranging from 1 to 16.

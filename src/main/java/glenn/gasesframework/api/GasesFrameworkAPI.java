@@ -1,12 +1,7 @@
 package glenn.gasesframework.api;
 
-import glenn.gasesframework.api.ExtendedGasEffectsBase.EffectType;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gastype.GasTypeAir;
-import glenn.gasesframework.common.gastype.GasTypeFire;
-import glenn.gasesframework.api.lanterntype.LanternType;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 

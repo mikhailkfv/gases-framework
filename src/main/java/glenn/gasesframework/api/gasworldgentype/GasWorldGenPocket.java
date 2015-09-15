@@ -5,11 +5,10 @@ import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Set;
 
-import glenn.gasesframework.GasesFramework;
+import glenn.gasesframework.api.GasesFrameworkAPI;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -74,10 +73,13 @@ public class GasWorldGenPocket extends GasWorldGenType
 		{
 			for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 	    	{
-	    		Block block = world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ);
-	    		if(block != GasesFramework.registry.getGasBlock(gasType) && (block instanceof BlockFalling || !block.isOpaqueCube()))
+				if (GasesFrameworkAPI.implementation.getGasType(world, x, y, z) != gasType)
 				{
-					return 0;
+					Block block = world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ);
+					if(block instanceof BlockFalling || !block.isOpaqueCube())
+					{
+						return 0;
+					}
 				}
 	    	}
 			return 16;

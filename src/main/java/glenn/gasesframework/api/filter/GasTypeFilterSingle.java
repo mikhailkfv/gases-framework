@@ -1,6 +1,6 @@
 package glenn.gasesframework.api.filter;
 
-import glenn.gasesframework.GasesFramework;
+import glenn.gasesframework.api.GasesFrameworkAPI;
 import net.minecraft.nbt.NBTTagCompound;
 import glenn.gasesframework.api.gastype.GasType;
 
@@ -45,7 +45,7 @@ public abstract class GasTypeFilterSingle extends GasTypeFilterSimple
 			GasType filterType = null;
 			if (tagCompound.hasKey("gasType"))
 			{
-				filterType = GasesFramework.registry.getGasTypeByID(tagCompound.getInteger("gasType"));
+				filterType = GasesFrameworkAPI.registry.getGasTypeByID(tagCompound.getInteger("gasType"));
 			}
 
 			switch (tagCompound.getByte("type"))

@@ -368,6 +368,21 @@ public class Implementation implements IGasesFrameworkImplementation
 	}
 
 	/**
+	 * Place a pipe block of the specified type containing a gas.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param pipeType
+	 * @param gasType
+	 */
+	@Override
+	public void placePipe(World world, int x, int y, int z, PipeType pipeType, GasType gasType)
+	{
+		world.setBlock(x, y, z, GasesFramework.registry.getGasPipeBlock(gasType), pipeType.pipeID, 3);
+	}
+
+	/**
 	 * If gas exists at this location, it will be ignited.
 	 * @param world
 	 * @param x
@@ -385,6 +400,17 @@ public class Implementation implements IGasesFrameworkImplementation
 		}
 	}
 
+	/**
+	 * Spawn a delayed explosion in the world.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param delay
+	 * @param power
+	 * @param isFlaming
+	 * @param isSmoking
+	 */
 	@Override
 	public void spawnDelayedExplosion(World world, double x, double y, double z, int delay, float power, boolean isFlaming, boolean isSmoking)
 	{
@@ -394,6 +420,16 @@ public class Implementation implements IGasesFrameworkImplementation
 		world.spawnEntityInWorld(explosionEntity);
 	}
 
+	/**
+	 * Sent a filter update packet for {@link glenn.gasesframework.api.block.IGasTypeFilter IGasTypeFilter} blocks to clients.
+	 * This will call {@link glenn.gasesframework.api.block.IGasTypeFilter#setFilter(IBlockAccess,int,int,int,ForgeDirection,GasTypeFilter) setFilter(IBlockAccess,int,int,int,ForgeDirection,GasTypeFilter)}.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param side
+	 * @param filter
+	 */
 	@Override
 	public void sendFilterUpdatePacket(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter)
 	{
@@ -432,12 +468,35 @@ public class Implementation implements IGasesFrameworkImplementation
 	 * @param z
 	 * @return
 	 */
-	public GasType getGasPipeType(IBlockAccess blockAccess, int x, int y, int z)
+	@Override
+	public GasType getGasTypeInPipe(IBlockAccess blockAccess, int x, int y, int z)
 	{
 		Block block = blockAccess.getBlock(x, y, z);
-		if(block instanceof BlockGasPipe)
+		if (block instanceof BlockGasPipe)
 		{
 			return ((BlockGasPipe)block).type;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Gets the pipe type of the gas pipe block at the location, if any. If no gas pipe block is present, null is returned.
+	 * @param blockAccess
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
+	@Override
+	public PipeType getPipeType(IBlockAccess blockAccess, int x, int y, int z)
+	{
+		Block block = blockAccess.getBlock(x, y, z);
+		if (block instanceof BlockGasPipe)
+		{
+			return ((BlockGasPipe)block).getPipeType(blockAccess, x, y, z);
 		}
 		else
 		{
