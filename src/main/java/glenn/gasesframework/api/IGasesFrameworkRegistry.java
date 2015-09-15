@@ -126,15 +126,7 @@ public interface IGasesFrameworkRegistry
 	 * @param type
 	 * @return The gas block registered for this type, if any.
 	 */
-	Block registerGasType(GasType type);
-
-	/**
-	 * Registers a gas type and places the gas block on a creative tab. This involves creating and registering the blocks necessary for a gas type.
-	 * @param type
-	 * @param creativeTab
-	 * @return The gas block registered for this type, if any.
-	 */
-	Block registerGasType(GasType type, CreativeTabs creativeTab);
+	void registerGasType(GasType type);
 
 	/**
 	 * Is this gas type registered?
@@ -170,15 +162,7 @@ public interface IGasesFrameworkRegistry
 	 * @param type
 	 * @return The lantern block registered for this type, if any.
 	 */
-	Block registerLanternType(LanternType type);
-
-	/**
-	 * Registers a lantern type and places the lantern block on a creative tab. This involves creating and registering the blocks necessary for a lantern type.
-	 * @param type
-	 * @param creativeTab
-	 * @return The lantern block registered for this type, if any.
-	 */
-	Block registerLanternType(LanternType type, CreativeTabs creativeTab);
+	void registerLanternType(LanternType type);
 
 	/**
 	 * Is this lantern type registered?

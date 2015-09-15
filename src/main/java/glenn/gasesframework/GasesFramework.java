@@ -95,7 +95,9 @@ public class GasesFramework
 	public static SimpleNetworkWrapper networkWrapper = new SimpleNetworkWrapper(MODID);
 	
 	public static GasesFrameworkMainConfigurations configurations;
-	
+
+	public static CreativeTabs creativeTab = new CreativeTab("tabGasesFramework");
+
 	public static final PipeType pipeTypeIron = new PipeTypeIron(0, "iron", true, "gasesframework:pipe_iron");
 	public static final PipeType pipeTypeGlass = new PipeTypeGlass(1, "glass", false, "gasesframework:pipe_glass");
 	public static final PipeType pipeTypeWood = new PipeTypeWood(2, "wood", true, "gasesframework:pipe_wood");
@@ -105,23 +107,14 @@ public class GasesFramework
 	public static GFItems items;
 	public static GFBlocks blocks;
 
-	public static final GasType gasTypeSmoke = new GasType(true, 1, "smoke", 0x3F3F3F9F, 2, -16, Combustibility.NONE)
+	public static final GasType gasTypeSmoke = new GasType(true, 1, "smoke", 0x3F3F3F9F, 2, -16, Combustibility.NONE).setCreativeTab(creativeTab)
 			.setEffectRate(ExtendedGasEffectsBase.EffectType.BLINDNESS, 4)
 			.setEffectRate(ExtendedGasEffectsBase.EffectType.SUFFOCATION, 4)
 			.setEffectRate(ExtendedGasEffectsBase.EffectType.SLOWNESS, 16);
-	public static final GasType gasTypeFire = new GasTypeFire();
+	public static final GasType gasTypeFire = new GasTypeFire().setCreativeTab(creativeTab);
 
-	/**
-	 * The lantern type for empty lanterns. Do not register this!
-	 */
-	public static final LanternType lanternTypeEmpty = new LanternType("empty", 0.0f, "gasesframework:lantern_empty", new ItemKey(), null, 0).setInOut();
-	/**
-	 * The lantern type for lanterns containing bottles. Do not register this!
-	 */
-	public static final LanternType lanternTypeGasEmpty = new LanternType("gas_empty", 0.0f, "gasesframework:lantern_gas_empty", new ItemKey(Items.glass_bottle), lanternTypeEmpty, 0).setInOut();
-	/**
-	 * A list of lantern types for lanterns containing gas of varying {@link glenn.gasesframework.api.Combustibility#burnRate burn rates}. Do not register these!
-	 */
+	public static final LanternType lanternTypeEmpty = new LanternType("empty", 0.0f, "gasesframework:lantern_empty", new ItemKey(), null, 0).setCreativeTab(creativeTab).setInOut();
+	public static final LanternType lanternTypeGasEmpty = new LanternType("gas_empty", 0.0f, "gasesframework:lantern_gas_empty", new ItemKey(Items.glass_bottle), lanternTypeEmpty, 0).setCreativeTab(creativeTab).setInOut();
 	public static final LanternType[] lanternTypesGas = new LanternType[] {
 			lanternTypeGasEmpty,
 			new LanternType("gas_1", 1.0f, "gasesframework:lantern_gas_1", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 1),
@@ -132,11 +125,6 @@ public class GasesFramework
 	};
 
 
-	/**
-	 * The creative tab used by Gases Framework. It sports a fancy lantern icon.
-	 * If Gases Framework is not installed, this is null.
-	 */
-	public static CreativeTabs creativeTab = new CreativeTab("tabGasesFramework");
 
 	public static final Implementation implementation = new Implementation();
 	public static final Registry registry = new Registry();
@@ -146,15 +134,15 @@ public class GasesFramework
 		items = new GFItems();
 		blocks = new GFBlocks();
 
-		registry.registerLanternType(lanternTypeEmpty, creativeTab);
+		registry.registerLanternType(lanternTypeEmpty);
 		for (LanternType lanternType : lanternTypesGas)
 		{
 			registry.registerLanternType(lanternType);
 		}
 		
 		registry.registerGasType(GasesFrameworkAPI.gasTypeAir);
-		registry.registerGasType(gasTypeSmoke, creativeTab);
-		registry.registerGasType(gasTypeFire, creativeTab);
+		registry.registerGasType(gasTypeSmoke);
+		registry.registerGasType(gasTypeFire);
 		
 		registry.registerPipeType(pipeTypeIron);
 		registry.registerPipeType(pipeTypeGlass);

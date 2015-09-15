@@ -92,16 +92,8 @@ public class DummyRegistry implements IGasesFrameworkRegistry
 	}
 
 	@Override
-	public Block registerGasType(GasType type)
-	{
-		return null;
-	}
-
-	@Override
-	public Block registerGasType(GasType type, CreativeTabs creativeTab)
-	{
-		return null;
-	}
+	public void registerGasType(GasType type)
+	{}
 
 	@Override
 	public boolean isGasTypeRegistered(GasType type)
@@ -126,16 +118,8 @@ public class DummyRegistry implements IGasesFrameworkRegistry
 	}
 
 	@Override
-	public Block registerLanternType(LanternType type)
-	{
-		return null;
-	}
-
-	@Override
-	public Block registerLanternType(LanternType type, CreativeTabs creativeTab)
-	{
-		return null;
-	}
+	public void registerLanternType(LanternType type)
+	{}
 
 	@Override
 	public boolean isLanternTypeRegistered(LanternType type)

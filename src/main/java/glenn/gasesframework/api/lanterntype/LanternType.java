@@ -4,6 +4,7 @@ import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.ItemKey;
 
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 
 public class LanternType
 {
@@ -33,6 +34,11 @@ public class LanternType
 	public final int expirationRate;
 
 	/**
+	 * The creative tab this lantern type is bound to.
+	 */
+	public CreativeTabs creativeTab;
+
+	/**
 	 * Creates a new lantern type. Lantern types must be {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerLanternType(LanternType) registered}.
 	 * @param name - An unique name for this lantern type.
 	 * @param lightLevel - The level of light emitted by this lantern type in an interval from 0.0f to 1.0f.
@@ -51,6 +57,12 @@ public class LanternType
 		this.expirationRate = expirationRate;
 	}
 
+	public LanternType setCreativeTab(CreativeTabs creativeTab)
+	{
+		this.creativeTab = creativeTab;
+		return this;
+	}
+
 	/**
 	 * Sets the item to treat the item given from this lantern type as something used to create a lantern of this type.
 	 * This is common for non-gas lanterns.
@@ -62,15 +74,6 @@ public class LanternType
 		return this;
 	}
 
-	/**
-	 * This method is called upon lantern block construction when the lantern type is {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerLanternType(LanternType) registered}.
-	 * @return
-	 */
-	public Block tweakLanternBlock(Block block)
-	{
-		return block;
-	}
-	
 	public boolean expires()
 	{
 		return expirationRate > 0;

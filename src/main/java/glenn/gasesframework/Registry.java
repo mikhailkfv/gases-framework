@@ -164,7 +164,7 @@ public class Registry implements IGasesFrameworkRegistry
 	}
 
 	@Override
-	public Block registerGasType(GasType type)
+	public void registerGasType(GasType type)
 	{
 		if(isGasTypeRegistered(type))
 		{
@@ -179,11 +179,9 @@ public class Registry implements IGasesFrameworkRegistry
 			throw new RuntimeException("Gas type named " + type.name + " has an ID conflict with gas type named " + getGasTypeByID(type.gasID).name + ".");
 		}
 
-		BlockGas gasBlock = null;
-
 		if(type != GasesFrameworkAPI.gasTypeAir)
 		{
-			gasBlock = (BlockGas)GameRegistry.registerBlock(new BlockGas(type).setLightLevel(type.lightLevel), "gas_" + type.name);
+			BlockGas gasBlock = (BlockGas)GameRegistry.registerBlock(new BlockGas(type).setLightLevel(type.lightLevel).setCreativeTab(type.creativeTab), "gas_" + type.name);
 			gasTypeGasBlocks.put(type, gasBlock);
 
 			if(type.combustibility.fireSpreadRate >= 0 | type.combustibility.explosionPower > 0.0F)
@@ -206,19 +204,6 @@ public class Registry implements IGasesFrameworkRegistry
 		registeredGasTypes.add(type);
 		gasTypesByID[type.gasID] = type;
 		gasTypesByName.put(type.name, type);
-
-		return gasBlock;
-	}
-
-	@Override
-	public Block registerGasType(GasType type, CreativeTabs creativeTab)
-	{
-		Block result = registerGasType(type);
-		if(result != null)
-		{
-			result.setCreativeTab(creativeTab);
-		}
-		return result;
 	}
 
 	@Override
@@ -266,7 +251,7 @@ public class Registry implements IGasesFrameworkRegistry
 	}
 
 	@Override
-	public Block registerLanternType(LanternType type)
+	public void registerLanternType(LanternType type)
 	{
 		if(isLanternTypeRegistered(type))
 		{
@@ -277,25 +262,12 @@ public class Registry implements IGasesFrameworkRegistry
 			throw new RuntimeException("Lantern type named " + type.name + " has a name conflict with another lantern type.");
 		}
 
-		BlockLantern lanternBlock = (BlockLantern)GameRegistry.registerBlock(type.tweakLanternBlock(new BlockLantern(type)), "lantern_" + type.name);
+		BlockLantern lanternBlock = (BlockLantern)GameRegistry.registerBlock(new BlockLantern(type).setCreativeTab(type.creativeTab), "lantern_" + type.name);
 
 		lanternTypeLanternBlocks.put(type, lanternBlock);
 
 		registeredLanternTypes.add(type);
 		lanternTypesByName.put(type.name, type);
-
-		return lanternBlock;
-	}
-
-	@Override
-	public Block registerLanternType(LanternType type, CreativeTabs creativeTab)
-	{
-		Block result = registerLanternType(type);
-		if(result != null)
-		{
-			result.setCreativeTab(creativeTab);
-		}
-		return result;
 	}
 
 	@Override

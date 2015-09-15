@@ -11,6 +11,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -67,6 +68,10 @@ public class GasType
 	 * The level of light this gas gives off from 0.0 to 1.0.
 	 */
 	public float lightLevel = 0.0f;
+	/**
+	 * The creative tab this gas type is bound to.
+	 */
+	public CreativeTabs creativeTab;
 	
 	/**
 	 * The rate at which gas of this type will cause various gas effects.
@@ -194,6 +199,12 @@ public class GasType
 	public GasType setLightLevel(float lightLevel)
 	{
 		this.lightLevel = lightLevel;
+		return this;
+	}
+
+	public GasType setCreativeTab(CreativeTabs creativeTab)
+	{
+		this.creativeTab = creativeTab;
 		return this;
 	}
 	
