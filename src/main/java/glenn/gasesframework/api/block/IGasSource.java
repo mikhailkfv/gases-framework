@@ -6,8 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * An interface for interactivity with gas pipe systems. A gas source can have gas extracted from one or more of its sides.
- * @author Glenn
- *
+ * @author Erlend
  */
 public interface IGasSource extends IGasInterface
 {

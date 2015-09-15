@@ -6,8 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * An interface for interactivity with gas pipe systems. A gas propellor is a block that can propel gas from one or more of its sides.
  * This interface must be implemented to allow piping guides to originate from this block.
- * @author Glenn
- *
+ * @author Erlend
  */
 public interface IGasPropellor extends IGasInterface
 {

@@ -7,7 +7,6 @@ import java.util.Random;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -21,17 +20,7 @@ public class GasTypeFire extends GasType
 		setDissipationRate(2);
 		setTextureName("gasesframework:gas_fire");
 		setDestroyLooseBlocks(true);
-	}
-	
-	/**
-	 * This method is called upon gas block construction when the gas type is {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerGasType(GasType) registered}.
-	 * @return
-	 */
-	@Override
-	public Block tweakGasBlock(Block block)
-	{
-		block.setLightLevel(0.5f);
-		return super.tweakGasBlock(block);
+		setLightLevel(0.5f);
 	}
 	
 	/**
@@ -61,9 +50,9 @@ public class GasTypeFire extends GasType
 			{
 				world.setBlock(x, y, z, Blocks.fire);
 			}
-			else if(GasesFramework.implementation.getFireSmokeAmount() > 0 && world.rand.nextInt(4) == 0)
+			else if(GasesFramework.configurations.gases.smoke.fireSmokeAmount > 0 && world.rand.nextInt(4) == 0)
 			{
-				GasesFramework.implementation.placeGas(world, x, y, z, GasesFramework.gasTypeSmoke, GasesFramework.implementation.getFireSmokeAmount());
+				GasesFramework.implementation.placeGas(world, x, y, z, GasesFramework.gasTypeSmoke, GasesFramework.configurations.gases.smoke.fireSmokeAmount);
 			}
     	}
     }

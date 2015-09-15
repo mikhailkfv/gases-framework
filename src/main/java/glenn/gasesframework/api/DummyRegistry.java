@@ -11,6 +11,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
+/**
+ * A dummy registry for the Gases Framework that is used when the mod is not installed.
+ * @author Erlend
+ */
 public class DummyRegistry implements IGasesFrameworkRegistry
 {
 	@Override

@@ -7,7 +7,6 @@ import glenn.gasesframework.api.gastype.GasType;
 /**
  * Abstract filter involving one gas type, be it including or excluding.
  * @author Erlend
- *
  */
 public abstract class GasTypeFilterSingle extends GasTypeFilterSimple
 {

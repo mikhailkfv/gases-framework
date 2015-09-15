@@ -9,6 +9,10 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+/**
+ * A dummy implementation for the Gases Framework that is used when the mod is not installed.
+ * @author Erlend
+ */
 public class DummyImplementation implements IGasesFrameworkImplementation
 {
 	@Override
@@ -75,12 +79,6 @@ public class DummyImplementation implements IGasesFrameworkImplementation
 
 	@Override
 	public float getGasExplosionPowerFactor()
-	{
-		return 0;
-	}
-
-	@Override
-	public int getFireSmokeAmount()
 	{
 		return 0;
 	}

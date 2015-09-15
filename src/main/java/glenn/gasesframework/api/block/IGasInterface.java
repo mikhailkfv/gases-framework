@@ -3,11 +3,16 @@ package glenn.gasesframework.api.block;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public abstract interface IGasInterface
+/**
+ * An abstract base interface which many machinery related interfaces extend.
+ * Implementing this interface is unnecessary.
+ * @author Erlend
+ */
+public interface IGasInterface
 {
 	/**
 	 * Should pipes connect to this block?
-	 * @param world
+	 * @param blockaccess
 	 * @param x
 	 * @param y
 	 * @param z

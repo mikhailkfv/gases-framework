@@ -43,8 +43,7 @@ public class BlockGasPipe extends Block implements IGasTransporter
 	
 	/**
 	 * Constructs a new gas pipe block. Because of technical reasons, each type of gas needs its own gas pipe block for pipe usage.
-	 * @param par1 - Block ID
-	 * @param containedGas - The gas this pipe will carry
+	 * @param type
 	 */
 	public BlockGasPipe(GasType type)
 	{
@@ -63,7 +62,7 @@ public class BlockGasPipe extends Block implements IGasTransporter
 	@Override
 	public void registerBlockIcons(IIconRegister iconRegister)
 	{
-		for(PipeType type : PipeType.getAllTypes())
+		for(PipeType type : GasesFramework.registry.getRegisteredPipeTypes())
 		{
 			type.registerIcons(iconRegister);
 		}
@@ -75,7 +74,7 @@ public class BlockGasPipe extends Block implements IGasTransporter
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int metadata)
     {
-        return PipeType.getPipeTypeByID(metadata).solidIcon;
+        return GasesFramework.registry.getPipeTypeByID(metadata).solidIcon;
     }
 	
 	/**
@@ -84,7 +83,7 @@ public class BlockGasPipe extends Block implements IGasTransporter
     @SideOnly(Side.CLIENT)
     public void getSubBlocks(Item blockItem, CreativeTabs creativeTab, List list)
     {
-        for (PipeType type : PipeType.getAllTypes())
+        for (PipeType type : GasesFramework.registry.getRegisteredPipeTypes())
         {
         	list.add(new ItemStack(blockItem, 1, type.pipeID));
         }
@@ -318,7 +317,7 @@ public class BlockGasPipe extends Block implements IGasTransporter
 	
 	public PipeType getPipeType(int metadata)
 	{
-		return PipeType.getPipeTypeByID(metadata);
+		return GasesFramework.registry.getPipeTypeByID(metadata);
 	}
 	
 	public PipeType getPipeType(IBlockAccess blockAccess, int x, int y, int z)

@@ -6,11 +6,11 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 /**
  * A class containing the variables for gas effects per EntityLivingBase.
  * This includes blindness, suffocation and slowness.
- * @author Glenn
+ * @author Erlend
  */
 public abstract class ExtendedGasEffectsBase implements IExtendedEntityProperties
 {
-	public static enum EffectType
+	public enum EffectType
 	{
 		/**
 		 * This is a blindness effect much like the one already in Minecraft, except it is gradual.

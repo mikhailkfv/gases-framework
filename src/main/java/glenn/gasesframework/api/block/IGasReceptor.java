@@ -6,8 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * An interface for interactivity with gas pipe systems. A gas receptor is able to receive gas from a pipe.
- * @author Glenn
- *
+ * @author Erlend
  */
 public interface IGasReceptor extends IGasInterface
 {

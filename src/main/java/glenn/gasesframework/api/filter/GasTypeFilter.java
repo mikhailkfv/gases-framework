@@ -10,7 +10,6 @@ import glenn.gasesframework.api.gastype.GasType;
  * All filters are immutable.
  * All filters are NBT compatible.
  * @author Erlend
- *
  */
 public abstract class GasTypeFilter
 {

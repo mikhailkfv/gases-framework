@@ -8,8 +8,6 @@ import net.minecraft.world.World;
 
 public abstract class GasWorldGenType
 {
-	private static HashMap<String, GasWorldGenType> gasWorldGenTypesByName = new HashMap<String, GasWorldGenType>();
-	
 	/**
 	 * A name for this gas world gen type. Must be unique.
 	 */
@@ -40,27 +38,6 @@ public abstract class GasWorldGenType
 	public final int maxY;
 	
 	/**
-	 * Get a gas world gen type by its name.
-	 * @param name
-	 * @return
-	 */
-	public static GasWorldGenType getGasWorldGenTypeByName(String name)
-	{
-		return gasWorldGenTypesByName.get(name);
-	}
-	
-	private void map()
-	{
-		GasWorldGenType prev = getGasWorldGenTypeByName(name);
-		if(prev != null)
-		{
-			throw new RuntimeException("A gas world gen type named " + name + " attempted to override a gas world gen type with the same name");
-		}
-		
-		gasWorldGenTypesByName.put(name, this);
-	}
-	
-	/**
 	 * Creates a new gas world gen type. Gas world gen types are necessary for adding gases to the terrain.
 	 * If the Gases Framework retrogen is enabled, this type will be generated in chunks where it has not previously been generated.
 	 * @param name - A name for this gas world gen type. Must be unique.
@@ -80,8 +57,6 @@ public abstract class GasWorldGenType
 		this.evenness = evenness < 0.0f ? 0.0f : (evenness > 1.0f ? 1.0f : evenness);
 		this.minY = minY;
 		this.maxY = maxY;
-		
-		map();
 	}
 	
 	/**

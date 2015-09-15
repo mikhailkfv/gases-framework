@@ -3,9 +3,13 @@ package glenn.gasesframework.api.item;
 import net.minecraft.item.ItemStack;
 import glenn.gasesframework.api.gastype.GasType;
 
+/**
+ * An interface for items that contain a gas type, like samplers.
+ * @author Erlend
+ */
 public interface ISampler
 {
-	public GasType getGasType(ItemStack itemstack);
+	GasType getGasType(ItemStack itemstack);
 	
-	public ItemStack setGasType(ItemStack itemstack, GasType gasType);
+	ItemStack setGasType(ItemStack itemstack, GasType gasType);
 }

@@ -183,7 +183,7 @@ public class Registry implements IGasesFrameworkRegistry
 
 		if(type != GasesFrameworkAPI.gasTypeAir)
 		{
-			gasBlock = (BlockGas)GameRegistry.registerBlock(type.tweakGasBlock(new BlockGas(type)), "gas_" + type.name);
+			gasBlock = (BlockGas)GameRegistry.registerBlock(new BlockGas(type).setLightLevel(type.lightLevel), "gas_" + type.name);
 			gasTypeGasBlocks.put(type, gasBlock);
 
 			if(type.combustibility.fireSpreadRate >= 0 | type.combustibility.explosionPower > 0.0F)
@@ -193,7 +193,7 @@ public class Registry implements IGasesFrameworkRegistry
 		}
 		if(type.isIndustrial)
 		{
-			BlockGasPipe gasPipeBlock = (BlockGasPipe)GameRegistry.registerBlock(type.tweakPipeBlock(new BlockGasPipe(type)), ItemGasPipe.class, "gasPipe_" + type.name);
+			BlockGasPipe gasPipeBlock = (BlockGasPipe)GameRegistry.registerBlock(new BlockGasPipe(type), ItemGasPipe.class, "gasPipe_" + type.name);
 			gasTypeGasPipeBlocks.put(type, gasPipeBlock);
 
 			LanternType lanternType = GasesFramework.lanternTypesGas[type.combustibility.burnRate];

@@ -1,12 +1,10 @@
 package glenn.gasesframework.api.filter;
 
-import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
 
 /**
  * A filter that will accept null, air, or any gas type that is in a list.
  * @author Erlend
- *
  */
 public class GasTypeFilterMultiIncluding extends GasTypeFilterMulti
 {

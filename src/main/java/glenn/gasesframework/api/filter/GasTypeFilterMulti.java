@@ -13,7 +13,6 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * Abstract filter involving several gas types, be it including or excluding.
  * @author Erlend
- *
  */
 public abstract class GasTypeFilterMulti extends GasTypeFilter
 {

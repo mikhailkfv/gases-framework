@@ -7,7 +7,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 /**
  * An interface for blocks that can interact with samplers to get and set filters.
  * @author Erlend
- *
  */
 public interface IGasTypeFilter
 {
@@ -20,7 +19,7 @@ public interface IGasTypeFilter
 	 * @param side
 	 * @return
 	 */
-	public GasTypeFilter getFilter(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection side);
+	GasTypeFilter getFilter(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection side);
 
 	/**
 	 * Set the block's filter on the specific side.
@@ -33,5 +32,5 @@ public interface IGasTypeFilter
 	 * @param filter
 	 * @return
 	 */
-	public GasTypeFilter setFilter(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection side, GasTypeFilter filter);
+	GasTypeFilter setFilter(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection side, GasTypeFilter filter);
 }

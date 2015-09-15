@@ -14,10 +14,10 @@ import net.minecraft.util.ResourceLocation;
  * <b>The Gases Framework API</b>
  * <br>
  * <br>
- * <i>This API will work both with and without the Gases Framework installed, <b>with some restrictions</b>. Certain methods will throw exceptions if called when the mod is missing.</i>
+ * <i>This API will work both with and without the Gases Framework installed. Certain methods will not function properly if the mod is not installed.</i>
  * <br>
  * <ul>
- * <li>You can determine the mod installation state by a query to {@link #isModInstalled()}.</li>
+ * <li>You can determine the mod installation state by a query to {@link #isInstalled()}.</li>
  * <li><b>IMPORTANT NOTE: To ensure the API will work properly when the mod is loaded, your mod must have the following added to its {@link cpw.mods.fml.common.Mod Mod} annotation:</b><br>
  * <i>{@link cpw.mods.fml.common.Mod#dependencies dependencies}="after:gasesFrameworkCore"</i></li>
  * <li>If you want the mod to work only if the Gases Framework mod installed, add the following instead:</br>
@@ -26,7 +26,7 @@ import net.minecraft.util.ResourceLocation;
  * </ul>
  * This piece of software is covered under the LGPL license. Redistribution and modification is permitted.
  * But honestly, why would you want to modify it?
- * @author Glenn
+ * @author Erlend
  * @author Trent
  */
 public class GasesFrameworkAPI

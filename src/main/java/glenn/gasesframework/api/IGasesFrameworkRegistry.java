@@ -11,6 +11,10 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
+/**
+ * An interface to connect the GasesFrameworkAPI to the registry of the GasesFramework mod.
+ * @author Erlend
+ */
 public interface IGasesFrameworkRegistry
 {
 	/**
@@ -196,6 +200,8 @@ public interface IGasesFrameworkRegistry
 	 * @return
 	 */
 	LanternType[] getRegisteredLanternTypes();
+
+
 
 	/**
 	 * Registers a gas world generator for generation in certain dimensions.

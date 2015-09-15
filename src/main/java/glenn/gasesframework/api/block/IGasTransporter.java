@@ -8,7 +8,6 @@ import glenn.gasesframework.api.gastype.GasType;
 /**
  * An interface for blocks that can carry and transport gas types, most commonly implemented by pipes.
  * @author Glenn
- *
  */
 public interface IGasTransporter extends IGasInterface
 {

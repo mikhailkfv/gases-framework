@@ -63,6 +63,10 @@ public class GasType
 	 * Will this gas type, when flowing, destroy loose blocks such as redstone, torches and lanterns?
 	 */
 	public boolean destroyLooseBlocks = false;
+	/**
+	 * The level of light this gas gives off from 0.0 to 1.0.
+	 */
+	public float lightLevel = 0.0f;
 	
 	/**
 	 * The rate at which gas of this type will cause various gas effects.
@@ -77,7 +81,7 @@ public class GasType
 	 * The name of the texture that will be used on the gas block. Default "gasesframework:gas"
 	 */
 	public String textureName = "gasesframework:gas";
-	
+
 	/**
 	 * This field is a little buggy.
 	 */
@@ -141,7 +145,12 @@ public class GasType
     	
     	return this;
     }
-	
+
+	/**
+	 * Get the rate of a gas effect on this gas type.
+	 * @param effectType
+	 * @return
+	 */
 	public int getEffectRate(EffectType effectType)
 	{
 		Integer res = this.effectRates.get(effectType);
@@ -176,6 +185,17 @@ public class GasType
     	this.dissipationRate = dissipationRate;
     	return this;
     }
+
+	/**
+	 * Set the level of light this gas gives off from 0.0 to 1.0.
+	 * @param lightLevel
+	 * @return
+	 */
+	public GasType setLightLevel(float lightLevel)
+	{
+		this.lightLevel = lightLevel;
+		return this;
+	}
 	
 	/**
 	 * Set the texture name of the gas in block form.
@@ -209,25 +229,7 @@ public class GasType
 		this.destroyLooseBlocks = destroyLooseBlocks;
 		return this;
 	}
-	
-	/**
-	 * This method is called upon gas block construction when the gas type is {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerGasType(GasType) registered}.
-	 * @return
-	 */
-	public Block tweakGasBlock(Block block)
-	{
-		return block;
-	}
-	
-	/**
-	 * This method is called upon gas pipe block construction when the gas type is {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerGasType(GasType) registered}.
-	 * @return
-	 */
-	public Block tweakPipeBlock(Block block)
-	{
-		return block;
-	}
-	
+
 	/**
 	 * Apply effects onto an entity when breathed. A gas is breathed when the player runs out of air in their hidden air meter.
 	 * How quickly this happens, and how frequently this method is called depends on this gas type's rate of suffocation.

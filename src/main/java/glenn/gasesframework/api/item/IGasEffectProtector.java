@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 /**
  * An interface for items that can protect against gas effects when held or worn.
- * @author Glenn
+ * @author Erlend
  */
 public interface IGasEffectProtector
 {
@@ -20,7 +20,7 @@ public interface IGasEffectProtector
 	 * @param effect - The effect that can be prevented.
 	 * @return
 	 */
-	public boolean protect(EntityLivingBase entity, ItemStack itemstack, int slot, GasType gasType, EffectType effect);
+	boolean protect(EntityLivingBase entity, ItemStack itemstack, int slot, GasType gasType, EffectType effect);
 	
 	/**
 	 * Get the itemstack after it has protected the holder against one or several gas effects.
@@ -31,5 +31,5 @@ public interface IGasEffectProtector
 	 * @param gasType - The gas type causing this effect.
 	 * @return
 	 */
-	public ItemStack getItemstackOnProtect(EntityLivingBase entity, ItemStack itemstack, int slot, GasType gasType);
+	ItemStack getItemstackOnProtect(EntityLivingBase entity, ItemStack itemstack, int slot, GasType gasType);
 }

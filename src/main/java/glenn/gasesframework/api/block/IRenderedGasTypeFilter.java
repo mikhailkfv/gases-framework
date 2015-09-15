@@ -10,11 +10,10 @@ import net.minecraftforge.common.util.ForgeDirection;
  * 
  * Simply implementing this interface is insufficient to make it work.
  * The block must override {@link net.minecraft.block.Block#getRenderType() getRenderType()} to return
- * {@link glenn.gasesframework.api.GasesFrameworkAPI#getRenderedGasTypeFilterBlockRenderType() getRenderedGasTypeFilterBlockRenderType()} INITIALLY.
+ * {@link glenn.gasesframework.api.IGasesFrameworkImplementation#getRenderedGasTypeFilterBlockRenderType() getRenderedGasTypeFilterBlockRenderType()} INITIALLY.
  * It must, however, swap to return the underlying render type when {@link #swapRenderedGasTypeFilterRenderType() swapRenderedGasTypeFilterRenderType()} is called,
  * and swap back again when repeated.
  * @author Erlend
- *
  */
 public interface IRenderedGasTypeFilter
 {
@@ -27,12 +26,12 @@ public interface IRenderedGasTypeFilter
 	 * @param side - Local side
 	 * @return
 	 */
-	public GasTypeFilter getRenderedFilter(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection side);
+	GasTypeFilter getRenderedFilter(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection side);
 	
 	/**
 	 * Swap the result of {@link net.minecraft.block.Block#getRenderType() getRenderType()}
-	 * between {@link glenn.gasesframework.api.GasesFrameworkAPI#getRenderedGasTypeFilterBlockRenderType() getRenderedGasTypeFilterBlockRenderID()}
+	 * between {@link glenn.gasesframework.api.IGasesFrameworkImplementation#getRenderedGasTypeFilterBlockRenderType() getRenderedGasTypeFilterBlockRenderID()}
 	 * and the underlying block renderer, commonly 0.
 	 */
-	public void swapRenderedGasTypeFilterRenderType();
+	void swapRenderedGasTypeFilterRenderType();
 }

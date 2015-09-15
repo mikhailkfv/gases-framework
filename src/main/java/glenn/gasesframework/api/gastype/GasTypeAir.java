@@ -14,17 +14,7 @@ public class GasTypeAir extends GasType
 	{
 		super(true, 0, "air", 0, 0, 0, Combustibility.NONE);
 	}
-	
-	/**
-	 * This method is called upon gas pipe block construction when the gas type is {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasType(GasType) registered}.
-	 * @return
-	 */
-	@Override
-	public Block tweakPipeBlock(Block block)
-	{
-		return super.tweakPipeBlock(block);
-	}
-	
+
 	/**
 	 * Is this gas visible?
 	 */
@@ -36,7 +26,7 @@ public class GasTypeAir extends GasType
 
     /**
 	 * Apply effects onto an entity when breathed. A gas is breathed when the player runs out of air in their hidden air meter.
-	 * How quickly this happens, and how frequently this method is called depends on this gas type's {@link GasType#suffocationRate}.
+	 * How quickly this happens, and how frequently this method is called depends on this gas type's rate of suffocation.
 	 * @param entity
 	 */
     @Override

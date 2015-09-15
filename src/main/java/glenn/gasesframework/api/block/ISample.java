@@ -6,8 +6,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * An interface for blocks with interactivity with gas samplers.
- * @author Glenn
- *
+ * @author Erlend
  */
 public interface ISample
 {
@@ -21,5 +20,5 @@ public interface ISample
 	 * @param side - The local side of the block the sampler is applied to
 	 * @return
 	 */
-	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, ForgeDirection side);
+	GasType sampleInteraction(World world, int x, int y, int z, GasType in, ForgeDirection side);
 }

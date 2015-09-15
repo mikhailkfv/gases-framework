@@ -5,7 +5,6 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * Abstract filter involving one or less gas types.
  * @author Erlend
- *
  */
 public abstract class GasTypeFilterSimple extends GasTypeFilter
 {

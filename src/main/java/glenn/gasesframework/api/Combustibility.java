@@ -3,8 +3,7 @@ package glenn.gasesframework.api;
 
 /**
  * An enumerator to set gas combustion properties. Gases are not combustible ({@link Combustibility#NONE}) by default.
- * @author Glenn
- *
+ * @author Erlend
  */
 public enum Combustibility
 {

@@ -5,9 +5,8 @@ import net.minecraft.item.ItemStack;
 
 /**
  * Handles the insertion operation of a gas transposer.
- * Must be registered through {@link glenn.gasesframework.api.GasesFrameworkAPI#registerGasTransposerHandler(IGasTransposerHandler) registerGasTransposerHandler(IGasTransposerHandler)}.
- * @author Glenn
- *
+ * Must be registered through {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerGasTransposerHandler(IGasTransposerHandler) registerGasTransposerHandler(IGasTransposerHandler)}.
+ * @author Erlend
  */
 public interface IGasTransposerInsertHandler extends IGasTransposerHandler
 {
