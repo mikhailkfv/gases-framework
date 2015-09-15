@@ -22,7 +22,7 @@ group= "glenn.gasesframework" // http://maven.apache.org/guides/mini/guide-namin
 archivesBaseName = "gasesFramework"
 
 minecraft {
-    version = "1.7.10-10.13.2.1291"
+    version = "10.13.4.1492-1.7.10"
     runDir = "eclipse"
 }
 
