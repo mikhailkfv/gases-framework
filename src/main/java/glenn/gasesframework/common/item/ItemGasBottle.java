@@ -4,18 +4,14 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
 
-import java.util.List;
-
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class ItemGasBottle extends Item
+public class ItemGasBottle extends ItemGasContainer
 {
 	public IIcon overlayIcon;
 	
@@ -87,24 +83,6 @@ public class ItemGasBottle extends Item
     public IIcon getIconFromDamage(int par1)
     {
         return this.itemIcon;
-    }
-	
-	@SideOnly(Side.CLIENT)
-
-    /**
-     * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
-     */
-    @Override
-    public void getSubItems(Item item, CreativeTabs creativeTabs, List itemList)
-    {
-		GasType[] allTypes = GasesFramework.registry.getRegisteredGasTypes();
-        for (GasType type : allTypes)
-        {
-        	if(type.isIndustrial && type != GasesFrameworkAPI.gasTypeAir)
-        	{
-        		itemList.add(new ItemStack(item, 1, type.gasID));
-        	}
-        }
     }
 	
 	@Override

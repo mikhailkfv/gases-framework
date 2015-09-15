@@ -6,18 +6,14 @@ import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.item.IFilterProvider;
 import glenn.gasesframework.api.item.ISampler;
 
-import java.util.List;
-
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class ItemGasSampler extends Item implements ISampler, IFilterProvider
+public abstract class ItemGasSampler extends ItemGasContainer implements ISampler, IFilterProvider
 {
 	public IIcon overlayIcon;
 	public IIcon emptyOverlayIcon;
@@ -107,23 +103,5 @@ public abstract class ItemGasSampler extends Item implements ISampler, IFilterPr
 	public IIcon getIconFromDamage(int par1)
 	{
 		return itemIcon;
-	}
-	
-	@SideOnly(Side.CLIENT)
-
-	/**
-	 * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
-	 */
-	@Override
-	public void getSubItems(Item item, CreativeTabs creativeTabs, List itemList)
-	{
-		GasType[] allTypes = GasesFramework.registry.getRegisteredGasTypes();
-		for (GasType type : allTypes)
-		{
-			if(type.isIndustrial)
-			{
-				itemList.add(new ItemStack(item, 1, type.gasID));
-			}
-		}
 	}
 }
