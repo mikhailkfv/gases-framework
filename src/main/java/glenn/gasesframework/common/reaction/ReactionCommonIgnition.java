@@ -4,7 +4,7 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.reaction.BlockReaction;
 import glenn.gasesframework.api.reaction.environment.IBlockReactionEnvironment;
 
-public class ReactionIgnition extends BlockReaction
+public class ReactionCommonIgnition extends BlockReaction
 {
 	@Override
 	public void react(IBlockReactionEnvironment environment)

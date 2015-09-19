@@ -28,7 +28,6 @@ import glenn.gasesframework.common.CreativeTab;
 import glenn.gasesframework.common.GasBottleTransposerHandler;
 import glenn.gasesframework.common.GuiHandler;
 import glenn.gasesframework.common.block.BlockGasPipe;
-import glenn.gasesframework.api.gastype.GasTypeAir;
 import glenn.gasesframework.common.gastype.GasTypeFire;
 import glenn.gasesframework.init.GFBlocks;
 import glenn.gasesframework.common.configuration.GasesFrameworkMainConfigurations;
@@ -37,7 +36,7 @@ import glenn.gasesframework.init.GFItems;
 import glenn.gasesframework.common.pipetype.PipeTypeGlass;
 import glenn.gasesframework.common.pipetype.PipeTypeIron;
 import glenn.gasesframework.common.pipetype.PipeTypeWood;
-import glenn.gasesframework.common.reaction.ReactionIgnition;
+import glenn.gasesframework.common.reaction.ReactionCommonIgnition;
 import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
 import glenn.gasesframework.common.tileentity.TileEntityInfiniteGasDrain;
 import glenn.gasesframework.common.tileentity.TileEntityInfiniteGasPump;
@@ -63,7 +62,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
 
 /**
  * <b>Gases Framework</b>
@@ -231,7 +229,7 @@ public class GasesFramework
 		{
 			if (gasType.combustibility.burnRate >= Combustibility.FLAMMABLE.burnRate)
 			{
-				registry.registerReaction(new ReactionIgnition(), gasType);
+				registry.registerReaction(new ReactionCommonIgnition(), gasType);
 			}
 		}
 

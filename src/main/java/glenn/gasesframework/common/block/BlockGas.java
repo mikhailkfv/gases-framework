@@ -13,6 +13,7 @@ import glenn.gasesframework.client.render.RenderBlockGas;
 
 import java.util.Random;
 
+import glenn.gasesframework.common.reaction.ReactionCommonIgnition;
 import glenn.gasesframework.common.reaction.environment.WorldBlockReactionEnvironment;
 import glenn.gasesframework.common.reaction.environment.WorldGasReactionEnvironment;
 import net.minecraft.block.Block;
@@ -277,7 +278,7 @@ public class BlockGas extends Block implements ISample
 	}
 	
 	/**
-	 * Called whenever a gas {@link glenn.gasesframework.common.reaction.ReactionIgnition reacts}
+	 * Called whenever a gas {@link ReactionCommonIgnition reacts}
 	 * with a block registered with {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerIgnitionBlock(Block)}.
 	 * @param world
 	 * @param i
