@@ -29,6 +29,9 @@ import glenn.gasesframework.common.GasBottleTransposerHandler;
 import glenn.gasesframework.common.GuiHandler;
 import glenn.gasesframework.common.block.BlockGasPipe;
 import glenn.gasesframework.common.gastype.GasTypeFire;
+import glenn.gasesframework.common.reaction.ReactionBurnEntity;
+import glenn.gasesframework.common.reaction.ReactionEntityIgnition;
+import glenn.gasesframework.common.reaction.ReactionNoisyPeople;
 import glenn.gasesframework.init.GFBlocks;
 import glenn.gasesframework.common.configuration.GasesFrameworkMainConfigurations;
 import glenn.gasesframework.common.entity.EntityDelayedExplosion;
@@ -220,8 +223,10 @@ public class GasesFramework
 		GameRegistry.registerTileEntity(TileEntityInfiniteGasPump.class, "infiniteGasPump");
 		GameRegistry.registerTileEntity(TileEntityInfiniteGasDrain.class, "infiniteGasDrain");
 		GameRegistry.registerTileEntity(TileEntityGasTransposer.class, "gasTransposer");
-		GameRegistry.registerTileEntity(TileEntityIronGasDynamo.class, "ironGasDynamo");
-		GameRegistry.registerTileEntity(TileEntityWoodGasDynamo.class, "woodGasDynamo");
+		GameRegistry.registerTileEntity(TileEntityIronGasDynamo.class,
+				"ironGasDynamo");
+		GameRegistry.registerTileEntity(TileEntityWoodGasDynamo.class,
+				"woodGasDynamo");
 		
 		EntityRegistry.registerModEntity(EntityDelayedExplosion.class, "delayedGasExplosion", 127, this, 20, 1, false);
 
@@ -230,8 +235,12 @@ public class GasesFramework
 			if (gasType.combustibility.burnRate >= Combustibility.FLAMMABLE.burnRate)
 			{
 				registry.registerReaction(new ReactionCommonIgnition(), gasType);
+				registry.registerReaction(new ReactionEntityIgnition(), gasType);
 			}
+
+			registry.registerReaction(new ReactionNoisyPeople(), gasType);
 		}
+		registry.registerReaction(new ReactionBurnEntity(), gasTypeFire);
 
 		registry.registerGasTransposerHandler(new GasBottleTransposerHandler());
 		

@@ -55,10 +55,6 @@ public class GasType
 	 */
 	public int dissipationRate = 0;
 	/**
-	 * The damage this gas deals upon touch.
-	 */
-	public float damage = 0.0f;
-	/**
 	 * Will this gas type, when flowing, destroy loose blocks such as redstone, torches and lanterns?
 	 */
 	public boolean destroyLooseBlocks = false;
@@ -84,23 +80,6 @@ public class GasType
 	 * The name of the texture that will be used on the gas block. Default "gasesframework:gas"
 	 */
 	public String textureName = "gasesframework:gas";
-
-	/**
-	 * This field is a little buggy.
-	 */
-	private static final HashSet<String> noisyPeople = new HashSet<String>();
-	private static final Random soundRandom = new Random();
-	
-	static
-	{
-		noisyPeople.add("cyanideepic");
-		noisyPeople.add("dethridgecraft");
-		noisyPeople.add("wyld");
-		noisyPeople.add("crustymustard");
-		noisyPeople.add("glenna");
-		noisyPeople.add("trentv4");
-		noisyPeople.add("username720");
-	}
 
 	/**
 	 * Get the ID of a gas type with support for null. If null, this returns -1.
@@ -166,18 +145,7 @@ public class GasType
 			return res;
 		}
 	}
-	
-	/**
-	 * Set how much damage the gas will deal upon contact with the player.
-	 * @param damage
-	 * @return
-	 */
-	public GasType setDamage(float damage)
-	{
-		this.damage = damage;
-		return this;
-	}
-	
+
 	/**
 	 * Set how quickly the gas can dissipate. Higher values will decrease dissipation speed.
 	 * @param dissipationRate
@@ -247,27 +215,6 @@ public class GasType
 	public void onBreathed(EntityLivingBase entity)
 	{
 		entity.attackEntityFrom(GasesFrameworkAPI.asphyxiationDamageSource, 2.0F);
-	}
-	
-	/**
-	 * Called when an entity touches the gas in block form.
-	 * @param entity
-	 */
-	public void onTouched(Entity entity)
-	{
-		if(damage > 0.0F & !(entity instanceof EntityItem))
-    	{
-    		entity.attackEntityFrom(DamageSource.generic, damage);
-    	}
-		
-		if(entity instanceof EntityPlayer)
-		{
-			String displayName = ((EntityPlayer)entity).getDisplayName().toLowerCase();
-			if(noisyPeople.contains(displayName) && soundRandom.nextInt(20) == 0)
-			{
-				entity.worldObj.playSoundAtEntity(entity, "mob.villager.idle", 1.0F, 0.75F + soundRandom.nextFloat() * 0.5F);
-			}
-		}
 	}
 	
 	/**

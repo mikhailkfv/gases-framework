@@ -8,13 +8,16 @@ import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.block.MaterialGas;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.reaction.BlockReaction;
+import glenn.gasesframework.api.reaction.EntityReaction;
 import glenn.gasesframework.api.reaction.GasReaction;
+import glenn.gasesframework.api.reaction.Reaction;
 import glenn.gasesframework.client.render.RenderBlockGas;
 
 import java.util.Random;
 
 import glenn.gasesframework.common.reaction.ReactionCommonIgnition;
 import glenn.gasesframework.common.reaction.environment.WorldBlockReactionEnvironment;
+import glenn.gasesframework.common.reaction.environment.WorldEntityReactionEnvironment;
 import glenn.gasesframework.common.reaction.environment.WorldGasReactionEnvironment;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -91,43 +94,14 @@ public class BlockGas extends Block implements ISample
 	@Override
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity entity)
 	{
-		type.onTouched(entity);
-		
-		boolean setOnFire = false;
-		
-		if(entity.isBurning())
+		EntityReaction[] reactions = GasesFramework.registry.getRegisteredEntityReactions(type);
+		if (reactions.length > 0)
 		{
-			setOnFire = true;
-		}
-		else if(entity instanceof EntityPlayer)
-		{
-			EntityPlayer playerEntity = (EntityPlayer)entity;
-			
-			ItemStack stack;
-			if((stack = playerEntity.getCurrentEquippedItem()) != null)
+			WorldEntityReactionEnvironment environment = new WorldEntityReactionEnvironment(world, x, y, z, entity);
+			for (EntityReaction reaction : reactions)
 			{
-				setOnFire = GasesFramework.registry.isIgnitionItem(stack.getItem());
+				reaction.react(environment);
 			}
-			
-			for(int i = 0; i < 4; i++)
-			{
-				if((stack = playerEntity.inventory.armorItemInSlot(i)) != null)
-				{
-					setOnFire |= GasesFrameworkAPI.registry.isIgnitionItem(stack.getItem());
-				}
-			}
-		}
-		else if(entity instanceof EntityItem)
-		{
-			EntityItem itemEntity = (EntityItem)entity;
-			
-			Item item = itemEntity.getEntityItem().getItem();
-			setOnFire = GasesFrameworkAPI.registry.isIgnitionItem(item);
-		}
-		
-		if(setOnFire)
-		{
-			onFire(world, x, y, z, world.rand, world.getBlockMetadata(x, y, z));
 		}
 	}
 

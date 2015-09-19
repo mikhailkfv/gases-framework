@@ -23,17 +23,6 @@ public class GasTypeFire extends GasType
 		setLightLevel(0.5f);
 	}
 	
-	/**
-	 * Called when an entity touches the gas in block form.
-	 * @param entity
-	 */
-    @Override
-	public void onTouched(Entity entity)
-	{
-    	super.onTouched(entity);
-		entity.setFire(5);
-	}
-    
     /**
 	 * Called when a gas block of this type dissipates.
 	 * @param world

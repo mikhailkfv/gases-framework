@@ -16,6 +16,7 @@ import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
 import glenn.gasesframework.api.pipetype.PipeType;
 import glenn.gasesframework.api.reaction.BlockReaction;
+import glenn.gasesframework.api.reaction.EntityReaction;
 import glenn.gasesframework.api.reaction.GasReaction;
 import glenn.gasesframework.api.reaction.Reaction;
 import glenn.gasesframework.common.block.BlockGas;
@@ -93,6 +94,7 @@ public class Registry implements IGasesFrameworkRegistry
 	private final Map<GasType, Set<Reaction>> registeredReactions = new IdentityHashMap<GasType, Set<Reaction>>();
 	private final Map<GasType, Set<GasReaction>> registeredGasReactions = new IdentityHashMap<GasType, Set<GasReaction>>();
 	private final Map<GasType, Set<BlockReaction>> registeredBlockReactions = new IdentityHashMap<GasType, Set<BlockReaction>>();
+	private final Map<GasType, Set<EntityReaction>> registeredEntityReactions = new IdentityHashMap<GasType, Set<EntityReaction>>();
 
 	@Override
 	public void registerReaction(Reaction reaction, GasType... gasTypes)
@@ -126,6 +128,11 @@ public class Registry implements IGasesFrameworkRegistry
 			{
 				registerBlockReaction((BlockReaction)reaction, gasType);
 			}
+
+			if (reactions instanceof EntityReaction)
+			{
+				registerEntityReaction((EntityReaction)reaction, gasType);
+			}
 		}
 	}
 
@@ -151,6 +158,16 @@ public class Registry implements IGasesFrameworkRegistry
 		blockReactions.add(reaction);
 	}
 
+	private void registerEntityReaction(EntityReaction reaction, GasType gasType)
+	{
+		Set<EntityReaction> entityReactions = registeredEntityReactions.get(gasType);
+		if (entityReactions == null)
+		{
+			entityReactions = Collections.newSetFromMap(new IdentityHashMap<EntityReaction, Boolean>());
+			registeredEntityReactions.put(gasType, entityReactions);
+		}
+		entityReactions.add(reaction);
+	}
 	@Override
 	public boolean isReactionRegistered(Reaction reaction, GasType gasType)
 	{
@@ -200,6 +217,19 @@ public class Registry implements IGasesFrameworkRegistry
 		}
 
 		return new BlockReaction[0];
+	}
+
+	public EntityReaction[] getRegisteredEntityReactions(GasType gasType)
+	{
+		Set<EntityReaction> reactionsSet = registeredEntityReactions.get(gasType);
+		if (reactionsSet != null)
+		{
+			EntityReaction[] reactions = new EntityReaction[reactionsSet.size()];
+			reactionsSet.toArray(reactions);
+			return reactions;
+		}
+
+		return new EntityReaction[0];
 	}
 
 
