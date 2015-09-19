@@ -3,15 +3,18 @@ package glenn.gasesframework.common.block;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.PartialGasStack;
 import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.block.MaterialGas;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.api.reaction.Reaction;
-import glenn.gasesframework.api.reaction.ReactionEmpty;
+import glenn.gasesframework.api.reaction.BlockReaction;
+import glenn.gasesframework.api.reaction.GasReaction;
 import glenn.gasesframework.client.render.RenderBlockGas;
 
 import java.util.Random;
 
+import glenn.gasesframework.common.reaction.environment.WorldBlockReactionEnvironment;
+import glenn.gasesframework.common.reaction.environment.WorldGasReactionEnvironment;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -274,7 +277,8 @@ public class BlockGas extends Block implements ISample
 	}
 	
 	/**
-	 * Called whenever a gas {@link glenn.gasesframework.common.reaction.ReactionIgnition reacts} with a block registered with {@link GasesFramework#registerIgnitionBlock(Block)}. Does not necessarily trigger as a gas block.
+	 * Called whenever a gas {@link glenn.gasesframework.common.reaction.ReactionIgnition reacts}
+	 * with a block registered with {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerIgnitionBlock(Block)}.
 	 * @param world
 	 * @param i
 	 * @param j
@@ -400,93 +404,7 @@ public class BlockGas extends Block implements ISample
 			}
 		}
 	}
-	
-	/**
-	 * Fills an array of {@link glenn.gasesframework.api.reaction.Reaction} with reactions for surrounding blocks. Used internally only.
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param reactions
-	 * @param reactionIndices
-	 * @param random
-	 */
-	private void reactionsWithSurroundingBlocks(World world, int x, int y, int z, Reaction[] reactions, int[] reactionIndices, Random random)
-	{
-		int[] indices = new int[6];
-		fillArrayWithIndices(random, indices, 6, 0, 0);
-		
-		for(int index = 0; index < reactions.length; index++)
-		{
-			int i = indices[index];
-			int xDirection = x + (i < 2 ? i * 2 - 1: 0);
-			int yDirection = y + (i < 4 & i >= 2 ? i * 2 - 5: 0);
-			int zDirection = z + (i >= 4 ? i * 2 - 9: 0);
-			
-			Block directionBlock = world.getBlock(xDirection, yDirection, zDirection);
-			Reaction reaction = GasesFramework.registry.getReactionForBlocks(world, this, x, y, z, directionBlock, xDirection, yDirection, zDirection);
-			for(int j = 0; j < reactions.length; j++)
-			{
-				Reaction reaction2 = reactions[j];
-				if(reaction2 == null)
-				{
-					reactions[j] = reaction;
-					reactionIndices[j] = i;
-					break;
-				}
-				else if(reaction2.priority < reaction.priority)
-				{
-					for(int k = index - 1; k >= j; k--)
-					{
-						reactions[k + 1] = reactions[k];
-						reactionIndices[k + 1] = reactionIndices[k];
-					}
-					
-					reactions[j] = reaction;
-					reactionIndices[j] = i;
-					break;
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Gets the delay in ticks needed before the block should update again. Used internally only.
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return
-	 */
-	protected int getDelayForUpdate(World world, int x, int y, int z)
-	{
-		Reaction reaction = new ReactionEmpty();
-		int delay = -1;
-		
-		for(int i = 0; i < 6; i++)
-		{
-			int xDirection = x + (i < 2 ? i * 2 - 1: 0);
-			int yDirection = y + (i < 4 & i >= 2 ? i * 2 - 5: 0);
-			int zDirection = z + (i >= 4 ? i * 2 - 9: 0);
-			
-			Block directionBlock = world.getBlock(xDirection, yDirection, zDirection);
-			Reaction reaction2 = GasesFramework.registry.getReactionForBlocks(world, this, x, y, z, directionBlock, xDirection, yDirection, zDirection);
-			
-			if(reaction.isErroneous() || reaction2.priority < reaction.priority)
-			{
-				reaction = reaction2;
-				delay = reaction.getDelay(world, x, y, z, xDirection, yDirection, zDirection);
-			}
-		}
-		
-		if(delay == -1)
-		{
-			return getDelayForUpdateByDensity();
-		}
-		
-		return delay;
-	}
-	
+
 	/**
 	 * Gets the delay in ticks needed before the block should update again based on its density. Used internally only.
 	 * @return
@@ -516,21 +434,37 @@ public class BlockGas extends Block implements ISample
 			return;
 		}
 		
-		//Fetch a list of reactions. If any of these reactions succeed, the block will not update normally.
 		{
-			Reaction[] reactions = new Reaction[6];
-			int[] reactionIndices = new int[6];
-			reactionsWithSurroundingBlocks(world, par2, par3, par4, reactions, reactionIndices, random);
-			
-			for(int i = 0; i < reactions.length; i++)
+			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 			{
-				int index = reactionIndices[i];
-				int xDirection = index < 2 ? index * 2 - 1: 0;
-				int yDirection = index < 4 & index >= 2 ? index * 2 - 5: 0;
-				int zDirection = index >= 4 ? index * 2 - 9: 0;
-				if(reactions[i].reactIfPossible(world, random, par2, par3, par4, par2 + xDirection, par3 + yDirection, par4 + zDirection))
+				int bx = par2 + direction.offsetX;
+				int by = par3 + direction.offsetY;
+				int bz = par4 + direction.offsetZ;
+
+				PartialGasStack b = GasesFramework.implementation.getGas(world, bx, by, bz);
+				if (b != null)
 				{
-					return;
+					GasReaction[] reactions = GasesFramework.registry.getRegisteredGasReactions(type);
+					if (reactions.length > 0)
+					{
+						WorldGasReactionEnvironment environment = new WorldGasReactionEnvironment(world, par2, par3, par4, bx, by, bz);
+						for (GasReaction reaction : reactions)
+						{
+							reaction.react(environment);
+						}
+					}
+				}
+				else
+				{
+					BlockReaction[] reactions = GasesFramework.registry.getRegisteredBlockReactions(type);
+					if (reactions.length > 0)
+					{
+						WorldBlockReactionEnvironment environment = new WorldBlockReactionEnvironment(world, par2, par3, par4, bx, by, bz);
+						for (BlockReaction reaction : reactions)
+						{
+							reaction.react(environment);
+						}
+					}
 				}
 			}
 		}
@@ -894,7 +828,7 @@ public class BlockGas extends Block implements ISample
 		//If this gas requires a new tick, it will schedule one.
 		if(requiresTick || type.requiresNewTick(world, par2, par3, par4, random))
 		{
-			world.scheduleBlockUpdate(par2, par3, par4, this, getDelayForUpdate(world, par2, par3, par4));
+			world.scheduleBlockUpdate(par2, par3, par4, this, getDelayForUpdateByDensity());
 		}
 		
 		type.postTick(world, par2, par3, par4, random);
@@ -908,7 +842,7 @@ public class BlockGas extends Block implements ISample
 	{
 		if(disableUpdate) return;
 		
-		int delay = getDelayForUpdate(par1World, par2, par3, par4);
+		int delay = getDelayForUpdateByDensity();
 		if(delay <= 0)
 		{
 			this.updateTick(par1World, par2, par3, par4, par1World.rand);

@@ -7,6 +7,7 @@ import java.util.Random;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.IGasesFrameworkImplementation;
 import glenn.gasesframework.api.ItemKey;
+import glenn.gasesframework.api.PartialGasStack;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasTransporter;
 import glenn.gasesframework.api.filter.GasTypeFilter;
@@ -27,6 +28,7 @@ import glenn.moddingutils.IVec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -49,7 +51,7 @@ public class Implementation implements IGasesFrameworkImplementation
 
 	/**
 	 * Returns true if this block coordinate can be filled with a unit of gas.
-	 * If this returns true, {@link glenn.gasesframework.GasesFramework#fillWithGas(World, Random, int, int, int, GasType) fillWithGas(World,Random,int,int,int,GasType)} will also return true.
+	 * If this returns true, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#fillWithGas(World, Random, int, int, int, GasType) fillWithGas(World,Random,int,int,int,GasType)} will also return true.
 	 * @param world - The world object
 	 * @param x
 	 * @param y
@@ -109,7 +111,7 @@ public class Implementation implements IGasesFrameworkImplementation
 
 	/**
 	 * Try to fill this block coordinate with a unit of gas. If necessary, this method will spread the gas outwards.
-	 * The result of this method can be predetermined with {@link glenn.gasesframework.GasesFramework#canFillWithGas(World, int, int, int, GasType) canFillWithGas(World,int,int,int,GasType)}.
+	 * The result of this method can be predetermined with {@link glenn.gasesframework.api.IGasesFrameworkImplementation#canFillWithGas(World, int, int, int, GasType) canFillWithGas(World,int,int,int,GasType)}.
 	 * @param world
 	 * @param random
 	 * @param x
@@ -243,6 +245,20 @@ public class Implementation implements IGasesFrameworkImplementation
 	}
 
 	/**
+	 * Place a gas block.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param gasStack
+	 */
+	@Override
+	public void placeGas(World world, int x, int y, int z, PartialGasStack gasStack)
+	{
+		placeGas(world, x, y, z, gasStack.gasType, gasStack.partialAmount);
+	}
+
+	/**
 	 * Place a gas block of the specified type with a specific volume ranging from 0 to 16.
 	 * @param world
 	 * @param x
@@ -258,7 +274,11 @@ public class Implementation implements IGasesFrameworkImplementation
 		if(volume > 0)
 		{
 			if(volume > 16) volume = 16;
-			world.setBlock(x, y, z, GasesFramework.registry.getGasBlock(type), 16 - volume, 3);
+			BlockGas gasBlock = GasesFramework.registry.getGasBlock(type);
+			if (gasBlock != null)
+			{
+				world.setBlock(x, y, z, gasBlock, 16 - volume, 3);
+			}
 		}
 	}
 
@@ -342,8 +362,9 @@ public class Implementation implements IGasesFrameworkImplementation
 
 	/**
 	 * Push gas to a coordinate with a certain direction and pressure.
-	 * If the block is an IGasTransporter or IGasReceptor, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#pumpGas(World,int,int,int,GasType,ForgeDirection,int) pumpGas(World,int,int,int,GasType,ForgeDirection,int)} is returned.
-	 * Else, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#fillWithGas(World,int,int,int,GasType) fillWithGas(World,int,int,int,GasType)} is returned.
+	 * If the block is an IGasTransporter or IGasReceptor,
+	 * {@link glenn.gasesframework.api.IGasesFrameworkImplementation#pumpGas(World,Random,int,int,int,GasType,ForgeDirection,int) pumpGas(World,Random,int,int,int,GasType,ForgeDirection,int)} is returned.
+	 * Else, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#fillWithGas(World,Random,int,int,int,GasType) fillWithGas(World,Random,int,int,int,GasType)} is returned.
 	 * @param world
 	 * @param random
 	 * @param x
@@ -436,6 +457,30 @@ public class Implementation implements IGasesFrameworkImplementation
 		GasesFramework.networkWrapper.sendToDimension(
 				new MessageSetBlockGasTypeFilter(x, y, z, side, filter),
 				world.provider.dimensionId);
+	}
+
+	/**
+	 * Get a PartialGasStack at the location. If the block is air, a full stack of air is returned. Else, null is returned.
+	 * @param blockAccess
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
+	@Override
+	public PartialGasStack getGas(IBlockAccess blockAccess, int x, int y, int z)
+	{
+		Block block = blockAccess.getBlock(x, y, z);
+		if (block instanceof BlockGas)
+		{
+			return new PartialGasStack(((BlockGas)block).type, 16 - blockAccess.getBlockMetadata(x, y, z));
+		}
+		else if (block == Blocks.air)
+		{
+			return new PartialGasStack(GasesFrameworkAPI.gasTypeAir, 16);
+		}
+
+		return null;
 	}
 
 	/**

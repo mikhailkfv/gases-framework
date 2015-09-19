@@ -5,6 +5,7 @@ import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
 import glenn.gasesframework.api.pipetype.PipeType;
+import glenn.gasesframework.api.reaction.GasReaction;
 import glenn.gasesframework.api.reaction.Reaction;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -72,38 +73,23 @@ public interface IGasesFrameworkRegistry
 
 
 	/**
-	 * Gets the reaction between 2 blocks. Returns an empty reaction if it doesn't exist (not null)
-	 * @param world
-	 * @param block1
-	 * @param block1X
-	 * @param block1Y
-	 * @param block1Z
-	 * @param block2
-	 * @param block2X
-	 * @param block2Y
-	 * @param block2Z
-	 * @return
-	 */
-	Reaction getReactionForBlocks(World world, Block block1, int block1X, int block1Y, int block1Z, Block block2, int block2X, int block2Y, int block2Z);
-
-	/**
-	 * Registers a custom gas reaction.
+	 * Register a reaction for a set of gas types.
 	 * @param reaction
 	 */
-	void registerReaction(Reaction reaction);
+	void registerReaction(Reaction reaction, GasType... gasTypes);
 
 	/**
-	 * Is this reaction registered?
+	 * Is this reaction registered for this gas type?
 	 * @param reaction
 	 * @return
 	 */
-	boolean isReactionRegistered(Reaction reaction);
+	boolean isReactionRegistered(Reaction reaction, GasType gasType);
 
 	/**
-	 * Get an array of all registered reactions.
+	 * Get an array of all registered reactions for a gas type.
 	 * @return
 	 */
-	Reaction[] getRegisteredReactions();
+	Reaction[] getRegisteredReactions(GasType gasType);
 
 
 
@@ -204,13 +190,13 @@ public interface IGasesFrameworkRegistry
 
 
 	/**
-	 * Registers a gas transposer handler.
+	 * Registers a gas transposer environment.
 	 * @param handler
 	 */
 	void registerGasTransposerHandler(IGasTransposerHandler handler);
 
 	/**
-	 * Is this gas transposer handler registered?
+	 * Is this gas transposer environment registered?
 	 * @param handler
 	 * @return
 	 */

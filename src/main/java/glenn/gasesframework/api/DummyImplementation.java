@@ -33,6 +33,10 @@ public class DummyImplementation implements IGasesFrameworkImplementation
 	}
 
 	@Override
+	public void placeGas(World world, int x, int y, int z, PartialGasStack gasStack)
+	{}
+
+	@Override
 	public void placeGas(World world, int x, int y, int z, GasType type, int volume)
 	{}
 
@@ -63,6 +67,12 @@ public class DummyImplementation implements IGasesFrameworkImplementation
 	@Override
 	public void sendFilterUpdatePacket(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter)
 	{}
+
+	@Override
+	public PartialGasStack getGas(IBlockAccess blockAccess, int x, int y, int z)
+	{
+		return null;
+	}
 
 	@Override
 	public GasType getGasType(IBlockAccess blockAccess, int x, int y, int z)

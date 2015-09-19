@@ -15,19 +15,18 @@ import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
 import glenn.gasesframework.api.pipetype.PipeType;
+import glenn.gasesframework.api.reaction.BlockReaction;
+import glenn.gasesframework.api.reaction.GasReaction;
 import glenn.gasesframework.api.reaction.Reaction;
-import glenn.gasesframework.api.reaction.ReactionEmpty;
 import glenn.gasesframework.common.block.BlockGas;
 import glenn.gasesframework.common.block.BlockGasPipe;
 import glenn.gasesframework.common.block.BlockLantern;
 import glenn.gasesframework.common.item.ItemGasPipe;
 import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 public class Registry implements IGasesFrameworkRegistry
 {
@@ -55,7 +54,7 @@ public class Registry implements IGasesFrameworkRegistry
 	public Block[] getRegisteredIgnitionBlocks()
 	{
 		Block[] ignitionBlocks = new Block[registeredIgnitionBlocks.size()];
-		registeredGasTypes.toArray(ignitionBlocks);
+		registeredIgnitionBlocks.toArray(ignitionBlocks);
 		return ignitionBlocks;
 	}
 
@@ -85,54 +84,122 @@ public class Registry implements IGasesFrameworkRegistry
 	public Item[] getRegisteredIgnitionItems()
 	{
 		Item[] ignitionItems = new Item[registeredIgnitionItems.size()];
-		registeredGasTypes.toArray(ignitionItems);
+		registeredIgnitionItems.toArray(ignitionItems);
 		return ignitionItems;
 	}
 
 
 
-	private final Set<Reaction> registeredReactions = Collections.newSetFromMap(new IdentityHashMap<Reaction, Boolean>());
+	private final Map<GasType, Set<Reaction>> registeredReactions = new IdentityHashMap<GasType, Set<Reaction>>();
+	private final Map<GasType, Set<GasReaction>> registeredGasReactions = new IdentityHashMap<GasType, Set<GasReaction>>();
+	private final Map<GasType, Set<BlockReaction>> registeredBlockReactions = new IdentityHashMap<GasType, Set<BlockReaction>>();
 
 	@Override
-	public Reaction getReactionForBlocks(World world, Block block1, int block1X, int block1Y, int block1Z, Block block2, int block2X, int block2Y, int block2Z)
+	public void registerReaction(Reaction reaction, GasType... gasTypes)
 	{
-		for(Reaction reaction : registeredReactions)
+		if (gasTypes.length == 0)
 		{
-			if(reaction.is(world, block1, block1X, block1Y, block1Z, block2, block2X, block2Y, block2Z))
+			GasesFramework.logger.warn("Attempted to register reaction without specifying any gas types. Reactions must be bound to their respective gas types!");
+		}
+
+		for (GasType gasType : gasTypes)
+		{
+			if (isReactionRegistered(reaction, gasType))
 			{
-				return reaction;
+				throw new RuntimeException("A reaction was attempted registered to a gas type it was already registered to.");
+			}
+
+			Set<Reaction> reactions = registeredReactions.get(gasType);
+			if (reactions == null)
+			{
+				reactions = Collections.newSetFromMap(new IdentityHashMap<Reaction, Boolean>());
+				registeredReactions.put(gasType, reactions);
+			}
+			reactions.add(reaction);
+
+			if (reaction instanceof GasReaction)
+			{
+				registerGasReaction((GasReaction)reaction, gasType);
+			}
+
+			if (reaction instanceof BlockReaction)
+			{
+				registerBlockReaction((BlockReaction)reaction, gasType);
 			}
 		}
+	}
 
-		return new ReactionEmpty();
+	private void registerGasReaction(GasReaction reaction, GasType gasType)
+	{
+		Set<GasReaction> gasReactions = registeredGasReactions.get(gasType);
+		if (gasReactions == null)
+		{
+			gasReactions = Collections.newSetFromMap(new IdentityHashMap<GasReaction, Boolean>());
+			registeredGasReactions.put(gasType, gasReactions);
+		}
+		gasReactions.add(reaction);
+	}
+
+	private void registerBlockReaction(BlockReaction reaction, GasType gasType)
+	{
+		Set<BlockReaction> blockReactions = registeredBlockReactions.get(gasType);
+		if (blockReactions == null)
+		{
+			blockReactions = Collections.newSetFromMap(new IdentityHashMap<BlockReaction, Boolean>());
+			registeredBlockReactions.put(gasType, blockReactions);
+		}
+		blockReactions.add(reaction);
 	}
 
 	@Override
-	public void registerReaction(Reaction reaction)
+	public boolean isReactionRegistered(Reaction reaction, GasType gasType)
 	{
-		if (isReactionRegistered(reaction))
+		Set<Reaction> reactions = registeredReactions.get(gasType);
+		if (reactions != null)
 		{
-			throw new RuntimeException("A reaction was attempted registered when it was already registered.");
+			return reactions.contains(reaction);
+		}
+		return false;
+	}
+
+	@Override
+	public Reaction[] getRegisteredReactions(GasType gasType)
+	{
+		Set<Reaction> reactionsSet = registeredReactions.get(gasType);
+		if (reactionsSet != null)
+		{
+			Reaction[] reactions = new Reaction[registeredReactions.size()];
+			reactionsSet.toArray(reactions);
+			return reactions;
 		}
 
-		if(!reaction.isErroneous())
+		return new Reaction[0];
+	}
+
+	public GasReaction[] getRegisteredGasReactions(GasType gasType)
+	{
+		Set<GasReaction> reactionsSet = registeredGasReactions.get(gasType);
+		if (reactionsSet != null)
 		{
-			registeredReactions.add(reaction);
+			GasReaction[] reactions = new GasReaction[registeredGasReactions.size()];
+			reactionsSet.toArray(reactions);
+			return reactions;
 		}
+
+		return new GasReaction[0];
 	}
 
-	@Override
-	public boolean isReactionRegistered(Reaction reaction)
+	public BlockReaction[] getRegisteredBlockReactions(GasType gasType)
 	{
-		return registeredReactions.contains(reaction);
-	}
+		Set<BlockReaction> reactionsSet = registeredBlockReactions.get(gasType);
+		if (reactionsSet != null)
+		{
+			BlockReaction[] reactions = new BlockReaction[registeredBlockReactions.size()];
+			reactionsSet.toArray(reactions);
+			return reactions;
+		}
 
-	@Override
-	public Reaction[] getRegisteredReactions()
-	{
-		Reaction[] reactions = new Reaction[registeredReactions.size()];
-		registeredReactions.toArray(reactions);
-		return reactions;
+		return new BlockReaction[0];
 	}
 
 
@@ -322,7 +389,7 @@ public class Registry implements IGasesFrameworkRegistry
 	{
 		if (isGasTransposerHandlerRegistered(handler))
 		{
-			throw new RuntimeException("A gas transposer handler was attempted registered while it was already registered.");
+			throw new RuntimeException("A gas transposer environment was attempted registered while it was already registered.");
 		}
 
 		TileEntityGasTransposer.registerHandler(handler);

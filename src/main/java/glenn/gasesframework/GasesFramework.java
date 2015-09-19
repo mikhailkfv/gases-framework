@@ -226,9 +226,15 @@ public class GasesFramework
 		GameRegistry.registerTileEntity(TileEntityWoodGasDynamo.class, "woodGasDynamo");
 		
 		EntityRegistry.registerModEntity(EntityDelayedExplosion.class, "delayedGasExplosion", 127, this, 20, 1, false);
-		
-		registry.registerReaction(new ReactionIgnition());
-		
+
+		for (GasType gasType : registry.getRegisteredGasTypes())
+		{
+			if (gasType.combustibility.burnRate >= Combustibility.FLAMMABLE.burnRate)
+			{
+				registry.registerReaction(new ReactionIgnition(), gasType);
+			}
+		}
+
 		registry.registerGasTransposerHandler(new GasBottleTransposerHandler());
 		
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);

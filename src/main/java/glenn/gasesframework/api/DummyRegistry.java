@@ -58,26 +58,23 @@ public class DummyRegistry implements IGasesFrameworkRegistry
 	}
 
 	@Override
-	public Reaction getReactionForBlocks(World world, Block block1, int block1X, int block1Y, int block1Z, Block block2, int block2X, int block2Y, int block2Z)
+	public void registerReaction(Reaction reaction, GasType... gasTypes)
 	{
-		return null;
 	}
 
 	@Override
-	public void registerReaction(Reaction reaction)
-	{}
-
-	@Override
-	public boolean isReactionRegistered(Reaction reaction)
+	public boolean isReactionRegistered(Reaction reaction, GasType gasType)
 	{
 		return false;
 	}
 
 	@Override
-	public Reaction[] getRegisteredReactions()
+	public Reaction[] getRegisteredReactions(GasType gasType)
 	{
 		return new Reaction[0];
 	}
+
+
 
 	@Override
 	public GasType getGasTypeByID(int id)

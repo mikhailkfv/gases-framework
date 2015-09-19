@@ -50,6 +50,16 @@ public interface IGasesFrameworkImplementation
 	 * @return
 	 */
 	boolean fillWithGas(World world, Random random, int x, int y, int z, GasType type);
+
+	/**
+	 * Place a gas block.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param gasStack
+	 */
+	void placeGas(World world, int x, int y, int z, PartialGasStack gasStack);
 	
 	/**
 	 * Place a gas block of the specified type with a specific volume ranging from 0 to 16.
@@ -80,8 +90,9 @@ public interface IGasesFrameworkImplementation
 	
 	/**
 	 * Push gas to a coordinate with a certain direction and pressure.
-	 * If the block is an IGasTransporter or IGasReceptor, {@link IGasesFrameworkImplementation#pumpGas(World,Random,int,int,int,GasType,ForgeDirection,int) pumpGas(World,Random,int,int,int,GasType,ForgeDirection,int)} is returned.
-	 * Else, {@link IGasesFrameworkImplementation#fillWithGas(World,Random,int,int,int,GasType) fillWithGas(World,Random,int,int,int,GasType)} is returned.
+	 * If the block is an IGasTransporter or IGasReceptor,
+	 * {@link glenn.gasesframework.api.IGasesFrameworkImplementation#pumpGas(World,Random,int,int,int,GasType,ForgeDirection,int) pumpGas(World,Random,int,int,int,GasType,ForgeDirection,int)} is returned.
+	 * Else, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#fillWithGas(World,Random,int,int,int,GasType) fillWithGas(World,Random,int,int,int,GasType)} is returned.
 	 * @param world
 	 * @param random
 	 * @param x
@@ -139,6 +150,18 @@ public interface IGasesFrameworkImplementation
 	 * @param filter
 	 */
 	void sendFilterUpdatePacket(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter);
+
+
+
+	/**
+	 * Get a PartialGasStack at the location. If the block is air, a full stack of air is returned. Else, null is returned.
+	 * @param blockAccess
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return
+	 */
+	PartialGasStack getGas(IBlockAccess blockAccess, int x, int y, int z);
 	
 	/**
 	 * Gets the gas type of the gas block at the location, if any. If no gas block is present, null is returned.
