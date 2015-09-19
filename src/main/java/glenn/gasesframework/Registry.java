@@ -168,7 +168,7 @@ public class Registry implements IGasesFrameworkRegistry
 		Set<Reaction> reactionsSet = registeredReactions.get(gasType);
 		if (reactionsSet != null)
 		{
-			Reaction[] reactions = new Reaction[registeredReactions.size()];
+			Reaction[] reactions = new Reaction[reactionsSet.size()];
 			reactionsSet.toArray(reactions);
 			return reactions;
 		}
@@ -181,7 +181,7 @@ public class Registry implements IGasesFrameworkRegistry
 		Set<GasReaction> reactionsSet = registeredGasReactions.get(gasType);
 		if (reactionsSet != null)
 		{
-			GasReaction[] reactions = new GasReaction[registeredGasReactions.size()];
+			GasReaction[] reactions = new GasReaction[reactionsSet.size()];
 			reactionsSet.toArray(reactions);
 			return reactions;
 		}
@@ -194,7 +194,7 @@ public class Registry implements IGasesFrameworkRegistry
 		Set<BlockReaction> reactionsSet = registeredBlockReactions.get(gasType);
 		if (reactionsSet != null)
 		{
-			BlockReaction[] reactions = new BlockReaction[registeredBlockReactions.size()];
+			BlockReaction[] reactions = new BlockReaction[reactionsSet.size()];
 			reactionsSet.toArray(reactions);
 			return reactions;
 		}
