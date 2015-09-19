@@ -429,7 +429,7 @@ public class BlockGas extends Block implements ISample
 	@Override
 	public void updateTick(World world, int par2, int par3, int par4, Random random)
 	{
-		if(!world.provider.isHellWorld & par3 > GasesFramework.configurations.gases.maxHeight)
+		if(par3 > GasesFramework.configurations.gases.maxHeight)
 		{
 			world.setBlock(par2, par3, par4, Blocks.air);
 			return;
