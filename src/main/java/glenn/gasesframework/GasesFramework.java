@@ -2,6 +2,8 @@ package glenn.gasesframework;
 
 import java.io.File;
 
+import org.apache.logging.log4j.Logger;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -90,22 +92,20 @@ public class GasesFramework
 	public static final String MODID = GasesFrameworkAPI.OWNER;
 	public static final String VERSION = "1.1.2";
 	public static final String TARGETVERSION = GasesFrameworkAPI.TARGETVERSION;
-	
+
+	public static Logger logger;
 	public static final GuiHandler guiHandler = new GuiHandler();
 	public static SimpleNetworkWrapper networkWrapper = new SimpleNetworkWrapper(MODID);
-	
 	public static GasesFrameworkMainConfigurations configurations;
-
 	public static final CreativeTabs creativeTab = new CreativeTab("tabGasesFramework");
-
-	public static final PipeType pipeTypeIron = new PipeTypeIron(0, "iron", true, "gasesframework:pipe_iron");
-	public static final PipeType pipeTypeGlass = new PipeTypeGlass(1, "glass", false, "gasesframework:pipe_glass");
-	public static final PipeType pipeTypeWood = new PipeTypeWood(2, "wood", true, "gasesframework:pipe_wood");
-	
 	public static final WorldGeneratorGasesFramework worldGenerator = new WorldGeneratorGasesFramework();
 
 	public static GFItems items;
 	public static GFBlocks blocks;
+
+	public static final PipeType pipeTypeIron = new PipeTypeIron(0, "iron", true, "gasesframework:pipe_iron");
+	public static final PipeType pipeTypeGlass = new PipeTypeGlass(1, "glass", false, "gasesframework:pipe_glass");
+	public static final PipeType pipeTypeWood = new PipeTypeWood(2, "wood", true, "gasesframework:pipe_wood");
 
 	public static final GasType gasTypeSmoke = new GasType(true, 1, "smoke", 0x3F3F3F9F, 2, -16, Combustibility.NONE).setCreativeTab(creativeTab)
 			.setEffectRate(ExtendedGasEffectsBase.EffectType.BLINDNESS, 4)
@@ -181,6 +181,8 @@ public class GasesFramework
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		logger = event.getModLog();
+
 		GasesFrameworkAPI.install(implementation, registry);
 
 		networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
