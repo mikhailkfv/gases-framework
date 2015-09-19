@@ -435,41 +435,51 @@ public class BlockGas extends Block implements ISample
 			return;
 		}
 		
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 		{
-			for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
-			{
-				int bx = par2 + direction.offsetX;
-				int by = par3 + direction.offsetY;
-				int bz = par4 + direction.offsetZ;
+			int bx = par2 + direction.offsetX;
+			int by = par3 + direction.offsetY;
+			int bz = par4 + direction.offsetZ;
 
-				PartialGasStack b = GasesFramework.implementation.getGas(world, bx, by, bz);
-				if (b != null)
+			PartialGasStack b = GasesFramework.implementation.getGas(world, bx, by, bz);
+			if (b != null)
+			{
+				GasReaction[] reactions = GasesFramework.registry.getRegisteredGasReactions(type);
+				if (reactions.length > 0)
 				{
-					GasReaction[] reactions = GasesFramework.registry.getRegisteredGasReactions(type);
-					if (reactions.length > 0)
+					WorldGasReactionEnvironment environment = new WorldGasReactionEnvironment(world, par2, par3, par4, bx, by, bz);
+					for (GasReaction reaction : reactions)
 					{
-						WorldGasReactionEnvironment environment = new WorldGasReactionEnvironment(world, par2, par3, par4, bx, by, bz);
-						for (GasReaction reaction : reactions)
-						{
-							reaction.react(environment);
-						}
+						reaction.react(environment);
 					}
 				}
-				else
+			}
+			else
+			{
+				BlockReaction[] reactions = GasesFramework.registry.getRegisteredBlockReactions(type);
+				if (reactions.length > 0)
 				{
-					BlockReaction[] reactions = GasesFramework.registry.getRegisteredBlockReactions(type);
-					if (reactions.length > 0)
+					WorldBlockReactionEnvironment environment = new WorldBlockReactionEnvironment(world, par2, par3, par4, bx, by, bz);
+					for (BlockReaction reaction : reactions)
 					{
-						WorldBlockReactionEnvironment environment = new WorldBlockReactionEnvironment(world, par2, par3, par4, bx, by, bz);
-						for (BlockReaction reaction : reactions)
-						{
-							reaction.react(environment);
-						}
+						reaction.react(environment);
 					}
 				}
 			}
 		}
-		
+
+		{
+			Block replacementBlock = world.getBlock(par2, par3, par4);
+			if (replacementBlock != this)
+			{
+				if (replacementBlock instanceof BlockGas)
+				{
+					replacementBlock.updateTick(world, par2, par3, par4, random);
+				}
+				return;
+			}
+		}
+
 		type.preTick(world, par2, par3, par4, random);
 		
 		//For technical reasons, metadata is a reverse representation of how much gas there is inside a block
