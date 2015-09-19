@@ -18,4 +18,6 @@ public interface IReactionEnvironment
 	void explode(float power, boolean isFlaming, boolean isSmoking);
 
 	Random getRandom();
+
+	void playSound(String name, float volume, float pitch);
 }

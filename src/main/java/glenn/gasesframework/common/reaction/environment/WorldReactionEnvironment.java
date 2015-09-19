@@ -73,4 +73,14 @@ public abstract class WorldReactionEnvironment implements IReactionEnvironment
 	{
 		return world.rand;
 	}
+
+	@Override
+	public void playSound(String name, float volume, float pitch)
+	{
+		double x = (ax + bx) / 2.0D;
+		double y = (ay + by) / 2.0D;
+		double z = (az + bz) / 2.0D;
+
+		world.playSound(x, y, z, name, volume, pitch, false);
+	}
 }
