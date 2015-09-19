@@ -13,4 +13,6 @@ public interface IBlockReactionEnvironment extends IReactionEnvironment
 	void setB(Block b, int metadata);
 
 	void breakB();
+
+	float getBHardness();
 }

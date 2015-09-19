@@ -42,4 +42,10 @@ public class WorldBlockReactionEnvironment extends WorldReactionEnvironment impl
 		b.dropBlockAsItem(world, bx, by, bz, world.getBlockMetadata(bx, by, bz), 0);
 		world.setBlockToAir(bx, by, bz);
 	}
+
+	@Override
+	public float getBHardness()
+	{
+		return getB().getBlockHardness(world, bx, by, bz);
+	}
 }
