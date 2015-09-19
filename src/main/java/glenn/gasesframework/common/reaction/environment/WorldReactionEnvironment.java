@@ -5,6 +5,7 @@ import java.util.Random;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.PartialGasStack;
 import glenn.gasesframework.api.reaction.environment.IReactionEnvironment;
+import glenn.moddingutils.DVec;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -50,8 +51,11 @@ public abstract class WorldReactionEnvironment implements IReactionEnvironment
 		double x = (ax + bx) / 2.0D;
 		double y = (ay + by) / 2.0D;
 		double z = (az + bz) / 2.0D;
+		DVec vec = DVec.randomNormalizedVec(world.rand).scale(0.1D);
 
-		world.spawnEntityInWorld(new EntityItem(world, x, y, z, itemstack));
+		EntityItem entityItem = new EntityItem(world, x, y, z, itemstack);
+		entityItem.addVelocity(vec.x, vec.y, vec.z);
+		world.spawnEntityInWorld(entityItem);
 	}
 
 	@Override
