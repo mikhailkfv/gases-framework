@@ -427,19 +427,19 @@ public class BlockGas extends Block implements ISample
 	}
 
 	@Override
-	public void updateTick(World world, int par2, int par3, int par4, Random random)
+	public void updateTick(World world, int x, int y, int z, Random random)
 	{
-		if(par3 > GasesFramework.configurations.gases.maxHeight)
+		if(y > GasesFramework.configurations.gases.maxHeight)
 		{
-			world.setBlock(par2, par3, par4, Blocks.air);
+			world.setBlock(x, y, z, Blocks.air);
 			return;
 		}
 		
 		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 		{
-			int bx = par2 + direction.offsetX;
-			int by = par3 + direction.offsetY;
-			int bz = par4 + direction.offsetZ;
+			int bx = x + direction.offsetX;
+			int by = y + direction.offsetY;
+			int bz = z + direction.offsetZ;
 
 			PartialGasStack b = GasesFramework.implementation.getGas(world, bx, by, bz);
 			if (b != null)
@@ -447,7 +447,7 @@ public class BlockGas extends Block implements ISample
 				GasReaction[] reactions = GasesFramework.registry.getRegisteredGasReactions(type);
 				if (reactions.length > 0)
 				{
-					WorldGasReactionEnvironment environment = new WorldGasReactionEnvironment(world, par2, par3, par4, bx, by, bz);
+					WorldGasReactionEnvironment environment = new WorldGasReactionEnvironment(world, x, y, z, bx, by, bz);
 					for (GasReaction reaction : reactions)
 					{
 						reaction.react(environment);
@@ -459,7 +459,7 @@ public class BlockGas extends Block implements ISample
 				BlockReaction[] reactions = GasesFramework.registry.getRegisteredBlockReactions(type);
 				if (reactions.length > 0)
 				{
-					WorldBlockReactionEnvironment environment = new WorldBlockReactionEnvironment(world, par2, par3, par4, bx, by, bz);
+					WorldBlockReactionEnvironment environment = new WorldBlockReactionEnvironment(world, x, y, z, bx, by, bz);
 					for (BlockReaction reaction : reactions)
 					{
 						reaction.react(environment);
@@ -469,27 +469,27 @@ public class BlockGas extends Block implements ISample
 		}
 
 		{
-			Block replacementBlock = world.getBlock(par2, par3, par4);
+			Block replacementBlock = world.getBlock(x, y, z);
 			if (replacementBlock != this)
 			{
 				if (replacementBlock instanceof BlockGas)
 				{
-					replacementBlock.updateTick(world, par2, par3, par4, random);
+					replacementBlock.updateTick(world, x, y, z, random);
 				}
 				return;
 			}
 		}
 
-		type.preTick(world, par2, par3, par4, random);
+		type.preTick(world, x, y, z, random);
 		
 		//For technical reasons, metadata is a reverse representation of how much gas there is inside a block
-		int metadata = 16 - world.getBlockMetadata(par2, par3, par4) - type.getDissipation(world, par2, par3, par4, random);
+		int metadata = 16 - world.getBlockMetadata(x, y, z) - type.getDissipation(world, x, y, z, random);
 		boolean requiresTick = type.dissipationRate > 0;
 		
 		if(metadata <= 0)
 		{
-			world.setBlockToAir(par2, par3, par4);
-			type.onDissipated(world, par2, par3, par4);
+			world.setBlockToAir(x, y, z);
+			type.onDissipated(world, x, y, z);
 			return;
 		}
 		
@@ -499,7 +499,6 @@ public class BlockGas extends Block implements ISample
 			//The gas will flow out from its position, but will priorify blocks around with the least amount of gas, and especially air. It will not flow into other blocks.
 			int[] metadataList = new int[6];
 			int[] priorityList = new int[6];
-			int surroundingAirBlocks = 0;
 			int totalFlow = 0;
 			int prevMetadata = metadata;
 
@@ -509,13 +508,12 @@ public class BlockGas extends Block implements ISample
 				int yDirection = ringY[i];
 				int zDirection = ringZ[i];
 				
-				Block direction2Block = world.getBlock(par2 + xDirection, par3 + yDirection, par4 + zDirection);
-				int direction2BlockMetadata = 16 - world.getBlockMetadata(par2 + xDirection, par3 + yDirection, par4 + zDirection);
+				Block direction2Block = world.getBlock(x + xDirection, y + yDirection, z + zDirection);
+				int direction2BlockMetadata = 16 - world.getBlockMetadata(x + xDirection, y + yDirection, z + zDirection);
 				
-				if(type.canFlowHere(prevMetadata, world, par2 + xDirection, par3 + yDirection, par4 + zDirection))
+				if(type.canFlowHere(prevMetadata, world, x + xDirection, y + yDirection, z + zDirection))
 				{
 					direction2BlockMetadata = -1;
-					surroundingAirBlocks++;
 					totalFlow += 8;
 				}
 				else if(direction2Block != this)
@@ -565,7 +563,7 @@ public class BlockGas extends Block implements ISample
 						int transaction = flow * 16 / (totalFlow + 8);
 						
 						if(transaction < 1) transaction = 1;
-						world.setBlock(par2 + xDirection, par3 + yDirection, par4 + zDirection, this, 16 - transaction, 3);
+						world.setBlock(x + xDirection, y + yDirection, z + zDirection, this, 16 - transaction, 3);
 						requiresTick = false;
 						metadata -= transaction;
 					} else if(direction2BlockMetadata < 16 & direction2BlockMetadata + 1 < metadata)
@@ -574,7 +572,7 @@ public class BlockGas extends Block implements ISample
 						int transaction = flow * 16 / (totalFlow + 8);
 
 						if(transaction < 1) transaction = 1;
-						world.setBlockMetadataWithNotify(par2 + xDirection, par3 + yDirection, par4 + zDirection, 16 - direction2BlockMetadata - transaction, 3);
+						world.setBlockMetadataWithNotify(x + xDirection, y + yDirection, z + zDirection, 16 - direction2BlockMetadata - transaction, 3);
 						requiresTick = false;
 						metadata -= transaction;
 					}
@@ -584,36 +582,36 @@ public class BlockGas extends Block implements ISample
 			//Remember to set the new metadata for the gas block.
 			if(metadata > 0)
 			{
-				world.setBlockMetadataWithNotify(par2, par3, par4, 16 - metadata, 3);
+				world.setBlockMetadataWithNotify(x, y, z, 16 - metadata, 3);
 			} else
 			{
-				world.setBlockToAir(par2, par3, par4);
+				world.setBlockToAir(x, y, z);
 			}
 			
-			if(requiresTick || type.requiresNewTick(world, par2, par3, par4, random))
+			if(requiresTick || type.requiresNewTick(world, x, y, z, random))
 			{
-				world.scheduleBlockUpdate(par2, par3, par4, this, 10);
+				world.scheduleBlockUpdate(x, y, z, this, 10);
 			}
 			
-			type.postTick(world, par2, par3, par4, random);
+			type.postTick(world, x, y, z, random);
 			
 			return;
 		}
 
 		int yDirection = type.density > 0 ? -1 : 1;
-		Block directionBlock = world.getBlock(par2, par3 + yDirection, par4);
-		int directionBlockMetadata = 16 - world.getBlockMetadata(par2, par3 + yDirection, par4);
-		Block reverseDirectionBlock = world.getBlock(par2, par3 - yDirection, par4);
-		int reverseDirectionBlockMetadata = 16 - world.getBlockMetadata(par2, par3 - yDirection, par4);
+		Block directionBlock = world.getBlock(x, y + yDirection, z);
+		int directionBlockMetadata = 16 - world.getBlockMetadata(x, y + yDirection, z);
+		Block reverseDirectionBlock = world.getBlock(x, y - yDirection, z);
+		int reverseDirectionBlockMetadata = 16 - world.getBlockMetadata(x, y - yDirection, z);
 		
-		if(type.canFlowHere(metadata, world, par2, par3 + yDirection, par4))
+		if(type.canFlowHere(metadata, world, x, y + yDirection, z))
 		{
 			//If the block in the direction can be flowed into forcefully, it will only move in this direction.
 			if(metadata > 0)
 			{
-				world.setBlock(par2, par3 + yDirection, par4, this, 16 - metadata, 3);
+				world.setBlock(x, y + yDirection, z, this, 16 - metadata, 3);
 			}
-			world.setBlockToAir(par2, par3, par4);
+			world.setBlockToAir(x, y, z);
 		}
 		else
 		{
@@ -624,8 +622,8 @@ public class BlockGas extends Block implements ISample
 
 				if((type.density > 0 & type.density > directionBlockDensity) | (type.density < 0 & type.density < directionBlockDensity))
 				{
-					world.setBlock(par2, par3, par4, directionBlock, 16 - directionBlockMetadata, 3);
-					world.setBlock(par2, par3 + yDirection, par4, this, 16 - metadata, 3);
+					world.setBlock(x, y, z, directionBlock, 16 - directionBlockMetadata, 3);
+					world.setBlock(x, y + yDirection, z, this, 16 - metadata, 3);
 					return;
 				}
 			}
@@ -637,14 +635,14 @@ public class BlockGas extends Block implements ISample
 				{
 					if(directionBlockMetadata + metadata < 16)
 					{
-						world.setBlockToAir(par2, par3, par4);
-						world.setBlockMetadataWithNotify(par2, par3 + yDirection, par4, 16 - directionBlockMetadata - metadata, 3);
+						world.setBlockToAir(x, y, z);
+						world.setBlockMetadataWithNotify(x, y + yDirection, z, 16 - directionBlockMetadata - metadata, 3);
 
 						return;
 					} else
 					{
-						world.setBlockMetadataWithNotify(par2, par3, par4, 32 - directionBlockMetadata - metadata, 3);
-						world.setBlockMetadataWithNotify(par2, par3 + yDirection, par4, 0, 3);
+						world.setBlockMetadataWithNotify(x, y, z, 32 - directionBlockMetadata - metadata, 3);
+						world.setBlockMetadataWithNotify(x, y + yDirection, z, 0, 3);
 					}
 
 					metadata -= 16 - directionBlockMetadata;
@@ -657,7 +655,7 @@ public class BlockGas extends Block implements ISample
 				metadata += reverseDirectionBlockMetadata;
 			}
 			
-			//The gas will flow out from its position, but will priorify blocks around with the least amount of gas, and especially air. It will not flow into other blocks.
+			//The gas will flow out from its position, but will prioritize blocks around with the least amount of gas, and especially air. It will not flow into other blocks.
 			int[] metadataList = new int[4];
 			int[] priorityList = new int[4];
 			int surroundingAirBlocks = 0;
@@ -669,10 +667,10 @@ public class BlockGas extends Block implements ISample
 				int xDirection = ringsX[i];
 				int zDirection = ringsZ[i];
 
-				Block direction2Block = world.getBlock(par2 + xDirection, par3, par4 + zDirection);
-				int direction2BlockMetadata = 16 - world.getBlockMetadata(par2 + xDirection, par3, par4 + zDirection);
+				Block direction2Block = world.getBlock(x + xDirection, y, z + zDirection);
+				int direction2BlockMetadata = 16 - world.getBlockMetadata(x + xDirection, y, z + zDirection);
 
-				if(type.canFlowHere(prevMetadata, world, par2 + xDirection, par3, par4 + zDirection))
+				if(type.canFlowHere(prevMetadata, world, x + xDirection, y, z + zDirection))
 				{
 					direction2BlockMetadata = -1;
 					surroundingAirBlocks++;
@@ -721,43 +719,36 @@ public class BlockGas extends Block implements ISample
 				this.fillArrayWithIndices(random, indices, 4, 0, 0);
 				this.fillArrayWithIndices(random, indices, 4, 4, 4);
 				this.fillArrayWithIndices(random, indices, 4, 8, 8);
-				for(int index = 0; index < indices.length; index++)
+				for(int i : indices)
 				{
-					int i = indices[index];
-					int x = par2 + ringsX[i];
-					int z = par4 + ringsZ[i];
+					int x0 = x + ringsX[i];
+					int z0 = z + ringsZ[i];
 
-					Block direction2Block = world.getBlock(x, par3, z);
-					int direction2BlockMetadata = world.getBlockMetadata(x, par3, z);
-
-					if(type.canFlowHere(prevMetadata, world, x, par3, z))
+					if(type.canFlowHere(prevMetadata, world, x0, y, z0))
 					{
-						Block direction3Block = world.getBlock(x, par3 + yDirection, z);
-						int direction3BlockMetadata = world.getBlockMetadata(x, par3 + yDirection, z);
+						Block direction3Block = world.getBlock(x0, y + yDirection, z0);
 
-						if(type.canFlowHere(prevMetadata, world, x, par3 + yDirection, z) || (direction3Block == this && metadata - world.getBlockMetadata(x, par3 + yDirection, z) <= 0))
+						if(type.canFlowHere(prevMetadata, world, x0, y + yDirection, z0) || (direction3Block == this && metadata - world.getBlockMetadata(x0, y + yDirection, z0) <= 0))
 						{
 							if(i >= 8)
 							{
-								Block direction4Block = world.getBlock(par2 + movesX[i], par3, par4 + movesZ[i]);
-								int direction4BlockMetadata = world.getBlockMetadata(par2 + movesX[i], par3, par4 + movesZ[i]);
-								
-								if(!type.canFlowHere(prevMetadata, world, par2 + movesX[i], par3, par4 + movesZ[i]))
+								if(!type.canFlowHere(prevMetadata, world, x + movesX[i], y, z + movesZ[i]))
 								{
 									continue;
 								}
-							} else if(i >= 4)
+							}
+							else if(i >= 4)
 							{
-								if(!type.canFlowHere(prevMetadata, world, par2 + movesX[i], par3, par4) && !type.canFlowHere(prevMetadata, world, par2, par3, par4 + movesZ[i]))
+								if(!type.canFlowHere(prevMetadata, world, x + movesX[i], y, z) && !type.canFlowHere(prevMetadata, world, x, y, z + movesZ[i]))
 								{
 									continue;
 								}
 							}
 
-							world.setBlockToAir(par2, par3, par4);
+							world.setBlockToAir(x, y, z);
 							if(metadata > 0)
 							{
-								world.setBlock(par2 + movesX[i], par3, par4 + movesZ[i], this, 16 - metadata, 3);
+								world.setBlock(x + movesX[i], y, z + movesZ[i], this, 16 - metadata, 3);
 							}
 							return;
 						}
@@ -788,10 +779,11 @@ public class BlockGas extends Block implements ISample
 						{
 							transaction = 1;
 						}
-						world.setBlock(par2 + xDirection, par3, par4 + zDirection, this, 16 - transaction, 3);
+						world.setBlock(x + xDirection, y, z + zDirection, this, 16 - transaction, 3);
 						requiresTick = false;
 						metadata -= transaction;
-					} else if(direction2BlockMetadata < 16 & direction2BlockMetadata + 1 < metadata)
+					}
+					else if(direction2BlockMetadata < 16 & direction2BlockMetadata + 1 < metadata)
 					{
 						int flow = (prevMetadata - direction2BlockMetadata) / 2;
 						int transaction = flow * 16 / (totalFlow + 8);
@@ -804,7 +796,7 @@ public class BlockGas extends Block implements ISample
 						{
 							transaction = 1;
 						}
-						world.setBlockMetadataWithNotify(par2 + xDirection, par3, par4 + zDirection, 16 - direction2BlockMetadata - transaction, 3);
+						world.setBlockMetadataWithNotify(x + xDirection, y, z + zDirection, 16 - direction2BlockMetadata - transaction, 3);
 						requiresTick = false;
 						metadata -= transaction;
 					}
@@ -814,35 +806,35 @@ public class BlockGas extends Block implements ISample
 			//Finalizing. Setting the metadata for both this block and the block in the opposite direction to make sure the gases are finite.
 			if(metadata > 16)
 			{
-				world.setBlockMetadataWithNotify(par2, par3, par4, 0, 3);
+				world.setBlockMetadataWithNotify(x, y, z, 0, 3);
 				if(reverseDirectionBlock == this)
 				{
-					world.setBlockMetadataWithNotify(par2, par3 - yDirection, par4, 32 - metadata, 3);
+					world.setBlockMetadataWithNotify(x, y - yDirection, z, 32 - metadata, 3);
 				}
 			} else
 			{
 				if(reverseDirectionBlock == this)
 				{
-					world.setBlockToAir(par2, par3 - yDirection, par4);
+					world.setBlockToAir(x, y - yDirection, z);
 				}
 
 				if(metadata > 0)
 				{
-					world.setBlockMetadataWithNotify(par2, par3, par4, 16 - metadata, 3);
+					world.setBlockMetadataWithNotify(x, y, z, 16 - metadata, 3);
 				} else
 				{
-					world.setBlockToAir(par2, par3, par4);
+					world.setBlockToAir(x, y, z);
 				}
 			}
 		}
 		
 		//If this gas requires a new tick, it will schedule one.
-		if(requiresTick || type.requiresNewTick(world, par2, par3, par4, random))
+		if(requiresTick || type.requiresNewTick(world, x, y, z, random))
 		{
-			world.scheduleBlockUpdate(par2, par3, par4, this, getDelayForUpdateByDensity());
+			world.scheduleBlockUpdate(x, y, z, this, getDelayForUpdateByDensity());
 		}
 		
-		type.postTick(world, par2, par3, par4, random);
+		type.postTick(world, x, y, z, random);
 	}
 
 	/**
