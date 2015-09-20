@@ -39,7 +39,7 @@ public class TankProvider implements IWailaDataProvider
 		else
 		{
 			String gasName = I18n.format(tileEntity.getGasTypeStored().getUnlocalizedName() + ".name");
-			double amount = 100.0D * tileEntity.getRelativeGasStored();
+			String amount = String.format("%.1f", 100.0D * tileEntity.getRelativeGasStored());
 			currenttip.add(I18n.format("tile.gf_gasTank.waila.body.filled", gasName, amount));
 		}
 		return currenttip;
