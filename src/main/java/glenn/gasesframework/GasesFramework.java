@@ -223,10 +223,8 @@ public class GasesFramework
 		GameRegistry.registerTileEntity(TileEntityInfiniteGasPump.class, "infiniteGasPump");
 		GameRegistry.registerTileEntity(TileEntityInfiniteGasDrain.class, "infiniteGasDrain");
 		GameRegistry.registerTileEntity(TileEntityGasTransposer.class, "gasTransposer");
-		GameRegistry.registerTileEntity(TileEntityIronGasDynamo.class,
-				"ironGasDynamo");
-		GameRegistry.registerTileEntity(TileEntityWoodGasDynamo.class,
-				"woodGasDynamo");
+		GameRegistry.registerTileEntity(TileEntityIronGasDynamo.class, "ironGasDynamo");
+		GameRegistry.registerTileEntity(TileEntityWoodGasDynamo.class, "woodGasDynamo");
 		
 		EntityRegistry.registerModEntity(EntityDelayedExplosion.class, "delayedGasExplosion", 127, this, 20, 1, false);
 
