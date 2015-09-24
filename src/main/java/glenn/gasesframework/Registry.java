@@ -129,7 +129,7 @@ public class Registry implements IGasesFrameworkRegistry
 				registerBlockReaction((BlockReaction)reaction, gasType);
 			}
 
-			if (reactions instanceof EntityReaction)
+			if (reaction instanceof EntityReaction)
 			{
 				registerEntityReaction((EntityReaction)reaction, gasType);
 			}
