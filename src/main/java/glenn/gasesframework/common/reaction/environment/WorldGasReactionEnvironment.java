@@ -5,7 +5,7 @@ import glenn.gasesframework.api.PartialGasStack;
 import glenn.gasesframework.api.reaction.environment.IGasReactionEnvironment;
 import net.minecraft.world.World;
 
-public class WorldGasReactionEnvironment extends WorldReactionEnvironment implements IGasReactionEnvironment
+public class WorldGasReactionEnvironment extends WorldBlocksReactionEnvironment implements IGasReactionEnvironment
 {
 	public WorldGasReactionEnvironment(World world, int ax, int ay, int az, int bx, int by, int bz)
 	{

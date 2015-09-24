@@ -4,7 +4,7 @@ import glenn.gasesframework.api.reaction.environment.IBlockReactionEnvironment;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 
-public class WorldBlockReactionEnvironment extends WorldReactionEnvironment implements IBlockReactionEnvironment
+public class WorldBlockReactionEnvironment extends WorldBlocksReactionEnvironment implements IBlockReactionEnvironment
 {
 	public WorldBlockReactionEnvironment(World world, int ax, int ay, int az, int bx, int by, int bz)
 	{

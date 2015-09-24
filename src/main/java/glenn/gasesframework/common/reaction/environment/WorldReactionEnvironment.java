@@ -14,17 +14,13 @@ public abstract class WorldReactionEnvironment implements IReactionEnvironment
 {
 	protected final World world;
 	protected final int ax, ay, az;
-	protected final int bx, by, bz;
 
-	public WorldReactionEnvironment(World world, int ax, int ay, int az, int bx, int by, int bz)
+	public WorldReactionEnvironment(World world, int ax, int ay, int az)
 	{
 		this.world = world;
 		this.ax = ax;
 		this.ay = ay;
 		this.az = az;
-		this.bx = bx;
-		this.by = by;
-		this.bz = bz;
 	}
 
 	@Override
@@ -48,24 +44,19 @@ public abstract class WorldReactionEnvironment implements IReactionEnvironment
 	@Override
 	public void dropItem(ItemStack itemstack)
 	{
-		double x = (ax + bx) / 2.0D;
-		double y = (ay + by) / 2.0D;
-		double z = (az + bz) / 2.0D;
-		DVec vec = DVec.randomNormalizedVec(world.rand).scale(0.1D);
+		DVec c = getCenter();
+		DVec v = DVec.randomNormalizedVec(world.rand).scale(0.1D);
 
-		EntityItem entityItem = new EntityItem(world, x, y, z, itemstack);
-		entityItem.addVelocity(vec.x, vec.y, vec.z);
+		EntityItem entityItem = new EntityItem(world, c.x, c.y, c.z, itemstack);
+		entityItem.addVelocity(v.x, v.y, v.z);
 		world.spawnEntityInWorld(entityItem);
 	}
 
 	@Override
 	public void explode(float power, boolean isFlaming, boolean isSmoking)
 	{
-		double x = (ax + bx) / 2.0D;
-		double y = (ay + by) / 2.0D;
-		double z = (az + bz) / 2.0D;
-
-		world.newExplosion(null, x, y, z, power, isFlaming, isSmoking);
+		DVec c = getCenter();
+		world.newExplosion(null, c.x, c.y, c.z, power, isFlaming, isSmoking);
 	}
 
 	@Override
@@ -77,10 +68,9 @@ public abstract class WorldReactionEnvironment implements IReactionEnvironment
 	@Override
 	public void playSound(String name, float volume, float pitch)
 	{
-		double x = (ax + bx) / 2.0D;
-		double y = (ay + by) / 2.0D;
-		double z = (az + bz) / 2.0D;
-
-		world.playSound(x, y, z, name, volume, pitch, false);
+		DVec c = getCenter();
+		world.playSound(c.x, c.y, c.z, name, volume, pitch, false);
 	}
+
+	protected abstract DVec getCenter();
 }
