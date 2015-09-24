@@ -4,6 +4,7 @@ import java.util.Random;
 
 import glenn.gasesframework.api.PartialGasStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 
 /**
  * IReactionEnvironment is an abstractification of an environment where a reaction can happen.
@@ -48,6 +49,12 @@ public interface IReactionEnvironment
 	 * @return
 	 */
 	Random getRandom();
+
+	/**
+	 * Get the world object.
+	 * @return
+	 */
+	World getWorld();
 
 	/**
 	 * Play a sound.

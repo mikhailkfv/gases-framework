@@ -66,6 +66,12 @@ public abstract class WorldReactionEnvironment implements IReactionEnvironment
 	}
 
 	@Override
+	public World getWorld()
+	{
+		return world;
+	}
+
+	@Override
 	public void playSound(String name, float volume, float pitch)
 	{
 		DVec c = getCenter();
