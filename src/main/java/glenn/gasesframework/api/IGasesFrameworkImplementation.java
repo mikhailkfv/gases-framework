@@ -53,6 +53,7 @@ public interface IGasesFrameworkImplementation
 
 	/**
 	 * Place a gas block.
+	 * If the type is air, and volume > 0, air will be placed.
 	 * @param world
 	 * @param x
 	 * @param y
@@ -63,6 +64,7 @@ public interface IGasesFrameworkImplementation
 	
 	/**
 	 * Place a gas block of the specified type with a specific volume ranging from 0 to 16.
+	 * If the type is air, and volume > 0, air will be placed.
 	 * @param world
 	 * @param x
 	 * @param y

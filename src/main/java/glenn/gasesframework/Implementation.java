@@ -246,6 +246,7 @@ public class Implementation implements IGasesFrameworkImplementation
 
 	/**
 	 * Place a gas block.
+	 * If the type is air, and volume > 0, air will be placed.
 	 * @param world
 	 * @param x
 	 * @param y
@@ -260,6 +261,7 @@ public class Implementation implements IGasesFrameworkImplementation
 
 	/**
 	 * Place a gas block of the specified type with a specific volume ranging from 0 to 16.
+	 * If the type is air, and volume > 0, air will be placed.
 	 * @param world
 	 * @param x
 	 * @param y
@@ -273,11 +275,18 @@ public class Implementation implements IGasesFrameworkImplementation
 	{
 		if(volume > 0)
 		{
-			if(volume > 16) volume = 16;
-			BlockGas gasBlock = GasesFramework.registry.getGasBlock(type);
-			if (gasBlock != null)
+			if (type != GasesFrameworkAPI.gasTypeAir)
 			{
-				world.setBlock(x, y, z, gasBlock, 16 - volume, 3);
+				if(volume > 16) volume = 16;
+				BlockGas gasBlock = GasesFramework.registry.getGasBlock(type);
+				if (gasBlock != null)
+				{
+					world.setBlock(x, y, z, gasBlock, 16 - volume, 3);
+				}
+			}
+			else
+			{
+				world.setBlockToAir(x, y, z);
 			}
 		}
 	}
