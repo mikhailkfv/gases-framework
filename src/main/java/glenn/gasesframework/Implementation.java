@@ -339,7 +339,6 @@ public class Implementation implements IGasesFrameworkImplementation
 
 					IGasTransporter receptorBlock = (IGasTransporter)block;
 					receptorBlock = receptorBlock.setCarriedType(world, x, y, z, type);
-					Block kek = world.getBlock(x, y, z);
 					receptorBlock.handlePressure(world, random, x, y, z, end.branch.depth + 1);
 
 
