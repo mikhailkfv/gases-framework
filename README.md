@@ -24,4 +24,4 @@ To use the Gases Framework in your mod, you must install the [Gases Framework AP
 
 ## Making a development build ##
 
-* Run *gradlew jar* in your workspace. The development build will be placed in the /build/libs folder in your workspace.
+* Run *gradlew buildDev* in your workspace. The development build will be placed in the /build/libs folder in your workspace.
