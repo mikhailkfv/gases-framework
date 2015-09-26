@@ -24,9 +24,9 @@ public abstract class GasTypeFilterMulti extends GasTypeFilter
 			mutableFilterTypes.add(filterTypes[i]);
 		}
 		
-		this.filterTypes = Collections.unmodifiableSet(Collections.unmodifiableSet(mutableFilterTypes));
+		this.filterTypes = Collections.unmodifiableSet(mutableFilterTypes);
 	}
-	
+
 	/**
 	 * Get an immutable set of gas types used by this filter, be it excluding or including.
 	 * @return An immutable set of gas types used by this filter
