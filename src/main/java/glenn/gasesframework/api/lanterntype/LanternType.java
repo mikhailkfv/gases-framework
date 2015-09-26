@@ -2,8 +2,6 @@ package glenn.gasesframework.api.lanterntype;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.ItemKey;
-
-import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 
 public class LanternType
@@ -40,12 +38,12 @@ public class LanternType
 
 	/**
 	 * Creates a new lantern type. Lantern types must be {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerLanternType(LanternType) registered}.
-	 * @param name - An unique name for this lantern type.
-	 * @param lightLevel - The level of light emitted by this lantern type in an interval from 0.0f to 1.0f.
-	 * @param textureName - The name of the texture displayed inside the lantern.
-	 * @param itemOut - The item given from this lantern. NOTE: Not the necessarily same as the item placed in the lantern.
-	 * @param expirationLanternType - The lantern type this lantern will transform into if it expires. Can be null.
-	 * @param expirationRate - The rate at which this lantern will expire. Smaller numbers mean quicker expiration. If <= 0, this lantern type will never expire.
+	 * @param name An unique name for this lantern type
+	 * @param lightLevel The level of light emitted by this lantern type in an interval from 0.0f to 1.0f
+	 * @param textureName The name of the texture displayed inside the lantern
+	 * @param itemOut The item given from this lantern. NOTE: Not the necessarily same as the item placed in the lantern
+	 * @param expirationLanternType The lantern type this lantern will transform into if it expires. Can be null
+	 * @param expirationRate The rate at which this lantern will expire. Smaller numbers mean quicker expiration. If <= 0, this lantern type will never expire
 	 */
 	public LanternType(String name, float lightLevel, String textureName, ItemKey itemOut, LanternType expirationLanternType, int expirationRate)
 	{
@@ -57,6 +55,11 @@ public class LanternType
 		this.expirationRate = expirationRate;
 	}
 
+	/**
+	 * Set the creative tab this lantern type is bound to.
+	 * @param creativeTab The creative tab
+	 * @return this
+	 */
 	public LanternType setCreativeTab(CreativeTabs creativeTab)
 	{
 		this.creativeTab = creativeTab;
@@ -66,14 +69,18 @@ public class LanternType
 	/**
 	 * Sets the item to treat the item given from this lantern type as something used to create a lantern of this type.
 	 * This is common for non-gas lanterns.
-	 * @return
+	 * @return this
 	 */
 	public LanternType setInOut()
 	{
-		GasesFrameworkAPI.registry.registerLanternRecipe(this, itemOut);
+		GasesFrameworkAPI.registry.registerLanternInput(this, itemOut);
 		return this;
 	}
 
+	/**
+	 * Does this lantern type expire?
+	 * @return True if this lantern type expires
+	 */
 	public boolean expires()
 	{
 		return expirationRate > 0;
@@ -81,7 +88,7 @@ public class LanternType
 	
 	/**
 	 * Get the unlocalized name of the lantern.
-	 * @return "gf_lantern." + name;
+	 * @return "gf_lantern." + {@link #name};
 	 */
 	public String getUnlocalizedName()
 	{

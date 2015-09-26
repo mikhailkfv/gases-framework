@@ -3,6 +3,9 @@ package glenn.gasesframework.api;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+/**
+ * An utility class for mapping and matching items.
+ */
 public class ItemKey
 {
 	public final Item item;

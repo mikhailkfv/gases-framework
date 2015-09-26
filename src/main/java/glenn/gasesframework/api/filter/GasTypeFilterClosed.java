@@ -2,7 +2,6 @@ package glenn.gasesframework.api.filter;
 
 /**
  * A filter that does not accept any gas type except air or null.
- * @author Erlend
  */
 public class GasTypeFilterClosed extends GasTypeFilterSimple
 {

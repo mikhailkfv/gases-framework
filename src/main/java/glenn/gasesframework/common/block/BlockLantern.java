@@ -2,7 +2,6 @@ package glenn.gasesframework.common.block;
 
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.Combustibility;
-import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.ItemKey;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.gastype.GasType;
@@ -96,7 +95,8 @@ public class BlockLantern extends Block implements IGasReceptor
     	ItemStack heldItem = entityPlayer.getCurrentEquippedItem();
     	ItemKey itemIn = new ItemKey(heldItem);
     	
-    	LanternType replacementType = GasesFramework.registry.getLanternTypeByItemIn(itemIn);
+    	LanternType replacementType = GasesFramework.registry.getLanternTypeByInput(
+				itemIn);
     	
     	if(replacementType == null)
     	{

@@ -19,12 +19,12 @@ public interface IRenderedGasTypeFilter
 {
 	/**
 	 * Get the filter to be rendered on this side of the block. If null, no filter will be rendered.
-	 * @param blockAccess
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param side - Local side
-	 * @return
+	 * @param blockAccess The block access
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param z Z coordinate
+	 * @param side The local side
+	 * @return The filter that is to be rendered on this side, or null
 	 */
 	GasTypeFilter getRenderedFilter(IBlockAccess blockAccess, int x, int y, int z, ForgeDirection side);
 	

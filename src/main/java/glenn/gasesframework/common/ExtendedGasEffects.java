@@ -2,7 +2,7 @@ package glenn.gasesframework.common;
 
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
-import glenn.gasesframework.api.block.MaterialGas;
+import glenn.gasesframework.api.MaterialGas;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.item.IGasEffectProtector;
 import glenn.gasesframework.common.block.BlockGas;
@@ -14,10 +14,7 @@ import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;

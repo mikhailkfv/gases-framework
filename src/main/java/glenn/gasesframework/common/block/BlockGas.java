@@ -2,15 +2,13 @@ package glenn.gasesframework.common.block;
 
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.Combustibility;
-import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.PartialGasStack;
 import glenn.gasesframework.api.block.ISample;
-import glenn.gasesframework.api.block.MaterialGas;
+import glenn.gasesframework.api.MaterialGas;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.reaction.BlockReaction;
 import glenn.gasesframework.api.reaction.EntityReaction;
 import glenn.gasesframework.api.reaction.GasReaction;
-import glenn.gasesframework.api.reaction.Reaction;
 import glenn.gasesframework.client.render.RenderBlockGas;
 
 import java.util.Random;
@@ -21,11 +19,7 @@ import glenn.gasesframework.common.reaction.environment.WorldEntityReactionEnvir
 import glenn.gasesframework.common.reaction.environment.WorldGasReactionEnvironment;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -83,9 +77,9 @@ public class BlockGas extends Block implements ISample
 	@Override
 	public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int i, int j, int k)
 	{
-		int metadata = world.getBlockMetadata(i, j, k);
-		double minY = type.getMinY(world, i, j, k, metadata);
-		double maxY = type.getMaxY(world, i, j, k, metadata);
+		int volume = 16 - world.getBlockMetadata(i, j, k);
+		double minY = type.getMinY(world, i, j, k, volume);
+		double maxY = type.getMaxY(world, i, j, k, volume);
 
 		//return AxisAlignedBB.getAABBPool().getAABB((double)i, (double)j + minY, (double)k, (double)i + 1.0D, (double)j + maxY, (double)k + 1.0D);
 		return AxisAlignedBB.getBoundingBox((double)i, (double)j + minY, (double)k, (double)i + 1.0D, (double)j + maxY, (double)k + 1.0D);
@@ -167,7 +161,7 @@ public class BlockGas extends Block implements ISample
 		int yDirection = side == 0 ? 1 : (side == 1 ? -1 : 0);
 		int zDirection = side == 2 ? 1 : (side == 3 ? -1 : 0);
 		
-		int metadata = blockAccess.getBlockMetadata(i, j, k);
+		int volume = 16 - blockAccess.getBlockMetadata(i, j, k);
 		Block directionBlock = blockAccess.getBlock(i + xDirection, j + yDirection, k + zDirection);
 		int directionBlockMetadata = blockAccess.getBlockMetadata(i + xDirection, j + yDirection, k + zDirection);
 		
@@ -177,7 +171,7 @@ public class BlockGas extends Block implements ISample
 			{
 				double maxY = ((BlockGas)directionBlock).type.getMaxY(blockAccess, i, j, k, directionBlockMetadata);
 				
-				return maxY - 1.0D != type.getMinY(blockAccess, i, j, k, metadata);
+				return maxY - 1.0D != type.getMinY(blockAccess, i, j, k, volume);
 			} else
 			{
 				return true;
@@ -189,7 +183,7 @@ public class BlockGas extends Block implements ISample
 			{
 				double minY = ((BlockGas)directionBlock).type.getMinY(blockAccess, i, j, k, directionBlockMetadata);
 				
-				return minY != type.getMaxY(blockAccess, i, j, k, metadata) - 1.0D ;
+				return minY != type.getMaxY(blockAccess, i, j, k, volume) - 1.0D ;
 			} else
 			{
 				return true;
@@ -485,7 +479,7 @@ public class BlockGas extends Block implements ISample
 				Block direction2Block = world.getBlock(x + xDirection, y + yDirection, z + zDirection);
 				int direction2BlockMetadata = 16 - world.getBlockMetadata(x + xDirection, y + yDirection, z + zDirection);
 				
-				if(type.canFlowHere(prevMetadata, world, x + xDirection, y + yDirection, z + zDirection))
+				if(type.canFlowHere(world, x + xDirection, y + yDirection, z + zDirection, prevMetadata))
 				{
 					direction2BlockMetadata = -1;
 					totalFlow += 8;
@@ -578,7 +572,7 @@ public class BlockGas extends Block implements ISample
 		Block reverseDirectionBlock = world.getBlock(x, y - yDirection, z);
 		int reverseDirectionBlockMetadata = 16 - world.getBlockMetadata(x, y - yDirection, z);
 		
-		if(type.canFlowHere(metadata, world, x, y + yDirection, z))
+		if(type.canFlowHere(world, x, y + yDirection, z, metadata))
 		{
 			//If the block in the direction can be flowed into forcefully, it will only move in this direction.
 			if(metadata > 0)
@@ -644,7 +638,7 @@ public class BlockGas extends Block implements ISample
 				Block direction2Block = world.getBlock(x + xDirection, y, z + zDirection);
 				int direction2BlockMetadata = 16 - world.getBlockMetadata(x + xDirection, y, z + zDirection);
 
-				if(type.canFlowHere(prevMetadata, world, x + xDirection, y, z + zDirection))
+				if(type.canFlowHere(world, x + xDirection, y, z + zDirection, prevMetadata))
 				{
 					direction2BlockMetadata = -1;
 					surroundingAirBlocks++;
@@ -698,22 +692,22 @@ public class BlockGas extends Block implements ISample
 					int x0 = x + ringsX[i];
 					int z0 = z + ringsZ[i];
 
-					if(type.canFlowHere(prevMetadata, world, x0, y, z0))
+					if(type.canFlowHere(world, x0, y, z0, prevMetadata))
 					{
 						Block direction3Block = world.getBlock(x0, y + yDirection, z0);
 
-						if(type.canFlowHere(prevMetadata, world, x0, y + yDirection, z0) || (direction3Block == this && metadata - world.getBlockMetadata(x0, y + yDirection, z0) <= 0))
+						if(type.canFlowHere(world, x0, y + yDirection, z0, prevMetadata) || (direction3Block == this && metadata - world.getBlockMetadata(x0, y + yDirection, z0) <= 0))
 						{
 							if(i >= 8)
 							{
-								if(!type.canFlowHere(prevMetadata, world, x + movesX[i], y, z + movesZ[i]))
+								if(!type.canFlowHere(world, x + movesX[i], y, z + movesZ[i], prevMetadata))
 								{
 									continue;
 								}
 							}
 							else if(i >= 4)
 							{
-								if(!type.canFlowHere(prevMetadata, world, x + movesX[i], y, z) && !type.canFlowHere(prevMetadata, world, x, y, z + movesZ[i]))
+								if(!type.canFlowHere(world, x + movesX[i], y, z, prevMetadata) && !type.canFlowHere(world, x, y, z + movesZ[i], prevMetadata))
 								{
 									continue;
 								}

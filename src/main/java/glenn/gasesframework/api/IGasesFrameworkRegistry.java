@@ -19,35 +19,37 @@ public interface IGasesFrameworkRegistry
 	/**
 	 * Register a furnace recipe that only applies to gas furnaces.
 	 * A gas furnace recipe will always be prioritized before an ordinary furnace recipe.
-	 * @param ingredient - The item that can be smelted. Can be more than 1.
-	 * @param result - The result of the smelting action.
-	 * @param time - The amount of time it takes to smelt. Default is 200.
-	 * @param exp - The amount of exp given.
+	 * @param ingredient The item that can be smelted. Can be more than 1
+	 * @param result The result of the smelting action
+	 * @param time The amount of time it takes to smelt. Default is 200
+	 * @param exp The amount of exp given
 	 */
 	void registerGasFurnaceRecipe(ItemStack ingredient, ItemStack result, int time, int exp);
 
+
+
 	/**
 	 * Returns true if the block is a gas igniting block, e.g. a block which can cause a gas to combust or explode.
-	 * @param block
-	 * @return
+	 * @param block The block in question
+	 * @return True if the block is an ignition block
 	 */
 	boolean isIgnitionBlock(Block block);
 
 	/**
 	 * Register a block as a gas igniting block, e.g. a block which can cause a gas to combust or explode.
-	 * @param block
+	 * @param block The block
 	 */
 	void registerIgnitionBlock(Block block);
 
 	/**
 	 * Unregister a block as a gas igniting block, e.g. a block which can cause a gas to combust or explode.
-	 * @param block
+	 * @param block The block
 	 */
 	void unregisterIgnitionBlock(Block block);
 
 	/**
 	 * Get an array of all gas igniting blocks, e.g. blocks which can cause a gas to combust or explode.
-	 * @return
+	 * @return A modifiable array with all registered ignition blocks
 	 */
 	Block[] getRegisteredIgnitionBlocks();
 
@@ -55,26 +57,26 @@ public interface IGasesFrameworkRegistry
 
 	/**
 	 * Returns true if the item is a gas igniting item, e.g. an item which can cause a gas to combust or explode when held, equipped or dropped.
-	 * @param item
-	 * @return
+	 * @param item The item in question
+	 * @return True if the item is an ignition item
 	 */
 	boolean isIgnitionItem(Item item);
 
 	/**
 	 * Register an item as a gas igniting item, e.g. an item which can cause a gas to combust or explode when held, equipped or dropped.
-	 * @param item
+	 * @param item The item
 	 */
 	void registerIgnitionItem(Item item);
 
 	/**
 	 * Unregister an item as a gas igniting item, e.g. an item which can cause a gas to combust or explode when held, equipped or dropped.
-	 * @param item
+	 * @param item The item
 	 */
 	void unregisterIgnitionItem(Item item);
 
 	/**
 	 * Get an array of all gas igniting items, e.g. items which can cause a gas to combust or explode when held, equipped or dropped.
-	 * @return
+	 * @return A modifiable array with all registered ignition items
 	 */
 	Item[] getRegisteredIgnitionItems();
 
@@ -82,20 +84,21 @@ public interface IGasesFrameworkRegistry
 
 	/**
 	 * Register a reaction for a set of gas types.
-	 * @param reaction
+	 * @param reaction The reaction to register to the gas types
+	 * @param gasTypes The gas types to register the reaction to
 	 */
 	void registerReaction(Reaction reaction, GasType... gasTypes);
 
 	/**
 	 * Is this reaction registered for this gas type?
-	 * @param reaction
-	 * @return
+	 * @param reaction The reaction
+	 * @return True if the reaction is registered to the gas type
 	 */
 	boolean isReactionRegistered(Reaction reaction, GasType gasType);
 
 	/**
 	 * Get an array of all registered reactions for a gas type.
-	 * @return
+	 * @return A modifiable array with all reactions registered for the gas type
 	 */
 	Reaction[] getRegisteredReactions(GasType gasType);
 
@@ -103,35 +106,35 @@ public interface IGasesFrameworkRegistry
 
 	/**
 	 * Get a gas type by its ID.
-	 * @param id
-	 * @return
+	 * @param id The gas ID
+	 * @return A gas type with a matching gas ID, or null
 	 */
 	GasType getGasTypeByID(int id);
 
 	/**
 	 * Get a gas type by its name.
-	 * @param name
-	 * @return
+	 * @param name The gas name
+	 * @return A gas type with a matching name, or null
 	 */
 	GasType getGasTypeByName(String name);
 
 	/**
 	 * Registers a gas type. This involves creating and registering the blocks necessary for a gas type.
-	 * @param type
-	 * @return The gas block registered for this type, if any.
+	 * Gas types must be registered during PreInit.
+	 * @param type The gas type
 	 */
 	void registerGasType(GasType type);
 
 	/**
 	 * Is this gas type registered?
-	 * @param type
-	 * @return
+	 * @param type The gas type
+	 * @return True if the gas type is registered
 	 */
 	boolean isGasTypeRegistered(GasType type);
 
 	/**
 	 * Get an array of all registered gas types.
-	 * @return
+	 * @return A modifiable array with all registered gas types
 	 */
 	GasType[] getRegisteredGasTypes();
 
@@ -139,43 +142,42 @@ public interface IGasesFrameworkRegistry
 
 	/**
 	 * Get a lantern type by its name.
-	 * @param name
-	 * @return
+	 * @param name The lantern name
+	 * @return A lantern type with a matching name, or null
 	 */
 	LanternType getLanternTypeByName(String name);
 
 	/**
 	 * Get a lantern type by its item input.
-	 * @param itemKey
-	 * @return
+	 * @param itemKey The input item
+	 * @return A lantern type for the item input, or null
 	 */
-	LanternType getLanternTypeByItemIn(ItemKey itemKey);
+	LanternType getLanternTypeByInput(ItemKey itemKey);
 
 	/**
 	 * Registers a lantern type. This involves creating and registering the blocks necessary for a lantern type.
-	 * @param type
-	 * @return The lantern block registered for this type, if any.
+	 * Lantern types must be registered during PreInit.
+	 * @param type The lantern type
 	 */
 	void registerLanternType(LanternType type);
 
 	/**
 	 * Is this lantern type registered?
-	 * @param type
-	 * @return
+	 * @param type The lantern type
+	 * @return True if the lantern type is registered
 	 */
 	boolean isLanternTypeRegistered(LanternType type);
 
 	/**
-	 * Register a recipe for a lantern type. This will override conflicting recipes.
-	 * The lantern type can created by right clicking a lantern with the itemKey or by putting an empty lantern in a crafting grid together with the itemKey.
-	 * @param type
-	 * @param itemKey
+	 * Register a recipe for a lantern type. This will override conflicting registered inputs.
+	 * @param type The lantern type
+	 * @param itemKey The item that can be put in the lantern
 	 */
-	void registerLanternRecipe(LanternType type, ItemKey itemKey);
+	void registerLanternInput(LanternType type, ItemKey itemKey);
 
 	/**
-	 * Get an array of all registered lanterns.
-	 * @return
+	 * Get an array of all registered lantern types.
+	 * @return A modifiable array with all registered lantern types
 	 */
 	LanternType[] getRegisteredLanternTypes();
 
@@ -183,30 +185,30 @@ public interface IGasesFrameworkRegistry
 
 	/**
 	 * Registers a gas world generator for generation in certain dimensions.
-	 * @param type
+	 * @param type The world gen type to register
 	 */
 	void registerGasWorldGenType(GasWorldGenType type, String... dimensions);
 
 	/**
 	 * Is this gas world gen type registered for this dimension?
-	 * @param type
-	 * @param dimension
-	 * @return
+	 * @param type The world gen type in question
+	 * @param dimension The dimension in question
+	 * @return True if this gas world gen type is registered for this dimension
 	 */
 	boolean isGasWorldGenTypeRegistered(GasWorldGenType type, String dimension);
 
 
 
 	/**
-	 * Registers a gas transposer environment.
-	 * @param handler
+	 * Registers a gas transposer handler.
+	 * @param handler The gas transposer handler
 	 */
 	void registerGasTransposerHandler(IGasTransposerHandler handler);
 
 	/**
-	 * Is this gas transposer environment registered?
-	 * @param handler
-	 * @return
+	 * Is this gas transposer handler registered?
+	 * @param handler The gas transposer handler in question
+	 * @return True if this gas transposer handler is registered
 	 */
 	boolean isGasTransposerHandlerRegistered(IGasTransposerHandler handler);
 
@@ -214,34 +216,35 @@ public interface IGasesFrameworkRegistry
 
 	/**
 	 * Get a pipe type by its ID.
-	 * @param id
-	 * @return
+	 * @param id The pipe ID
+	 * @return A pipe with a matching ID, or null
 	 */
 	PipeType getPipeTypeByID(int id);
 
 	/**
 	 * Get a pipe type by its name.
-	 * @param name
-	 * @return
+	 * @param name The pipe name
+	 * @return A pipe with a matching ID, or null
 	 */
 	PipeType getPipeTypeByName(String name);
 
 	/**
 	 * Registers a pipe type.
-	 * @param type
+	 * Pipe types must be registered during PreInit.
+	 * @param type The pipe type
 	 */
 	void registerPipeType(PipeType type);
 
 	/**
 	 * Is this pipe type registered?
-	 * @param type
-	 * @return
+	 * @param type The pipe type in question
+	 * @return True if the pipe type is registered
 	 */
 	boolean isPipeTypeRegistered(PipeType type);
 
 	/**
 	 * Get an array of all registered pipe types.
-	 * @return
+	 * @return A modifiable array of all registered pipe types
 	 */
 	PipeType[] getRegisteredPipeTypes();
 }

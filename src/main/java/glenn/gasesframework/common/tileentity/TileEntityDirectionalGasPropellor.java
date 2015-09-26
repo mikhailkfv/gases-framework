@@ -10,7 +10,6 @@ import glenn.gasesframework.api.filter.GasTypeFilter;
 import glenn.gasesframework.api.filter.GasTypeFilterOpen;
 import glenn.gasesframework.api.filter.GasTypeFilterSimple;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.common.block.BlockDirectionalGasPropellor;
 import glenn.moddingutils.blockrotation.BlockRotation;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -146,7 +145,8 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
 				IGasSource gasSource = (IGasSource)directionBlock;
 				if(acceptsType(gasSource.getGasTypeFromSide(worldObj, x1, y1, z1, direction.getOpposite())))
 				{
-					return gasSource.takeGasTypeFromSide(worldObj, x1, y1, z1, direction.getOpposite());
+					return gasSource.extractGasTypeFromSide(worldObj, x1, y1,
+							z1, direction.getOpposite());
 				}
 			}
 		}
@@ -166,7 +166,8 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
     {
     	IGasPropellor propellor = (IGasPropellor)getBlockType();
     	int pressure = propellor.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, direction);
-    	return GasesFramework.implementation.pushGas(worldObj, worldObj.rand, x, y, z, containedType, direction, pressure);
+    	return GasesFramework.implementation.tryPushGas(worldObj, worldObj.rand,
+				x, y, z, containedType, direction, pressure);
     }
     
     /**

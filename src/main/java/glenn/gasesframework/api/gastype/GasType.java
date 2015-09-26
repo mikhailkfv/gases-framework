@@ -5,16 +5,11 @@ import glenn.gasesframework.api.ExtendedGasEffectsBase.EffectType;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 
 import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -34,7 +29,7 @@ public class GasType
 	 */
 	public final String name;
 	/**
-	 * The color of this gas type, represented as an RGB hex.
+	 * The color of this gas type, represented as RGBA hex.
 	 */
 	public final int color;
 	/**
@@ -77,14 +72,14 @@ public class GasType
 	 */
 	public ResourceLocation overlayImage = GasesFrameworkAPI.gasOverlayImage;
 	/**
-	 * The name of the texture that will be used on the gas block. Default "gasesframework:gas"
+	 * The name of the texture that will be used on the gas block. Default "gasesframework:gas".
 	 */
 	public String textureName = "gasesframework:gas";
 
 	/**
-	 * Get the ID of a gas type with support for null. If null, this returns -1.
-	 * @param gasType
-	 * @return
+	 * Get the ID of a gas type with support for null.
+	 * @param gasType The gas type
+	 * @return The ID of the gas type, or -1 if null
 	 */
 	public static int getGasID(GasType gasType)
 	{
@@ -92,17 +87,17 @@ public class GasType
 	}
 	
 	/**
-	 * Creates a new gas type. Gas types must be {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerGasType(GasType) registered}.
-	 * @param isIndustrial - Can this gas be used in pipe systems?
-	 * @param gasID - The ID of this gas type. Must be unique. Limited to 0-255. Consult the Gases Framework documentation for unoccupied IDs.
-	 * @param name - An unique name for the gas type.
-	 * @param color - An RGBA representation of the color to be used by this gas.
-	 * @param opacity - Higher values will increase the opacity of this gas. This will also affect how well light passes through it.
-	 * @param density - A value determining how dense the gas will be relative to air.
-	 * <ul><li><b>density > 0</b> Will produce a falling gas. Greater values means the gas will move faster.</li>
-	 * <li><b>density < 0</b> Will produce a rising gas. Lower values means the gas will move faster.</li>
-	 * <li><b>density = 0</b> Will produce a floating gas which will spread in all directions.</li></ul>
-	 * @param combustibility - The grade of combustibility of this gas type.
+	 * Create a new gas type. Gas types must be {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerGasType(GasType) registered}.
+	 * @param isIndustrial Can this gas be used in pipe systems?
+	 * @param gasID The ID of this gas type. Must be unique. Limited to 0-255. Consult the Gases Framework documentation for unoccupied IDs
+	 * @param name An unique name for the gas type
+	 * @param color An RGBA hex representation of the color to be used by this gas
+	 * @param opacity Higher values will increase the opacity of this gas. This will also affect how well light passes through it
+	 * @param density A value determining how dense the gas will be relative to air
+	 * <ul><li><b>density > 0</b> Will produce a falling gas. Greater values means the gas will fall faster</li>
+	 * <li><b>density < 0</b> Will produce a rising gas. Lower values means the gas will rise faster</li>
+	 * <li><b>density = 0</b> Will produce a floating gas which will spread in all directions</li></ul>
+	 * @param combustibility The grade of combustibility of this gas type
 	 */
 	public GasType(boolean isIndustrial, int gasID, String name, int color, int opacity, int density, Combustibility combustibility)
 	{
@@ -117,21 +112,21 @@ public class GasType
 	
 	/**
 	 * Sets the rate of a gas effect on this gas type.
-	 * @param effectType - The effect type which is to be added to the gas.
-	 * @param value - The rate at which this effect will be applied. Greater numbers trigger the effects more quickly.
-	 * @return
+	 * @param effectType The effect type which is to be added to the gas
+	 * @param value The rate at which this effect will be applied. Greater numbers trigger the effects more quickly
+	 * @return this
 	 */
 	public GasType setEffectRate(EffectType effectType, int value)
     {
-		this.effectRates.put(effectType, Integer.valueOf(value));
+		this.effectRates.put(effectType, value);
     	
     	return this;
     }
 
 	/**
-	 * Get the rate of a gas effect on this gas type.
-	 * @param effectType
-	 * @return
+	 * Get the rate of a gas effect on this gas type. All effect rates are 0 by default.
+	 * @param effectType The effect type
+	 * @return The rate of the effect
 	 */
 	public int getEffectRate(EffectType effectType)
 	{
@@ -148,8 +143,8 @@ public class GasType
 
 	/**
 	 * Set how quickly the gas can dissipate. Higher values will decrease dissipation speed.
-	 * @param dissipationRate
-	 * @return
+	 * @param dissipationRate The dissipation rate
+	 * @return this
 	 */
 	public GasType setDissipationRate(int dissipationRate)
     {
@@ -159,8 +154,8 @@ public class GasType
 
 	/**
 	 * Set the level of light this gas gives off from 0.0 to 1.0.
-	 * @param lightLevel
-	 * @return
+	 * @param lightLevel The light level
+	 * @return this
 	 */
 	public GasType setLightLevel(float lightLevel)
 	{
@@ -168,6 +163,11 @@ public class GasType
 		return this;
 	}
 
+	/**
+	 * Set the creative tab this gas is bound to.
+	 * @param creativeTab The creative tab
+	 * @return this
+	 */
 	public GasType setCreativeTab(CreativeTabs creativeTab)
 	{
 		this.creativeTab = creativeTab;
@@ -176,8 +176,8 @@ public class GasType
 	
 	/**
 	 * Set the texture name of the gas in block form.
-	 * @param textureName
-	 * @return
+	 * @param textureName The texture name
+	 * @return this
 	 */
 	public GasType setTextureName(String textureName)
 	{
@@ -187,8 +187,9 @@ public class GasType
 	
 	/**
 	 * Set the overlay image to be rendered when the player is inside the gas.
-	 * @param overlayImage
-	 * @return
+	 * Common overlay images are found in {@link glenn.gasesframework.api.GasesFrameworkAPI GasesFrameworkAPI}.
+	 * @param overlayImage The overlay image
+	 * @return this
 	 */
 	public GasType setOverlayImage(ResourceLocation overlayImage)
 	{
@@ -200,6 +201,8 @@ public class GasType
 	 * Set whether this gas type, when flowing, will destroy loose blocks such as redstone and torches.
 	 * If true, the gas can destroy blocks with materials on the condition {@link net.minecraft.block.material.Material#getMaterialMobility() getMaterialMobility()} == 1. 
 	 * If false, the gas can destroy blocks with materials on the condition {@link net.minecraft.block.material.Material#isReplaceable() isReplaceable()}.
+	 * @param destroyLooseBlocks Destroy loose blocks
+	 * @return this
 	 */
 	public GasType setDestroyLooseBlocks(boolean destroyLooseBlocks)
 	{
@@ -210,7 +213,7 @@ public class GasType
 	/**
 	 * Apply effects onto an entity when breathed. A gas is breathed when the player runs out of air in their hidden air meter.
 	 * How quickly this happens, and how frequently this method is called depends on this gas type's rate of suffocation.
-	 * @param entity
+	 * @param entity The entity that is breathing the gas
 	 */
 	public void onBreathed(EntityLivingBase entity)
 	{
@@ -219,31 +222,28 @@ public class GasType
 	
 	/**
 	 * Called when a gas block of this type dissipates.
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
+	 * @param world The world object
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param z Z coordinate
 	 */
 	public void onDissipated(World world, int x, int y, int z)
-	{
-		
-	}
+	{}
 	
 	/**
 	 * Called randomly on the client when the player is around a gas block of this type.
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param random
+	 * @param world The world object
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param z Z coordinate
+	 * @param random The random object
 	 */
 	public void randomDisplayTick(World world, int x, int y, int z, Random random)
-	{
-		
-	}
+	{}
 	
 	/**
 	 * Is this gas visible?
+	 * @return True if this gas is visible
 	 */
 	public boolean isVisible()
 	{
@@ -252,14 +252,14 @@ public class GasType
 	
 	/**
      * Get the relative Y coordinate of the bottom side of the gas block.
-     * @param blockAccess
-     * @param x
-     * @param y
-     * @param z
-     * @param metadata
-     * @return
+     * @param blockAccess The block access
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param volume The volume of the gas block
+     * @return The relative minimum Y of the gas block
      */
-	public double getMinY(IBlockAccess blockAccess, int x, int y, int z, int metadata)
+	public double getMinY(IBlockAccess blockAccess, int x, int y, int z, int volume)
     {
 		if(density > 0)
     	{
@@ -267,7 +267,7 @@ public class GasType
     	}
     	else if(density < 0)
     	{
-    		return (double)metadata / 16.0D;
+    		return 1.0D - volume / 16.0D;
     	}
     	else
     	{
@@ -276,25 +276,25 @@ public class GasType
     			return 0.0D;
     		}
     		boolean b = GasesFrameworkAPI.implementation.getGasType(blockAccess, x, y + 1, z) == this;
-    		double d = (0.5D - (double)(16 - metadata) / 8.0D) * (b ? 2.0D : 1.0D);
+    		double d = (0.5D - volume / 8.0D) * (b ? 2.0D : 1.0D);
     		return d < 0.0D ? 0.0D : d;
     	}
     }
 	
 	/**
      * Get the relative Y coordinate of the bottom side of the gas block.
-     * @param blockAccess
-     * @param x
-     * @param y
-     * @param z
-     * @param metadata
-     * @return
+     * @param blockAccess The block access
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param volume The volume of the gas block
+     * @return The relative maximum Y of the gas block
      */
-	public double getMaxY(IBlockAccess blockAccess, int x, int y, int z, int metadata)
+	public double getMaxY(IBlockAccess blockAccess, int x, int y, int z, int volume)
     {
 		if(density > 0)
     	{
-    		return 1.0D - (double)metadata / 16.0D;
+    		return volume / 16.0D;
     	}
     	else if(density < 0)
     	{
@@ -307,17 +307,17 @@ public class GasType
     			return 1.0D;
     		}
     		boolean b = GasesFrameworkAPI.implementation.getGasType(blockAccess, x, y - 1, z) == this;
-    		double d = 1.0D - (0.5D - (double)(16 - metadata) / 8.0D) * (b ? 2.0D : 1.0D);
+    		double d = 1.0D - (0.5D - volume / 8.0D) * (b ? 2.0D : 1.0D);
     		return d > 1.0D ? 1.0D : d;
     	}
     }
 	
 	/**
 	 * Can a gas block of type 'type' forcefully flow into this type of gas?
-	 * @param thisVolume - The volume of this gas block.
-	 * @param type - The type of gas attempting to flow into this one.
-	 * @param otherVolume - The volume of the other gas block.
-	 * @return
+	 * @param thisVolume The volume of this gas block
+	 * @param type The type of gas attempting to flow into this one
+	 * @param otherVolume The volume of the other gas block
+	 * @return True if the other gas can forcefully flow into this
 	 */
 	public boolean canBeDestroyedBy(int thisVolume, GasType type, int otherVolume)
 	{
@@ -325,20 +325,20 @@ public class GasType
 	}
 	
 	/**
-	 * Can this gas type flow to this coordinate?
-	 * @param thisVolume - The volume of this gas block.
-	 * @param world
-	 * @param x - The X coordinate this gas can flow to.
-	 * @param y - The Y coordinate this gas can flow to.
-	 * @param z - The z coordinate this gas can flow to.
-	 * @return
+	 * Can this gas flow to this coordinate?
+	 * @param world The world object
+	 * @param x The X coordinate this gas can flow to
+	 * @param y The Y coordinate this gas can flow to
+	 * @param z The z coordinate this gas can flow to
+	 * @param volume The volume of this gas block
+	 * @return True if the gas can flow to the coordinate
 	 */
-	public boolean canFlowHere(int thisVolume, World world, int x, int y, int z)
+	public boolean canFlowHere(World world, int x, int y, int z, int volume)
 	{
 		GasType otherGasType = GasesFrameworkAPI.implementation.getGasType(world, x, y, z);
 		if(otherGasType != null)
 		{
-			return otherGasType.canBeDestroyedBy(GasesFrameworkAPI.implementation.getGasVolume(world, x, y, z), this, thisVolume);
+			return otherGasType.canBeDestroyedBy(GasesFrameworkAPI.implementation.getGasVolume(world, x, y, z), this, volume);
 		}
 		else
 		{
@@ -356,11 +356,11 @@ public class GasType
 	
 	/**
 	 * Get the dissipation of a gas. This triggers every time the gas block ticks. This is affected by the {@link #dissipationRate} of the GasType.
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param random
+	 * @param world The world object
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param z Z coordinate
+	 * @param random The random object
 	 * @return
 	 */
     public int getDissipation(World world, int x, int y, int z, Random random)
@@ -370,38 +370,34 @@ public class GasType
     
     /**
      * Called before a gas block of this type ticks.
-     * @param world
-     * @param x
-     * @param y
-     * @param z
-     * @param random
+     * @param world The world object
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param random The random object
      */
     public void preTick(World world, int x, int y, int z, Random random)
-    {
-    	
-    }
+    {}
     
     /**
      * Called after a gas block of this type ticks.
-     * @param world
-     * @param x
-     * @param y
-     * @param z
-     * @param random
+     * @param world The world object
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param random The random object
      */
     public void postTick(World world, int x, int y, int z, Random random)
-    {
-    	
-    }
+    {}
     
     /**
-     * Called at the end of the gas block tick. If this returns true, a new tick is guaranteed.
-     * @param world
-     * @param x
-     * @param y
-     * @param z
-     * @param random
-     * @return
+     * Called at the end of the gas block tick. If true is returned, a new tick will happen.
+     * @param world The world object
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param random The random object
+     * @return True if another tick is needed
      */
     public boolean requiresNewTick(World world, int x, int y, int z, Random random)
     {
@@ -409,8 +405,8 @@ public class GasType
     }
 	
 	/**
-	 * Get the overlay image to be renderer when the player is inside the gas.
-	 * @return
+	 * Get the overlay image to be rendered when the player is inside the gas.
+	 * @return The overlay image
 	 */
 	public ResourceLocation getOverlayImage()
 	{
@@ -419,7 +415,7 @@ public class GasType
 	
 	/**
 	 * Get the unlocalized name of the gas.
-	 * @return "gf_gas." + name;
+	 * @return "gf_gas." + {@link #name};
 	 */
 	public String getUnlocalizedName()
 	{

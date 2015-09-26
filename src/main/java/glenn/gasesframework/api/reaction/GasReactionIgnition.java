@@ -3,6 +3,9 @@ package glenn.gasesframework.api.reaction;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.reaction.environment.IGasReactionEnvironment;
 
+/**
+ * Reaction for ignition of a gas against another gas.
+ */
 public class GasReactionIgnition extends GasReaction
 {
 	public final GasType match;

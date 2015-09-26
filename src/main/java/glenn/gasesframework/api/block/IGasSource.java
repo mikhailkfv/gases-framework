@@ -6,28 +6,28 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * An interface for interactivity with gas pipe systems. A gas source can have gas extracted from one or more of its sides.
- * @author Erlend
  */
 public interface IGasSource extends IGasInterface
 {
 	/**
-	 * Returns the gas type this gas source will give from a certain side. Return null if no gas can be extracted.
-	 * @param world - The world object
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param side - The local side gas is attempted to be extracted from.
-	 * @return
+	 * Get (but not extract) the gas type that can be extracted from this side.
+	 * @param world The world object
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param z Z coordinate
+	 * @param side The local side gas can be extracted from.
+	 * @return The gas type that can be extracted from this side, or null
 	 */
 	GasType getGasTypeFromSide(World world, int x, int y, int z, ForgeDirection side);
+
 	/**
-	 * Extracts the gas then returns the gas type this gas source will give from a certain side. Return null if no gas was extracted.
-	 * @param world - The world object
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param side - The local side gas was extracted from.
-	 * @return
+	 * Extract the gas type from this side.
+	 * @param world The world object
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param z Z coordinate
+	 * @param side The local side gas is extracted from.
+	 * @return The gas type that was extracted from this side, or null
 	 */
-	GasType takeGasTypeFromSide(World world, int x, int y, int z, ForgeDirection side);
+	GasType extractGasTypeFromSide(World world, int x, int y, int z, ForgeDirection side);
 }

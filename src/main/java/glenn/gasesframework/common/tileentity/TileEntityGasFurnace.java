@@ -1,14 +1,11 @@
 package glenn.gasesframework.common.tileentity;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.common.block.BlockGasFurnace;
 import glenn.moddingutils.blockrotation.BlockRotation;
 
 import java.util.ArrayList;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
@@ -331,7 +328,9 @@ public abstract class TileEntityGasFurnace extends TileEntity implements ISidedI
 
 			BlockGasFurnace block = (BlockGasFurnace)getBlockType();
 			int pressure = block.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, pushDirection);
-			if (GasesFramework.implementation.pushGas(worldObj, worldObj.rand, x, y, z, GasesFramework.gasTypeSmoke, pushDirection, pressure))
+			if (GasesFramework.implementation.tryPushGas(worldObj,
+					worldObj.rand, x, y, z, GasesFramework.gasTypeSmoke,
+					pushDirection, pressure))
 			{
 				smokeTimer = 0;
 			}

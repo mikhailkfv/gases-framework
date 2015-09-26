@@ -5,6 +5,9 @@ import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.reaction.environment.IBlockReactionEnvironment;
 import net.minecraft.block.Block;
 
+/**
+ * Reaction for replacement of a gas against a specific block.
+ */
 public class BlockReactionReplaceGas extends BlockReaction
 {
 	public final GasType replacementGas;

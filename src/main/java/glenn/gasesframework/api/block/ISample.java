@@ -11,14 +11,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 public interface ISample
 {
 	/**
-	 * Called when right clicked with sampler. Returns the new gas type to be used for the sampler. Return "in" if nothing is sampled.
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param in - The current gas type of the sampler
-	 * @param side - The local side of the block the sampler is applied to
-	 * @return
+	 * Called when right clicked on this side with a sampler. Get the new gas type to be used for the sampler. Return "in" if nothing is sampled.
+	 * @param world The world object
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param z Z coordinate
+	 * @param in The current gas type of the sampler
+	 * @param side The local side
+	 * @return The new gas type to be contained in the sampler
 	 */
 	GasType sampleInteraction(World world, int x, int y, int z, GasType in, ForgeDirection side);
 }

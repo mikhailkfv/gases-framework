@@ -6,30 +6,23 @@ import java.util.Random;
 
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.IGasesFrameworkImplementation;
-import glenn.gasesframework.api.ItemKey;
 import glenn.gasesframework.api.PartialGasStack;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasTransporter;
 import glenn.gasesframework.api.filter.GasTypeFilter;
 import glenn.gasesframework.api.gastype.GasType;
-import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
-import glenn.gasesframework.api.lanterntype.LanternType;
-import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
 import glenn.gasesframework.api.pipetype.PipeType;
 import glenn.gasesframework.client.render.RenderBlockGasTypeFilter;
 import glenn.gasesframework.common.block.BlockGas;
 import glenn.gasesframework.common.block.BlockGasPipe;
 import glenn.gasesframework.common.entity.EntityDelayedExplosion;
-import glenn.gasesframework.common.tileentity.TileEntityGasFurnace;
 import glenn.gasesframework.network.message.MessageSetBlockGasTypeFilter;
 import glenn.gasesframework.util.GasTransporterIterator;
 import glenn.gasesframework.util.GasTransporterSearch;
 import glenn.moddingutils.IVec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -38,7 +31,7 @@ public class Implementation implements IGasesFrameworkImplementation
 {
 	/**
 	 * Returns true if this block coordinate can be filled with a unit of gas.
-	 * If this returns true, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#fillWithGas(World, Random, int, int, int, GasType) fillWithGas(World,Random,int,int,int,GasType)} will also return true.
+	 * If this returns true, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#tryFillWithGas(World, Random, int, int, int, GasType) tryFillWithGas(World,Random,int,int,int,GasType)} will also return true.
 	 * @param world - The world object
 	 * @param x
 	 * @param y
@@ -108,7 +101,8 @@ public class Implementation implements IGasesFrameworkImplementation
 	 * @return
 	 */
 	@Override
-	public boolean fillWithGas(World world, Random random, int x, int y, int z, GasType type)
+	public boolean tryFillWithGas(World world, Random random, int x, int y,
+			int z, GasType type)
 	{
 		if(type == GasesFrameworkAPI.gasTypeAir)
 		{
@@ -291,7 +285,8 @@ public class Implementation implements IGasesFrameworkImplementation
 	 * @param pressure
 	 * @return Whether the pumping action succeeded or not.
 	 */
-	public boolean pumpGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
+	public boolean tryPumpGas(World world, Random random, int x, int y, int z,
+			GasType type, ForgeDirection direction, int pressure)
 	{
 		Block block = world.getBlock(x, y, z);
 		if (block instanceof IGasTransporter)
@@ -311,7 +306,9 @@ public class Implementation implements IGasesFrameworkImplementation
 
 				if(isSearchingLooseEnds)
 				{
-					hasPushed = fillWithGas(world, random, end.endPosition.x, end.endPosition.y, end.endPosition.z, sourceBlockType);
+					hasPushed = tryFillWithGas(world, random, end.endPosition.x,
+							end.endPosition.y, end.endPosition.z,
+							sourceBlockType);
 				}
 				else
 				{
@@ -358,8 +355,8 @@ public class Implementation implements IGasesFrameworkImplementation
 	/**
 	 * Push gas to a coordinate with a certain direction and pressure.
 	 * If the block is an IGasTransporter or IGasReceptor,
-	 * {@link glenn.gasesframework.api.IGasesFrameworkImplementation#pumpGas(World,Random,int,int,int,GasType,ForgeDirection,int) pumpGas(World,Random,int,int,int,GasType,ForgeDirection,int)} is returned.
-	 * Else, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#fillWithGas(World,Random,int,int,int,GasType) fillWithGas(World,Random,int,int,int,GasType)} is returned.
+	 * {@link glenn.gasesframework.api.IGasesFrameworkImplementation#tryPumpGas(World,Random,int,int,int,GasType,ForgeDirection,int) tryPumpGas(World,Random,int,int,int,GasType,ForgeDirection,int)} is returned.
+	 * Else, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#tryFillWithGas(World,Random,int,int,int,GasType) tryFillWithGas(World,Random,int,int,int,GasType)} is returned.
 	 * @param world
 	 * @param random
 	 * @param x
@@ -370,16 +367,17 @@ public class Implementation implements IGasesFrameworkImplementation
 	 * @param pressure
 	 * @return Whether the pushing action succeeded or not.
 	 */
-	public boolean pushGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
+	public boolean tryPushGas(World world, Random random, int x, int y, int z,
+			GasType type, ForgeDirection direction, int pressure)
 	{
 		Block block = world.getBlock(x, y, z);
 		if (block instanceof IGasTransporter || block instanceof IGasReceptor)
 		{
-			return pumpGas(world, random, x, y, z, type, direction, pressure);
+			return tryPumpGas(world, random, x, y, z, type, direction, pressure);
 		}
 		else
 		{
-			return fillWithGas(world, random, x, y, z, type);
+			return tryFillWithGas(world, random, x, y, z, type);
 		}
 	}
 

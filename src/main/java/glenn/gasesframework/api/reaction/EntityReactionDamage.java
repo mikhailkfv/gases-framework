@@ -5,6 +5,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.util.DamageSource;
 
+/**
+ * Reaction for damaging an entity on contact with a gas.
+ */
 public class EntityReactionDamage extends EntityReaction
 {
 	public final DamageSource damageSource;

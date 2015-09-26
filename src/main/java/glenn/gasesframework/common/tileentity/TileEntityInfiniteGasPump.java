@@ -3,9 +3,7 @@ package glenn.gasesframework.common.tileentity;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
-import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.gastype.GasType;
-import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -62,7 +60,8 @@ public class TileEntityInfiniteGasPump extends TileEntity
     {
     	IGasPropellor propellor = (IGasPropellor)getBlockType();
     	int pressure = propellor.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, direction);
-    	return GasesFrameworkAPI.implementation.pushGas(worldObj, worldObj.rand, x, y, z, type, direction, pressure);
+    	return GasesFrameworkAPI.implementation.tryPushGas(worldObj,
+				worldObj.rand, x, y, z, type, direction, pressure);
     }
     
 	@Override

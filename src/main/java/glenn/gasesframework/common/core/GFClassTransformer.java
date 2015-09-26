@@ -270,7 +270,7 @@ public class GFClassTransformer implements IClassTransformer
 						
 						newInstructions.add(new VarInsnNode(ALOAD, 7));
 						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classBlock, methodGetMaterial, "()L" + classMaterial + ";", false));
-						newInstructions.add(new FieldInsnNode(GETSTATIC, "glenn/gasesframework/api/block/MaterialGas", "INSTANCE", "L" + classMaterial + ";"));
+						newInstructions.add(new FieldInsnNode(GETSTATIC, "glenn/gasesframework/api/MaterialGas", "INSTANCE", "L" + classMaterial + ";"));
 						newInstructions.add(new JumpInsnNode(IF_ACMPNE, l6));
 						newInstructions.add(new VarInsnNode(ALOAD, 7));
 						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classBlock, methodGetMaterial, "()L" + classMaterial + ";", false));

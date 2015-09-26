@@ -4,7 +4,6 @@ import glenn.gasesframework.api.gastype.GasType;
 
 /**
  * A filter that only accepts null, air or any gas type that is not a specific gas type.
- * @author Erlend
  */
 public class GasTypeFilterSingleExcluding extends GasTypeFilterSingle
 {

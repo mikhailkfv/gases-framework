@@ -4,6 +4,9 @@ import glenn.gasesframework.api.PartialGasStack;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.reaction.environment.IGasReactionEnvironment;
 
+/**
+ * Abstract base class for reactions mixing two gas types.
+ */
 public abstract class GasReactionMixBase extends GasReaction
 {
 	@Override

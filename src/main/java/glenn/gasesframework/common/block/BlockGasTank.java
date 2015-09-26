@@ -71,7 +71,8 @@ public abstract class BlockGasTank extends Block implements IGasSource, IGasRece
 	}
 
 	@Override
-	public GasType takeGasTypeFromSide(World world, int x, int y, int z, ForgeDirection side)
+	public GasType extractGasTypeFromSide(World world, int x, int y, int z,
+			ForgeDirection side)
 	{
 		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
 		GasType gasType = tileEntity.getGasTypeStored();

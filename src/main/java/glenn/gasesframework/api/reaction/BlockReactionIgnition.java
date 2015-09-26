@@ -3,6 +3,9 @@ package glenn.gasesframework.api.reaction;
 import glenn.gasesframework.api.reaction.environment.IBlockReactionEnvironment;
 import net.minecraft.block.Block;
 
+/**
+ * Reaction for ignition of a gas against a specific block.
+ */
 public class BlockReactionIgnition extends BlockReaction
 {
 	public final Block match;

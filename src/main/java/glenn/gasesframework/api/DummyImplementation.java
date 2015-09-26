@@ -17,17 +17,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class DummyImplementation implements IGasesFrameworkImplementation
 {
 	@Override
-	public void addSpecialFurnaceRecipe(ItemStack ingredient, ItemStack result, int cookTime, int exp)
-	{}
-
-	@Override
 	public boolean canFillWithGas(World world, int x, int y, int z, GasType type)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean fillWithGas(World world, Random random, int x, int y, int z, GasType type)
+	public boolean tryFillWithGas(World world, Random random, int x, int y,
+			int z, GasType type)
 	{
 		return false;
 	}
@@ -41,13 +38,15 @@ public class DummyImplementation implements IGasesFrameworkImplementation
 	{}
 
 	@Override
-	public boolean pumpGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
+	public boolean tryPumpGas(World world, Random random, int x, int y, int z,
+			GasType type, ForgeDirection direction, int pressure)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean pushGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
+	public boolean tryPushGas(World world, Random random, int x, int y, int z,
+			GasType type, ForgeDirection direction, int pressure)
 	{
 		return false;
 	}

@@ -1,7 +1,6 @@
 package glenn.gasesframework.common.tileentity;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasSource;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -65,7 +64,8 @@ public class TileEntityInfiniteGasDrain extends TileEntity
 					
 					if(block instanceof IGasSource)
 					{
-						((IGasSource)block).takeGasTypeFromSide(worldObj, x, y, z, side.getOpposite());
+						((IGasSource)block).extractGasTypeFromSide(worldObj, x,
+								y, z, side.getOpposite());
 					}
 				}
 			}

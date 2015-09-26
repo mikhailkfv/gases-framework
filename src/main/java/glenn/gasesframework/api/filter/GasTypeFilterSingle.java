@@ -6,7 +6,6 @@ import glenn.gasesframework.api.gastype.GasType;
 
 /**
  * Abstract filter involving one gas type, be it including or excluding.
- * @author Erlend
  */
 public abstract class GasTypeFilterSingle extends GasTypeFilterSimple
 {
@@ -19,7 +18,7 @@ public abstract class GasTypeFilterSingle extends GasTypeFilterSimple
 	
 	/**
 	 * Get the type used by this filter, be it excluding or including.
-	 * @return
+	 * @return The gas type used by this filter
 	 */
 	public GasType getFilterType()
 	{
@@ -28,7 +27,7 @@ public abstract class GasTypeFilterSingle extends GasTypeFilterSimple
 	
 	/**
 	 * Get a {@link glenn.gasesframework.api.filter.GasTypeFilterMulti GasTypeFilterMulti} variant of this filter
-	 * @return
+	 * @return A GasTypeFilterMulti variant of this filter
 	 */
 	public abstract GasTypeFilterMulti toMulti();
 	
@@ -37,7 +36,12 @@ public abstract class GasTypeFilterSingle extends GasTypeFilterSimple
 		super.writeToNBT(tagCompound);
 		tagCompound.setInteger("gasType", GasType.getGasID(filterType));
 	}
-	
+
+	/**
+	 * Read any kind of single gas type filter from NBT.
+	 * @param tagCompound The tag compound
+	 * @return The single gas type filter, or null if the tag compound is invalid
+	 */
 	public static GasTypeFilterSingle fromNBTTagCompound(NBTTagCompound tagCompound)
 	{
 		if (tagCompound != null && tagCompound.hasKey("type"))

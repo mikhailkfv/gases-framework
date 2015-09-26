@@ -20,7 +20,6 @@ import net.minecraft.util.ResourceLocation;
  * <br>
  * </ul>
  * This piece of software is covered under the LGPL license. Redistribution and modification is permitted.
- * But honestly, why would you want to modify it?
  * @author Erlend
  * @author Trent
  */
@@ -69,13 +68,18 @@ public class GasesFrameworkAPI
 	/**
 	 * Returns true if an implementation of the Gases Framework is installed.
 	 * This method may give false negatives if Gases Framework is loaded after this method is called. See {@link GasesFrameworkAPI}.
-	 * @return
+	 * @return True if the Gases Framework is installed
 	 */
 	public static boolean isInstalled()
 	{
 		return isInstalled;
 	}
 
+	/**
+	 * Install a Gases Framework implementation and registry. Used by the Gases Framework.
+	 * @param implementation The Gases Framework implementation
+	 * @param registry The Gases Framework registry
+	 */
 	public static void install(IGasesFrameworkImplementation implementation, IGasesFrameworkRegistry registry)
 	{
 		GasesFrameworkAPI.implementation = implementation;

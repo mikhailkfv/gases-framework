@@ -8,7 +8,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
 import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.block.MaterialGas;
+import glenn.gasesframework.api.MaterialGas;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.client.render.RenderVillagerGag;
 import glenn.gasesframework.common.DuctTapeGag;

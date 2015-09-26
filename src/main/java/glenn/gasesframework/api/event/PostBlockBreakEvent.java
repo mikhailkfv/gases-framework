@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.eventhandler.Event;
 
 /**
- * An even that is fired on the Minecraft Forge event bus after a block has been successfully broken.
+ * An event that is fired on the Minecraft Forge event bus after a block has been successfully broken.
  */
 public class PostBlockBreakEvent extends Event
 {

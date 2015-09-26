@@ -303,7 +303,8 @@ public class Registry implements IGasesFrameworkRegistry
 			LanternType lanternType = GasesFramework.lanternTypesGas[type.combustibility.burnRate];
 			if(lanternType != GasesFramework.lanternTypeGasEmpty)
 			{
-				registerLanternRecipe(lanternType, new ItemKey(GasesFramework.items.gasBottle, type.gasID));
+				registerLanternInput(lanternType,
+						new ItemKey(GasesFramework.items.gasBottle, type.gasID));
 			}
 		}
 
@@ -351,7 +352,7 @@ public class Registry implements IGasesFrameworkRegistry
 	}
 
 	@Override
-	public LanternType getLanternTypeByItemIn(ItemKey itemKey)
+	public LanternType getLanternTypeByInput(ItemKey itemKey)
 	{
 		return lanternRecipes.get(itemKey);
 	}
@@ -377,7 +378,7 @@ public class Registry implements IGasesFrameworkRegistry
 	}
 
 	@Override
-	public void registerLanternRecipe(LanternType type, ItemKey itemKey)
+	public void registerLanternInput(LanternType type, ItemKey itemKey)
 	{
 		lanternRecipes.put(itemKey, type);
 		GameRegistry.addShapelessRecipe(new ItemStack(getLanternBlock(type)), new ItemStack(getLanternBlock(GasesFramework.lanternTypeEmpty)), new ItemStack(itemKey.item, 1, itemKey.damage));

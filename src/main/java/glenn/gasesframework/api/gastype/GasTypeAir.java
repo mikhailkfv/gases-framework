@@ -1,12 +1,7 @@
 package glenn.gasesframework.api.gastype;
 
 import glenn.gasesframework.api.Combustibility;
-import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.gastype.GasType;
-import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
 
 public class GasTypeAir extends GasType
 {
@@ -15,23 +10,13 @@ public class GasTypeAir extends GasType
 		super(true, 0, "air", 0, 0, 0, Combustibility.NONE);
 	}
 
-	/**
-	 * Is this gas visible?
-	 */
 	@Override
 	public boolean isVisible()
 	{
 		return false;
 	}
 
-    /**
-	 * Apply effects onto an entity when breathed. A gas is breathed when the player runs out of air in their hidden air meter.
-	 * How quickly this happens, and how frequently this method is called depends on this gas type's rate of suffocation.
-	 * @param entity
-	 */
     @Override
 	public void onBreathed(EntityLivingBase entity)
-	{
-		
-	}
+	{}
 }

@@ -11,7 +11,6 @@ import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * Abstract filter involving several gas types, be it including or excluding.
- * @author Erlend
  */
 public abstract class GasTypeFilterMulti extends GasTypeFilter
 {
@@ -30,13 +29,13 @@ public abstract class GasTypeFilterMulti extends GasTypeFilter
 	
 	/**
 	 * Get an immutable set of gas types used by this filter, be it excluding or including.
-	 * @return
+	 * @return An immutable set of gas types used by this filter
 	 */
 	public Set<GasType> getFilterTypes()
 	{
 		return filterTypes;
 	}
-	
+
 	public void writeToNBT(NBTTagCompound tagCompound)
 	{
 		super.writeToNBT(tagCompound);
@@ -50,6 +49,11 @@ public abstract class GasTypeFilterMulti extends GasTypeFilter
 		tagCompound.setIntArray("gasTypes", gasTypes);
 	}
 
+	/**
+	 * Read any kind of multi gas type filter from NBT.
+	 * @param tagCompound The tag compound
+	 * @return The gas type filter, or null if the tag compound is invalid
+	 */
 	public static GasTypeFilterMulti readFromNBT(NBTTagCompound tagCompound)
 	{
 		if (tagCompound != null && tagCompound.hasKey("type"))

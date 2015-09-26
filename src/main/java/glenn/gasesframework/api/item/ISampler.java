@@ -9,7 +9,18 @@ import glenn.gasesframework.api.gastype.GasType;
  */
 public interface ISampler
 {
+	/**
+	 * Get the gas type contained in this sampler.
+	 * @param itemstack The itemstack
+	 * @return The gas type contained in this sampler, or null
+	 */
 	GasType getGasType(ItemStack itemstack);
-	
+
+	/**
+	 * Set the gas type contained in this sampler.
+	 * @param itemstack The itemstack
+	 * @param gasType The gas type
+	 * @return An itemstack with the item containing the gas type
+	 */
 	ItemStack setGasType(ItemStack itemstack, GasType gasType);
 }

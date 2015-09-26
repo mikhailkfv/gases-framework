@@ -24,31 +24,31 @@ public class PipeType
 	
 	/**
 	 * The icon used for the solid part of the pipe.
-	 * Name: {@link PipeType#textureName textureName} + "_solid"
+	 * Name: {@link #textureName} + "_solid"
 	 */
 	public IIcon solidIcon;
 	/**
-	 * The icon used for the gas content of the pipe if it is not {@link PipeType#isSolid solid}. It will be colored according to the gas content.
-	 * Name: {@link PipeType#textureName textureName} + "_gas_content"
+	 * The icon used for the gas content of the pipe if it is not {@link #isSolid solid}. It will be colored according to the gas content.
+	 * Name: {@link #textureName} + "_gas_content"
 	 */
 	public IIcon gasContentIcon;
 	/**
 	 * The icon used for the connectors that connect the pipe with surrounding blocks.
-	 * Name: {@link PipeType#textureName textureName} + "_connectors"
+	 * Name: {@link #textureName} + "_connectors"
 	 */
 	public IIcon connectorsIcon;
 	/**
 	 * The icon used for the ends of the pipe.
-	 * Name: {@link PipeType#textureName textureName} + "_end"
+	 * Name: {@link #textureName} + "_end"
 	 */
 	public IIcon endIcon;
 
 	/**
 	 * Creates a new pipe type. Pipe types must be {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerPipeType(PipeType) registered}.
-	 * @param pipeID - The ID of this pipe type. Must be unique. Limited to 0-15. Consult the Gases Framework documentation for unoccupied IDs.
-	 * @param name - An unique name for the pipe type.
-	 * @param isSolid - Will this pipe hide its contents?
-	 * @param textureName - The base name of the textures used by this pipe type. It will be prepended to the icon location strings.
+	 * @param pipeID The ID of this pipe type. Must be unique. Limited to 0-15. Consult the Gases Framework documentation for unoccupied IDs
+	 * @param name An unique name for the pipe type
+	 * @param isSolid Will this pipe hide its contents?
+	 * @param textureName The base name of the textures used by this pipe type. It will be prepended to the icon location strings
 	 */
 	public PipeType(int pipeID, String name, boolean isSolid, String textureName)
 	{
@@ -57,7 +57,11 @@ public class PipeType
 		this.isSolid = isSolid;
 		this.textureName = textureName;
 	}
-	
+
+	/**
+	 * Register the necessary icons for this pipe type.
+	 * @param iconRegister The icon register
+	 */
 	public void registerIcons(IIconRegister iconRegister)
 	{
 		solidIcon = iconRegister.registerIcon(textureName + "_solid");
@@ -68,7 +72,7 @@ public class PipeType
 
 	/**
 	 * Get the unlocalized name of the pipe.
-	 * @return "gf_gas." + name;
+	 * @return "gf_gas." + {@link #name};
 	 */
 	public String getUnlocalizedName()
 	{
@@ -77,6 +81,7 @@ public class PipeType
 	
 	/**
 	 * Get the pressure this pipe can handle before bursting. If -1, it can handle any pressure.
+	 * @return The pressure this pipe can handle before bursting
 	 */
 	public int getPressureTolerance()
 	{

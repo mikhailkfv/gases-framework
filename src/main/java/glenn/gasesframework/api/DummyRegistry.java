@@ -9,6 +9,7 @@ import glenn.gasesframework.api.reaction.Reaction;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 /**
@@ -17,6 +18,10 @@ import net.minecraft.world.World;
  */
 public class DummyRegistry implements IGasesFrameworkRegistry
 {
+	@Override
+	public void registerGasFurnaceRecipe(ItemStack ingredient, ItemStack result, int time, int exp)
+	{}
+
 	@Override
 	public boolean isIgnitionBlock(Block block)
 	{
@@ -109,7 +114,7 @@ public class DummyRegistry implements IGasesFrameworkRegistry
 		return null;
 	}
 
-	@Override public LanternType getLanternTypeByItemIn(ItemKey itemKey)
+	@Override public LanternType getLanternTypeByInput(ItemKey itemKey)
 	{
 		return null;
 	}
@@ -125,7 +130,7 @@ public class DummyRegistry implements IGasesFrameworkRegistry
 	}
 
 	@Override
-	public void registerLanternRecipe(LanternType type, ItemKey itemKey)
+	public void registerLanternInput(LanternType type, ItemKey itemKey)
 	{}
 
 	@Override public LanternType[] getRegisteredLanternTypes()

@@ -2,6 +2,9 @@ package glenn.gasesframework.api.reaction;
 
 import glenn.gasesframework.api.gastype.GasType;
 
+/**
+ * Reaction for mixing two specific gases.
+ */
 public class GasReactionMix extends GasReactionMixBase
 {
 	public final GasType typeA;

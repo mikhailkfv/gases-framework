@@ -1,4 +1,4 @@
-package glenn.gasesframework.api.block;
+package glenn.gasesframework.api;
 
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;

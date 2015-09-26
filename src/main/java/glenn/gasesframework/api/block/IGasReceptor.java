@@ -5,32 +5,31 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
- * An interface for interactivity with gas pipe systems. A gas receptor is able to receive gas from a pipe.
- * @author Erlend
+ * An interface for interactivity with gas pipe systems. A gas receptor is able to receive gas.
  */
 public interface IGasReceptor extends IGasInterface
 {
 	/**
-	 * This method is called when gas is attempted to be pumped inside this block. Returns true if this gas type is accepted and consumed.
-	 * @param world - The World object
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param side - The local side the received gas is inserted into
-	 * @param gasType - The type of gas being received
-	 * @return
+	 * Receive a gas through one of this side of the block. Returns true if the gas type is accepted and consumed.
+	 * @param world The world object
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param z Z coordinate
+	 * @param side The local side the received gas is inserted into
+	 * @param gasType The type of gas being received
+	 * @return True if the block could receive the gas
 	 */
 	boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType);
 	
 	/**
-	 * This method is called when it must be determined if a gas pipe can insert a type of gas into this receptor. This happens during pumping.
-	 * @param world - The World object
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param side - The local side the received gas is inserted into
-	 * @param gasType - The type of gas being that can be received
-	 * @return
+	 * Determine if a gas can be received through this side of the block.
+	 * @param world The world object
+	 * @param x X coordinate
+	 * @param y Y coordinate
+	 * @param z Z coordinate
+	 * @param side The local side the received gas is inserted into
+	 * @param gasType The type of gas being received
+	 * @return True if the block can receive the gas
 	 */
 	boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType);
 }

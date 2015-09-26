@@ -1,7 +1,6 @@
 package glenn.gasesframework.common.tileentity;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.moddingutils.ForgeDirectionUtil;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -46,7 +45,10 @@ public class TileEntityWoodGasTank extends TileEntityGasTank
 			{
 				for (ForgeDirection direction : ForgeDirectionUtil.shuffledList(worldObj.rand))
 				{
-					if (GasesFramework.implementation.fillWithGas(worldObj, worldObj.rand, xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, gasType))
+					if (GasesFramework.implementation.tryFillWithGas(worldObj,
+							worldObj.rand, xCoord + direction.offsetX,
+							yCoord + direction.offsetY,
+							zCoord + direction.offsetZ, gasType))
 					{
 						return true;
 					}

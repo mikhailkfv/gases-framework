@@ -4,7 +4,6 @@ import glenn.gasesframework.api.gastype.GasType;
 
 /**
  * A filter that accepts any gas type.
- * @author Erlend
  */
 public class GasTypeFilterOpen extends GasTypeFilterSimple
 {

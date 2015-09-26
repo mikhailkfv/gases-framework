@@ -6,7 +6,6 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 /**
  * A class containing the variables for gas effects per EntityLivingBase.
  * This includes blindness, suffocation and slowness.
- * @author Erlend
  */
 public abstract class ExtendedGasEffectsBase implements IExtendedEntityProperties
 {
@@ -42,31 +41,32 @@ public abstract class ExtendedGasEffectsBase implements IExtendedEntityPropertie
 
 	/**
 	 * Get the amount of an effect type.
-	 * @param effectType
-	 * @return
+	 * @param effectType The gas effect type
+	 * @return The amount of the effect
 	 */
 	public abstract int get(EffectType effectType);
 
 	/**
 	 * Set the amount of an effect type.
-	 * @param effectType
-	 * @param i
-	 * @return
+	 * @param effectType The gas effect type
+	 * @param i The amount of the effect
+	 * @return The new amount of the effect. May be clamped
 	 */
 	public abstract int set(EffectType effectType, int i);
 
 	/**
 	 * Increment the amount of an effect type.
-	 * @param effectType
-	 * @param i
-	 * @return
+	 * @param effectType The gas effect type
+	 * @param i The amount to increment the effect by
+	 * @return The new amount of the effect. May be clamped
 	 */
 	public abstract int increment(EffectType effectType, int i);
 
 	/**
-	 * Get the ExtendedGasEffectsBase instance of an entity. If the Gases Framework is not installed, this will return null.
-	 * @param entity
-	 * @return
+	 * Get the ExtendedGasEffectsBase instance of an entity.
+	 * If the Gases Framework is not installed, this will return null.
+	 * @param entity The entity holding the gas effects
+	 * @return The ExtendedGasEffectsBase bound to the entity, or null
 	 */
 	public static ExtendedGasEffectsBase get(EntityLivingBase entity)
 	{

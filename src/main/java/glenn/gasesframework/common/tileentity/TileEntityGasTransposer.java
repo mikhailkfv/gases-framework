@@ -3,7 +3,6 @@ package glenn.gasesframework.common.tileentity;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
-import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasSource;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.mechanical.IGasTransposerExtractHandler;
@@ -95,7 +94,9 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 								IGasTransposerInsertHandler handler = getHandlerForItemAndGasType(tileEntity.itemStacks[inputSlot], gasType);
 								if(handler != null)
 								{
-									gasType = gasSource.takeGasTypeFromSide(tileEntity.worldObj, x, y, z, direction.getOpposite());
+									gasType = gasSource.extractGasTypeFromSide(
+											tileEntity.worldObj, x, y, z,
+											direction.getOpposite());
 									tileEntity.setHandler(handler, handler.getInsertionTime());
 									tileEntity.containedType = gasType;
 									return;
@@ -284,7 +285,9 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 					IGasPropellor propellor = (IGasPropellor)tileEntity.getBlockType();
 					int pressure = propellor.getPressureFromSide(tileEntity.worldObj, tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord, direction);
 					
-					if (GasesFramework.implementation.pushGas(tileEntity.worldObj, tileEntity.worldObj.rand, x, y, z, tileEntity.pendingType, direction, pressure))
+					if (GasesFramework.implementation.tryPushGas(
+							tileEntity.worldObj, tileEntity.worldObj.rand, x, y,
+							z, tileEntity.pendingType, direction, pressure))
 					{
 						tileEntity.itemStacks[inputSlot] = handler.getExtractionInputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
 						tileEntity.itemStacks[outputSlot] = handler.getExtractionOutputStack(tileEntity.itemStacks[inputSlot], tileEntity.itemStacks[outputSlot], tileEntity.pendingType);
