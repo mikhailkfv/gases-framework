@@ -74,7 +74,7 @@ public class RenderBlockGas implements ISimpleBlockRenderingHandler
 	{
 		BlockGas block = (BlockGas)bblock;
 		
-		int metadata = blockAccess.getBlockMetadata(i, j, k);
+		int volume = 16 - blockAccess.getBlockMetadata(i, j, k);
 		Block sideBlock;
 		int sideBlockMetadata;
 	
@@ -91,8 +91,8 @@ public class RenderBlockGas implements ISimpleBlockRenderingHandler
 		double minX = block.sideIndent(blockAccess, i - 1, j, k);
 		double maxX = 1.0D - block.sideIndent(blockAccess, i + 1, j, k);
 		
-		double minY = block.type.getMinY(blockAccess, i, j, k, metadata) + block.sideIndent(blockAccess, i, j - 1, k);
-		double maxY = block.type.getMaxY(blockAccess, i, j, k, metadata) - block.sideIndent(blockAccess, i, j + 1, k);
+		double minY = block.type.getMinY(blockAccess, i, j, k, volume) + block.sideIndent(blockAccess, i, j - 1, k);
+		double maxY = block.type.getMaxY(blockAccess, i, j, k, volume) - block.sideIndent(blockAccess, i, j + 1, k);
 		
 		double minZ = block.sideIndent(blockAccess, i, j, k - 1);
 		double maxZ = 1.0D - block.sideIndent(blockAccess, i, j, k + 1);
