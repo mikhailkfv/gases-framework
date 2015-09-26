@@ -97,12 +97,6 @@ public class DummyImplementation implements IGasesFrameworkImplementation
 	}
 
 	@Override
-	public float getGasExplosionPowerFactor()
-	{
-		return 0;
-	}
-
-	@Override
 	public int getRenderedGasTypeFilterBlockRenderType()
 	{
 		return 0;

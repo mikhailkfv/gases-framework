@@ -204,13 +204,7 @@ public interface IGasesFrameworkImplementation
 	 * @return
 	 */
 	int getGasVolume(IBlockAccess blockAccess, int x, int y, int z);
-	
-	/**
-	 * Get the global multiplier for gas explosion power.
-	 * @return
-	 */
-	float getGasExplosionPowerFactor();
-	
+
 	/**
 	 * Get the block rendering ID for blocks that implement {@link glenn.gasesframework.api.block.IRenderedGasTypeFilter IRenderedGasTypeFilter}.
 	 * @return

@@ -306,7 +306,7 @@ public class BlockGas extends Block implements ISample
 					
 					float power = (float)Math.sqrt(totalSqPower) * 0.75f;
 					
-					GasesFramework.implementation.spawnDelayedExplosion(world, avgX, avgY, avgZ, 5, GasesFramework.implementation.getGasExplosionPowerFactor() * power, true, false);
+					GasesFramework.implementation.spawnDelayedExplosion(world, avgX, avgY, avgZ, 5, GasesFramework.configurations.gases.explosionFactor * power, true, false);
 				}
 			}
 			return true;

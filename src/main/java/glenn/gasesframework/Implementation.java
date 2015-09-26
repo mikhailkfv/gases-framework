@@ -572,16 +572,6 @@ public class Implementation implements IGasesFrameworkImplementation
 	}
 
 	/**
-	 * Get the global multiplier for gas explosion power.
-	 * @return
-	 */
-	@Override
-	public float getGasExplosionPowerFactor()
-	{
-		return GasesFramework.configurations.gases.explosionFactor;
-	}
-
-	/**
 	 * Get the block rendering ID for blocks that implement {@link glenn.gasesframework.api.block.IRenderedGasTypeFilter IRenderedGasTypeFilter}.
 	 * @return
 	 */
