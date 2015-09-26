@@ -29,16 +29,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 public class Implementation implements IGFImplementation
 {
-	/**
-	 * Returns true if this block coordinate can be filled with a unit of gas.
-	 * If this returns true, {@link IGFImplementation#tryFillWithGas(World, Random, int, int, int, GasType) tryFillWithGas(World,Random,int,int,int,GasType)} will also return true.
-	 * @param world - The world object
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param type - The gas type that can or cannot be filled here.
-	 * @return
-	 */
 	@Override
 	public boolean canFillWithGas(World world, int x, int y, int z, GasType type)
 	{
@@ -89,20 +79,8 @@ public class Implementation implements IGFImplementation
 		}
 	}
 
-	/**
-	 * Try to fill this block coordinate with a unit of gas. If necessary, this method will spread the gas outwards.
-	 * The result of this method can be predetermined with {@link IGFImplementation#canFillWithGas(World, int, int, int, GasType) canFillWithGas(World,int,int,int,GasType)}.
-	 * @param world
-	 * @param random
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param type - The gas type that can or cannot be filled here.
-	 * @return
-	 */
 	@Override
-	public boolean tryFillWithGas(World world, Random random, int x, int y,
-			int z, GasType type)
+	public boolean tryFillWithGas(World world, Random random, int x, int y, int z, GasType type)
 	{
 		if(type == GFAPI.gasTypeAir)
 		{
@@ -225,32 +203,12 @@ public class Implementation implements IGFImplementation
 		}
 	}
 
-	/**
-	 * Place a gas block.
-	 * If the type is air, and volume > 0, air will be placed.
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param gasStack
-	 */
 	@Override
 	public void placeGas(World world, int x, int y, int z, PartialGasStack gasStack)
 	{
 		placeGas(world, x, y, z, gasStack.gasType, gasStack.partialAmount);
 	}
 
-	/**
-	 * Place a gas block of the specified type with a specific volume ranging from 0 to 16.
-	 * If the type is air, and volume > 0, air will be placed.
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param type
-	 * @param volume
-	 * @return
-	 */
 	@Override
 	public void placeGas(World world, int x, int y, int z, GasType type, int volume)
 	{
@@ -272,21 +230,7 @@ public class Implementation implements IGFImplementation
 		}
 	}
 
-	/**
-	 * Pump gas into an IGasTransporter or an IGasReceptor with a certain direction and pressure.
-	 * If the block is an IGasTransporter, the gas will be pumped as far as the pressure allows it.
-	 * @param world
-	 * @param random
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param type
-	 * @param direction
-	 * @param pressure
-	 * @return Whether the pumping action succeeded or not.
-	 */
-	public boolean tryPumpGas(World world, Random random, int x, int y, int z,
-			GasType type, ForgeDirection direction, int pressure)
+	public boolean tryPumpGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
 	{
 		Block block = world.getBlock(x, y, z);
 		if (block instanceof IGasTransporter)
@@ -294,7 +238,8 @@ public class Implementation implements IGFImplementation
 			GasTransporterSearch.ReceptorSearch search = new GasTransporterSearch.ReceptorSearch(world, x, y, z, pressure);
 
 			boolean isSearchingLooseEnds = !search.looseEnds.isEmpty();
-			ArrayList<GasTransporterSearch.End> listToSearch = (ArrayList<GasTransporterSearch.End>)(isSearchingLooseEnds ? search.looseEnds : search.ends).clone();
+			ArrayList<GasTransporterSearch.End> listToSearch = new ArrayList<GasTransporterSearch.End>();
+			listToSearch.addAll(isSearchingLooseEnds ? search.looseEnds : search.ends);
 			Collections.shuffle(listToSearch, random);
 
 			for(GasTransporterSearch.End end : listToSearch)
@@ -306,9 +251,7 @@ public class Implementation implements IGFImplementation
 
 				if(isSearchingLooseEnds)
 				{
-					hasPushed = tryFillWithGas(world, random, end.endPosition.x,
-							end.endPosition.y, end.endPosition.z,
-							sourceBlockType);
+					hasPushed = tryFillWithGas(world, random, end.endPosition.x, end.endPosition.y, end.endPosition.z, sourceBlockType);
 				}
 				else
 				{
@@ -352,23 +295,7 @@ public class Implementation implements IGFImplementation
 		}
 	}
 
-	/**
-	 * Push gas to a coordinate with a certain direction and pressure.
-	 * If the block is an IGasTransporter or IGasReceptor,
-	 * {@link IGFImplementation#tryPumpGas(World,Random,int,int,int,GasType,ForgeDirection,int) tryPumpGas(World,Random,int,int,int,GasType,ForgeDirection,int)} is returned.
-	 * Else, {@link IGFImplementation#tryFillWithGas(World,Random,int,int,int,GasType) tryFillWithGas(World,Random,int,int,int,GasType)} is returned.
-	 * @param world
-	 * @param random
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param type
-	 * @param direction
-	 * @param pressure
-	 * @return Whether the pushing action succeeded or not.
-	 */
-	public boolean tryPushGas(World world, Random random, int x, int y, int z,
-			GasType type, ForgeDirection direction, int pressure)
+	public boolean tryPushGas(World world, Random random, int x, int y, int z, GasType type, ForgeDirection direction, int pressure)
 	{
 		Block block = world.getBlock(x, y, z);
 		if (block instanceof IGasTransporter || block instanceof IGasReceptor)
@@ -381,29 +308,12 @@ public class Implementation implements IGFImplementation
 		}
 	}
 
-	/**
-	 * Place a pipe block of the specified type containing a gas.
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param pipeType
-	 * @param gasType
-	 */
 	@Override
 	public void placePipe(World world, int x, int y, int z, PipeType pipeType, GasType gasType)
 	{
 		world.setBlock(x, y, z, GasesFramework.registry.getGasPipeBlock(gasType), pipeType.pipeID, 3);
 	}
 
-	/**
-	 * If gas exists at this location, it will be ignited.
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param random
-	 */
 	@Override
 	public void ignite(World world, int x, int y, int z, Random random)
 	{
@@ -414,17 +324,6 @@ public class Implementation implements IGFImplementation
 		}
 	}
 
-	/**
-	 * Spawn a delayed explosion in the world.
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param delay
-	 * @param power
-	 * @param isFlaming
-	 * @param isSmoking
-	 */
 	@Override
 	public void spawnDelayedExplosion(World world, double x, double y, double z, int delay, float power, boolean isFlaming, boolean isSmoking)
 	{
@@ -434,32 +333,12 @@ public class Implementation implements IGFImplementation
 		world.spawnEntityInWorld(explosionEntity);
 	}
 
-	/**
-	 * Sent a filter update packet for {@link glenn.gasesframework.api.block.IGasTypeFilter IGasTypeFilter} blocks to clients.
-	 * This will call {@link glenn.gasesframework.api.block.IGasTypeFilter#setFilter(IBlockAccess,int,int,int,ForgeDirection,GasTypeFilter) setFilter(IBlockAccess,int,int,int,ForgeDirection,GasTypeFilter)}.
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param side
-	 * @param filter
-	 */
 	@Override
 	public void sendFilterUpdatePacket(World world, int x, int y, int z, ForgeDirection side, GasTypeFilter filter)
 	{
-		GasesFramework.networkWrapper.sendToDimension(
-				new MessageSetBlockGasTypeFilter(x, y, z, side, filter),
-				world.provider.dimensionId);
+		GasesFramework.networkWrapper.sendToDimension(new MessageSetBlockGasTypeFilter(x, y, z, side, filter), world.provider.dimensionId);
 	}
 
-	/**
-	 * Get a PartialGasStack at the location. If the block is air, a full stack of air is returned. Else, null is returned.
-	 * @param blockAccess
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return
-	 */
 	@Override
 	public PartialGasStack getGas(IBlockAccess blockAccess, int x, int y, int z)
 	{
@@ -476,14 +355,6 @@ public class Implementation implements IGFImplementation
 		return null;
 	}
 
-	/**
-	 * Gets the gas type of the gas block at the location, if any. If no gas block is present, null is returned.
-	 * @param blockAccess
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return
-	 */
 	@Override
 	public GasType getGasType(IBlockAccess blockAccess, int x, int y, int z)
 	{
@@ -498,14 +369,6 @@ public class Implementation implements IGFImplementation
 		}
 	}
 
-	/**
-	 * Gets the gas type of the gas pipe block at the location, if any. If no gas pipe block is present, null is returned.
-	 * @param blockAccess
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return
-	 */
 	@Override
 	public GasType getGasTypeInPipe(IBlockAccess blockAccess, int x, int y, int z)
 	{
@@ -520,14 +383,6 @@ public class Implementation implements IGFImplementation
 		}
 	}
 
-	/**
-	 * Gets the pipe type of the gas pipe block at the location, if any. If no gas pipe block is present, null is returned.
-	 * @param blockAccess
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return
-	 */
 	@Override
 	public PipeType getPipeType(IBlockAccess blockAccess, int x, int y, int z)
 	{
@@ -542,25 +397,12 @@ public class Implementation implements IGFImplementation
 		}
 	}
 
-	/**
-	 * Gets the volume of a gas block ranging from 1 to 16.
-	 * If the block is not a gas block, the result is undefined.
-	 * @param blockAccess
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return
-	 */
 	@Override
 	public int getGasVolume(IBlockAccess blockAccess, int x, int y, int z)
 	{
 		return 16 - blockAccess.getBlockMetadata(x, y, z);
 	}
 
-	/**
-	 * Get the block rendering ID for blocks that implement {@link glenn.gasesframework.api.block.IRenderedGasTypeFilter IRenderedGasTypeFilter}.
-	 * @return
-	 */
 	@Override
 	public int getRenderedGasTypeFilterBlockRenderType()
 	{
