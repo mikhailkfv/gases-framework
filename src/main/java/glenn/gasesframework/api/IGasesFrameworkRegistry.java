@@ -5,12 +5,10 @@ import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
 import glenn.gasesframework.api.pipetype.PipeType;
-import glenn.gasesframework.api.reaction.GasReaction;
 import glenn.gasesframework.api.reaction.Reaction;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraft.world.World;
+import net.minecraft.item.ItemStack;
 
 /**
  * An interface to connect the GasesFrameworkAPI to the registry of the GasesFramework mod.
@@ -19,9 +17,19 @@ import net.minecraft.world.World;
 public interface IGasesFrameworkRegistry
 {
 	/**
+	 * Register a furnace recipe that only applies to gas furnaces.
+	 * A gas furnace recipe will always be prioritized before an ordinary furnace recipe.
+	 * @param ingredient - The item that can be smelted. Can be more than 1.
+	 * @param result - The result of the smelting action.
+	 * @param time - The amount of time it takes to smelt. Default is 200.
+	 * @param exp - The amount of exp given.
+	 */
+	void registerGasFurnaceRecipe(ItemStack ingredient, ItemStack result, int time, int exp);
+
+	/**
 	 * Returns true if the block is a gas igniting block, e.g. a block which can cause a gas to combust or explode.
 	 * @param block
-	 * @return isGasReactive
+	 * @return
 	 */
 	boolean isIgnitionBlock(Block block);
 
@@ -48,7 +56,7 @@ public interface IGasesFrameworkRegistry
 	/**
 	 * Returns true if the item is a gas igniting item, e.g. an item which can cause a gas to combust or explode when held, equipped or dropped.
 	 * @param item
-	 * @return isGasReactive
+	 * @return
 	 */
 	boolean isIgnitionItem(Item item);
 

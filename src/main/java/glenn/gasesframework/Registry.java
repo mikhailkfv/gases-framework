@@ -23,6 +23,7 @@ import glenn.gasesframework.common.block.BlockGas;
 import glenn.gasesframework.common.block.BlockGasPipe;
 import glenn.gasesframework.common.block.BlockLantern;
 import glenn.gasesframework.common.item.ItemGasPipe;
+import glenn.gasesframework.common.tileentity.TileEntityGasFurnace;
 import glenn.gasesframework.common.tileentity.TileEntityGasTransposer;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -31,6 +32,14 @@ import net.minecraft.item.ItemStack;
 
 public class Registry implements IGasesFrameworkRegistry
 {
+	@Override
+	public void registerGasFurnaceRecipe(ItemStack ingredient, ItemStack result, int time, int exp)
+	{
+		TileEntityGasFurnace.specialFurnaceRecipes.add(new TileEntityGasFurnace.SpecialFurnaceRecipe(ingredient, result, time));
+	}
+
+
+
 	private final Set<Block> registeredIgnitionBlocks = Collections.newSetFromMap(new IdentityHashMap<Block, Boolean>());
 
 	@Override

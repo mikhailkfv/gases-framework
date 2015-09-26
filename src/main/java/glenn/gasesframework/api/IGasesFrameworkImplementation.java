@@ -18,15 +18,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 public interface IGasesFrameworkImplementation
 {
 	/**
-	 * Adds a special furnace recipe which can be used in a gas furnace. Special furnace recipes are notably different in the way the stack size of what is smelted matters.
-	 * A special gas furnace recipe will always be prioritized before an ordinary furnace recipe.
-	 * @param ingredient - The item to be smelted. Can have a stack size larger than 1.
-	 * @param result - The result of the smelting action.
-	 * @param cookTime - The time it takes to complete the smelting action. Default is 200.
-	 */
-	void addSpecialFurnaceRecipe(ItemStack ingredient, ItemStack result, int cookTime, int exp);
-	
-	/**
 	 * Returns true if this block coordinate can be filled with a unit of gas.
 	 * If this returns true, {@link IGasesFrameworkImplementation#fillWithGas(World, Random, int, int, int, GasType) fillWithGas(World,Random,int,int,int,GasType)} will also return true.
 	 * @param world - The world object
@@ -197,6 +188,7 @@ public interface IGasesFrameworkImplementation
 
 	/**
 	 * Gets the volume of a gas block ranging from 1 to 16.
+	 * If the block is not a gas block, the result is undefined.
 	 * @param blockAccess
 	 * @param x
 	 * @param y
