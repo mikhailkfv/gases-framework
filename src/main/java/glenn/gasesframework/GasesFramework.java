@@ -91,7 +91,7 @@ public class GasesFramework
 	public static CommonProxy proxy;
 	
 	public static final String MODID = GasesFrameworkAPI.OWNER;
-	public static final String VERSION = "1.1.2";
+	public static final String VERSION = "1.2.0";
 	public static final String TARGETVERSION = GasesFrameworkAPI.TARGETVERSION;
 
 	public static Logger logger;
