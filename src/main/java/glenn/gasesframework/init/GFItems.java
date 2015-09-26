@@ -23,12 +23,17 @@ public class GFItems
 	{
 		for (Field field : getClass().getFields())
 		{
-			try
+			if (Item.class.isAssignableFrom(field.getType()))
 			{
-				GameRegistry.registerItem((Item)field.get(this), field.getName());
+				try
+				{
+					GameRegistry.registerItem((Item) field.get(this), field.getName());
+				}
+				catch (IllegalAccessException e)
+				{
+					throw new RuntimeException("Could not register item " + field.getName(), e);
+				}
 			}
-			catch (IllegalAccessException e)
-			{}
 		}
 	}
 }

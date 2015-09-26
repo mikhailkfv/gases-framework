@@ -41,13 +41,17 @@ public class GFBlocks
 	{
 		for (Field field : getClass().getFields())
 		{
-			try
+			if (Block.class.isAssignableFrom(field.getType()))
 			{
-				GameRegistry.registerBlock((Block) field.get(this),
-						field.getName());
+				try
+				{
+					GameRegistry.registerBlock((Block) field.get(this), field.getName());
+				}
+				catch (IllegalAccessException e)
+				{
+					throw new RuntimeException("Could not register block " + field.getName(), e);
+				}
 			}
-			catch (IllegalAccessException e)
-			{}
 		}
 	}
 }
