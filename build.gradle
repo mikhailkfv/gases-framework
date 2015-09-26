@@ -82,6 +82,10 @@ idea
 task buildDev(type: Jar) {
 	from sourceSets.main.output
 	classifier = 'dev'
+    manifest {
+        attributes 'FMLCorePlugin': 'glenn.gasesframework.common.core.GFFMLLoadingPlugin'
+        attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
 }
 
 curse {
