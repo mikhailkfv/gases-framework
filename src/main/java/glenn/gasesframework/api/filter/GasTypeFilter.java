@@ -1,7 +1,7 @@
 package glenn.gasesframework.api.filter;
 
 import net.minecraft.nbt.NBTTagCompound;
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.gastype.GasType;
 
 /**
@@ -25,7 +25,7 @@ public abstract class GasTypeFilter
 	 */
 	public boolean accept(GasType gasType)
 	{
-		return gasType == null || gasType == GasesFrameworkAPI.gasTypeAir;
+		return gasType == null || gasType == GFAPI.gasTypeAir;
 	}
 
 	/**

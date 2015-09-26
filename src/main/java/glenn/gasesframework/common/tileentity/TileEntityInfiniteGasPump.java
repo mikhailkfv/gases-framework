@@ -1,7 +1,7 @@
 package glenn.gasesframework.common.tileentity;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.gastype.GasType;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,7 +24,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
 		pumpTime = pumpRate;
 		for(int i = 0; i < types.length; i++)
 		{
-			types[i] = GasesFrameworkAPI.gasTypeAir;
+			types[i] = GFAPI.gasTypeAir;
 		}
 	}
 	
@@ -37,7 +37,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
 	public void setType(GasType newType, ForgeDirection side)
 	{
 		int ordinal = side.ordinal();
-		if(newType == types[ordinal]) newType = GasesFrameworkAPI.gasTypeAir;
+		if(newType == types[ordinal]) newType = GFAPI.gasTypeAir;
 		
 		worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), ordinal, GasType.getGasID(newType));
 		types[ordinal] = newType;
@@ -60,8 +60,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
     {
     	IGasPropellor propellor = (IGasPropellor)getBlockType();
     	int pressure = propellor.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, direction);
-    	return GasesFrameworkAPI.implementation.tryPushGas(worldObj,
-				worldObj.rand, x, y, z, type, direction, pressure);
+    	return GasesFramework.implementation.tryPushGas(worldObj, worldObj.rand, x, y, z, type, direction, pressure);
     }
     
 	@Override
@@ -97,7 +96,7 @@ public class TileEntityInfiniteGasPump extends TileEntity
 		for(int i = 0; i < types.length; i++)
 		{
 			types[i] = GasesFramework.registry.getGasTypeByID(gasIDArray[i]);
-			if(types[i] == null) types[i] = GasesFrameworkAPI.gasTypeAir; 
+			if(types[i] == null) types[i] = GFAPI.gasTypeAir;
 		}
 	}
 

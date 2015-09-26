@@ -1,11 +1,12 @@
 package glenn.gasesframework.api.mechanical;
 
+import glenn.gasesframework.api.IGFRegistry;
 import glenn.gasesframework.api.gastype.GasType;
 import net.minecraft.item.ItemStack;
 
 /**
  * Handles the insertion operation of a gas transposer.
- * Must be registered through {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerGasTransposerHandler(IGasTransposerHandler) registerGasTransposerHandler(IGasTransposerHandler)}.
+ * Must be registered through {@link IGFRegistry#registerGasTransposerHandler(IGasTransposerHandler) registerGasTransposerHandler(IGasTransposerHandler)}.
  */
 public interface IGasTransposerInsertHandler extends IGasTransposerHandler
 {

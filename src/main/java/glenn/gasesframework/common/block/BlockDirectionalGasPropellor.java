@@ -2,7 +2,7 @@ package glenn.gasesframework.common.block;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.block.IGasTypeFilter;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasReceptor;
@@ -133,7 +133,7 @@ public abstract class BlockDirectionalGasPropellor extends Block implements IGas
 		{
 			TileEntityDirectionalGasPropellor tileEntity = (TileEntityDirectionalGasPropellor)world.getTileEntity(x, y, z);
 			
-			return tileEntity != null && tileEntity.acceptsType(gasType) && (tileEntity.containedType == null || tileEntity.containedType == GasesFrameworkAPI.gasTypeAir);
+			return tileEntity != null && tileEntity.acceptsType(gasType) && (tileEntity.containedType == null || tileEntity.containedType == GFAPI.gasTypeAir);
 		}
 		else
 		{

@@ -7,16 +7,14 @@ import glenn.gasesframework.api.mechanical.IGasTransposerHandler;
 import glenn.gasesframework.api.pipetype.PipeType;
 import glenn.gasesframework.api.reaction.Reaction;
 import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 /**
  * A dummy registry for the Gases Framework that is used when the mod is not installed.
  * @author Erlend
  */
-public class DummyRegistry implements IGasesFrameworkRegistry
+public class DummyRegistry implements IGFRegistry
 {
 	@Override
 	public void registerGasFurnaceRecipe(ItemStack ingredient, ItemStack result, int time, int exp)

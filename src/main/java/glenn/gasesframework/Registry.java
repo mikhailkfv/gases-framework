@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.IGasesFrameworkRegistry;
+import glenn.gasesframework.api.GFAPI;
+import glenn.gasesframework.api.IGFRegistry;
 import glenn.gasesframework.api.ItemKey;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.gasworldgentype.GasWorldGenType;
@@ -30,7 +30,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-public class Registry implements IGasesFrameworkRegistry
+public class Registry implements IGFRegistry
 {
 	@Override
 	public void registerGasFurnaceRecipe(ItemStack ingredient, ItemStack result, int time, int exp)
@@ -285,7 +285,7 @@ public class Registry implements IGasesFrameworkRegistry
 			throw new RuntimeException("Gas type named " + type.name + " has an ID conflict with gas type named " + getGasTypeByID(type.gasID).name + ".");
 		}
 
-		if(type != GasesFrameworkAPI.gasTypeAir)
+		if(type != GFAPI.gasTypeAir)
 		{
 			BlockGas gasBlock = (BlockGas)GameRegistry.registerBlock(new BlockGas(type), "gas_" + type.name);
 			gasTypeGasBlocks.put(type, gasBlock);

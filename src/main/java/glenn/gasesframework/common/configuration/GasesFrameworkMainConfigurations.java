@@ -1,12 +1,8 @@
 package glenn.gasesframework.common.configuration;
 
-import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.moddingutils.configuration.Configurations;
 
 import java.io.File;
-
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 
 public class GasesFrameworkMainConfigurations extends Configurations
 {

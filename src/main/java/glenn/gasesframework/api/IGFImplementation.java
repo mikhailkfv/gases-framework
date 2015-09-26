@@ -11,14 +11,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
- * An interface to connect the GasesFrameworkAPI to the functionality of the GasesFramework mod.
+ * An interface to connect the GFAPI to the functionality of the GasesFramework mod.
  * @author Erlend
  */
-public interface IGasesFrameworkImplementation
+public interface IGFImplementation
 {
 	/**
 	 * Returns true if this block coordinate can be filled with a unit of gas.
-	 * If this returns true, {@link IGasesFrameworkImplementation#tryFillWithGas(World, Random, int, int, int, GasType) tryFillWithGas(World,Random,int,int,int,GasType)} will also return true.
+	 * If this returns true, {@link IGFImplementation#tryFillWithGas(World, Random, int, int, int, GasType) tryFillWithGas(World,Random,int,int,int,GasType)} will also return true.
 	 * @param world The world object
 	 * @param x X coordinate
 	 * @param y Y coordinate
@@ -30,7 +30,7 @@ public interface IGasesFrameworkImplementation
 	
 	/**
 	 * Try to fill this block coordinate with a unit of gas. If necessary, this method will spread the gas outwards.
-	 * The result of this method can be predetermined with {@link IGasesFrameworkImplementation#canFillWithGas(World, int, int, int, GasType) canFillWithGas(World,int,int,int,GasType)}.
+	 * The result of this method can be predetermined with {@link IGFImplementation#canFillWithGas(World, int, int, int, GasType) canFillWithGas(World,int,int,int,GasType)}.
 	 * @param world The world object
 	 * @param random The random object
 	 * @param x X coordinate
@@ -82,8 +82,8 @@ public interface IGasesFrameworkImplementation
 	/**
 	 * Push gas to a coordinate with a certain direction and pressure.
 	 * If the block is an IGasTransporter or IGasReceptor,
-	 * {@link glenn.gasesframework.api.IGasesFrameworkImplementation#tryPumpGas(World,Random,int,int,int,GasType,ForgeDirection,int) tryPumpGas(World,Random,int,int,int,GasType,ForgeDirection,int)} is returned.
-	 * Else, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#tryFillWithGas(World,Random,int,int,int,GasType) tryFillWithGas(World,Random,int,int,int,GasType)} is returned.
+	 * {@link IGFImplementation#tryPumpGas(World,Random,int,int,int,GasType,ForgeDirection,int) tryPumpGas(World,Random,int,int,int,GasType,ForgeDirection,int)} is returned.
+	 * Else, {@link IGFImplementation#tryFillWithGas(World,Random,int,int,int,GasType) tryFillWithGas(World,Random,int,int,int,GasType)} is returned.
 	 * @param world The world object
 	 * @param random The random object
 	 * @param x X coordinate

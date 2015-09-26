@@ -11,10 +11,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
- * An interface to connect the GasesFrameworkAPI to the registry of the GasesFramework mod.
+ * An interface to connect the GFAPI to the registry of the GasesFramework mod.
  * @author Erlend
  */
-public interface IGasesFrameworkRegistry
+public interface IGFRegistry
 {
 	/**
 	 * Register a furnace recipe that only applies to gas furnaces.

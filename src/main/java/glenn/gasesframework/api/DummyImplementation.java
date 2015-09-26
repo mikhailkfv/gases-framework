@@ -5,7 +5,6 @@ import java.util.Random;
 import glenn.gasesframework.api.filter.GasTypeFilter;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.pipetype.PipeType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -14,7 +13,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  * A dummy implementation for the Gases Framework that is used when the mod is not installed.
  * @author Erlend
  */
-public class DummyImplementation implements IGasesFrameworkImplementation
+public class DummyImplementation implements IGFImplementation
 {
 	@Override
 	public boolean canFillWithGas(World world, int x, int y, int z, GasType type)

@@ -1,7 +1,7 @@
 package glenn.gasesframework.common.item;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.item.IFilterProvider;
 import glenn.gasesframework.api.item.ISampler;
@@ -44,7 +44,7 @@ public abstract class ItemGasSampler extends ItemGasContainer implements ISample
 	public String getItemStackDisplayName(ItemStack itemstack)
 	{
 		GasType gasType = getGasType(itemstack);
-		if(gasType == GasesFrameworkAPI.gasTypeAir || gasType == null)
+		if(gasType == GFAPI.gasTypeAir || gasType == null)
 		{
 			return super.getItemStackDisplayName(itemstack);
 		}

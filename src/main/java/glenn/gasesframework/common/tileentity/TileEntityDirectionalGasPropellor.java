@@ -3,7 +3,7 @@ package glenn.gasesframework.common.tileentity;
 import java.util.Random;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasSource;
 import glenn.gasesframework.api.filter.GasTypeFilter;
@@ -115,7 +115,7 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
      */
     protected boolean canFill()
     {
-    	return containedType == null || containedType == GasesFrameworkAPI.gasTypeAir;
+    	return containedType == null || containedType == GFAPI.gasTypeAir;
     }
 	
     /**
@@ -151,7 +151,7 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
 			}
 		}
 		
-		return GasesFrameworkAPI.gasTypeAir;
+		return GFAPI.gasTypeAir;
     }
     
     /**

@@ -1,7 +1,7 @@
 package glenn.gasesframework.common.tileentity;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.block.IGasPropellor;
 import glenn.gasesframework.api.block.IGasSource;
 import glenn.gasesframework.api.gastype.GasType;
@@ -135,7 +135,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				}
 				else
 				{
-					return gasType == null || gasType == GasesFrameworkAPI.gasTypeAir;
+					return gasType == null || gasType == GFAPI.gasTypeAir;
 				}
 			}
 			
@@ -159,7 +159,7 @@ public class TileEntityGasTransposer extends TileEntity implements ISidedInvento
 				}
 				else
 				{
-					return gasType == null || gasType == GasesFrameworkAPI.gasTypeAir;
+					return gasType == null || gasType == GFAPI.gasTypeAir;
 				}
 			}
 			

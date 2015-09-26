@@ -1,6 +1,6 @@
 package glenn.gasesframework.client.render;
 
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.common.block.BlockInfiniteGasPump;
 import glenn.gasesframework.common.tileentity.TileEntityInfiniteGasPump;
@@ -200,7 +200,7 @@ public class RenderBlockInfiniteGasPump implements ISimpleBlockRenderingHandler
 			IIcon icon;
 			GasType type = tileEntity.getType(faceDirection);
 			
-			if(type != null && type != GasesFrameworkAPI.gasTypeAir)
+			if(type != null && type != GFAPI.gasTypeAir)
 			{
 				int color = type.color;
 				float gasRed = 0.25F + (float)((color >> 24) & 0xFF) / 510.0F;

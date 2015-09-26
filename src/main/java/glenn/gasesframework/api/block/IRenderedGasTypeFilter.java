@@ -1,5 +1,6 @@
 package glenn.gasesframework.api.block;
 
+import glenn.gasesframework.api.IGFImplementation;
 import glenn.gasesframework.api.filter.GasTypeFilter;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -10,7 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  * 
  * Simply implementing this interface is insufficient to make it work.
  * The block must override {@link net.minecraft.block.Block#getRenderType() getRenderType()} to return
- * {@link glenn.gasesframework.api.IGasesFrameworkImplementation#getRenderedGasTypeFilterBlockRenderType() getRenderedGasTypeFilterBlockRenderType()} INITIALLY.
+ * {@link IGFImplementation#getRenderedGasTypeFilterBlockRenderType() getRenderedGasTypeFilterBlockRenderType()} INITIALLY.
  * It must, however, swap to return the underlying render type when {@link #swapRenderedGasTypeFilterRenderType() swapRenderedGasTypeFilterRenderType()} is called,
  * and swap back again when repeated.
  * @author Erlend
@@ -30,7 +31,7 @@ public interface IRenderedGasTypeFilter
 	
 	/**
 	 * Swap the result of {@link net.minecraft.block.Block#getRenderType() getRenderType()}
-	 * between {@link glenn.gasesframework.api.IGasesFrameworkImplementation#getRenderedGasTypeFilterBlockRenderType() getRenderedGasTypeFilterBlockRenderID()}
+	 * between {@link IGFImplementation#getRenderedGasTypeFilterBlockRenderType() getRenderedGasTypeFilterBlockRenderID()}
 	 * and the underlying block renderer, commonly 0.
 	 */
 	void swapRenderedGasTypeFilterRenderType();

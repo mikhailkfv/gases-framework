@@ -1,7 +1,7 @@
 package glenn.gasesframework.common.core;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 
 import java.util.Arrays;
 
@@ -24,7 +24,7 @@ public class DummyContainerGasesFramework extends DummyModContainer
 		ModMetadata meta = getMetadata();
 		meta.modId = "gasesFrameworkCore";
 		meta.name = "Gases Framework Core";
-		meta.version = GasesFrameworkAPI.VERSION;
+		meta.version = GasesFramework.VERSION;
 		meta.description = "Adds core functionality for mods based on the Gases Framework.";
 		meta.authorList = Arrays.asList("Glenn");
 		meta.url = "http://www.minecraftforum.net/topic/1890587-/";
@@ -41,21 +41,17 @@ public class DummyContainerGasesFramework extends DummyModContainer
 
 	@Subscribe
 	public void modConstruction(FMLConstructionEvent evt)
-	{
-	}
+	{}
 
 	@Subscribe
 	public void preInit(FMLPreInitializationEvent evt)
-	{
-	}
+	{}
 
 	@Subscribe
 	public void init(FMLInitializationEvent evt)
-	{
-	}
+	{}
 
 	@Subscribe
 	public void postInit(FMLPostInitializationEvent evt)
-	{
-	}
+	{}
 }

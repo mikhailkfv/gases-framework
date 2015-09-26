@@ -1,5 +1,6 @@
 package glenn.gasesframework.api.pipetype;
 
+import glenn.gasesframework.api.IGFRegistry;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.util.IIcon;
 
@@ -44,7 +45,7 @@ public class PipeType
 	public IIcon endIcon;
 
 	/**
-	 * Creates a new pipe type. Pipe types must be {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerPipeType(PipeType) registered}.
+	 * Creates a new pipe type. Pipe types must be {@link IGFRegistry#registerPipeType(PipeType) registered}.
 	 * @param pipeID The ID of this pipe type. Must be unique. Limited to 0-15. Consult the Gases Framework documentation for unoccupied IDs
 	 * @param name An unique name for the pipe type
 	 * @param isSolid Will this pipe hide its contents?

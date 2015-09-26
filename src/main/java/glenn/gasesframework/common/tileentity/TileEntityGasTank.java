@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.moddingutils.ForgeDirectionUtil;
 import glenn.moddingutils.IVec;
@@ -265,7 +265,7 @@ public abstract class TileEntityGasTank extends TileEntity
 	
 	public boolean canIncrement(GasType gasType)
 	{
-		if(gasType == null || gasType == GasesFrameworkAPI.gasTypeAir)
+		if(gasType == null || gasType == GFAPI.gasTypeAir)
 		{
 			return true;
 		}
@@ -306,7 +306,7 @@ public abstract class TileEntityGasTank extends TileEntity
 	
 	public boolean increment(GasType gasType)
 	{
-		if(gasType == null || gasType == GasesFrameworkAPI.gasTypeAir)
+		if(gasType == null || gasType == GFAPI.gasTypeAir)
 		{
 			return true;
 		}

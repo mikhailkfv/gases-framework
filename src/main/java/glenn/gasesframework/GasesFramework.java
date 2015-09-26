@@ -2,6 +2,7 @@ package glenn.gasesframework;
 
 import java.io.File;
 
+import glenn.gasesframework.api.GFAPI;
 import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.common.Mod;
@@ -17,7 +18,6 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
-import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.ItemKey;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.lanterntype.LanternType;
@@ -90,9 +90,9 @@ public class GasesFramework
 	@SidedProxy(clientSide = "glenn.gasesframework.client.ClientProxy", serverSide = "glenn.gasesframework.server.ServerProxy")
 	public static CommonProxy proxy;
 	
-	public static final String MODID = GasesFrameworkAPI.OWNER;
+	public static final String MODID = GFAPI.OWNER;
 	public static final String VERSION = "1.2.0";
-	public static final String TARGETVERSION = GasesFrameworkAPI.TARGETVERSION;
+	public static final String TARGETVERSION = GFAPI.TARGETVERSION;
 
 	public static Logger logger;
 	public static final GuiHandler guiHandler = new GuiHandler();
@@ -141,7 +141,7 @@ public class GasesFramework
 			registry.registerLanternType(lanternType);
 		}
 		
-		registry.registerGasType(GasesFrameworkAPI.gasTypeAir);
+		registry.registerGasType(GFAPI.gasTypeAir);
 		registry.registerGasType(gasTypeSmoke);
 		registry.registerGasType(gasTypeFire);
 		
@@ -149,12 +149,12 @@ public class GasesFramework
 		registry.registerPipeType(pipeTypeGlass);
 		registry.registerPipeType(pipeTypeWood);
 
-		registry.getGasPipeBlock(GasesFrameworkAPI.gasTypeAir).setCreativeTab(creativeTab);
+		registry.getGasPipeBlock(GFAPI.gasTypeAir).setCreativeTab(creativeTab);
 	}
 
 	private void initRecipes()
 	{
-		BlockGasPipe pipeBlock = registry.getGasPipeBlock(GasesFrameworkAPI.gasTypeAir);
+		BlockGasPipe pipeBlock = registry.getGasPipeBlock(GFAPI.gasTypeAir);
 		ItemStack pipeIron = new ItemStack(pipeBlock, 1, 0);
 		ItemStack pipeWood = new ItemStack(pipeBlock, 1, 2);
 
@@ -184,7 +184,7 @@ public class GasesFramework
 	{
 		logger = event.getModLog();
 
-		GasesFrameworkAPI.install(implementation, registry);
+		GFAPI.install(implementation, registry);
 
 		networkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 		proxy.registerMessage(MessageGasEffects.Handler.class, MessageGasEffects.class, 0);

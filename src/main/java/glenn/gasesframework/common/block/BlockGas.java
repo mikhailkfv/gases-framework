@@ -2,6 +2,7 @@ package glenn.gasesframework.common.block;
 
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.Combustibility;
+import glenn.gasesframework.api.IGFRegistry;
 import glenn.gasesframework.api.PartialGasStack;
 import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.MaterialGas;
@@ -247,7 +248,7 @@ public class BlockGas extends Block implements ISample
 	
 	/**
 	 * Called whenever a gas {@link ReactionCommonIgnition reacts}
-	 * with a block registered with {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerIgnitionBlock(Block)}.
+	 * with a block registered with {@link IGFRegistry#registerIgnitionBlock(Block)}.
 	 * @param world
 	 * @param i
 	 * @param j

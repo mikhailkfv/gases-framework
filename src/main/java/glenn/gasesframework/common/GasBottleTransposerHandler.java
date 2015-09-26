@@ -3,7 +3,7 @@ package glenn.gasesframework.common;
 import glenn.gasesframework.GasesFramework;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.mechanical.IGasTransposerExtractHandler;
 import glenn.gasesframework.api.mechanical.IGasTransposerInsertHandler;
@@ -20,7 +20,7 @@ public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, 
 	@Override
 	public boolean isValidInsertionInput(ItemStack inputStack, GasType gasType)
 	{
-		return gasType != null && gasType != GasesFrameworkAPI.gasTypeAir;
+		return gasType != null && gasType != GFAPI.gasTypeAir;
 	}
 
 	@Override

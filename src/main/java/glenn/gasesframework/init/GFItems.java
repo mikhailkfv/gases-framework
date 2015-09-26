@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.common.item.ItemDuctTape;
 import glenn.gasesframework.common.item.ItemGasBottle;
 import glenn.gasesframework.common.item.ItemGasSamplerExcluding;

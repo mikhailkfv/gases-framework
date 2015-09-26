@@ -3,7 +3,7 @@ package glenn.gasesframework.common.block;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.client.render.RenderRotatedBlock;
@@ -139,7 +139,7 @@ public abstract class BlockGasDynamo extends Block implements IGasReceptor, ITil
     public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
     {
     	TileEntityGasDynamo gasDynamo = (TileEntityGasDynamo)world.getTileEntity(x, y, z);
-		if(gasType == GasesFrameworkAPI.gasTypeAir)
+		if(gasType == GFAPI.gasTypeAir)
 		{
 			return true;
 		}

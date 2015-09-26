@@ -1,10 +1,9 @@
 package glenn.gasesframework.common.block;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.block.IGasInterface;
 import glenn.gasesframework.api.block.IGasPropellor;
-import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasTransporter;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.pipetype.PipeType;
@@ -14,7 +13,6 @@ import glenn.gasesframework.util.GasTransporterSearch;
 import glenn.moddingutils.IVec;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -215,13 +213,15 @@ public class BlockGasPipe extends Block implements IGasTransporter
     @Override
 	public Item getItem(World par1World, int par2, int par3, int par4)
 	{
-	    return Item.getItemFromBlock(GasesFramework.registry.getGasPipeBlock(GasesFrameworkAPI.gasTypeAir));
+	    return Item.getItemFromBlock(GasesFramework.registry.getGasPipeBlock(
+				GFAPI.gasTypeAir));
 	}
     
     @Override
 	public Item getItemDropped(int par1, Random par2Random, int par3)
 	{
-		return Item.getItemFromBlock(GasesFramework.registry.getGasPipeBlock(GasesFrameworkAPI.gasTypeAir));
+		return Item.getItemFromBlock(GasesFramework.registry.getGasPipeBlock(
+				GFAPI.gasTypeAir));
 	}
 	
 	/**
@@ -240,7 +240,7 @@ public class BlockGasPipe extends Block implements IGasTransporter
     
     public void burst(World world, int x, int y, int z)
     {
-    	if (type != GasesFrameworkAPI.gasTypeAir)
+    	if (type != GFAPI.gasTypeAir)
     	{
 			GasesFramework.implementation.placeGas(world, x, y, z, type, 16);
     	}

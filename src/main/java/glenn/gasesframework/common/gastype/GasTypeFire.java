@@ -5,9 +5,8 @@ import glenn.gasesframework.api.Combustibility;
 
 import java.util.Random;
 
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.gastype.GasType;
-import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
@@ -16,7 +15,7 @@ public class GasTypeFire extends GasType
 	public GasTypeFire()
 	{
 		super(false, 11, "fire", 0xFFFFFFFF, 0, 0, Combustibility.NONE);
-		setOverlayImage(GasesFrameworkAPI.fireOverlayImage);
+		setOverlayImage(GFAPI.fireOverlayImage);
 		setDissipationRate(2);
 		setTextureName("gasesframework:gas_fire");
 		setDestroyLooseBlocks(true);

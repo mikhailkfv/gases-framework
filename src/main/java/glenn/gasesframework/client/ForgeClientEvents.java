@@ -1,5 +1,6 @@
 package glenn.gasesframework.client;
 
+import glenn.gasesframework.api.GFAPI;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -7,7 +8,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.ExtendedGasEffectsBase;
-import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.MaterialGas;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.client.render.RenderVillagerGag;
@@ -158,7 +158,8 @@ public class ForgeClientEvents
 			BlockGasPipe gasPipe = (BlockGasPipe)block;
 			
 			ItemStack currentPlayerItem = event.player.getCurrentEquippedItem();
-			if(currentPlayerItem != null && currentPlayerItem.getItem() == Item.getItemFromBlock(GasesFramework.registry.getGasPipeBlock(GasesFrameworkAPI.gasTypeAir)))
+			if(currentPlayerItem != null && currentPlayerItem.getItem() == Item.getItemFromBlock(GasesFramework.registry.getGasPipeBlock(
+					GFAPI.gasTypeAir)))
 			{
 				final byte[] pumpingDirections = gasPipe.getPossiblePropellingDirections(world, x, y, z);
 				

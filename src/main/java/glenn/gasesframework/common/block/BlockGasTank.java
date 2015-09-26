@@ -1,25 +1,16 @@
 package glenn.gasesframework.common.block;
 
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasSource;
 import glenn.gasesframework.api.block.ISample;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.client.render.RenderBlockGasTank;
-import glenn.gasesframework.common.item.ItemGasBottle;
 import glenn.gasesframework.common.tileentity.TileEntityGasTank;
-import glenn.moddingutils.IVec;
-
-import java.util.ArrayList;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -67,7 +58,7 @@ public abstract class BlockGasTank extends Block implements IGasSource, IGasRece
 		TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
 		GasType gasType = tileEntity.getGasTypeStored();
 		
-		return gasType != null ? gasType : GasesFrameworkAPI.gasTypeAir;
+		return gasType != null ? gasType : GFAPI.gasTypeAir;
 	}
 
 	@Override
@@ -78,7 +69,7 @@ public abstract class BlockGasTank extends Block implements IGasSource, IGasRece
 		GasType gasType = tileEntity.getGasTypeStored();
 		tileEntity.decrement();
 		
-		return gasType != null ? gasType : GasesFrameworkAPI.gasTypeAir;
+		return gasType != null ? gasType : GFAPI.gasTypeAir;
 	}
 	
 	@Override

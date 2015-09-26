@@ -1,10 +1,6 @@
 package glenn.gasesframework.client.render;
 
 import org.lwjgl.opengl.GL11;
-
-import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.common.tileentity.TileEntityGasDynamo;
 import glenn.moddingutils.blockrotation.BlockRotation;
 import net.minecraft.block.Block;

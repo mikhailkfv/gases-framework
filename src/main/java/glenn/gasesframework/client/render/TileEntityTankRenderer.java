@@ -1,9 +1,9 @@
 package glenn.gasesframework.client.render;
 
+import glenn.gasesframework.api.GFAPI;
 import org.lwjgl.opengl.GL11;
 
 import glenn.gasesframework.GasesFramework;
-import glenn.gasesframework.api.GasesFrameworkAPI;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.common.tileentity.TileEntityGasTank;
 import net.minecraft.block.Block;
@@ -43,7 +43,7 @@ public class TileEntityTankRenderer extends TileEntitySpecialRenderer
 			GasType gasType = tileEntity.getGasTypeStored();
 			if(gasType == null)
 			{
-				gasType = GasesFrameworkAPI.gasTypeAir;
+				gasType = GFAPI.gasTypeAir;
 			}
 
 			int color = gasType.color;

@@ -1,6 +1,7 @@
 package glenn.gasesframework.api.lanterntype;
 
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
+import glenn.gasesframework.api.IGFRegistry;
 import glenn.gasesframework.api.ItemKey;
 import net.minecraft.creativetab.CreativeTabs;
 
@@ -37,7 +38,7 @@ public class LanternType
 	public CreativeTabs creativeTab;
 
 	/**
-	 * Creates a new lantern type. Lantern types must be {@link glenn.gasesframework.api.IGasesFrameworkRegistry#registerLanternType(LanternType) registered}.
+	 * Creates a new lantern type. Lantern types must be {@link IGFRegistry#registerLanternType(LanternType) registered}.
 	 * @param name An unique name for this lantern type
 	 * @param lightLevel The level of light emitted by this lantern type in an interval from 0.0f to 1.0f
 	 * @param textureName The name of the texture displayed inside the lantern
@@ -73,7 +74,7 @@ public class LanternType
 	 */
 	public LanternType setInOut()
 	{
-		GasesFrameworkAPI.registry.registerLanternInput(this, itemOut);
+		GFAPI.registry.registerLanternInput(this, itemOut);
 		return this;
 	}
 

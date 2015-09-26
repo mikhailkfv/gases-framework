@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.Set;
 
-import glenn.gasesframework.api.GasesFrameworkAPI;
+import glenn.gasesframework.api.GFAPI;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.item.Item;
@@ -73,7 +73,7 @@ public class GasWorldGenPocket extends GasWorldGenType
 		{
 			for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 	    	{
-				if (GasesFrameworkAPI.implementation.getGasType(world, x, y, z) != gasType)
+				if (GFAPI.implementation.getGasType(world, x, y, z) != gasType)
 				{
 					Block block = world.getBlock(x + direction.offsetX, y + direction.offsetY, z + direction.offsetZ);
 					if(block instanceof BlockFalling || !block.isOpaqueCube())

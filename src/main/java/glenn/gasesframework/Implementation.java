@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-import glenn.gasesframework.api.GasesFrameworkAPI;
-import glenn.gasesframework.api.IGasesFrameworkImplementation;
+import glenn.gasesframework.api.GFAPI;
+import glenn.gasesframework.api.IGFImplementation;
 import glenn.gasesframework.api.PartialGasStack;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasTransporter;
@@ -27,11 +27,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-public class Implementation implements IGasesFrameworkImplementation
+public class Implementation implements IGFImplementation
 {
 	/**
 	 * Returns true if this block coordinate can be filled with a unit of gas.
-	 * If this returns true, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#tryFillWithGas(World, Random, int, int, int, GasType) tryFillWithGas(World,Random,int,int,int,GasType)} will also return true.
+	 * If this returns true, {@link IGFImplementation#tryFillWithGas(World, Random, int, int, int, GasType) tryFillWithGas(World,Random,int,int,int,GasType)} will also return true.
 	 * @param world - The world object
 	 * @param x
 	 * @param y
@@ -42,7 +42,7 @@ public class Implementation implements IGasesFrameworkImplementation
 	@Override
 	public boolean canFillWithGas(World world, int x, int y, int z, GasType type)
 	{
-		if(type == GasesFrameworkAPI.gasTypeAir)
+		if(type == GFAPI.gasTypeAir)
 		{
 			Block block = world.getBlock(x, y, z);
 			if(block instanceof BlockGas)
@@ -91,7 +91,7 @@ public class Implementation implements IGasesFrameworkImplementation
 
 	/**
 	 * Try to fill this block coordinate with a unit of gas. If necessary, this method will spread the gas outwards.
-	 * The result of this method can be predetermined with {@link glenn.gasesframework.api.IGasesFrameworkImplementation#canFillWithGas(World, int, int, int, GasType) canFillWithGas(World,int,int,int,GasType)}.
+	 * The result of this method can be predetermined with {@link IGFImplementation#canFillWithGas(World, int, int, int, GasType) canFillWithGas(World,int,int,int,GasType)}.
 	 * @param world
 	 * @param random
 	 * @param x
@@ -104,7 +104,7 @@ public class Implementation implements IGasesFrameworkImplementation
 	public boolean tryFillWithGas(World world, Random random, int x, int y,
 			int z, GasType type)
 	{
-		if(type == GasesFrameworkAPI.gasTypeAir)
+		if(type == GFAPI.gasTypeAir)
 		{
 			Block block = world.getBlock(x, y, z);
 			if(block instanceof BlockGas)
@@ -256,7 +256,7 @@ public class Implementation implements IGasesFrameworkImplementation
 	{
 		if(volume > 0)
 		{
-			if (type != GasesFrameworkAPI.gasTypeAir)
+			if (type != GFAPI.gasTypeAir)
 			{
 				if(volume > 16) volume = 16;
 				BlockGas gasBlock = GasesFramework.registry.getGasBlock(type);
@@ -355,8 +355,8 @@ public class Implementation implements IGasesFrameworkImplementation
 	/**
 	 * Push gas to a coordinate with a certain direction and pressure.
 	 * If the block is an IGasTransporter or IGasReceptor,
-	 * {@link glenn.gasesframework.api.IGasesFrameworkImplementation#tryPumpGas(World,Random,int,int,int,GasType,ForgeDirection,int) tryPumpGas(World,Random,int,int,int,GasType,ForgeDirection,int)} is returned.
-	 * Else, {@link glenn.gasesframework.api.IGasesFrameworkImplementation#tryFillWithGas(World,Random,int,int,int,GasType) tryFillWithGas(World,Random,int,int,int,GasType)} is returned.
+	 * {@link IGFImplementation#tryPumpGas(World,Random,int,int,int,GasType,ForgeDirection,int) tryPumpGas(World,Random,int,int,int,GasType,ForgeDirection,int)} is returned.
+	 * Else, {@link IGFImplementation#tryFillWithGas(World,Random,int,int,int,GasType) tryFillWithGas(World,Random,int,int,int,GasType)} is returned.
 	 * @param world
 	 * @param random
 	 * @param x
@@ -470,7 +470,7 @@ public class Implementation implements IGasesFrameworkImplementation
 		}
 		else if (block == Blocks.air)
 		{
-			return new PartialGasStack(GasesFrameworkAPI.gasTypeAir, 16);
+			return new PartialGasStack(GFAPI.gasTypeAir, 16);
 		}
 
 		return null;

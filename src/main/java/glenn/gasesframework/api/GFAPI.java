@@ -23,7 +23,7 @@ import net.minecraft.util.ResourceLocation;
  * @author Erlend
  * @author Trent
  */
-public class GasesFrameworkAPI
+public class GFAPI
 {
 	public static final String OWNER = "gasesFramework";
 	public static final String VERSION = "1.1.2";
@@ -36,12 +36,12 @@ public class GasesFrameworkAPI
 	 * The actual implementation of the Gases Framework. This serves as a connection point between the API and the functionality of the mod.
 	 * If the mod is not installed, this will be a dummy implementation.
 	 */
-	public static IGasesFrameworkImplementation implementation = new DummyImplementation();
+	public static IGFImplementation implementation = new DummyImplementation();
 	/**
 	 * The registry of the Gases Framework. This serves as a connection point between the API and the registry of the mod.
 	 * If the mod is not installed, this will be a dummy registry.
 	 */
-	public static IGasesFrameworkRegistry registry = new DummyRegistry();
+	public static IGFRegistry registry = new DummyRegistry();
 	
 	/**
 	 * The default overlay image used when the player is submerged in gas.
@@ -67,7 +67,7 @@ public class GasesFrameworkAPI
 
 	/**
 	 * Returns true if an implementation of the Gases Framework is installed.
-	 * This method may give false negatives if Gases Framework is loaded after this method is called. See {@link GasesFrameworkAPI}.
+	 * This method may give false negatives if Gases Framework is loaded after this method is called. See {@link GFAPI}.
 	 * @return True if the Gases Framework is installed
 	 */
 	public static boolean isInstalled()
@@ -80,10 +80,10 @@ public class GasesFrameworkAPI
 	 * @param implementation The Gases Framework implementation
 	 * @param registry The Gases Framework registry
 	 */
-	public static void install(IGasesFrameworkImplementation implementation, IGasesFrameworkRegistry registry)
+	public static void install(IGFImplementation implementation, IGFRegistry registry)
 	{
-		GasesFrameworkAPI.implementation = implementation;
-		GasesFrameworkAPI.registry = registry;
-		GasesFrameworkAPI.isInstalled = true;
+		GFAPI.implementation = implementation;
+		GFAPI.registry = registry;
+		GFAPI.isInstalled = true;
 	}
 }
