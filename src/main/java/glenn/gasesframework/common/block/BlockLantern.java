@@ -4,6 +4,7 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.Combustibility;
 import glenn.gasesframework.api.ItemKey;
 import glenn.gasesframework.api.block.IGasReceptor;
+import glenn.gasesframework.api.block.IGasTransporter;
 import glenn.gasesframework.api.gastype.GasType;
 import glenn.gasesframework.api.lanterntype.LanternType;
 import glenn.gasesframework.client.render.RenderBlockLantern;
@@ -95,8 +96,7 @@ public class BlockLantern extends Block implements IGasReceptor
     	ItemStack heldItem = entityPlayer.getCurrentEquippedItem();
     	ItemKey itemIn = new ItemKey(heldItem);
     	
-    	LanternType replacementType = GasesFramework.registry.getLanternTypeByInput(
-				itemIn);
+    	LanternType replacementType = GasesFramework.registry.getLanternTypeByInput(itemIn);
     	
     	if(replacementType == null)
     	{
@@ -181,7 +181,7 @@ public class BlockLantern extends Block implements IGasReceptor
     public boolean isValidConnection(World world, int x, int y, int z)
     {
     	Block block = world.getBlock(x, y, z);
-    	return block.isOpaqueCube() || block instanceof BlockGasPipe;
+    	return block.isOpaqueCube() || block instanceof IGasTransporter;
     }
 
     /**

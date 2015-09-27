@@ -114,8 +114,8 @@ public class GasesFramework
 			.setEffectRate(ExtendedGasEffectsBase.EffectType.SLOWNESS, 16);
 	public static final GasType gasTypeFire = new GasTypeFire().setCreativeTab(creativeTab);
 
-	public static final LanternType lanternTypeEmpty = new LanternType("empty", 0.0f, "gasesframework:lantern_empty", new ItemKey(), null, 0).setCreativeTab(creativeTab).setInOut();
-	public static final LanternType lanternTypeGasEmpty = new LanternType("gas_empty", 0.0f, "gasesframework:lantern_gas_empty", new ItemKey(Items.glass_bottle), lanternTypeEmpty, 0).setCreativeTab(creativeTab).setInOut();
+	public static final LanternType lanternTypeEmpty = new LanternType("empty", 0.0f, "gasesframework:lantern_empty", new ItemKey(), null, 0).setCreativeTab(creativeTab);
+	public static final LanternType lanternTypeGasEmpty = new LanternType("gas_empty", 0.0f, "gasesframework:lantern_gas_empty", new ItemKey(Items.glass_bottle), lanternTypeEmpty, 0).setCreativeTab(creativeTab);
 	public static final LanternType[] lanternTypesGas = new LanternType[] {
 			lanternTypeGasEmpty,
 			new LanternType("gas_1", 1.0f, "gasesframework:lantern_gas_1", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 1),
@@ -237,8 +237,15 @@ public class GasesFramework
 			}
 
 			registry.registerReaction(new ReactionNoisyPeople(), gasType);
+
+			if (gasType.combustibility != Combustibility.NONE)
+			{
+				registry.registerLanternInput(lanternTypesGas[gasType.combustibility.ordinal()], new ItemKey(items.gasBottle, gasType.gasID));
+			}
 		}
 		registry.registerReaction(new ReactionBurnEntity(), gasTypeFire);
+
+		registry.registerLanternInput(lanternTypeGasEmpty, new ItemKey(Items.glass_bottle));
 
 		registry.registerGasTransposerHandler(new GasBottleTransposerHandler());
 		
