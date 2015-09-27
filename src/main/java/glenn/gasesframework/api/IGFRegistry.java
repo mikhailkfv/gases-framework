@@ -84,6 +84,7 @@ public interface IGFRegistry
 
 	/**
 	 * Register a reaction for a set of gas types.
+	 * Reactions must be registered during {@link cpw.mods.fml.common.event.FMLInitializationEvent Initialization}.
 	 * @param reaction The reaction to register to the gas types
 	 * @param gasTypes The gas types to register the reaction to
 	 */
@@ -120,7 +121,7 @@ public interface IGFRegistry
 
 	/**
 	 * Registers a gas type. This involves creating and registering the blocks necessary for a gas type.
-	 * Gas types must be registered during PreInit.
+	 * Gas types must be registered during {@link cpw.mods.fml.common.event.FMLPreInitializationEvent PreInitialization}.
 	 * @param type The gas type
 	 */
 	void registerGasType(GasType type);
@@ -156,7 +157,7 @@ public interface IGFRegistry
 
 	/**
 	 * Registers a lantern type. This involves creating and registering the blocks necessary for a lantern type.
-	 * Lantern types must be registered during PreInit.
+	 * Lantern types must be registered during {@link cpw.mods.fml.common.event.FMLPreInitializationEvent PreInitialization}.
 	 * @param type The lantern type
 	 */
 	void registerLanternType(LanternType type);
@@ -170,6 +171,7 @@ public interface IGFRegistry
 
 	/**
 	 * Register a recipe for a lantern type. This will override conflicting registered inputs.
+	 * Lantern inputs must be registered during {@link cpw.mods.fml.common.event.FMLInitializationEvent Initialization}.
 	 * @param type The lantern type
 	 * @param itemKey The item that can be put in the lantern
 	 */

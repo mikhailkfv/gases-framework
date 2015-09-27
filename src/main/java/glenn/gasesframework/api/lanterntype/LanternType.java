@@ -68,17 +68,6 @@ public class LanternType
 	}
 
 	/**
-	 * Sets the item to treat the item given from this lantern type as something used to create a lantern of this type.
-	 * This is common for non-gas lanterns.
-	 * @return this
-	 */
-	public LanternType setInOut()
-	{
-		GFAPI.registry.registerLanternInput(this, itemOut);
-		return this;
-	}
-
-	/**
 	 * Does this lantern type expire?
 	 * @return True if this lantern type expires
 	 */

@@ -22,6 +22,7 @@ public class GasWorldGenPocket extends GasWorldGenType
 	/**
 	 * Creates a new gas world gen pocket. Gas world gen types are necessary for adding gases to the terrain.
 	 * If the Gases Framework retrogen is enabled, this type will be generated in chunks where it has not previously been generated.
+	 * In order for replaceBlocks to work, pocket world gen types initialized during {@link cpw.mods.fml.common.event.FMLInitializationEvent Initialization}.
 	 * @param name A name for this gas world gen type. Must be unique
 	 * @param gasType The gas type to be placed by this world generator
 	 * @param generationFrequency The average amount of pockets/clouds per 16x16x16 chunk of blocks
@@ -43,7 +44,7 @@ public class GasWorldGenPocket extends GasWorldGenType
 			}
 			else if (obj instanceof String)
 			{
-				ArrayList<ItemStack> itemstacks =  OreDictionary.getOres((String)obj);
+				ArrayList<ItemStack> itemstacks = OreDictionary.getOres((String)obj);
 				for (ItemStack itemstack : itemstacks)
 				{
 					Item item = itemstack.getItem();
