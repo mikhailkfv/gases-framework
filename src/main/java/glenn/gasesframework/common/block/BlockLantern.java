@@ -18,6 +18,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -183,6 +184,16 @@ public class BlockLantern extends Block implements IGasReceptor
     	Block block = world.getBlock(x, y, z);
     	return block.isOpaqueCube() || block instanceof IGasTransporter;
     }
+
+	/**
+	 * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+	 * cleared to be reused)
+	 */
+	@Override
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+	{
+		return null;
+	}
 
     /**
      * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
