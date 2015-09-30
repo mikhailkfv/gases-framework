@@ -21,6 +21,12 @@ public class ItemGasBottle extends ItemGasContainer
         this.setHasSubtypes(true);
 	}
 
+	@Override
+	protected boolean isValidTypeForItem(GasType type)
+	{
+		return type != GFAPI.gasTypeAir && super.isValidTypeForItem(type);
+	}
+
     @Override
 	public String getItemStackDisplayName(ItemStack itemstack)
 	{

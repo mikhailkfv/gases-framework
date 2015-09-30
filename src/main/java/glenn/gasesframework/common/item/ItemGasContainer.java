@@ -12,6 +12,11 @@ import net.minecraft.item.ItemStack;
 
 public class ItemGasContainer extends Item
 {
+	protected boolean isValidTypeForItem(GasType type)
+	{
+		return type.isIndustrial;
+	}
+
 	/**
 	 * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
 	 */
@@ -22,7 +27,7 @@ public class ItemGasContainer extends Item
 		GasType[] allTypes = GasesFramework.registry.getRegisteredGasTypes();
 		for (GasType type : allTypes)
 		{
-			if(type.creativeTab == creativeTabs && type.isIndustrial)
+			if(type.creativeTab == creativeTabs && isValidTypeForItem(type))
 			{
 				itemList.add(new ItemStack(item, 1, type.gasID));
 			}

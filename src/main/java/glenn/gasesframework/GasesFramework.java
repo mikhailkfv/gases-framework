@@ -141,7 +141,7 @@ public class GasesFramework
 			registry.registerLanternType(lanternType);
 		}
 		
-		registry.registerGasType(GFAPI.gasTypeAir);
+		registry.registerGasType(GFAPI.gasTypeAir.setCreativeTab(creativeTab));
 		registry.registerGasType(gasTypeSmoke);
 		registry.registerGasType(gasTypeFire);
 		
