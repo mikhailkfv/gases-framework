@@ -159,9 +159,9 @@ public class GasesFramework
 		ItemStack pipeWood = new ItemStack(pipeBlock, 1, 2);
 
 		GameRegistry.addRecipe(new ItemStack(registry.getLanternBlock(lanternTypeEmpty), 4), "I", "G", 'I', Items.iron_ingot, 'G', Blocks.glass);
-		GameRegistry.addRecipe(new ItemStack(pipeBlock, 24), "III", 'I', Items.iron_ingot);
+		GameRegistry.addRecipe(new ItemStack(pipeBlock, 24), "III", " A ", 'I', Items.iron_ingot, 'A', items.ductTape);
 		GameRegistry.addRecipe(new ItemStack(pipeBlock, 24, 1), "GGG", "III", "GGG", 'I', Items.iron_ingot, 'G', Blocks.glass_pane);
-		GameRegistry.addRecipe(new ItemStack(pipeBlock, 24, 2), " D ", "LLL", " D ", 'L', Blocks.log, 'D', items.ductTape);
+		GameRegistry.addRecipe(new ItemStack(pipeBlock, 24, 2), "LLL", " D ", 'L', Blocks.log, 'D', items.ductTape);
 		GameRegistry.addRecipe(new ItemStack(blocks.ironGasPump), " I ", "PRP", " I ", 'I', Items.iron_ingot, 'P', pipeIron, 'R', Items.redstone);
 		GameRegistry.addRecipe(new ItemStack(blocks.woodGasPump), " W ", "PDP", " W ", 'W', Blocks.planks, 'P', pipeWood, 'D', items.ductTape);
 		GameRegistry.addRecipe(new ItemStack(blocks.gasCollector), " P ", "PUP", " P ", 'U', blocks.ironGasPump, 'P', pipeIron);
