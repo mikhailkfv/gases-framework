@@ -176,6 +176,8 @@ public class GasesFramework
 		GameRegistry.addShapelessRecipe(new ItemStack(items.gasSamplerExcluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 0));
 		GameRegistry.addShapelessRecipe(new ItemStack(items.gasSamplerIncluder), new ItemStack(Items.glass_bottle), new ItemStack(Items.dye, 1, 15));
 		GameRegistry.addShapelessRecipe(new ItemStack(items.adhesive), new ItemStack(Items.water_bucket), Items.rotten_flesh, Items.sugar);
+		GameRegistry.addShapelessRecipe(new ItemStack(items.adhesive), Items.potato, Items.wheat, Blocks.cobblestone);
+		GameRegistry.addShapelessRecipe(new ItemStack(items.ductTape, 2), items.adhesive, Items.string, Items.string);
 		GameRegistry.addRecipe(new ItemStack(items.ductTape, 32), "SSS", "SAS", "SSS", 'S', Items.string, 'A', items.adhesive);
 	}
 	
