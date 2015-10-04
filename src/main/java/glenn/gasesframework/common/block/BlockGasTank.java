@@ -1,5 +1,6 @@
 package glenn.gasesframework.common.block;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.block.IGasReceptor;
 import glenn.gasesframework.api.block.IGasSource;
@@ -11,6 +12,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -129,8 +133,11 @@ public abstract class BlockGasTank extends Block implements IGasSource, IGasRece
 	public void breakBlock(World world, int x, int y, int z, Block oldBlock, int oldBlockMetadata)
 	{
     	TileEntityGasTank tileEntity = (TileEntityGasTank)world.getTileEntity(x, y, z);
+    	if(!tileEntity.isEmpty())
+    	{
+        	world.spawnEntityInWorld(new EntityItem(world, x, y, z, new ItemStack(Item.getItemFromBlock(oldBlock))));
+    	}
     	tileEntity.emptyInAir();
-
     	super.breakBlock(world, x, y, z, oldBlock, oldBlockMetadata);
 	}
 
