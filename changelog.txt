@@ -1,1 +1,20 @@
-BEGIN CurseForge changelog
+Version 1.2.0 (The Wooden Age)
+
+Additions:
+- New block: Gas Dynamo
+- New blocks: Wooden tier machinery (Poor man's)
+- New items: Adhesive, Duct Tape
+
+Changes:
+- Gas explosions are no longer instant and will instead happen in a chain of
+clustered explosions
+- Expanded rotation possibilities for some blocks
+- Added proper distinction between Glenn's Gases and Gases Framework blocks
+and items
+- Buffed Iron tier machinery
+- Pipes are now exposed to pressure equal to the length of the path of pushed
+gas. Pipes exposed to overpressure will make noise and eventually break
+- Lanterns no longer collide
+
+Internal:
+- Reworked most of the API
