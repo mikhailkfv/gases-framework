@@ -15,8 +15,11 @@ buildscript {
     }
 }
 
+plugins {
+	id 'com.matthewprenger.cursegradle' version '1.0.7'
+}
+
 apply plugin: 'forge'
-apply plugin: 'curseforge'
 
 version = "1.7.10-1.2.0"
 group= "glenn.gasesframework" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -88,10 +91,17 @@ task buildDev(type: Jar) {
     }
 }
 
-curse {
-	projectId = '236435'
+curseforge {
 	apiKey = project.curseForgeApiKey
-	releaseType = 'release'
+	project {
+		id = '236435'
+		changelog = file('changelog.txt')
+		releaseType = 'release'
 
-	additionalArtifact buildDev
+		mainArtifact(jar) {
+			displayName = "Gases Framework $project.version"
+		}
+
+		addArtifact buildDev
+	}
 }
