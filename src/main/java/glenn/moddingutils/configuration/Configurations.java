@@ -352,7 +352,7 @@ public abstract class Configurations
 
 				if (settings.autoReset)
 				{
-					property.set(settings.autoReset);
+					property.set(settings.defaultValue);
 				}
 			}
 			else if (clazz.isArray())
