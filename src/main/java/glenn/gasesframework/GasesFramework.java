@@ -3,6 +3,7 @@ package glenn.gasesframework;
 import java.io.File;
 
 import glenn.gasesframework.api.GFAPI;
+import glenn.gasesframework.api.gasworldgentype.GasWorldGenCloud;
 import org.apache.logging.log4j.Logger;
 
 import cpw.mods.fml.common.Mod;
@@ -250,7 +251,7 @@ public class GasesFramework
 		registry.registerLanternInput(lanternTypeGasEmpty, new ItemKey(Items.glass_bottle));
 
 		registry.registerGasTransposerHandler(new GasBottleTransposerHandler());
-		
+
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
 		
 		GasesFrameworkWaila.init();

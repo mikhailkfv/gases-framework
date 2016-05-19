@@ -14,6 +14,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -35,8 +36,7 @@ public class ForgeCommonEvents
 				ExtendedGasEffects.register(entityLivingBase);
 			}
 
-			//Currently only applies to villagers.
-			if (entityLivingBase instanceof EntityVillager)
+			if (DuctTapeGag.canGag(entityLivingBase))
 			{
 				if(DuctTapeGag.get(entityLivingBase) == null)
 				{
@@ -53,21 +53,37 @@ public class ForgeCommonEvents
 		{
 			if (event.target instanceof EntityLivingBase)
 			{
-				EntityLivingBase entityLivingBase = (EntityLivingBase)event.target;
-				ExtendedGasEffectsBase extendedGasEffects = ExtendedGasEffects.get(entityLivingBase);
-				if (extendedGasEffects != null)
-				{
-					extendedGasEffects.sendMessage();
-				}
+				syncExtendedEntityProperties((EntityLivingBase)event.target);
+			}
+		}
+	}
 
-				if (entityLivingBase instanceof EntityVillager)
-				{
-					DuctTapeGag gag = DuctTapeGag.get(entityLivingBase);
-					if (gag != null)
-					{
-						gag.sendMessage();
-					}
-				}
+	@SubscribeEvent
+	public void onEntityJoinWorld(EntityJoinWorldEvent event)
+	{
+		if (!event.entity.worldObj.isRemote)
+		{
+			if (event.entity instanceof EntityLivingBase)
+			{
+				syncExtendedEntityProperties((EntityLivingBase)event.entity);
+			}
+		}
+	}
+
+	private void syncExtendedEntityProperties(EntityLivingBase entity)
+	{
+		ExtendedGasEffectsBase extendedGasEffects = ExtendedGasEffects.get(entity);
+		if (extendedGasEffects != null)
+		{
+			extendedGasEffects.sendMessage();
+		}
+
+		if (DuctTapeGag.canGag(entity))
+		{
+			DuctTapeGag gag = DuctTapeGag.get(entity);
+			if (gag != null)
+			{
+				gag.sendMessage();
 			}
 		}
 	}

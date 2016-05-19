@@ -5,6 +5,8 @@ import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.network.message.MessageDuctTapeGag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -34,11 +36,6 @@ public class DuctTapeGag implements IExtendedEntityProperties
 	{
 		NBTTagCompound properties = compound.getCompoundTag(EXT_PROP_NAME);
 		gagged = properties.getBoolean("gagged");
-
-		if (!entity.worldObj.isRemote)
-		{
-			sendMessage();
-		}
 	}
 
 	@Override
@@ -51,6 +48,11 @@ public class DuctTapeGag implements IExtendedEntityProperties
 				new MessageDuctTapeGag(entity, gagged),
 				new NetworkRegistry.TargetPoint(entity.worldObj.provider.dimensionId, entity.posX, entity.posY, entity.posZ, 50.0D)
 		);
+	}
+
+	public static boolean canGag(EntityLivingBase entity)
+	{
+		return entity instanceof EntityVillager || entity instanceof EntityPlayer;
 	}
 	
 	public static DuctTapeGag register(EntityLivingBase entity)

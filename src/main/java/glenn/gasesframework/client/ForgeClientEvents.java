@@ -1,6 +1,11 @@
 package glenn.gasesframework.client;
 
 import glenn.gasesframework.api.GFAPI;
+import glenn.gasesframework.client.render.RenderPlayerGag;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.RendererLivingEntity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -269,12 +274,21 @@ public class ForgeClientEvents
 	@SubscribeEvent
 	public void onRenderLiving(RenderLivingEvent.Post event)
 	{
-		if (event.renderer instanceof RenderVillager && !(event.renderer instanceof RenderVillagerGag))
+		if (DuctTapeGag.isGagged(event.entity))
 		{
-			EntityVillager entity = (EntityVillager)event.entity;
-			if (DuctTapeGag.isGagged(entity))
+			EntityLivingBase entity = event.entity;
+			RendererLivingEntity gagRenderer = null;
+			if (event.renderer instanceof RenderVillager && !(event.renderer instanceof RenderVillagerGag))
 			{
-				RenderVillagerGag gagRenderer = ((ClientProxy)GasesFramework.proxy).renderVillagerGag;
+                gagRenderer = ((ClientProxy)GasesFramework.proxy).renderVillagerGag;
+			}
+			else if (event.renderer instanceof RenderPlayer && !(event.renderer instanceof RenderPlayerGag))
+			{
+                gagRenderer = ((ClientProxy)GasesFramework.proxy).renderPlayerGag;
+			}
+
+			if (gagRenderer != null)
+			{
 				gagRenderer.doRender((Entity)entity, event.x, event.y, event.z, entity.rotationYaw, 1.0F);
 			}
 		}
