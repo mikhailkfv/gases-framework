@@ -164,13 +164,13 @@ public class BlockGas extends Block implements ISample
 		
 		int volume = 16 - blockAccess.getBlockMetadata(i, j, k);
 		Block directionBlock = blockAccess.getBlock(i + xDirection, j + yDirection, k + zDirection);
-		int directionBlockMetadata = blockAccess.getBlockMetadata(i + xDirection, j + yDirection, k + zDirection);
+		int directionBlockVolume = 16 - blockAccess.getBlockMetadata(i + xDirection, j + yDirection, k + zDirection);
 		
 		if(side == 1)
 		{
 			if(directionBlock instanceof BlockGas)
 			{
-				double maxY = ((BlockGas)directionBlock).type.getMaxY(blockAccess, i, j, k, directionBlockMetadata);
+				double maxY = ((BlockGas)directionBlock).type.getMaxY(blockAccess, i, j - 1, k, directionBlockVolume);
 				
 				return maxY - 1.0D != type.getMinY(blockAccess, i, j, k, volume);
 			} else
@@ -182,9 +182,9 @@ public class BlockGas extends Block implements ISample
 		{
 			if(directionBlock instanceof BlockGas)
 			{
-				double minY = ((BlockGas)directionBlock).type.getMinY(blockAccess, i, j, k, directionBlockMetadata);
+				double minY = ((BlockGas)directionBlock).type.getMinY(blockAccess, i, j + 1, k, directionBlockVolume);
 				
-				return minY != type.getMaxY(blockAccess, i, j, k, volume) - 1.0D ;
+				return minY != type.getMaxY(blockAccess, i, j, k, volume) - 1.0D;
 			} else
 			{
 				return true;

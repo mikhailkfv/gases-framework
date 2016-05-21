@@ -76,7 +76,7 @@ public class RenderBlockGas implements ISimpleBlockRenderingHandler
 		
 		int volume = 16 - blockAccess.getBlockMetadata(i, j, k);
 		Block sideBlock;
-		int sideBlockMetadata;
+		int sideBlockVolume;
 	
 		icon = renderer.hasOverrideBlockTexture() ? renderer.overrideBlockTexture : renderer.getBlockIcon(block);
 	    int brightness = block.getMixedBrightnessForBlock(blockAccess, i, j, k);
@@ -110,9 +110,9 @@ public class RenderBlockGas implements ISimpleBlockRenderingHandler
 			sideBlock = blockAccess.getBlock(i, j, k - 1);
 			if(sideBlock == block)
 			{
-	    		sideBlockMetadata = blockAccess.getBlockMetadata(i, j, k - 1);
-				sideMinY = ((BlockGas)sideBlock).type.getMinY(blockAccess, i, j, k - 1, sideBlockMetadata);
-				sideMaxY = ((BlockGas)sideBlock).type.getMaxY(blockAccess, i, j, k - 1, sideBlockMetadata);
+	    		sideBlockVolume = 16 - blockAccess.getBlockMetadata(i, j, k - 1);
+				sideMinY = ((BlockGas)sideBlock).type.getMinY(blockAccess, i, j, k - 1, sideBlockVolume);
+				sideMaxY = ((BlockGas)sideBlock).type.getMaxY(blockAccess, i, j, k - 1, sideBlockVolume);
 				
 				if((minY <= sideMinY & minY <= sideMaxY & maxY <= sideMinY & maxY <= sideMinY) | (minY >= sideMinY & minY >= sideMaxY & maxY >= sideMinY & maxY >= sideMinY))
 				{
@@ -179,9 +179,9 @@ public class RenderBlockGas implements ISimpleBlockRenderingHandler
 			sideBlock = blockAccess.getBlock(i, j, k + 1);
 			if(sideBlock == block)
 			{
-	    		sideBlockMetadata = blockAccess.getBlockMetadata(i, j, k + 1);
-				sideMinY = ((BlockGas)sideBlock).type.getMinY(blockAccess, i, j, k + 1, sideBlockMetadata);
-				sideMaxY = ((BlockGas)sideBlock).type.getMaxY(blockAccess, i, j, k + 1, sideBlockMetadata);
+	    		sideBlockVolume = 16 - blockAccess.getBlockMetadata(i, j, k + 1);
+				sideMinY = ((BlockGas)sideBlock).type.getMinY(blockAccess, i, j, k + 1, sideBlockVolume);
+				sideMaxY = ((BlockGas)sideBlock).type.getMaxY(blockAccess, i, j, k + 1, sideBlockVolume);
 				
 				if((minY <= sideMinY & minY <= sideMaxY & maxY <= sideMinY & maxY <= sideMinY) | (minY >= sideMinY & minY >= sideMaxY & maxY >= sideMinY & maxY >= sideMinY))
 				{
@@ -247,9 +247,9 @@ public class RenderBlockGas implements ISimpleBlockRenderingHandler
 			sideBlock = blockAccess.getBlock(i - 1, j, k);
 			if(sideBlock == block)
 			{
-	    		sideBlockMetadata = blockAccess.getBlockMetadata(i - 1, j, k);
-				sideMinY = ((BlockGas)sideBlock).type.getMinY(blockAccess, i - 1, j, k, sideBlockMetadata);
-				sideMaxY = ((BlockGas)sideBlock).type.getMaxY(blockAccess, i - 1, j, k, sideBlockMetadata);
+	    		sideBlockVolume = 16 - blockAccess.getBlockMetadata(i - 1, j, k);
+				sideMinY = ((BlockGas)sideBlock).type.getMinY(blockAccess, i - 1, j, k, sideBlockVolume);
+				sideMaxY = ((BlockGas)sideBlock).type.getMaxY(blockAccess, i - 1, j, k, sideBlockVolume);
 				
 				if((minY <= sideMinY & minY <= sideMaxY & maxY <= sideMinY & maxY <= sideMinY) | (minY >= sideMinY & minY >= sideMaxY & maxY >= sideMinY & maxY >= sideMinY))
 				{
@@ -315,9 +315,9 @@ public class RenderBlockGas implements ISimpleBlockRenderingHandler
 			sideBlock = blockAccess.getBlock(i + 1, j, k);
 			if(sideBlock == block)
 			{
-	    		sideBlockMetadata = blockAccess.getBlockMetadata(i + 1, j, k);
-				sideMinY = ((BlockGas)sideBlock).type.getMinY(blockAccess, i + 1, j, k, sideBlockMetadata);
-				sideMaxY = ((BlockGas)sideBlock).type.getMaxY(blockAccess, i + 1, j, k, sideBlockMetadata);
+	    		sideBlockVolume = 16 - blockAccess.getBlockMetadata(i + 1, j, k);
+				sideMinY = ((BlockGas)sideBlock).type.getMinY(blockAccess, i + 1, j, k, sideBlockVolume);
+				sideMaxY = ((BlockGas)sideBlock).type.getMaxY(blockAccess, i + 1, j, k, sideBlockVolume);
 				
 				if((minY <= sideMinY & minY <= sideMaxY & maxY <= sideMinY & maxY <= sideMinY) | (minY >= sideMinY & minY >= sideMaxY & maxY >= sideMinY & maxY >= sideMinY))
 				{
