@@ -97,7 +97,7 @@ public class GasesFramework
 
 	public static Logger logger;
 	public static final GuiHandler guiHandler = new GuiHandler();
-	public static SimpleNetworkWrapper networkWrapper = new SimpleNetworkWrapper(MODID);
+	public static SimpleNetworkWrapper networkWrapper;
 	public static GasesFrameworkMainConfigurations configurations;
 	public static final CreativeTabs creativeTab = new CreativeTab("tabGasesFramework");
 	public static final WorldGeneratorGasesFramework worldGenerator = new WorldGeneratorGasesFramework();
