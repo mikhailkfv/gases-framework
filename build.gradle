@@ -91,6 +91,18 @@ task buildDev(type: Jar) {
     }
 }
 
+task apiSource(type: Zip) {
+	classifier = 'apiSource'
+
+	from sourceSets.main.java
+	include 'glenn/gasesframework/api/**'
+}
+
+task apiJavadoc(type: Javadoc) {
+	source = sourceSets.main.java
+	include 'glenn/gasesframework/api/**'
+}
+
 curseforge {
 	apiKey = project.curseForgeApiKey
 	project {
@@ -103,5 +115,6 @@ curseforge {
 		}
 
 		addArtifact buildDev
+		addArtifact apiSource
 	}
 }
