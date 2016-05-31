@@ -210,8 +210,9 @@ public class GasesFramework
 	public void load(FMLInitializationEvent event)
 	{
 		proxy.registerRenderers();
-		
-		GameRegistry.registerWorldGenerator(worldGenerator, 10);
+
+		// Register world generator with massive weight to ensure gas pockets are not popped by other world generators
+		GameRegistry.registerWorldGenerator(worldGenerator, 10000);
 
 		initRecipes();
 
