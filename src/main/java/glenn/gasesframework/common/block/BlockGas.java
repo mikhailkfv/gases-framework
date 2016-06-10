@@ -465,105 +465,107 @@ public class BlockGas extends Block implements ISample
 		//If density is 0, the block will behave very differently.
 		if(type.density == 0)
 		{
-			//The gas will flow out from its position, but will priorify blocks around with the least amount of gas, and especially air. It will not flow into other blocks.
-			int[] metadataList = new int[6];
-			int[] priorityList = new int[6];
-			int totalFlow = 0;
-			int prevMetadata = metadata;
-
-			for(int i = 0; i < 6; i++)
+			if(metadata >= 8)
 			{
-				int xDirection = ringX[i];
-				int yDirection = ringY[i];
-				int zDirection = ringZ[i];
+				//The gas will flow out from its position, but will priorify blocks around with the least amount of gas, and especially air. It will not flow into other blocks.
+				int[] metadataList = new int[6];
+				int[] priorityList = new int[6];
+				int totalFlow = 0;
+				int prevMetadata = metadata;
+
+				for(int i = 0; i < 6; i++)
+				{
+					int xDirection = ringX[i];
+					int yDirection = ringY[i];
+					int zDirection = ringZ[i];
+					
+					Block direction2Block = world.getBlock(x + xDirection, y + yDirection, z + zDirection);
+					int direction2BlockMetadata = 16 - world.getBlockMetadata(x + xDirection, y + yDirection, z + zDirection);
+					
+					if(type.canFlowHere(world, x + xDirection, y + yDirection, z + zDirection, prevMetadata))
+					{
+						direction2BlockMetadata = -1;
+						totalFlow += 8;
+					}
+					else if(direction2Block != this)
+					{
+						direction2BlockMetadata = 17;
+					}
+					else if(direction2BlockMetadata < metadata - 1)
+					{
+						totalFlow += (metadata - direction2BlockMetadata) / 2;
+					}
+
+					for(int j = 0; j < 6; j++)
+					{
+						if(metadataList[j] <= direction2BlockMetadata & j != i)
+						{
+							continue;
+						}
+
+						for(int k = 4; k >= j; k--)
+						{
+							metadataList[k + 1] = metadataList[k];
+							priorityList[k + 1] = priorityList[k];
+						}
+
+						metadataList[j] = direction2BlockMetadata;
+						priorityList[j] = i;
+
+						break;
+					}
+				}
 				
-				Block direction2Block = world.getBlock(x + xDirection, y + yDirection, z + zDirection);
-				int direction2BlockMetadata = 16 - world.getBlockMetadata(x + xDirection, y + yDirection, z + zDirection);
+				mixEqualSortedValues(random, metadataList, priorityList);
+
+				for(int i = 0; i < 6 & metadata > 1; i++)
+				{
+					int j = priorityList[i];
+					int direction2BlockMetadata = metadataList[i];
+					int xDirection = ringX[j];
+					int yDirection = ringY[j];
+					int zDirection = ringZ[j];
+
+					if(direction2BlockMetadata != 17)
+					{
+						if(direction2BlockMetadata == -1)
+						{
+							int flow = prevMetadata / 2;
+							int transaction = flow * 16 / (totalFlow + 8);
+							
+							if(transaction < 1) transaction = 1;
+							world.setBlock(x + xDirection, y + yDirection, z + zDirection, this, 16 - transaction, 3);
+							requiresTick = false;
+							metadata -= transaction;
+						} else if(direction2BlockMetadata < 16 & direction2BlockMetadata + 1 < metadata)
+						{
+							int flow = (prevMetadata - direction2BlockMetadata) / 2;
+							int transaction = flow * 16 / (totalFlow + 8);
+
+							if(transaction < 1) transaction = 1;
+							world.setBlockMetadataWithNotify(x + xDirection, y + yDirection, z + zDirection, 16 - direction2BlockMetadata - transaction, 3);
+							requiresTick = false;
+							metadata -= transaction;
+						}
+					}
+				}
 				
-				if(type.canFlowHere(world, x + xDirection, y + yDirection, z + zDirection, prevMetadata))
+				//Remember to set the new metadata for the gas block.
+				if(metadata > 0)
 				{
-					direction2BlockMetadata = -1;
-					totalFlow += 8;
-				}
-				else if(direction2Block != this)
+					world.setBlockMetadataWithNotify(x, y, z, 16 - metadata, 3);
+				} else
 				{
-					direction2BlockMetadata = 17;
+					world.setBlockToAir(x, y, z);
 				}
-				else if(direction2BlockMetadata < metadata - 1)
+				
+				if(requiresTick || type.requiresNewTick(world, x, y, z, random))
 				{
-					totalFlow += (metadata - direction2BlockMetadata) / 2;
+					world.scheduleBlockUpdate(x, y, z, this, 10);
 				}
-
-				for(int j = 0; j < 6; j++)
-				{
-					if(metadataList[j] <= direction2BlockMetadata & j != i)
-					{
-						continue;
-					}
-
-					for(int k = 4; k >= j; k--)
-					{
-						metadataList[k + 1] = metadataList[k];
-						priorityList[k + 1] = priorityList[k];
-					}
-
-					metadataList[j] = direction2BlockMetadata;
-					priorityList[j] = i;
-
-					break;
-				}
+				
+				type.postTick(world, x, y, z, random);
 			}
-			
-			mixEqualSortedValues(random, metadataList, priorityList);
-
-			for(int i = 0; i < 6 & metadata > 1; i++)
-			{
-				int j = priorityList[i];
-				int direction2BlockMetadata = metadataList[i];
-				int xDirection = ringX[j];
-				int yDirection = ringY[j];
-				int zDirection = ringZ[j];
-
-				if(direction2BlockMetadata != 17)
-				{
-					if(direction2BlockMetadata == -1)
-					{
-						int flow = prevMetadata / 2;
-						int transaction = flow * 16 / (totalFlow + 8);
-						
-						if(transaction < 1) transaction = 1;
-						world.setBlock(x + xDirection, y + yDirection, z + zDirection, this, 16 - transaction, 3);
-						requiresTick = false;
-						metadata -= transaction;
-					} else if(direction2BlockMetadata < 16 & direction2BlockMetadata + 1 < metadata)
-					{
-						int flow = (prevMetadata - direction2BlockMetadata) / 2;
-						int transaction = flow * 16 / (totalFlow + 8);
-
-						if(transaction < 1) transaction = 1;
-						world.setBlockMetadataWithNotify(x + xDirection, y + yDirection, z + zDirection, 16 - direction2BlockMetadata - transaction, 3);
-						requiresTick = false;
-						metadata -= transaction;
-					}
-				}
-			}
-			
-			//Remember to set the new metadata for the gas block.
-			if(metadata > 0)
-			{
-				world.setBlockMetadataWithNotify(x, y, z, 16 - metadata, 3);
-			} else
-			{
-				world.setBlockToAir(x, y, z);
-			}
-			
-			if(requiresTick || type.requiresNewTick(world, x, y, z, random))
-			{
-				world.scheduleBlockUpdate(x, y, z, this, 10);
-			}
-			
-			type.postTick(world, x, y, z, random);
-			
 			return;
 		}
 
