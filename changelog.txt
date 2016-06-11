@@ -1,11 +1,9 @@
-Version 1.2.1 (Bugfix/Patch)
+Version 1.2.2 (Bugfix/Patch)
 
-Additions:
-- Made Duct Tape more viable.
+Changes:
+- Adjusted the minimum volume gas needed to flow to another block at a density of 0.
 
 Bugfixes:
-- Fixed retrogen being always activated (!!!).
-- Fixed retrogen regenerating pockets it should not regenerate.
-
-Not bugfixes:
-- Didn't fix bug where certain players make noise, but added a temporary fix involving Duct Tape.
+- Fixed gas not rendering correctly according to volume.
+- Fixed gas effects registering incorrectly.
+- Increased world generation weight to ensure gas pockets were not being popped by other generators
