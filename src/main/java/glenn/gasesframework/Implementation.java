@@ -363,6 +363,10 @@ public class Implementation implements IGFImplementation
 		{
 			return ((BlockGas)block).type;
 		}
+		else if(blockAccess.isAirBlock(x, y, z))
+		{
+			return GFAPI.gasTypeAir;
+		}
 		else
 		{
 			return null;
