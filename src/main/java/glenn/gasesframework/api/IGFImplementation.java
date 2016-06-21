@@ -155,7 +155,7 @@ public interface IGFImplementation
 	PartialGasStack getGas(IBlockAccess blockAccess, int x, int y, int z);
 	
 	/**
-	 * Gets the gas type of the gas block at the location, if any. If no gas block is present, null is returned.
+	 * Gets the gas type of the gas block at the location, if any. If no gas block is present and air exists, GFAPI.gasTypeAir is returned. Otherwise, null is returned.
 	 * @param blockAccess The block access
 	 * @param x X coordinate
 	 * @param y Y coordinate
