@@ -36,7 +36,7 @@ public class GasType
 	/**
 	 * The ability of the gas to stick together. Only applies to 0-density gases. Limited to 0-16. Higher values mean the gas will have a higher threshold of volume before spreading in midair.
 	 */
-	public final int cohesion;
+	public int cohesion;
 	/**
 	 * The opacity of this gas type. A highly opaque gas will block more light.
 	 */
@@ -106,7 +106,7 @@ public class GasType
 	 * will have a higher threshold of volume before spreading in midair
 	 * @param combustibility The grade of combustibility of this gas type
 	 */
-	public GasType(boolean isIndustrial, int gasID, String name, int color, int opacity, int density, int cohesion, Combustibility combustibility)
+	public GasType(boolean isIndustrial, int gasID, String name, int color, int opacity, int density, Combustibility combustibility)
 	{
 		this.isIndustrial = isIndustrial;
 		this.gasID = gasID;
@@ -115,7 +115,6 @@ public class GasType
         this.opacity = opacity;
         this.density = density;
         this.combustibility = combustibility;
-        this.cohesion = cohesion;
 	}
 	
 	/**
@@ -168,6 +167,17 @@ public class GasType
 	public GasType setLightLevel(float lightLevel)
 	{
 		this.lightLevel = lightLevel;
+		return this;
+	}
+
+	/**
+	 * Set the level of light this gas gives off from 0.0 to 1.0.
+	 * @param lightLevel The light level
+	 * @return this
+	 */
+	public GasType setCohesion(int cohesion)
+	{
+		this.cohesion = cohesion;
 		return this;
 	}
 

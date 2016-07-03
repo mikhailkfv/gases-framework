@@ -7,7 +7,7 @@ public class GasTypeAir extends GasType
 {
 	public GasTypeAir()
 	{
-		super(true, 0, "air", 0, 0, 0, 0, Combustibility.NONE);
+		super(true, 0, "air", 0, 0, 0, Combustibility.NONE);
 	}
 
 	@Override
