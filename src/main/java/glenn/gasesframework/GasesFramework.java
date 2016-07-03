@@ -109,7 +109,7 @@ public class GasesFramework
 	public static final PipeType pipeTypeGlass = new PipeTypeGlass(1, "glass", false, "gasesframework:pipe_glass");
 	public static final PipeType pipeTypeWood = new PipeTypeWood(2, "wood", true, "gasesframework:pipe_wood");
 
-	public static final GasType gasTypeSmoke = new GasType(true, 1, "smoke", 0x3F3F3F9F, 2, -16, Combustibility.NONE).setCreativeTab(creativeTab)
+	public static final GasType gasTypeSmoke = new GasType(true, 1, "smoke", 0x3F3F3F9F, 2, -16, 0, Combustibility.NONE).setCreativeTab(creativeTab)
 			.setEffectRate(ExtendedGasEffectsBase.EffectType.BLINDNESS, 4)
 			.setEffectRate(ExtendedGasEffectsBase.EffectType.SUFFOCATION, 4)
 			.setEffectRate(ExtendedGasEffectsBase.EffectType.SLOWNESS, 16);

@@ -398,6 +398,15 @@ public class BlockGas extends Block implements ISample
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random random)
 	{
+		//Beware all ye who enter here
+		//Untold evils and unspeakable creatures live here
+		//Enter at your own risk and clutch tight your sanity
+		//		"The oldest and strongest emotion of mankind is fear, and the 
+		//		oldest and strongest kind of fear is fear of [this code]."
+		//							--H.P. Lovecraft
+		// --Trent
+		
+		//P.S. This is Glenn's code, not mine. 
 		if(y > GasesFramework.configurations.gases.maxHeight)
 		{
 			world.setBlock(x, y, z, Blocks.air);
@@ -465,9 +474,9 @@ public class BlockGas extends Block implements ISample
 		//If density is 0, the block will behave very differently.
 		if(type.density == 0)
 		{
-			if(metadata >= 8)
+			if(metadata >= type.cohesion)
 			{
-				//The gas will flow out from its position, but will priorify blocks around with the least amount of gas, and especially air. It will not flow into other blocks.
+				//The gas will flow out from its position, but will prioritize blocks around with the least amount of gas, and especially air. It will not flow into other blocks.
 				int[] metadataList = new int[6];
 				int[] priorityList = new int[6];
 				int totalFlow = 0;
