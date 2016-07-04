@@ -558,23 +558,22 @@ public class BlockGas extends Block implements ISample
 						}
 					}
 				}
-				
-				//Remember to set the new metadata for the gas block.
-				if(metadata > 0)
-				{
-					world.setBlockMetadataWithNotify(x, y, z, 16 - metadata, 3);
-				} else
-				{
-					world.setBlockToAir(x, y, z);
-				}
-				
-				if(requiresTick || type.requiresNewTick(world, x, y, z, random))
-				{
-					world.scheduleBlockUpdate(x, y, z, this, 10);
-				}
-				
-				type.postTick(world, x, y, z, random);
 			}
+			//Remember to set the new metadata for the gas block.
+			if(metadata > 0)
+			{
+				world.setBlockMetadataWithNotify(x, y, z, 16 - metadata, 3);
+			} else
+			{
+				world.setBlockToAir(x, y, z);
+			}
+			
+			if(requiresTick || type.requiresNewTick(world, x, y, z, random))
+			{
+				world.scheduleBlockUpdate(x, y, z, this, 10);
+			}
+			
+			type.postTick(world, x, y, z, random);
 			return;
 		}
 

@@ -171,8 +171,10 @@ public class GasType
 	}
 
 	/**
-	 * Set the level of light this gas gives off from 0.0 to 1.0.
-	 * @param lightLevel The light level
+	 * Sets the ability of the gas to stick together. Only applies to 0-density gases.
+	 *  Limited to 0-16. Higher values mean the gas will have a higher threshold
+	 *  of volume before spreading in midair.
+	 * @param cohesion The cohesion
 	 * @return this
 	 */
 	public GasType setCohesion(int cohesion)
