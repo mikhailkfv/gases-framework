@@ -102,8 +102,6 @@ public class GasType
 	 * <ul><li><b>density > 0</b> Will produce a falling gas. Greater values means the gas will fall faster</li>
 	 * <li><b>density < 0</b> Will produce a rising gas. Lower values means the gas will rise faster</li>
 	 * <li><b>density = 0</b> Will produce a floating gas which will spread in all directions</li></ul>
-	 * @param  cohesion The ability of the gas to stick together. Only applies to 0-density gases. Limited to 0-16. Higher values mean the gas 
-	 * will have a higher threshold of volume before spreading in midair
 	 * @param combustibility The grade of combustibility of this gas type
 	 */
 	public GasType(boolean isIndustrial, int gasID, String name, int color, int opacity, int density, Combustibility combustibility)
