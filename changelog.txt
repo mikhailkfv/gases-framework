@@ -1,9 +1,9 @@
-Version 1.2.2 (Bugfix/Patch)
+Version 1.2.3 (Bugfix/Patch)
 
 Changes:
-- Adjusted the minimum volume gas needed to flow to another block at a density of 0.
+- Added the cohesion property to dictate how gas behaves when it's 0-density. Higher cohesion means there will be more gas needed before the gas will expand in midair. 
 
 Bugfixes:
-- Fixed gas not rendering correctly according to volume.
-- Fixed gas effects registering incorrectly.
-- Increased world generation weight to ensure gas pockets were not being popped by other generators
+- Fixed getGasType returning null instead of GasTypeAir.
+- Fixed ignited gas not spreading and disappearing properly.
+- Increased world generation weight to ensure gas pockets were not being popped by other generators.
