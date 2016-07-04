@@ -20,6 +20,7 @@ public class GasTypeFire extends GasType
 		setTextureName("gasesframework:gas_fire");
 		setDestroyLooseBlocks(true);
 		setLightLevel(0.5f);
+		setCohesion(0);
 	}
 	
     /**
