@@ -7,3 +7,4 @@ Bugfixes:
 - Fixed getGasType returning null instead of GasTypeAir.
 - Fixed ignited gas not spreading and disappearing properly.
 - Increased world generation weight to ensure gas pockets were not being popped by other generators.
+- Fix configurations creating error messages for string arrays.

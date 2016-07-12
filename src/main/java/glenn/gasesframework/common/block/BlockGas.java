@@ -424,9 +424,9 @@ public class BlockGas extends Block implements ISample
 		// Beware all ye who enter here
 		// Untold evils and unspeakable creatures live here
 		// Enter at your own risk and clutch tight your sanity
-		// 		"The oldest and strongest emotion of mankind is fear, and the
-		// 		oldest and strongest kind of fear is fear of [this code]."
-		// 									--H.P. Lovecraft
+		// "The oldest and strongest emotion of mankind is fear, and the
+		// oldest and strongest kind of fear is fear of [this code]."
+		// --H.P. Lovecraft
 		// --Trent
 
 		// P.S. This is Glenn's code, not mine.

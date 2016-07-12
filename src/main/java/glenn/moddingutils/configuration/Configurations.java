@@ -369,14 +369,6 @@ public abstract class Configurations
 					{
 						try
 						{
-							parser.parse(defaultValues[i], componentClazz);
-						} catch (Exception e)
-						{
-							FMLLog.severe("Failed to parse the default value '%s' of configuration field %s[%d] in config file %s", settings.defaultValue, subPath.toString(), i, innerConfig.getConfigFile().getAbsolutePath());
-						}
-
-						try
-						{
 							Object value = parser.parse(stringValues[i], componentClazz);
 							Array.set(valuesArray, i, value);
 						} catch (Exception e)
