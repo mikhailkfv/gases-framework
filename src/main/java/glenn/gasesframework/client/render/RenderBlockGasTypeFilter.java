@@ -16,7 +16,7 @@ public class RenderBlockGasTypeFilter implements ISimpleBlockRenderingHandler
 	@Override
 	public boolean renderWorldBlock(IBlockAccess blockAccess, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
 	{
-		IRenderedGasTypeFilter renderedGasTypeFilter = (IRenderedGasTypeFilter)block;
+		IRenderedGasTypeFilter renderedGasTypeFilter = (IRenderedGasTypeFilter) block;
 
 		renderedGasTypeFilter.swapRenderedGasTypeFilterRenderType();
 		if (renderer.renderBlockByRenderType(block, x, y, z))
@@ -31,7 +31,7 @@ public class RenderBlockGasTypeFilter implements ISimpleBlockRenderingHandler
 		renderedGasTypeFilter.swapRenderedGasTypeFilterRenderType();
 		return false;
 	}
-	
+
 	private void renderGasTypeFilters(IBlockAccess blockAccess, int x, int y, int z, IRenderedGasTypeFilter renderedGasTypeFilter)
 	{
 		for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
@@ -47,7 +47,7 @@ public class RenderBlockGasTypeFilter implements ISimpleBlockRenderingHandler
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
-		IRenderedGasTypeFilter renderedGasTypeFilter = (IRenderedGasTypeFilter)block;
+		IRenderedGasTypeFilter renderedGasTypeFilter = (IRenderedGasTypeFilter) block;
 		renderedGasTypeFilter.swapRenderedGasTypeFilterRenderType();
 		renderer.renderBlockAsItem(block, metadata, 1.0F);
 		renderedGasTypeFilter.swapRenderedGasTypeFilterRenderType();

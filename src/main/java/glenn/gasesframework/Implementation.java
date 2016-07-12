@@ -32,10 +32,10 @@ public class Implementation implements IGFImplementation
 	@Override
 	public boolean canFillWithGas(World world, int x, int y, int z, GasType type)
 	{
-		if(type == GFAPI.gasTypeAir)
+		if (type == GFAPI.gasTypeAir)
 		{
 			Block block = world.getBlock(x, y, z);
-			if(block instanceof BlockGas)
+			if (block instanceof BlockGas)
 			{
 				return world.getBlockMetadata(x, y, z) > 0;
 			}
@@ -47,17 +47,17 @@ public class Implementation implements IGFImplementation
 
 		int firstBlockCapacity = fillCapacity(world, x, y, z, type);
 
-		if(firstBlockCapacity >= 16)
+		if (firstBlockCapacity >= 16)
 		{
 			return true;
 		}
-		else if(firstBlockCapacity >= 0)
+		else if (firstBlockCapacity >= 0)
 		{
 			int capacity = 0;
 			int[] sideCapacity = new int[6];
-			for(int side = 0; side < 6; side++)
+			for (int side = 0; side < 6; side++)
 			{
-				if((side == 0 & type.density > 0) | (side == 1 & type.density < 0))
+				if ((side == 0 & type.density > 0) | (side == 1 & type.density < 0))
 				{
 					sideCapacity[side] = -1;
 				}
@@ -67,7 +67,8 @@ public class Implementation implements IGFImplementation
 					int yDirection = y + (side == 0 ? 1 : (side == 1 ? -1 : 0));
 					int zDirection = z + (side == 2 ? 1 : (side == 3 ? -1 : 0));
 
-					if((sideCapacity[side] = fillCapacity(world, xDirection, yDirection, zDirection, type)) > 0) capacity += sideCapacity[side];
+					if ((sideCapacity[side] = fillCapacity(world, xDirection, yDirection, zDirection, type)) > 0)
+						capacity += sideCapacity[side];
 				}
 			}
 
@@ -82,10 +83,10 @@ public class Implementation implements IGFImplementation
 	@Override
 	public boolean tryFillWithGas(World world, Random random, int x, int y, int z, GasType type)
 	{
-		if(type == GFAPI.gasTypeAir)
+		if (type == GFAPI.gasTypeAir)
 		{
 			Block block = world.getBlock(x, y, z);
-			if(block instanceof BlockGas)
+			if (block instanceof BlockGas)
 			{
 				return world.getBlockMetadata(x, y, z) > 0;
 			}
@@ -97,18 +98,18 @@ public class Implementation implements IGFImplementation
 
 		int firstBlockCapacity = fillCapacity(world, x, y, z, type);
 
-		if(firstBlockCapacity >= 16)
+		if (firstBlockCapacity >= 16)
 		{
 			fill(world, x, y, z, type, 16);
 			return true;
 		}
-		else if(firstBlockCapacity >= 0)
+		else if (firstBlockCapacity >= 0)
 		{
 			int capacity = 0;
 			int[] sideCapacity = new int[6];
-			for(int side = 0; side < 6; side++)
+			for (int side = 0; side < 6; side++)
 			{
-				if((side == 0 & type.density > 0) | (side == 1 & type.density < 0))
+				if ((side == 0 & type.density > 0) | (side == 1 & type.density < 0))
 				{
 					sideCapacity[side] = -1;
 				}
@@ -118,11 +119,12 @@ public class Implementation implements IGFImplementation
 					int yDirection = y + (side == 0 ? 1 : (side == 1 ? -1 : 0));
 					int zDirection = z + (side == 2 ? 1 : (side == 3 ? -1 : 0));
 
-					if((sideCapacity[side] = fillCapacity(world, xDirection, yDirection, zDirection, type)) > 0) capacity += sideCapacity[side];
+					if ((sideCapacity[side] = fillCapacity(world, xDirection, yDirection, zDirection, type)) > 0)
+						capacity += sideCapacity[side];
 				}
 			}
 
-			if(capacity + firstBlockCapacity < 16)
+			if (capacity + firstBlockCapacity < 16)
 			{
 				return false;
 			}
@@ -131,22 +133,23 @@ public class Implementation implements IGFImplementation
 
 			int fill = 0;
 			int[] sideFill = new int[6];
-			for(int side = 0; side < 6; side++)
+			for (int side = 0; side < 6; side++)
 			{
-				if(sideCapacity[side] != -1) fill += (sideFill[side] = (sideCapacity[side] * (16 - firstBlockCapacity)) / capacity);
+				if (sideCapacity[side] != -1)
+					fill += (sideFill[side] = (sideCapacity[side] * (16 - firstBlockCapacity)) / capacity);
 			}
 
-			while(fill < (16 - firstBlockCapacity))
+			while (fill < (16 - firstBlockCapacity))
 			{
 				int side = random.nextInt(6);
-				if(sideFill[side] < sideCapacity[side] & sideCapacity[side] != -1)
+				if (sideFill[side] < sideCapacity[side] & sideCapacity[side] != -1)
 				{
 					sideFill[side]++;
 					fill++;
 				}
 			}
 
-			for(int side = 0; side < 6; side++)
+			for (int side = 0; side < 6; side++)
 			{
 				int xDirection = x + (side == 4 ? 1 : (side == 5 ? -1 : 0));
 				int yDirection = y + (side == 0 ? 1 : (side == 1 ? -1 : 0));
@@ -165,10 +168,11 @@ public class Implementation implements IGFImplementation
 
 	private void fill(World world, int x, int y, int z, GasType type, int amount)
 	{
-		if(amount <= 0) return;
+		if (amount <= 0)
+			return;
 
 		Block block = world.getBlock(x, y, z);
-		if(block == GasesFramework.registry.getGasBlock(type))
+		if (block == GasesFramework.registry.getGasBlock(type))
 		{
 			int newMetadata = 16 - world.getBlockMetadata(x, y, z) + amount;
 			world.setBlockMetadataWithNotify(x, y, z, 16 - newMetadata, 3);
@@ -182,9 +186,9 @@ public class Implementation implements IGFImplementation
 	private int fillCapacity(World world, int x, int y, int z, GasType type)
 	{
 		Block block = world.getBlock(x, y, z);
-		if(block instanceof BlockGas)
+		if (block instanceof BlockGas)
 		{
-			if(block == GasesFramework.registry.getGasBlock(type))
+			if (block == GasesFramework.registry.getGasBlock(type))
 			{
 				return world.getBlockMetadata(x, y, z);
 			}
@@ -193,7 +197,7 @@ public class Implementation implements IGFImplementation
 				return -1;
 			}
 		}
-		else if(block instanceof BlockLiquid)
+		else if (block instanceof BlockLiquid)
 		{
 			return -1;
 		}
@@ -212,11 +216,12 @@ public class Implementation implements IGFImplementation
 	@Override
 	public void placeGas(World world, int x, int y, int z, GasType type, int volume)
 	{
-		if(volume > 0)
+		if (volume > 0)
 		{
 			if (type != GFAPI.gasTypeAir)
 			{
-				if(volume > 16) volume = 16;
+				if (volume > 16)
+					volume = 16;
 				BlockGas gasBlock = GasesFramework.registry.getGasBlock(type);
 				if (gasBlock != null)
 				{
@@ -242,41 +247,40 @@ public class Implementation implements IGFImplementation
 			listToSearch.addAll(isSearchingLooseEnds ? search.looseEnds : search.ends);
 			Collections.shuffle(listToSearch, random);
 
-			for(GasTransporterSearch.End end : listToSearch)
+			for (GasTransporterSearch.End end : listToSearch)
 			{
 				IVec branchPos = end.branch.getPosition();
-				IGasTransporter sourceBlock = (IGasTransporter)world.getBlock(branchPos.x, branchPos.y, branchPos.z);
+				IGasTransporter sourceBlock = (IGasTransporter) world.getBlock(branchPos.x, branchPos.y, branchPos.z);
 				GasType sourceBlockType = sourceBlock.getCarriedType(world, x, y, z);
 				boolean hasPushed;
 
-				if(isSearchingLooseEnds)
+				if (isSearchingLooseEnds)
 				{
 					hasPushed = tryFillWithGas(world, random, end.endPosition.x, end.endPosition.y, end.endPosition.z, sourceBlockType);
 				}
 				else
 				{
-					IGasReceptor receptor = (IGasReceptor)world.getBlock(end.endPosition.x, end.endPosition.y, end.endPosition.z);
+					IGasReceptor receptor = (IGasReceptor) world.getBlock(end.endPosition.x, end.endPosition.y, end.endPosition.z);
 					hasPushed = receptor.receiveGas(world, end.endPosition.x, end.endPosition.y, end.endPosition.z, end.endDirection.getOpposite(), sourceBlockType);
 				}
 
-				if(hasPushed)
+				if (hasPushed)
 				{
 					GasTransporterIterator.DescendingGasTransporterIterator iterator = new GasTransporterIterator.DescendingGasTransporterIterator(end.branch);
 					GasTransporterIterator.Iteration iteration;
-					while((iteration = iterator.narrowNext(random)) != null)
+					while ((iteration = iterator.narrowNext(random)) != null)
 					{
-						IGasTransporter receptorBlock = (IGasTransporter)world.getBlock(iteration.previousPosition.x, iteration.previousPosition.y, iteration.previousPosition.z);
-						IGasTransporter giverBlock = (IGasTransporter)world.getBlock(iteration.currentPosition.x, iteration.currentPosition.y, iteration.currentPosition.z);
+						IGasTransporter receptorBlock = (IGasTransporter) world.getBlock(iteration.previousPosition.x, iteration.previousPosition.y, iteration.previousPosition.z);
+						IGasTransporter giverBlock = (IGasTransporter) world.getBlock(iteration.currentPosition.x, iteration.currentPosition.y, iteration.currentPosition.z);
 						GasType transferredType = giverBlock.getCarriedType(world, iteration.currentPosition.x, iteration.currentPosition.y, iteration.currentPosition.z);
 
 						receptorBlock = receptorBlock.setCarriedType(world, iteration.previousPosition.x, iteration.previousPosition.y, iteration.previousPosition.z, transferredType);
 						receptorBlock.handlePressure(world, random, iteration.previousPosition.x, iteration.previousPosition.y, iteration.previousPosition.z, end.branch.depth + 1);
 					}
 
-					IGasTransporter receptorBlock = (IGasTransporter)block;
+					IGasTransporter receptorBlock = (IGasTransporter) block;
 					receptorBlock = receptorBlock.setCarriedType(world, x, y, z, type);
 					receptorBlock.handlePressure(world, random, x, y, z, end.branch.depth + 1);
-
 
 					return true;
 				}
@@ -286,7 +290,7 @@ public class Implementation implements IGFImplementation
 		}
 		else if (block instanceof IGasReceptor)
 		{
-			IGasReceptor receptorBlock = (IGasReceptor)block;
+			IGasReceptor receptorBlock = (IGasReceptor) block;
 			return receptorBlock.receiveGas(world, x, y, z, direction.getOpposite(), type);
 		}
 		else
@@ -318,9 +322,9 @@ public class Implementation implements IGFImplementation
 	public void ignite(World world, int x, int y, int z, Random random)
 	{
 		Block block = world.getBlock(x, y, z);
-		if(block instanceof BlockGas)
+		if (block instanceof BlockGas)
 		{
-			((BlockGas)block).onFire(world, x, y, z, random, world.getBlockMetadata(x, y, z));
+			((BlockGas) block).onFire(world, x, y, z, random, world.getBlockMetadata(x, y, z));
 		}
 	}
 
@@ -345,7 +349,7 @@ public class Implementation implements IGFImplementation
 		Block block = blockAccess.getBlock(x, y, z);
 		if (block instanceof BlockGas)
 		{
-			return new PartialGasStack(((BlockGas)block).type, 16 - blockAccess.getBlockMetadata(x, y, z));
+			return new PartialGasStack(((BlockGas) block).type, 16 - blockAccess.getBlockMetadata(x, y, z));
 		}
 		else if (block == Blocks.air)
 		{
@@ -359,11 +363,11 @@ public class Implementation implements IGFImplementation
 	public GasType getGasType(IBlockAccess blockAccess, int x, int y, int z)
 	{
 		Block block = blockAccess.getBlock(x, y, z);
-		if(block instanceof BlockGas)
+		if (block instanceof BlockGas)
 		{
-			return ((BlockGas)block).type;
+			return ((BlockGas) block).type;
 		}
-		else if(blockAccess.isAirBlock(x, y, z))
+		else if (blockAccess.isAirBlock(x, y, z))
 		{
 			return GFAPI.gasTypeAir;
 		}
@@ -379,7 +383,7 @@ public class Implementation implements IGFImplementation
 		Block block = blockAccess.getBlock(x, y, z);
 		if (block instanceof BlockGasPipe)
 		{
-			return ((BlockGasPipe)block).type;
+			return ((BlockGasPipe) block).type;
 		}
 		else
 		{
@@ -393,7 +397,7 @@ public class Implementation implements IGFImplementation
 		Block block = blockAccess.getBlock(x, y, z);
 		if (block instanceof BlockGasPipe)
 		{
-			return ((BlockGasPipe)block).getPipeType(blockAccess, x, y, z);
+			return ((BlockGasPipe) block).getPipeType(blockAccess, x, y, z);
 		}
 		else
 		{

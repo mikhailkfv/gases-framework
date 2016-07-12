@@ -17,14 +17,16 @@ public class GuiGasDynamo extends GuiContainer
 {
 	private static final ResourceLocation dynamoGuiTexture = new ResourceLocation("gasesframework:textures/gui/container/dynamo.png");
 	private TileEntityGasDynamo tileEntity;
-	
+
 	public GuiGasDynamo(InventoryPlayer inventoryPlayer, TileEntityGasDynamo tileEntity)
 	{
 		super(new ContainerGasDynamo(inventoryPlayer, tileEntity));
 		this.tileEntity = tileEntity;
 	}
+
 	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
+	 * Draw the foreground layer for the GuiContainer (everything in front of
+	 * the items)
 	 */
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
@@ -37,8 +39,10 @@ public class GuiGasDynamo extends GuiContainer
 		this.fontRendererObj.drawString(fuelAmount, 115 - this.fontRendererObj.getStringWidth(fuelAmount), 50, 0x404040);
 		this.fontRendererObj.drawString(energyAmount, 115 - this.fontRendererObj.getStringWidth(energyAmount), 60, 0x404040);
 	}
+
 	/**
-	 * Draw the background layer for the GuiContainer (everything behind the items)
+	 * Draw the background layer for the GuiContainer (everything behind the
+	 * items)
 	 */
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
 	{
@@ -47,10 +51,10 @@ public class GuiGasDynamo extends GuiContainer
 		int k = (this.width - this.xSize) / 2;
 		int l = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
-		
+
 		int count = 54 * this.tileEntity.getFuelStored() / this.tileEntity.getMaxFuelStored();
 		this.drawTexturedModalRect(k + 123, l + 16 + 54 - count, 176, 54 - count, 10, count);
-		
+
 		count = 54 * this.tileEntity.getEnergyStored(ForgeDirection.UNKNOWN) / this.tileEntity.getMaxEnergyStored(ForgeDirection.UNKNOWN);
 		this.drawTexturedModalRect(k + 141, l + 16 + 54 - count, 186, 54 - count, 10, count);
 	}

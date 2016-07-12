@@ -14,25 +14,25 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 public class RenderBlockGasTank implements ISimpleBlockRenderingHandler
 {
 	public static final int RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
-	
+
 	@Override
 	public void renderInventoryBlock(Block bblock, int metadata, int modelID, RenderBlocks renderer)
 	{
-		BlockGasTank block = (BlockGasTank)bblock;
+		BlockGasTank block = (BlockGasTank) bblock;
 		Tessellator tessellator = Tessellator.instance;
-		
+
 		GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
-        GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-		
+		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+
 		double uMin = block.side.getInterpolatedU(0.0D);
 		double uMax = block.side.getInterpolatedU(16.0D);
 		double vMin = block.side.getInterpolatedV(0.0D);
 		double vMax = block.side.getInterpolatedV(16.0D);
-		
+
 		tessellator.startDrawingQuads();
-		
+
 		tessellator.setColorOpaque_F(0.8F, 0.8F, 0.8F);
 		tessellator.setNormal(0.0F, 0.0F, -1.0F);
 		tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, uMax, vMax);
@@ -81,12 +81,12 @@ public class RenderBlockGasTank implements ISimpleBlockRenderingHandler
 		tessellator.addVertexWithUV(1.0D, 1.0D, 1.0D, uMin, vMin);
 		tessellator.addVertexWithUV(1.0D, 1.0D, 0.0D, uMax, vMin);
 		tessellator.addVertexWithUV(1.0D, 0.0D, 0.0D, uMax, vMax);
-		
+
 		uMin = block.top.getInterpolatedU(0.0D);
 		uMax = block.top.getInterpolatedU(16.0D);
 		vMin = block.top.getInterpolatedV(0.0D);
 		vMax = block.top.getInterpolatedV(16.0D);
-		
+
 		tessellator.setColorOpaque_F(0.6F, 0.6F, 0.6F);
 		tessellator.setNormal(0.0F, -1.0F, 0.0F);
 		tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, uMax, vMax);
@@ -99,44 +99,44 @@ public class RenderBlockGasTank implements ISimpleBlockRenderingHandler
 		tessellator.addVertexWithUV(1.0D, 1.0D, 1.0D, uMax, vMin);
 		tessellator.addVertexWithUV(1.0D, 1.0D, 0.0D, uMin, vMin);
 		tessellator.addVertexWithUV(0.0D, 1.0D, 0.0D, uMin, vMax);
-		
+
 		uMin = block.inside.getInterpolatedU(0.0D);
 		uMax = block.inside.getInterpolatedU(16.0D);
 		vMin = block.inside.getInterpolatedV(0.0D);
 		vMax = block.inside.getInterpolatedV(16.0D);
-		
+
 		tessellator.setColorOpaque_F(0.8F, 0.8F, 0.8F);
 		tessellator.setNormal(0.0F, 1.0F, 0.0F);
 		tessellator.addVertexWithUV(0.0D, 2.0D / 16.0D, 1.0D, uMin, vMax);
 		tessellator.addVertexWithUV(1.0D, 2.0D / 16.0D, 1.0D, uMin, vMin);
 		tessellator.addVertexWithUV(1.0D, 2.0D / 16.0D, 0.0D, uMax, vMin);
 		tessellator.addVertexWithUV(0.0D, 2.0D / 16.0D, 0.0D, uMax, vMax);
-		
+
 		tessellator.setColorOpaque_F(0.6F, 0.6F, 0.6F);
 		tessellator.setNormal(0.0F, -1.0F, 0.0F);
 		tessellator.addVertexWithUV(0.0D, 14.0D / 16.0D, 0.0D, uMin, vMax);
 		tessellator.addVertexWithUV(1.0D, 14.0D / 16.0D, 0.0D, uMin, vMin);
 		tessellator.addVertexWithUV(1.0D, 14.0D / 16.0D, 1.0D, uMax, vMin);
 		tessellator.addVertexWithUV(0.0D, 14.0D / 16.0D, 1.0D, uMax, vMax);
-		
+
 		tessellator.draw();
-		
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+
+		GL11.glDisable(GL11.GL_ALPHA_TEST);
 	}
-	
+
 	@Override
 	public boolean renderWorldBlock(IBlockAccess blockAccess, int x, int y, int z, Block bblock, int modelId, RenderBlocks renderer)
 	{
-		BlockGasTank block = (BlockGasTank)bblock;
+		BlockGasTank block = (BlockGasTank) bblock;
 		Tessellator tessellator = Tessellator.instance;
-		
+
 		renderer.renderStandardBlock(bblock, x, y, z);
 		renderer.renderFromInside = true;
 		renderer.renderAllFaces = true;
 		renderer.renderStandardBlock(bblock, x, y, z);
 		renderer.renderFromInside = false;
 		renderer.renderAllFaces = false;
-		
+
 		tessellator.addTranslation(x, y, z);
 
 		double uMin = block.inside.getInterpolatedU(0.0D);
@@ -158,18 +158,18 @@ public class RenderBlockGasTank implements ISimpleBlockRenderingHandler
 		tessellator.addVertexWithUV(1.0D, 14.0D / 16.0D, 0.0D, uMin, vMin);
 		tessellator.addVertexWithUV(1.0D, 14.0D / 16.0D, 1.0D, uMax, vMin);
 		tessellator.addVertexWithUV(0.0D, 14.0D / 16.0D, 1.0D, uMax, vMax);
-		
+
 		tessellator.addTranslation(-x, -y, -z);
-		
-        return true;
+
+		return true;
 	}
-	
+
 	@Override
 	public boolean shouldRender3DInInventory(int i)
 	{
 		return true;
 	}
-	
+
 	@Override
 	public int getRenderId()
 	{

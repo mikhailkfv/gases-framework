@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 
 @IFMLLoadingPlugin.Name(value = "Gases Framework Core")
 @IFMLLoadingPlugin.MCVersion(value = "1.7.10")
-@TransformerExclusions(value="glenn.gasesframework.common.core")
+@TransformerExclusions(value = "glenn.gasesframework.common.core")
 public class GFFMLLoadingPlugin implements IFMLLoadingPlugin
 {
 	@Override
@@ -15,11 +15,11 @@ public class GFFMLLoadingPlugin implements IFMLLoadingPlugin
 	{
 		return null;
 	}
-	
+
 	@Override
 	public String[] getASMTransformerClass()
 	{
-		return new String[]{GFClassTransformer.class.getName()};
+		return new String[] { GFClassTransformer.class.getName() };
 	}
 
 	@Override
@@ -37,6 +37,6 @@ public class GFFMLLoadingPlugin implements IFMLLoadingPlugin
 	@Override
 	public void injectData(Map<String, Object> data)
 	{
-		
+
 	}
 }

@@ -17,20 +17,20 @@ public abstract class CommonProxy
 {
 	public void registerRenderers()
 	{
-		
+
 	}
-	
+
 	public void registerEventHandlers()
 	{
 		MinecraftForge.EVENT_BUS.register(new ForgeCommonEvents());
 		FMLCommonHandler.instance().bus().register(new FMLCommonEvents());
 	}
-	
+
 	public <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, int discriminator)
 	{
 		GasesFramework.networkWrapper.registerMessage(messageHandler, requestMessageType, discriminator, Side.SERVER);
 	}
-	
+
 	public EntityPlayer getPlayerEntity(MessageContext ctx)
 	{
 		return ctx.getServerHandler().playerEntity;

@@ -8,7 +8,7 @@ public class SharedBlockIcons
 	public static IIcon circularTypeIndicatorIcon;
 	public static IIcon circularExcludingOutlineIcon;
 	public static IIcon circularIncludingOutlineIcon;
-	
+
 	public static void registerIcons(IIconRegister iconRegister)
 	{
 		circularTypeIndicatorIcon = iconRegister.registerIcon("gasesframework:filter_circular_indicator");

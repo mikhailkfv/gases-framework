@@ -20,28 +20,29 @@ public class ConfigGasFurnaceRecipes
 	{
 		try
 		{
-			if(!file.exists())
+			if (!file.exists())
 			{
 				file.createNewFile();
 				PrintWriter writer = new PrintWriter(file);
 				writer.print(String.format("[%n\t%n]"));
 				writer.close();
 			}
-			
+
 			Gson gson = new Gson();
-			ArrayList<CustomGasFurnaceRecipe> recipes = gson.fromJson(new FileReader(file), new TypeToken<ArrayList<CustomGasFurnaceRecipe>>(){}.getType());
-			
-			for(CustomGasFurnaceRecipe recipe : recipes)
+			ArrayList<CustomGasFurnaceRecipe> recipes = gson.fromJson(new FileReader(file), new TypeToken<ArrayList<CustomGasFurnaceRecipe>>()
+			{
+			}.getType());
+
+			for (CustomGasFurnaceRecipe recipe : recipes)
 			{
 				GasesFramework.registry.registerGasFurnaceRecipe(recipe.input.getItemStack(), recipe.output.getItemStack(), recipe.time <= 0 ? 200 : recipe.time, recipe.exp);
 			}
-		}
-		catch(IOException e)
+		} catch (IOException e)
 		{
 			FMLLog.warning("Could not read custom gas furnace recipe configuration file (%s)", e.toString());
 		}
 	}
-	
+
 	private class CustomGasFurnaceRecipe
 	{
 		public ItemRepresentation input;

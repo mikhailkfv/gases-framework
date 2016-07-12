@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ContainerGasDynamo extends Container
 {
 	public static final int GUI_ID = 2;
-	
+
 	private TileEntityGasDynamo tileEntity;
 
 	public ContainerGasDynamo(InventoryPlayer inventoryPlayer, TileEntityGasDynamo tileEntity)
@@ -44,13 +44,14 @@ public class ContainerGasDynamo extends Container
 	}
 
 	/**
-	 * Called when a player shift-clicks on a slot. You must override this or you will crash when someone does that.
+	 * Called when a player shift-clicks on a slot. You must override this or
+	 * you will crash when someone does that.
 	 */
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer entityPlayer, int slotIndex)
 	{
 		ItemStack itemstack = null;
-		Slot slot = (Slot)this.inventorySlots.get(slotIndex);
+		Slot slot = (Slot) this.inventorySlots.get(slotIndex);
 
 		if (slot != null && slot.getHasStack())
 		{
@@ -59,7 +60,7 @@ public class ContainerGasDynamo extends Container
 
 			if (slotIndex >= 0 && slotIndex < 27)
 			{
-				//This is from the player's main inventory
+				// This is from the player's main inventory
 				if (!this.mergeItemStack(itemstack1, 27, 36, false))
 				{
 					return null;
@@ -67,7 +68,7 @@ public class ContainerGasDynamo extends Container
 			}
 			else if (slotIndex >= 27 && slotIndex < 36)
 			{
-				//This is from the player's action bar
+				// This is from the player's action bar
 				if (!this.mergeItemStack(itemstack1, 0, 27, false))
 				{
 					return null;
@@ -76,7 +77,7 @@ public class ContainerGasDynamo extends Container
 
 			if (itemstack1.stackSize == 0)
 			{
-				slot.putStack((ItemStack)null);
+				slot.putStack((ItemStack) null);
 			}
 			else
 			{

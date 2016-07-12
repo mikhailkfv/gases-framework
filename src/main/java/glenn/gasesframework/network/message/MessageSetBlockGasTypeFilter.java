@@ -20,13 +20,13 @@ public class MessageSetBlockGasTypeFilter extends AbstractSerialMessage
 		public AbstractMessage onMessage(MessageSetBlockGasTypeFilter message, MessageContext ctx)
 		{
 			World world = GasesFramework.proxy.getPlayerEntity(ctx).worldObj;
-			
+
 			Block block = world.getBlock(message.blockX, message.blockY, message.blockZ);
-			if(block instanceof IGasTypeFilter)
+			if (block instanceof IGasTypeFilter)
 			{
-				((IGasTypeFilter)block).setFilter(world, message.blockX, message.blockY, message.blockZ, message.getSide(), message.getFilter());
+				((IGasTypeFilter) block).setFilter(world, message.blockX, message.blockY, message.blockZ, message.getSide(), message.getFilter());
 			}
-			
+
 			return null;
 		}
 	}
@@ -34,7 +34,7 @@ public class MessageSetBlockGasTypeFilter extends AbstractSerialMessage
 	public int blockX, blockY, blockZ;
 	public int side;
 	public NBTTagCompound filter;
-	
+
 	public MessageSetBlockGasTypeFilter(int blockX, int blockY, int blockZ, ForgeDirection side, GasTypeFilter filter)
 	{
 		this.blockX = blockX;
@@ -44,17 +44,17 @@ public class MessageSetBlockGasTypeFilter extends AbstractSerialMessage
 		this.filter = new NBTTagCompound();
 		filter.writeToNBT(this.filter);
 	}
-	
+
 	public MessageSetBlockGasTypeFilter()
 	{
-		
+
 	}
-	
+
 	public ForgeDirection getSide()
 	{
 		return ForgeDirection.getOrientation(side);
 	}
-	
+
 	public GasTypeFilter getFilter()
 	{
 		return GasTypeFilter.readFromNBT(filter);

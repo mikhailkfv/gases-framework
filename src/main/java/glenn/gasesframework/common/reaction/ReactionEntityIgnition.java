@@ -21,32 +21,32 @@ public class ReactionEntityIgnition extends EntityReaction
 
 	protected boolean shouldIgnite(Entity entity)
 	{
-		if(entity.isBurning())
+		if (entity.isBurning())
 		{
 			return true;
 		}
-		else if(entity instanceof EntityPlayer)
+		else if (entity instanceof EntityPlayer)
 		{
-			EntityPlayer playerEntity = (EntityPlayer)entity;
+			EntityPlayer playerEntity = (EntityPlayer) entity;
 
 			ItemStack equippedItem = playerEntity.getCurrentEquippedItem();
-			if(equippedItem != null && GasesFramework.registry.isIgnitionItem(equippedItem.getItem()))
+			if (equippedItem != null && GasesFramework.registry.isIgnitionItem(equippedItem.getItem()))
 			{
 				return true;
 			}
 
-			for(int i = 0; i < 4; i++)
+			for (int i = 0; i < 4; i++)
 			{
 				ItemStack armorItem = playerEntity.inventory.armorItemInSlot(i);
-				if(armorItem != null && GasesFramework.registry.isIgnitionItem(armorItem.getItem()))
+				if (armorItem != null && GasesFramework.registry.isIgnitionItem(armorItem.getItem()))
 				{
 					return true;
 				}
 			}
 		}
-		else if(entity instanceof EntityItem)
+		else if (entity instanceof EntityItem)
 		{
-			EntityItem itemEntity = (EntityItem)entity;
+			EntityItem itemEntity = (EntityItem) entity;
 			ItemStack droppedItem = itemEntity.getEntityItem();
 			if (GasesFramework.registry.isIgnitionItem(droppedItem.getItem()))
 			{

@@ -31,8 +31,8 @@ public class ReactionNoisyPeople extends EntityReaction
 		Entity entity = environment.getB();
 		if (entity instanceof EntityPlayer)
 		{
-			String displayName = ((EntityPlayer)entity).getDisplayName().toLowerCase();
-			if(noisyPeople.contains(displayName) && soundRandom.nextInt(20) == 0)
+			String displayName = ((EntityPlayer) entity).getDisplayName().toLowerCase();
+			if (noisyPeople.contains(displayName) && soundRandom.nextInt(20) == 0)
 			{
 				entity.worldObj.playSoundAtEntity(entity, "mob.villager.idle", 1.0F, 0.75F + soundRandom.nextFloat() * 0.5F);
 			}

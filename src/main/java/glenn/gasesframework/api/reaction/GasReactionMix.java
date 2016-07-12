@@ -21,7 +21,7 @@ public class GasReactionMix extends GasReactionMixBase
 	@Override
 	public GasType mix(GasType typeA, GasType typeB)
 	{
-		if((this.typeA == typeA && this.typeB == typeB) || (this.typeB == typeA && this.typeA == typeB))
+		if ((this.typeA == typeA && this.typeB == typeB) || (this.typeB == typeA && this.typeA == typeB))
 		{
 			return mixedType;
 		}

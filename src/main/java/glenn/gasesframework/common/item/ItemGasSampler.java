@@ -17,19 +17,19 @@ public abstract class ItemGasSampler extends ItemGasContainer implements ISample
 {
 	public IIcon overlayIcon;
 	public IIcon emptyOverlayIcon;
-	
+
 	public ItemGasSampler()
 	{
 		super();
 		this.setHasSubtypes(true);
 	}
-	
+
 	@Override
 	public GasType getGasType(ItemStack itemstack)
 	{
 		return GasesFramework.registry.getGasTypeByID(itemstack.getItemDamage());
 	}
-	
+
 	@Override
 	public ItemStack setGasType(ItemStack itemstack, GasType gasType)
 	{
@@ -39,12 +39,12 @@ public abstract class ItemGasSampler extends ItemGasContainer implements ISample
 		}
 		return itemstack;
 	}
-	
+
 	@Override
 	public String getItemStackDisplayName(ItemStack itemstack)
 	{
 		GasType gasType = getGasType(itemstack);
-		if(gasType == GFAPI.gasTypeAir || gasType == null)
+		if (gasType == GFAPI.gasTypeAir || gasType == null)
 		{
 			return super.getItemStackDisplayName(itemstack);
 		}
@@ -54,28 +54,28 @@ public abstract class ItemGasSampler extends ItemGasContainer implements ISample
 			return StatCollector.translateToLocalFormatted(getUnlocalizedNameInefficiently(itemstack) + ".name.filled", s);
 		}
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean requiresMultipleRenderPasses()
 	{
 		return true;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public int getColorFromItemStack(ItemStack par1ItemStack, int par2)
 	{
 		return par2 > 0 ? 0xFFFFFF : this.getColorFromDamage(par1ItemStack.getItemDamage());
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	public int getColorFromDamage(int par1)
 	{
 		GasType gasType = GasesFramework.registry.getGasTypeByID(par1);
 		return gasType != null ? (gasType.color >> 8) : 0xFFFFFF;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IIconRegister iconRegister)
@@ -84,17 +84,18 @@ public abstract class ItemGasSampler extends ItemGasContainer implements ISample
 		overlayIcon = iconRegister.registerIcon(this.getIconString() + "_overlay");
 		emptyOverlayIcon = iconRegister.registerIcon(this.getIconString() + "_overlay_empty");
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	/**
-	 * Gets an icon index based on an item's damage value and the given render pass
+	 * Gets an icon index based on an item's damage value and the given render
+	 * pass
 	 */
 	@Override
 	public IIcon getIconFromDamageForRenderPass(int par1, int par2)
 	{
 		return par2 == 0 ? (par1 > 0 ? overlayIcon : emptyOverlayIcon) : itemIcon;
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	/**
 	 * Gets an icon index based on an item's damage value

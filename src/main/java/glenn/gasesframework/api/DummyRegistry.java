@@ -11,14 +11,17 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
- * A dummy registry for the Gases Framework that is used when the mod is not installed.
+ * A dummy registry for the Gases Framework that is used when the mod is not
+ * installed.
+ * 
  * @author Erlend
  */
 public class DummyRegistry implements IGFRegistry
 {
 	@Override
 	public void registerGasFurnaceRecipe(ItemStack ingredient, ItemStack result, int time, int exp)
-	{}
+	{
+	}
 
 	@Override
 	public boolean isIgnitionBlock(Block block)
@@ -28,11 +31,13 @@ public class DummyRegistry implements IGFRegistry
 
 	@Override
 	public void registerIgnitionBlock(Block block)
-	{}
+	{
+	}
 
 	@Override
 	public void unregisterIgnitionBlock(Block block)
-	{}
+	{
+	}
 
 	@Override
 	public Block[] getRegisteredIgnitionBlocks()
@@ -48,11 +53,13 @@ public class DummyRegistry implements IGFRegistry
 
 	@Override
 	public void registerIgnitionItem(Item item)
-	{}
+	{
+	}
 
 	@Override
 	public void unregisterIgnitionItem(Item item)
-	{}
+	{
+	}
 
 	@Override
 	public Item[] getRegisteredIgnitionItems()
@@ -77,8 +84,6 @@ public class DummyRegistry implements IGFRegistry
 		return new Reaction[0];
 	}
 
-
-
 	@Override
 	public GasType getGasTypeByID(int id)
 	{
@@ -93,7 +98,8 @@ public class DummyRegistry implements IGFRegistry
 
 	@Override
 	public void registerGasType(GasType type)
-	{}
+	{
+	}
 
 	@Override
 	public boolean isGasTypeRegistered(GasType type)
@@ -101,7 +107,8 @@ public class DummyRegistry implements IGFRegistry
 		return false;
 	}
 
-	@Override public GasType[] getRegisteredGasTypes()
+	@Override
+	public GasType[] getRegisteredGasTypes()
 	{
 		return new GasType[0];
 	}
@@ -112,14 +119,16 @@ public class DummyRegistry implements IGFRegistry
 		return null;
 	}
 
-	@Override public LanternType getLanternTypeByInput(ItemKey itemKey)
+	@Override
+	public LanternType getLanternTypeByInput(ItemKey itemKey)
 	{
 		return null;
 	}
 
 	@Override
 	public void registerLanternType(LanternType type)
-	{}
+	{
+	}
 
 	@Override
 	public boolean isLanternTypeRegistered(LanternType type)
@@ -129,16 +138,19 @@ public class DummyRegistry implements IGFRegistry
 
 	@Override
 	public void registerLanternInput(LanternType type, ItemKey itemKey)
-	{}
+	{
+	}
 
-	@Override public LanternType[] getRegisteredLanternTypes()
+	@Override
+	public LanternType[] getRegisteredLanternTypes()
 	{
 		return new LanternType[0];
 	}
 
 	@Override
 	public void registerGasWorldGenType(GasWorldGenType type, String... dimensions)
-	{}
+	{
+	}
 
 	@Override
 	public boolean isGasWorldGenTypeRegistered(GasWorldGenType type, String dimension)
@@ -148,7 +160,8 @@ public class DummyRegistry implements IGFRegistry
 
 	@Override
 	public void registerGasTransposerHandler(IGasTransposerHandler handler)
-	{}
+	{
+	}
 
 	@Override
 	public boolean isGasTransposerHandlerRegistered(IGasTransposerHandler handler)
@@ -170,7 +183,8 @@ public class DummyRegistry implements IGFRegistry
 
 	@Override
 	public void registerPipeType(PipeType type)
-	{}
+	{
+	}
 
 	@Override
 	public boolean isPipeTypeRegistered(PipeType type)

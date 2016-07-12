@@ -36,7 +36,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public abstract class BlockGasFurnace extends BlockContainer implements IGasReceptor, IGasPropellor, IRotatedBlock
 {
 	/**
-	 * Is the random generator used by furnace to drop the inventory contents in random directions.
+	 * Is the random generator used by furnace to drop the inventory contents in
+	 * random directions.
 	 */
 	private final Random furnaceRand = new Random();
 
@@ -44,8 +45,9 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	private final boolean isActive;
 
 	/**
-	 * This flag is used to prevent the furnace inventory to be dropped upon block removal, is used internally when the
-	 * furnace block changes from idle to active and vice-versa.
+	 * This flag is used to prevent the furnace inventory to be dropped upon
+	 * block removal, is used internally when the furnace block changes from
+	 * idle to active and vice-versa.
 	 */
 	private static boolean keepFurnaceInventory;
 
@@ -55,7 +57,7 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	private IIcon iconBottom;
 	@SideOnly(Side.CLIENT)
 	private IIcon[] iconsFront;
-	
+
 	private boolean renderRotated = true;
 
 	public BlockGasFurnace(Material material, boolean isActive)
@@ -63,7 +65,7 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 		super(material);
 		this.isActive = isActive;
 	}
-	
+
 	protected abstract Block getIdleBlock();
 
 	protected abstract Block getActiveBlock();
@@ -91,17 +93,22 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 			Block localBlock4 = world.getBlock(x + 1, y, z);
 
 			int l = 3;
-			if ((localBlock1.func_149730_j()) && (!localBlock2.func_149730_j())) l = 3;
-			if ((localBlock2.func_149730_j()) && (!localBlock1.func_149730_j())) l = 2;
-			if ((localBlock3.func_149730_j()) && (!localBlock4.func_149730_j())) l = 5;
-			if ((localBlock4.func_149730_j()) && (!localBlock3.func_149730_j())) l = 4;
+			if ((localBlock1.func_149730_j()) && (!localBlock2.func_149730_j()))
+				l = 3;
+			if ((localBlock2.func_149730_j()) && (!localBlock1.func_149730_j()))
+				l = 2;
+			if ((localBlock3.func_149730_j()) && (!localBlock4.func_149730_j()))
+				l = 5;
+			if ((localBlock4.func_149730_j()) && (!localBlock3.func_149730_j()))
+				l = 4;
 
 			world.setBlockMetadataWithNotify(x, y, z, l, 2);
 		}
 	}
 
 	/**
-	 * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+	 * From the specified side and block metadata retrieves the blocks texture.
+	 * Args: side, metadata
 	 */
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -109,18 +116,18 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	{
 		return getIcon(side, metadata, 0);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public IIcon getIcon(IBlockAccess blockAccess, int x, int y, int z, int side)
 	{
-		TileEntityGasFurnace tileEntity = (TileEntityGasFurnace)blockAccess.getTileEntity(x, y, z);
+		TileEntityGasFurnace tileEntity = (TileEntityGasFurnace) blockAccess.getTileEntity(x, y, z);
 		int metadata = blockAccess.getBlockMetadata(x, y, z);
 		int stage = tileEntity.prevStage;
 
 		return getIcon(side, metadata, stage);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	protected IIcon getIcon(int side, int metadata, int stage)
 	{
@@ -130,20 +137,21 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 
 		switch (blockSide)
 		{
-		case NORTH:
-			return this.iconTop;
-		case SOUTH:
-			return this.iconBottom;
-		case DOWN:
-			return this.iconsFront[stage];
-		default:
-			return this.blockIcon;
+			case NORTH:
+				return this.iconTop;
+			case SOUTH:
+				return this.iconBottom;
+			case DOWN:
+				return this.iconsFront[stage];
+			default:
+				return this.blockIcon;
 		}
 	}
 
 	/**
-	 * When this method is called, your block should register all the icons it needs with the given IconRegister. This
-	 * is the only chance you get to register icons.
+	 * When this method is called, your block should register all the icons it
+	 * needs with the given IconRegister. This is the only chance you get to
+	 * register icons.
 	 */
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -153,26 +161,26 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 		this.blockIcon = iconRegister.registerIcon(getTextureName() + "_side");
 		this.iconTop = iconRegister.registerIcon(getTextureName() + "_top");
 		this.iconBottom = iconRegister.registerIcon(getTextureName() + "_bottom");
-		for(int i = 0; i < 5; i++)
+		for (int i = 0; i < 5; i++)
 		{
 			this.iconsFront[i] = iconRegister.registerIcon(getTextureName() + "_front_" + i);
 		}
 	}
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public int getRenderType()
-    {
-    	if (renderRotated)
-    	{
-    		return RenderRotatedBlock.RENDER_ID;
-    	}
-    	else
-    	{
-    		return super.getRenderType();
-    	}
-    }
-    
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getRenderType()
+	{
+		if (renderRotated)
+		{
+			return RenderRotatedBlock.RENDER_ID;
+		}
+		else
+		{
+			return super.getRenderType();
+		}
+	}
+
 	/**
 	 * Called upon block activation (right click on the block.)
 	 */
@@ -185,7 +193,7 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 		}
 		else
 		{
-			TileEntityGasFurnace tileEntity = (TileEntityGasFurnace)world.getTileEntity(x, y, z);
+			TileEntityGasFurnace tileEntity = (TileEntityGasFurnace) world.getTileEntity(x, y, z);
 
 			if (tileEntity != null)
 			{
@@ -202,7 +210,7 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 		TileEntity tileentity = world.getTileEntity(x, y, z);
 		keepFurnaceInventory = true;
 
-		if(stage == 0)
+		if (stage == 0)
 		{
 			world.setBlock(x, y, z, getIdleBlock());
 		}
@@ -231,21 +239,22 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 
 		if (itemStack.hasDisplayName())
 		{
-			((TileEntityGasFurnace)world.getTileEntity(x, y, z)).setGuiDisplayName(itemStack.getDisplayName());
+			((TileEntityGasFurnace) world.getTileEntity(x, y, z)).setGuiDisplayName(itemStack.getDisplayName());
 		}
 	}
 
 	/**
-	 * Called on server worlds only when the block has been replaced by a different block ID, or the same block with a
-	 * different metadata value, but before the new metadata value is set. Args: World, x, y, z, old block ID, old
-	 * metadata
+	 * Called on server worlds only when the block has been replaced by a
+	 * different block ID, or the same block with a different metadata value,
+	 * but before the new metadata value is set. Args: World, x, y, z, old block
+	 * ID, old metadata
 	 */
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block oldBlock, int oldMetadata)
 	{
 		if (!keepFurnaceInventory)
 		{
-			TileEntityGasFurnace tileentityfurnace = (TileEntityGasFurnace)world.getTileEntity(x, y, z);
+			TileEntityGasFurnace tileentityfurnace = (TileEntityGasFurnace) world.getTileEntity(x, y, z);
 
 			if (tileentityfurnace != null)
 			{
@@ -269,17 +278,17 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 							}
 
 							itemstack.stackSize -= k1;
-							EntityItem entityitem = new EntityItem(world, (double)((float)x + f), (double)((float)y + f1), (double)((float)z + f2), new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
+							EntityItem entityitem = new EntityItem(world, (double) ((float) x + f), (double) ((float) y + f1), (double) ((float) z + f2), new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
 
 							if (itemstack.hasTagCompound())
 							{
-								entityitem.getEntityItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+								entityitem.getEntityItem().setTagCompound((NBTTagCompound) itemstack.getTagCompound().copy());
 							}
 
 							float f3 = 0.05F;
-							entityitem.motionX = (double)((float)this.furnaceRand.nextGaussian() * f3);
-							entityitem.motionY = (double)((float)this.furnaceRand.nextGaussian() * f3 + 0.2F);
-							entityitem.motionZ = (double)((float)this.furnaceRand.nextGaussian() * f3);
+							entityitem.motionX = (double) ((float) this.furnaceRand.nextGaussian() * f3);
+							entityitem.motionY = (double) ((float) this.furnaceRand.nextGaussian() * f3 + 0.2F);
+							entityitem.motionZ = (double) ((float) this.furnaceRand.nextGaussian() * f3);
 							world.spawnEntityInWorld(entityitem);
 						}
 					}
@@ -293,8 +302,9 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	}
 
 	/**
-	 * If this returns true, then comparators facing away from this block will use the value from
-	 * getComparatorInputOverride instead of the actual redstone signal strength.
+	 * If this returns true, then comparators facing away from this block will
+	 * use the value from getComparatorInputOverride instead of the actual
+	 * redstone signal strength.
 	 */
 	@Override
 	public boolean hasComparatorInputOverride()
@@ -303,58 +313,60 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	}
 
 	/**
-	 * If hasComparatorInputOverride returns true, the return value from this is used instead of the redstone signal
-	 * strength when this block inputs to a comparator.
+	 * If hasComparatorInputOverride returns true, the return value from this is
+	 * used instead of the redstone signal strength when this block inputs to a
+	 * comparator.
 	 */
 	@Override
 	public int getComparatorInputOverride(World world, int x, int y, int z, int side)
 	{
-		return Container.calcRedstoneFromInventory((IInventory)world.getTileEntity(x, y, z));
+		return Container.calcRedstoneFromInventory((IInventory) world.getTileEntity(x, y, z));
 	}
 
 	@SideOnly(Side.CLIENT)
 
 	/**
-	 * only called by clickMiddleMouseButton , and passed to inventory.setCurrentItem (along with isCreative)
+	 * only called by clickMiddleMouseButton , and passed to
+	 * inventory.setCurrentItem (along with isCreative)
 	 */
 	@Override
 	public Item getItem(World world, int x, int y, int z)
 	{
 		return Item.getItemFromBlock(getIdleBlock());
 	}
-	
+
 	@Override
 	public Item getItemDropped(int par1, Random random, int par3)
 	{
 		return Item.getItemFromBlock(getIdleBlock());
 	}
-	
+
 	@Override
 	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		TileEntityGasFurnace gasFurnace = (TileEntityGasFurnace)world.getTileEntity(x, y, z);
-		if(gasType == GFAPI.gasTypeAir)
+		TileEntityGasFurnace gasFurnace = (TileEntityGasFurnace) world.getTileEntity(x, y, z);
+		if (gasType == GFAPI.gasTypeAir)
 		{
 			return true;
 		}
-		else if(gasType.combustibility.burnRate == 0)
+		else if (gasType.combustibility.burnRate == 0)
 		{
 			return false;
 		}
-		else if(gasFurnace.getFuelStored() + 100 * gasType.combustibility.burnRate <= gasFurnace.getMaxFuelStored())
+		else if (gasFurnace.getFuelStored() + 100 * gasType.combustibility.burnRate <= gasFurnace.getMaxFuelStored())
 		{
 			return true;
 		}
-		
+
 		return false;
 	}
 
 	@Override
 	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		if(canReceiveGas(world, x, y, z, side, gasType))
+		if (canReceiveGas(world, x, y, z, side, gasType))
 		{
-			TileEntityGasFurnace gasFurnace = (TileEntityGasFurnace)world.getTileEntity(x, y, z);
+			TileEntityGasFurnace gasFurnace = (TileEntityGasFurnace) world.getTileEntity(x, y, z);
 			gasFurnace.fuelLevel += 100 * gasType.combustibility.burnRate;
 			return true;
 		}
@@ -363,14 +375,14 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 			return false;
 		}
 	}
-	
+
 	@Override
 	public int getPressureFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
 		BlockRotation rotation = getBlockRotation(world, x, y, z);
-		if(side == rotation.rotate(ForgeDirection.NORTH))
+		if (side == rotation.rotate(ForgeDirection.NORTH))
 		{
-			TileEntityGasFurnace gasFurnace = (TileEntityGasFurnace)world.getTileEntity(x, y, z);
+			TileEntityGasFurnace gasFurnace = (TileEntityGasFurnace) world.getTileEntity(x, y, z);
 			return gasFurnace.isBurning() ? GasesFramework.configurations.piping.ironMaterial.maxPressure : 0;
 		}
 		return 0;
@@ -381,19 +393,19 @@ public abstract class BlockGasFurnace extends BlockContainer implements IGasRece
 	{
 		return true;
 	}
-	
+
 	@Override
 	public BlockRotation getBlockRotationAsItem(int metadata)
 	{
 		return BlockRotation.EAST_FORWARD;
 	}
-	
+
 	@Override
 	public BlockRotation getBlockRotation(IBlockAccess blockAccess, int x, int y, int z)
 	{
 		return BlockRotation.getRotation(blockAccess.getBlockMetadata(x, y, z));
 	}
-	
+
 	@Override
 	public void swapRotatedBlockRenderType()
 	{

@@ -31,7 +31,7 @@ public class PipeProvider implements IWailaDataProvider
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
-		BlockGasPipe pipeBlock = (BlockGasPipe)accessor.getBlock();
+		BlockGasPipe pipeBlock = (BlockGasPipe) accessor.getBlock();
 		String gasName = I18n.format(pipeBlock.type.getUnlocalizedName() + ".name");
 		currenttip.add(I18n.format("tile.gf_gasPipe.waila.body", gasName));
 		return currenttip;

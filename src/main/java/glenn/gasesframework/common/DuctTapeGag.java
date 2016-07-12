@@ -40,21 +40,19 @@ public class DuctTapeGag implements IExtendedEntityProperties
 
 	@Override
 	public void init(Entity entity, World world)
-	{}
+	{
+	}
 
 	public void sendMessage()
 	{
-		GasesFramework.networkWrapper.sendToAllAround(
-				new MessageDuctTapeGag(entity, gagged),
-				new NetworkRegistry.TargetPoint(entity.worldObj.provider.dimensionId, entity.posX, entity.posY, entity.posZ, 50.0D)
-		);
+		GasesFramework.networkWrapper.sendToAllAround(new MessageDuctTapeGag(entity, gagged), new NetworkRegistry.TargetPoint(entity.worldObj.provider.dimensionId, entity.posX, entity.posY, entity.posZ, 50.0D));
 	}
 
 	public static boolean canGag(EntityLivingBase entity)
 	{
 		return entity instanceof EntityVillager || entity instanceof EntityPlayer;
 	}
-	
+
 	public static DuctTapeGag register(EntityLivingBase entity)
 	{
 		DuctTapeGag gag = new DuctTapeGag(entity);
@@ -64,7 +62,7 @@ public class DuctTapeGag implements IExtendedEntityProperties
 
 	public static DuctTapeGag get(EntityLivingBase entity)
 	{
-		return (DuctTapeGag)entity.getExtendedProperties(EXT_PROP_NAME);
+		return (DuctTapeGag) entity.getExtendedProperties(EXT_PROP_NAME);
 	}
 
 	public static DuctTapeGag getOrRegister(EntityLivingBase entity)

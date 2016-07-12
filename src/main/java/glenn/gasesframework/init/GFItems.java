@@ -28,8 +28,7 @@ public class GFItems
 				try
 				{
 					GameRegistry.registerItem((Item) field.get(this), field.getName());
-				}
-				catch (IllegalAccessException e)
+				} catch (IllegalAccessException e)
 				{
 					throw new RuntimeException("Could not register item " + field.getName(), e);
 				}

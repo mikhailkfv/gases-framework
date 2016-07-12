@@ -9,7 +9,7 @@ public class PipeTypeIron extends PipeType
 	{
 		super(pipeID, name, isSolid, textureName);
 	}
-	
+
 	public int getPressureTolerance()
 	{
 		return GasesFramework.configurations.piping.ironMaterial.pressureTolerance;

@@ -11,12 +11,12 @@ public class EntityDelayedExplosion extends Entity
 	private float explosionPower;
 	private boolean isFlaming;
 	private boolean isSmoking;
-	
+
 	public EntityDelayedExplosion(World world)
 	{
 		super(world);
 	}
-	
+
 	public EntityDelayedExplosion(World world, int ticksToExplode, float explosionPower, boolean isFlaming, boolean isSmoking)
 	{
 		super(world);
@@ -25,30 +25,30 @@ public class EntityDelayedExplosion extends Entity
 		this.isFlaming = isFlaming;
 		this.isSmoking = isSmoking;
 	}
-	
+
 	@Override
 	public void onUpdate()
 	{
 		if (this.ticksToExplode-- <= 0)
 		{
 			this.setDead();
-			
+
 			if (!this.worldObj.isRemote)
 			{
 				this.explode();
 			}
 		}
 	}
-	
+
 	protected void explode()
 	{
-        this.worldObj.newExplosion(this, this.posX, this.posY, this.posZ, this.explosionPower, this.isFlaming, this.isSmoking);
+		this.worldObj.newExplosion(this, this.posX, this.posY, this.posZ, this.explosionPower, this.isFlaming, this.isSmoking);
 	}
 
 	@Override
 	protected void entityInit()
 	{
-		
+
 	}
 
 	@Override

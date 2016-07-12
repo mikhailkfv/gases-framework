@@ -12,7 +12,8 @@ public class LanternType
 	 */
 	public final String name;
 	/**
-	 * The level of light emitted by this lantern in an interval from 0.0f to 1.0f.
+	 * The level of light emitted by this lantern in an interval from 0.0f to
+	 * 1.0f.
 	 */
 	public final float lightLevel;
 	/**
@@ -24,11 +25,13 @@ public class LanternType
 	 */
 	public ItemKey itemOut;
 	/**
-	 * The lantern type this lantern will transform into if it expires. Can be null.
+	 * The lantern type this lantern will transform into if it expires. Can be
+	 * null.
 	 */
 	public final LanternType expirationLanternType;
 	/**
-	 * The rate at which this lantern will expire. Smaller numbers mean quicker expiration. If <= 0, this lantern type will never expire.
+	 * The rate at which this lantern will expire. Smaller numbers mean quicker
+	 * expiration. If <= 0, this lantern type will never expire.
 	 */
 	public final int expirationRate;
 
@@ -38,13 +41,26 @@ public class LanternType
 	public CreativeTabs creativeTab;
 
 	/**
-	 * Creates a new lantern type. Lantern types must be {@link IGFRegistry#registerLanternType(LanternType) registered}.
-	 * @param name An unique name for this lantern type
-	 * @param lightLevel The level of light emitted by this lantern type in an interval from 0.0f to 1.0f
-	 * @param textureName The name of the texture displayed inside the lantern
-	 * @param itemOut The item given from this lantern. NOTE: Not the necessarily same as the item placed in the lantern
-	 * @param expirationLanternType The lantern type this lantern will transform into if it expires. Can be null
-	 * @param expirationRate The rate at which this lantern will expire. Smaller numbers mean quicker expiration. If <= 0, this lantern type will never expire
+	 * Creates a new lantern type. Lantern types must be
+	 * {@link IGFRegistry#registerLanternType(LanternType) registered}.
+	 * 
+	 * @param name
+	 *            An unique name for this lantern type
+	 * @param lightLevel
+	 *            The level of light emitted by this lantern type in an interval
+	 *            from 0.0f to 1.0f
+	 * @param textureName
+	 *            The name of the texture displayed inside the lantern
+	 * @param itemOut
+	 *            The item given from this lantern. NOTE: Not the necessarily
+	 *            same as the item placed in the lantern
+	 * @param expirationLanternType
+	 *            The lantern type this lantern will transform into if it
+	 *            expires. Can be null
+	 * @param expirationRate
+	 *            The rate at which this lantern will expire. Smaller numbers
+	 *            mean quicker expiration. If <= 0, this lantern type will never
+	 *            expire
 	 */
 	public LanternType(String name, float lightLevel, String textureName, ItemKey itemOut, LanternType expirationLanternType, int expirationRate)
 	{
@@ -58,7 +74,9 @@ public class LanternType
 
 	/**
 	 * Set the creative tab this lantern type is bound to.
-	 * @param creativeTab The creative tab
+	 * 
+	 * @param creativeTab
+	 *            The creative tab
 	 * @return this
 	 */
 	public LanternType setCreativeTab(CreativeTabs creativeTab)
@@ -69,15 +87,17 @@ public class LanternType
 
 	/**
 	 * Does this lantern type expire?
+	 * 
 	 * @return True if this lantern type expires
 	 */
 	public boolean expires()
 	{
 		return expirationRate > 0;
 	}
-	
+
 	/**
 	 * Get the unlocalized name of the lantern.
+	 * 
 	 * @return "gf_lantern." + {@link #name};
 	 */
 	public String getUnlocalizedName()

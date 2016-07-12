@@ -6,7 +6,7 @@ package glenn.gasesframework.api.filter;
 public class GasTypeFilterClosed extends GasTypeFilterSimple
 {
 	public static final byte TYPE = 5;
-	
+
 	@Override
 	public byte getType()
 	{

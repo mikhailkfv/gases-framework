@@ -17,20 +17,20 @@ public class MessageSetTransposerMode extends AbstractSerialMessage
 		public AbstractMessage onMessage(MessageSetTransposerMode message, MessageContext ctx)
 		{
 			World world = GasesFramework.proxy.getPlayerEntity(ctx).worldObj;
-			
+
 			TileEntity tileEntity = world.getTileEntity(message.tileEntityX, message.tileEntityY, message.tileEntityZ);
-			if(tileEntity != null && tileEntity instanceof TileEntityGasTransposer)
+			if (tileEntity != null && tileEntity instanceof TileEntityGasTransposer)
 			{
-				((TileEntityGasTransposer)tileEntity).setMode(message.mode);
+				((TileEntityGasTransposer) tileEntity).setMode(message.mode);
 			}
-			
+
 			return null;
 		}
 	}
-	
+
 	public int tileEntityX, tileEntityY, tileEntityZ;
 	public int mode;
-	
+
 	public MessageSetTransposerMode(TileEntityGasTransposer tileEntity)
 	{
 		this.tileEntityX = tileEntity.xCoord;
@@ -38,7 +38,8 @@ public class MessageSetTransposerMode extends AbstractSerialMessage
 		this.tileEntityZ = tileEntity.zCoord;
 		this.mode = tileEntity.mode.ordinal();
 	}
-	
+
 	public MessageSetTransposerMode()
-	{}
+	{
+	}
 }

@@ -14,89 +14,93 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class TileEntityInfiniteGasPump extends TileEntity
 {
 	private final int pumpRate;
-	
+
 	private int pumpTime;
 	private GasType[] types = new GasType[6];
-	
+
 	public TileEntityInfiniteGasPump()
 	{
 		pumpRate = GasesFramework.configurations.piping.infiniteMaterial.pumpRate;
 		pumpTime = pumpRate;
-		for(int i = 0; i < types.length; i++)
+		for (int i = 0; i < types.length; i++)
 		{
 			types[i] = GFAPI.gasTypeAir;
 		}
 	}
-	
+
 	public GasType getType(ForgeDirection side)
 	{
 		GasType type = types[side.ordinal()];
 		return type;
 	}
-	
+
 	public void setType(GasType newType, ForgeDirection side)
 	{
 		int ordinal = side.ordinal();
-		if(newType == types[ordinal]) newType = GFAPI.gasTypeAir;
-		
+		if (newType == types[ordinal])
+			newType = GFAPI.gasTypeAir;
+
 		worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), ordinal, GasType.getGasID(newType));
 		types[ordinal] = newType;
 	}
-	
+
 	public boolean isActive()
 	{
 		return !worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord);
 	}
-	
-    /**
-     * Pump to a specified block. If the contained gas type is consumed, return true.
-     * @param x
-     * @param y
-     * @param z
-     * @param direction
-     * @return
-     */
-    protected boolean pumpToBlock(int x, int y, int z, GasType type, ForgeDirection direction)
-    {
-    	IGasPropellor propellor = (IGasPropellor)getBlockType();
-    	int pressure = propellor.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, direction);
-    	return GasesFramework.implementation.tryPushGas(worldObj, worldObj.rand, x, y, z, type, direction, pressure);
-    }
-    
+
+	/**
+	 * Pump to a specified block. If the contained gas type is consumed, return
+	 * true.
+	 * 
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param direction
+	 * @return
+	 */
+	protected boolean pumpToBlock(int x, int y, int z, GasType type, ForgeDirection direction)
+	{
+		IGasPropellor propellor = (IGasPropellor) getBlockType();
+		int pressure = propellor.getPressureFromSide(worldObj, xCoord, yCoord, zCoord, direction);
+		return GasesFramework.implementation.tryPushGas(worldObj, worldObj.rand, x, y, z, type, direction, pressure);
+	}
+
 	@Override
 	public void updateEntity()
 	{
-		if(!worldObj.isRemote && pumpTime-- <= 0)
+		if (!worldObj.isRemote && pumpTime-- <= 0)
 		{
-			if(isActive())
+			if (isActive())
 			{
-				for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
+				for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS)
 				{
 					GasType type = getType(side);
-	
+
 					int x = xCoord + side.offsetX;
 					int y = yCoord + side.offsetY;
 					int z = zCoord + side.offsetZ;
-					
+
 					pumpToBlock(x, y, z, type, side);
 				}
 			}
-			
+
 			pumpTime = pumpRate;
 		}
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound)
 	{
 		super.readFromNBT(tagCompound);
 		pumpTime = tagCompound.getInteger("pumpTime");
 		int[] gasIDArray = tagCompound.getIntArray("types");
-		
-		for(int i = 0; i < types.length; i++)
+
+		for (int i = 0; i < types.length; i++)
 		{
 			types[i] = GasesFramework.registry.getGasTypeByID(gasIDArray[i]);
-			if(types[i] == null) types[i] = GFAPI.gasTypeAir;
+			if (types[i] == null)
+				types[i] = GFAPI.gasTypeAir;
 		}
 	}
 
@@ -106,36 +110,36 @@ public class TileEntityInfiniteGasPump extends TileEntity
 		super.writeToNBT(tagCompound);
 		tagCompound.setInteger("pumpTime", pumpTime);
 		int[] gasIDArray = new int[6];
-		for(int i = 0; i < types.length; i++)
+		for (int i = 0; i < types.length; i++)
 		{
 			GasType gasType = types[i];
 			gasIDArray[i] = GasType.getGasID(gasType);
 		}
 		tagCompound.setIntArray("types", gasIDArray);
 	}
-	
+
 	@Override
-    public Packet getDescriptionPacket()
-    {
-    	NBTTagCompound nbtTag = new NBTTagCompound();
-        this.writeToNBT(nbtTag);
-        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
-    }
-	
+	public Packet getDescriptionPacket()
+	{
+		NBTTagCompound nbtTag = new NBTTagCompound();
+		this.writeToNBT(nbtTag);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+	}
+
 	@Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
-    {
-    	readFromNBT(packet.func_148857_g());
-    }
-	
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+	{
+		readFromNBT(packet.func_148857_g());
+	}
+
 	public boolean blockEvent(int eventID, int eventParam)
 	{
-		if(worldObj.isRemote)
+		if (worldObj.isRemote)
 		{
 			types[eventID] = GasesFramework.registry.getGasTypeByID(eventParam);
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
-		
+
 		return true;
 	}
 }

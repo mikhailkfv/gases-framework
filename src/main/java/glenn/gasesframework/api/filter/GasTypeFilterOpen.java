@@ -8,7 +8,7 @@ import glenn.gasesframework.api.gastype.GasType;
 public class GasTypeFilterOpen extends GasTypeFilterSimple
 {
 	public static final byte TYPE = 0;
-	
+
 	@Override
 	public byte getType()
 	{

@@ -27,12 +27,12 @@ public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, 
 	public boolean completeInsertion(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
 		ItemStack result = new ItemStack(GasesFramework.items.gasBottle, 1, gasType.gasID);
-		
-		if(outputStack == null)
+
+		if (outputStack == null)
 		{
 			return true;
 		}
-		else 
+		else
 		{
 			return outputStack.isItemEqual(result) && outputStack.stackSize + result.stackSize <= outputStack.getMaxStackSize();
 		}
@@ -48,8 +48,8 @@ public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, 
 	public ItemStack getInsertionOutputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
 		ItemStack result = new ItemStack(GasesFramework.items.gasBottle, 1, gasType.gasID);
-		
-		if(outputStack == null)
+
+		if (outputStack == null)
 		{
 			return result;
 		}
@@ -65,7 +65,7 @@ public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, 
 	{
 		return 20;
 	}
-	
+
 	@Override
 	public boolean isValidExtractionInput(ItemStack itemstack)
 	{
@@ -75,19 +75,19 @@ public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, 
 	@Override
 	public GasType getExtractionOutputGasType(ItemStack inputStack)
 	{
-		return ((ItemGasBottle)GasesFramework.items.gasBottle).getGasType(inputStack);
+		return ((ItemGasBottle) GasesFramework.items.gasBottle).getGasType(inputStack);
 	}
 
 	@Override
 	public boolean completeExtraction(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
 		ItemStack result = new ItemStack(Items.glass_bottle);
-		
-		if(outputStack == null)
+
+		if (outputStack == null)
 		{
 			return true;
 		}
-		else 
+		else
 		{
 			return outputStack.isItemEqual(result) && outputStack.stackSize + result.stackSize <= outputStack.getMaxStackSize();
 		}
@@ -103,8 +103,8 @@ public class GasBottleTransposerHandler implements IGasTransposerInsertHandler, 
 	public ItemStack getExtractionOutputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
 		ItemStack result = new ItemStack(Items.glass_bottle);
-		
-		if(outputStack == null)
+
+		if (outputStack == null)
 		{
 			return result;
 		}

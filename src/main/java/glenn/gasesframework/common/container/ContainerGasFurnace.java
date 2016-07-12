@@ -15,12 +15,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ContainerGasFurnace extends Container
 {
 	public static final int GUI_ID = 0;
-	
+
 	private TileEntityGasFurnace furnace;
 	private int lastCookTime;
 	private int lastTemperature;
 	private int lastFuelLevel;
-	
+
 	private boolean forceUpdate;
 
 	public ContainerGasFurnace(InventoryPlayer par1InventoryPlayer, TileEntityGasFurnace par2TileEntityFurnace)
@@ -42,7 +42,7 @@ public class ContainerGasFurnace extends Container
 		{
 			this.addSlotToContainer(new Slot(par1InventoryPlayer, i, 8 + i * 18, 142));
 		}
-		
+
 		forceUpdate = true;
 	}
 
@@ -65,18 +65,18 @@ public class ContainerGasFurnace extends Container
 
 		for (int i = 0; i < this.crafters.size(); ++i)
 		{
-			ICrafting icrafting = (ICrafting)this.crafters.get(i);
-			
+			ICrafting icrafting = (ICrafting) this.crafters.get(i);
+
 			if (this.lastCookTime != this.furnace.cookTime | forceUpdate)
 			{
 				icrafting.sendProgressBarUpdate(this, 0, this.furnace.cookTime);
 			}
-			
+
 			if (this.lastTemperature != this.furnace.temperature | forceUpdate)
 			{
 				icrafting.sendProgressBarUpdate(this, 1, this.furnace.temperature);
 			}
-			
+
 			if (this.lastFuelLevel != this.furnace.fuelLevel | forceUpdate)
 			{
 				icrafting.sendProgressBarUpdate(this, 2, this.furnace.fuelLevel);
@@ -86,7 +86,7 @@ public class ContainerGasFurnace extends Container
 		this.lastCookTime = this.furnace.cookTime;
 		this.lastTemperature = this.furnace.temperature;
 		this.lastFuelLevel = this.furnace.fuelLevel;
-		
+
 		forceUpdate = false;
 	}
 
@@ -98,7 +98,7 @@ public class ContainerGasFurnace extends Container
 		{
 			this.furnace.cookTime = parValue;
 		}
-		
+
 		if (parName == 1)
 		{
 			this.furnace.temperature = parValue;
@@ -117,13 +117,14 @@ public class ContainerGasFurnace extends Container
 	}
 
 	/**
-	 * Called when a player shift-clicks on a slot. You must override this or you will crash when someone does that.
+	 * Called when a player shift-clicks on a slot. You must override this or
+	 * you will crash when someone does that.
 	 */
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotIndex)
 	{
 		ItemStack itemstack = null;
-		Slot slot = (Slot)this.inventorySlots.get(slotIndex);
+		Slot slot = (Slot) this.inventorySlots.get(slotIndex);
 
 		if (slot != null && slot.getHasStack())
 		{
@@ -132,7 +133,7 @@ public class ContainerGasFurnace extends Container
 
 			if (slotIndex == 0)
 			{
-				//This is from the furnace input slot
+				// This is from the furnace input slot
 				if (!this.mergeItemStack(itemstack1, 2, 38, false))
 				{
 					return null;
@@ -140,7 +141,7 @@ public class ContainerGasFurnace extends Container
 			}
 			else if (slotIndex == 1)
 			{
-				//Taking from the furnace output slot
+				// Taking from the furnace output slot
 				if (!this.mergeItemStack(itemstack1, 2, 38, true))
 				{
 					return null;
@@ -150,10 +151,11 @@ public class ContainerGasFurnace extends Container
 			}
 			else
 			{
-				//Taking from an item somewhere in the player's inventory to be placed somewhere in the furnace
+				// Taking from an item somewhere in the player's inventory to be
+				// placed somewhere in the furnace
 				if (TileEntityGasFurnace.getSpecialFurnaceRecipe(itemstack1) != null || FurnaceRecipes.smelting().getSmeltingResult(itemstack1) != null)
 				{
-					//This is smeltable
+					// This is smeltable
 					if (!this.mergeItemStack(itemstack1, 0, 1, false))
 					{
 						return null;
@@ -161,7 +163,7 @@ public class ContainerGasFurnace extends Container
 				}
 				else if (slotIndex >= 2 && slotIndex < 29)
 				{
-					//This is from the player's main inventory
+					// This is from the player's main inventory
 					if (!this.mergeItemStack(itemstack1, 29, 38, false))
 					{
 						return null;
@@ -169,7 +171,7 @@ public class ContainerGasFurnace extends Container
 				}
 				else if (slotIndex >= 29 && slotIndex < 38)
 				{
-					//This is from the player's action bar
+					// This is from the player's action bar
 					if (!this.mergeItemStack(itemstack1, 2, 29, false))
 					{
 						return null;
@@ -179,7 +181,7 @@ public class ContainerGasFurnace extends Container
 
 			if (itemstack1.stackSize == 0)
 			{
-				slot.putStack((ItemStack)null);
+				slot.putStack((ItemStack) null);
 			}
 			else
 			{

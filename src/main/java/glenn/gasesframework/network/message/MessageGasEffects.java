@@ -18,25 +18,25 @@ public class MessageGasEffects extends AbstractSerialMessage
 		public AbstractMessage onMessage(MessageGasEffects message, MessageContext ctx)
 		{
 			World world = GasesFramework.proxy.getPlayerEntity(ctx).worldObj;
-			
+
 			Entity entity = world.getEntityByID(message.entityID);
-			
-			if(entity != null && entity instanceof EntityLivingBase)
+
+			if (entity != null && entity instanceof EntityLivingBase)
 			{
-				ExtendedGasEffectsBase extendedGasEffects = ExtendedGasEffectsBase.get((EntityLivingBase)entity);
-				
+				ExtendedGasEffectsBase extendedGasEffects = ExtendedGasEffectsBase.get((EntityLivingBase) entity);
+
 				extendedGasEffects.set(ExtendedGasEffectsBase.EffectType.BLINDNESS, message.blindness);
 				extendedGasEffects.set(ExtendedGasEffectsBase.EffectType.SUFFOCATION, message.suffocation);
 				extendedGasEffects.set(ExtendedGasEffectsBase.EffectType.SLOWNESS, message.slowness);
 			}
-			
+
 			return null;
 		}
 	}
-	
+
 	public int entityID;
 	public short blindness, suffocation, slowness;
-	
+
 	public MessageGasEffects(EntityLivingBase entity, short blindness, short suffocation, short slowness)
 	{
 		this.entityID = entity.getEntityId();
@@ -44,7 +44,8 @@ public class MessageGasEffects extends AbstractSerialMessage
 		this.suffocation = suffocation;
 		this.slowness = slowness;
 	}
-	
+
 	public MessageGasEffects()
-	{}
+	{
+	}
 }

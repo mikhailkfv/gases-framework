@@ -8,13 +8,13 @@ public abstract class GasTypeFilterSingleRenderer extends GasTypeFilterRenderer
 {
 	protected final GasTypeFilterSingle filter;
 	protected final IIcon outlineIcon;
-	
+
 	protected GasTypeFilterSingleRenderer(GasTypeFilterSingle filter, IIcon outlineIcon)
 	{
 		this.filter = filter;
 		this.outlineIcon = outlineIcon;
 	}
-	
+
 	@Override
 	public boolean renderFilterDown(IBlockAccess blockAccess, int x, int y, int z)
 	{
@@ -28,10 +28,10 @@ public abstract class GasTypeFilterSingleRenderer extends GasTypeFilterRenderer
 			renderFaceDown(x, y, z, typeColorR, typeColorG, typeColorB, typeIndicatorIcon);
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	@Override
 	public boolean renderFilterUp(IBlockAccess blockAccess, int x, int y, int z)
 	{
@@ -45,7 +45,7 @@ public abstract class GasTypeFilterSingleRenderer extends GasTypeFilterRenderer
 			renderFaceUp(x, y, z, typeColorR, typeColorG, typeColorB, typeIndicatorIcon);
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -62,7 +62,7 @@ public abstract class GasTypeFilterSingleRenderer extends GasTypeFilterRenderer
 			renderFaceNorth(x, y, z, typeColorR, typeColorG, typeColorB, typeIndicatorIcon);
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -79,7 +79,7 @@ public abstract class GasTypeFilterSingleRenderer extends GasTypeFilterRenderer
 			renderFaceSouth(x, y, z, typeColorR, typeColorG, typeColorB, typeIndicatorIcon);
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -96,7 +96,7 @@ public abstract class GasTypeFilterSingleRenderer extends GasTypeFilterRenderer
 			renderFaceWest(x, y, z, typeColorR, typeColorG, typeColorB, typeIndicatorIcon);
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -113,7 +113,7 @@ public abstract class GasTypeFilterSingleRenderer extends GasTypeFilterRenderer
 			renderFaceEast(x, y, z, typeColorR, typeColorG, typeColorB, typeIndicatorIcon);
 			return true;
 		}
-		
+
 		return false;
 	}
 }

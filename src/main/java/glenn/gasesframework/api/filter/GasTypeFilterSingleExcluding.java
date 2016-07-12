@@ -3,12 +3,13 @@ package glenn.gasesframework.api.filter;
 import glenn.gasesframework.api.gastype.GasType;
 
 /**
- * A filter that only accepts null, air or any gas type that is not a specific gas type.
+ * A filter that only accepts null, air or any gas type that is not a specific
+ * gas type.
  */
 public class GasTypeFilterSingleExcluding extends GasTypeFilterSingle
 {
 	public static final byte TYPE = 2;
-	
+
 	@Override
 	public byte getType()
 	{
@@ -31,7 +32,7 @@ public class GasTypeFilterSingleExcluding extends GasTypeFilterSingle
 	{
 		if (other instanceof GasTypeFilterSingleExcluding)
 		{
-			return ((GasTypeFilterSingleExcluding)other).filterType == filterType;
+			return ((GasTypeFilterSingleExcluding) other).filterType == filterType;
 		}
 		else
 		{

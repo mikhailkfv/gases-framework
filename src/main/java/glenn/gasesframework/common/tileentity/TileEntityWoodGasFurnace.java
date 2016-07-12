@@ -13,19 +13,14 @@ public class TileEntityWoodGasFurnace extends TileEntityGasFurnace
 {
 	public TileEntityWoodGasFurnace()
 	{
-		super(
-			GasesFramework.configurations.blocks.woodGasFurnace.smokeEmissionInterval,
-			GasesFramework.configurations.blocks.woodGasFurnace.maxFuel,
-			GasesFramework.configurations.blocks.woodGasFurnace.temperaturePerFuel,
-			GasesFramework.configurations.blocks.woodGasFurnace.temperatureFalloff
-		);
+		super(GasesFramework.configurations.blocks.woodGasFurnace.smokeEmissionInterval, GasesFramework.configurations.blocks.woodGasFurnace.maxFuel, GasesFramework.configurations.blocks.woodGasFurnace.temperaturePerFuel, GasesFramework.configurations.blocks.woodGasFurnace.temperatureFalloff);
 	}
-	
+
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		
+
 		if (GasesFramework.configurations.blocks.woodGasFurnace.catchesFire)
 		{
 			if (!worldObj.isRemote && isBurning() && worldObj.rand.nextInt(200) == 0)

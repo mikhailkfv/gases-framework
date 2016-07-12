@@ -19,6 +19,7 @@ public abstract class ConfigurationsValueParser
 			return Integer.valueOf(Integer.parseInt(value));
 		}
 	}
+
 	private static class FloatParser extends ConfigurationsValueParser
 	{
 		public FloatParser()
@@ -32,6 +33,7 @@ public abstract class ConfigurationsValueParser
 			return Float.valueOf(Float.parseFloat(value));
 		}
 	}
+
 	private static class DoubleParser extends ConfigurationsValueParser
 	{
 		public DoubleParser()
@@ -45,6 +47,7 @@ public abstract class ConfigurationsValueParser
 			return Double.valueOf(Double.parseDouble(value));
 		}
 	}
+
 	private static class BooleanParser extends ConfigurationsValueParser
 	{
 		public BooleanParser()
@@ -58,6 +61,7 @@ public abstract class ConfigurationsValueParser
 			return Boolean.valueOf(Boolean.parseBoolean(value));
 		}
 	}
+
 	private static class StringParser extends ConfigurationsValueParser
 	{
 		public StringParser()
@@ -71,9 +75,9 @@ public abstract class ConfigurationsValueParser
 			return value;
 		}
 	}
-	
+
 	private static final HashMap<Class<?>, ConfigurationsValueParser> parsers = new HashMap<Class<?>, ConfigurationsValueParser>();
-	
+
 	static
 	{
 		registerParser(new IntParser(), int.class);
@@ -82,17 +86,17 @@ public abstract class ConfigurationsValueParser
 		registerParser(new BooleanParser(), boolean.class);
 		registerParser(new StringParser(), String.class);
 	}
-	
+
 	public static void registerParser(ConfigurationsValueParser parser, Class<?> clazz)
 	{
 		parsers.put(clazz, parser);
 	}
-	
+
 	public static ConfigurationsValueParser getStrictParser(Class<?> clazz)
 	{
 		return parsers.get(clazz);
 	}
-	
+
 	public static ConfigurationsValueParser getParser(Class<?> clazz)
 	{
 		do
@@ -102,18 +106,17 @@ public abstract class ConfigurationsValueParser
 			{
 				return parser;
 			}
-		}
-		while((clazz = clazz.getSuperclass()) != null);
-		
+		} while ((clazz = clazz.getSuperclass()) != null);
+
 		return null;
 	}
-	
+
 	public final Property.Type propertyType;
-	
+
 	public ConfigurationsValueParser(Property.Type propertyType)
 	{
 		this.propertyType = propertyType;
 	}
-	
+
 	public abstract Object parse(String value, Class<?> clazz);
 }

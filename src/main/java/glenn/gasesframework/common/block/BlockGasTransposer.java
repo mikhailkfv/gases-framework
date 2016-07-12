@@ -31,14 +31,14 @@ public class BlockGasTransposer extends Block implements ITileEntityProvider, IG
 {
 	@SideOnly(Side.CLIENT)
 	protected IIcon frontIcon;
-	
+
 	private boolean renderRotated = true;
-	
-    public BlockGasTransposer()
+
+	public BlockGasTransposer()
 	{
 		super(Material.iron);
 	}
-	
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerBlockIcons(IIconRegister iconRegister)
@@ -57,99 +57,99 @@ public class BlockGasTransposer extends Block implements ITileEntityProvider, IG
 
 		switch (blockSide)
 		{
-		case NORTH:
-			return frontIcon;
-		default:
-			return blockIcon;
+			case NORTH:
+				return frontIcon;
+			default:
+				return blockIcon;
 		}
 	}
-	
-    @SideOnly(Side.CLIENT)
-    @Override
-    public int getRenderType()
-    {
-    	if (renderRotated)
-    	{
-    		return RenderRotatedBlock.RENDER_ID;
-    	}
-    	else
-    	{
-    		return super.getRenderType();
-    	}
-    }
-    
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemstack)
-    {
-		world.setBlockMetadataWithNotify(x, y, z, BlockRotation.getRotation(-entity.rotationYaw, entity.rotationPitch).ordinal(), 2);
-    }
-	
+
+	@SideOnly(Side.CLIENT)
 	@Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
-    {
-        if (world.isRemote)
-        {
-            return true;
-        }
-        else
-        {
-            TileEntityGasTransposer tileentityfurnace = (TileEntityGasTransposer)world.getTileEntity(x, y, z);
+	public int getRenderType()
+	{
+		if (renderRotated)
+		{
+			return RenderRotatedBlock.RENDER_ID;
+		}
+		else
+		{
+			return super.getRenderType();
+		}
+	}
 
-            if (tileentityfurnace != null)
-            {
-            	entityPlayer.openGui(GasesFramework.instance, ContainerGasTransposer.GUI_ID, world, x, y, z);
-            }
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemstack)
+	{
+		world.setBlockMetadataWithNotify(x, y, z, BlockRotation.getRotation(-entity.rotationYaw, entity.rotationPitch).ordinal(), 2);
+	}
 
-            return true;
-        }
-    }
-	
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int side, float hitX, float hitY, float hitZ)
+	{
+		if (world.isRemote)
+		{
+			return true;
+		}
+		else
+		{
+			TileEntityGasTransposer tileentityfurnace = (TileEntityGasTransposer) world.getTileEntity(x, y, z);
+
+			if (tileentityfurnace != null)
+			{
+				entityPlayer.openGui(GasesFramework.instance, ContainerGasTransposer.GUI_ID, world, x, y, z);
+			}
+
+			return true;
+		}
+	}
+
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
 	{
-		TileEntityGasTransposer tileEntity = (TileEntityGasTransposer)world.getTileEntity(x, y, z);
-		
-		if(tileEntity != null)
+		TileEntityGasTransposer tileEntity = (TileEntityGasTransposer) world.getTileEntity(x, y, z);
+
+		if (tileEntity != null)
 		{
-			for(int i = 0; i < tileEntity.getSizeInventory(); i++)
+			for (int i = 0; i < tileEntity.getSizeInventory(); i++)
 			{
 				ItemStack itemstack = tileEntity.getStackInSlot(i);
-				
-				if(itemstack != null)
+
+				if (itemstack != null)
 				{
 					float f = world.rand.nextFloat() * 0.8F + 0.1F;
 					float f1 = world.rand.nextFloat() * 0.8F + 0.1F;
 					float f2 = world.rand.nextFloat() * 0.8F + 0.1F;
-					
-					while(itemstack.stackSize > 0)
+
+					while (itemstack.stackSize > 0)
 					{
 						int k1 = world.rand.nextInt(21) + 10;
-						
-						if(k1 > itemstack.stackSize)
+
+						if (k1 > itemstack.stackSize)
 						{
 							k1 = itemstack.stackSize;
 						}
-						
+
 						itemstack.stackSize -= k1;
-						EntityItem entityitem = new EntityItem(world, (double)((float)x + f), (double)((float)y + f1), (double)((float)z + f2), new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
-						
-						if(itemstack.hasTagCompound())
+						EntityItem entityitem = new EntityItem(world, (double) ((float) x + f), (double) ((float) y + f1), (double) ((float) z + f2), new ItemStack(itemstack.getItem(), k1, itemstack.getItemDamage()));
+
+						if (itemstack.hasTagCompound())
 						{
-							entityitem.getEntityItem().setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+							entityitem.getEntityItem().setTagCompound((NBTTagCompound) itemstack.getTagCompound().copy());
 						}
-						
+
 						float f3 = 0.05F;
-						entityitem.motionX = (double)((float)world.rand.nextGaussian() * f3);
-						entityitem.motionY = (double)((float)world.rand.nextGaussian() * f3 + 0.2F);
-						entityitem.motionZ = (double)((float)world.rand.nextGaussian() * f3);
+						entityitem.motionX = (double) ((float) world.rand.nextGaussian() * f3);
+						entityitem.motionY = (double) ((float) world.rand.nextGaussian() * f3 + 0.2F);
+						entityitem.motionZ = (double) ((float) world.rand.nextGaussian() * f3);
 						world.spawnEntityInWorld(entityitem);
 					}
 				}
 			}
-			
+
 			world.func_147453_f(x, y, z, block);
 		}
-		
+
 		super.breakBlock(world, x, y, z, block, metadata);
 	}
 
@@ -162,14 +162,14 @@ public class BlockGasTransposer extends Block implements ITileEntityProvider, IG
 	@Override
 	public boolean receiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		TileEntityGasTransposer tileEntity = (TileEntityGasTransposer)world.getTileEntity(x, y, z);
+		TileEntityGasTransposer tileEntity = (TileEntityGasTransposer) world.getTileEntity(x, y, z);
 		return tileEntity.mode.receiveGas(tileEntity, gasType);
 	}
 
 	@Override
 	public boolean canReceiveGas(World world, int x, int y, int z, ForgeDirection side, GasType gasType)
 	{
-		TileEntityGasTransposer tileEntity = (TileEntityGasTransposer)world.getTileEntity(x, y, z);
+		TileEntityGasTransposer tileEntity = (TileEntityGasTransposer) world.getTileEntity(x, y, z);
 		return tileEntity.mode.canReceiveGas(tileEntity, gasType);
 	}
 
@@ -177,9 +177,9 @@ public class BlockGasTransposer extends Block implements ITileEntityProvider, IG
 	public int getPressureFromSide(World world, int x, int y, int z, ForgeDirection side)
 	{
 		BlockRotation rotation = getBlockRotation(world, x, y, z);
-		if(side == rotation.rotate(ForgeDirection.NORTH))
+		if (side == rotation.rotate(ForgeDirection.NORTH))
 		{
-			TileEntityGasTransposer tileEntity = (TileEntityGasTransposer)world.getTileEntity(x, y, z);
+			TileEntityGasTransposer tileEntity = (TileEntityGasTransposer) world.getTileEntity(x, y, z);
 			return tileEntity.mode.canPropelGas(tileEntity) ? GasesFramework.configurations.piping.ironMaterial.maxPressure : 0;
 		}
 		else
@@ -205,7 +205,7 @@ public class BlockGasTransposer extends Block implements ITileEntityProvider, IG
 	{
 		return BlockRotation.getRotation(blockAccess.getBlockMetadata(x, y, z));
 	}
-	
+
 	@Override
 	public void swapRotatedBlockRenderType()
 	{

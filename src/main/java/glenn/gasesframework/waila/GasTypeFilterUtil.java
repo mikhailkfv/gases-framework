@@ -30,7 +30,7 @@ public class GasTypeFilterUtil
 		}
 		else if (filter instanceof GasTypeFilterSingle)
 		{
-			GasTypeFilterSingle singleFilter = (GasTypeFilterSingle)filter;
+			GasTypeFilterSingle singleFilter = (GasTypeFilterSingle) filter;
 			String filterTypeName = singleFilter.getFilterType() != null ? I18n.format(singleFilter.getFilterType().getUnlocalizedName() + ".name") : "";
 			if (singleFilter instanceof GasTypeFilterSingleIncluding)
 			{
@@ -47,7 +47,7 @@ public class GasTypeFilterUtil
 		}
 		else if (filter instanceof GasTypeFilterMulti)
 		{
-			GasTypeFilterMulti multiFilter = (GasTypeFilterMulti)filter;
+			GasTypeFilterMulti multiFilter = (GasTypeFilterMulti) filter;
 			ArrayList<String> filterTypeNames = new ArrayList<String>();
 			for (GasType filterType : multiFilter.getFilterTypes())
 			{

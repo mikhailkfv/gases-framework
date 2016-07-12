@@ -9,7 +9,7 @@ public class PipeTypeGlass extends PipeType
 	{
 		super(pipeID, name, isSolid, textureName);
 	}
-	
+
 	public int getPressureTolerance()
 	{
 		return GasesFramework.configurations.piping.glassMaterial.pressureTolerance;

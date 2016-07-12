@@ -13,9 +13,9 @@ public abstract class AbstractRenderRotatedBlock implements ISimpleBlockRenderin
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
-		IRotatedBlock rotatedBlock = (IRotatedBlock)block;
+		IRotatedBlock rotatedBlock = (IRotatedBlock) block;
 		BlockRotation rotation = rotatedBlock.getBlockRotationAsItem(metadata);
-		
+
 		GL11.glPushMatrix();
 		GL11.glRotatef(rotation.yaw.getRotationDegrees(), 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(rotation.pitch.getRotationDegrees(), 1.0F, 0.0F, 0.0F);
@@ -23,20 +23,20 @@ public abstract class AbstractRenderRotatedBlock implements ISimpleBlockRenderin
 		rotatedBlock.swapRotatedBlockRenderType();
 		renderer.renderBlockAsItem(block, BlockRotation.PASSIVE_ROTATION.ordinal(), 1.0f);
 		rotatedBlock.swapRotatedBlockRenderType();
-		
+
 		GL11.glPopMatrix();
 	}
 
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
 	{
-		IRotatedBlock rotatedBlock = (IRotatedBlock)block;
+		IRotatedBlock rotatedBlock = (IRotatedBlock) block;
 		BlockRotation rotation = rotatedBlock.getBlockRotation(world, x, y, z);
-		
+
 		applyRotation(renderer, rotation);
 		boolean flag = renderer.renderStandardBlock(block, x, y, z);
 		resetRotation(renderer);
-		
+
 		return flag;
 	}
 
@@ -45,7 +45,7 @@ public abstract class AbstractRenderRotatedBlock implements ISimpleBlockRenderin
 	{
 		return true;
 	}
-	
+
 	private void applyRotation(RenderBlocks renderer, BlockRotation rotation)
 	{
 		renderer.uvRotateBottom = rotation.getUvRotation(ForgeDirection.DOWN);
@@ -55,7 +55,7 @@ public abstract class AbstractRenderRotatedBlock implements ISimpleBlockRenderin
 		renderer.uvRotateWest = rotation.getUvRotation(ForgeDirection.WEST);
 		renderer.uvRotateEast = rotation.getUvRotation(ForgeDirection.EAST);
 	}
-	
+
 	private void resetRotation(RenderBlocks renderer)
 	{
 		renderer.uvRotateBottom = 0;

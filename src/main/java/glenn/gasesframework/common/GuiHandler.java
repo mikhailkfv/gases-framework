@@ -20,33 +20,33 @@ public class GuiHandler implements IGuiHandler
 	public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		switch(id)
+		switch (id)
 		{
-		case ContainerGasFurnace.GUI_ID:
-			return new ContainerGasFurnace(player.inventory, (TileEntityGasFurnace)tileEntity);
-		case ContainerGasTransposer.GUI_ID:
-			return new ContainerGasTransposer(player.inventory, (TileEntityGasTransposer)tileEntity);
-		case ContainerGasDynamo.GUI_ID:
-			return new ContainerGasDynamo(player.inventory, (TileEntityGasDynamo)tileEntity);
+			case ContainerGasFurnace.GUI_ID:
+				return new ContainerGasFurnace(player.inventory, (TileEntityGasFurnace) tileEntity);
+			case ContainerGasTransposer.GUI_ID:
+				return new ContainerGasTransposer(player.inventory, (TileEntityGasTransposer) tileEntity);
+			case ContainerGasDynamo.GUI_ID:
+				return new ContainerGasDynamo(player.inventory, (TileEntityGasDynamo) tileEntity);
 		}
-		
+
 		return null;
 	}
-	
+
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
 		TileEntity tileEntity = world.getTileEntity(x, y, z);
-		switch(id)
+		switch (id)
 		{
-		case ContainerGasFurnace.GUI_ID:
-			return new GuiGasFurnace(player.inventory, (TileEntityGasFurnace)tileEntity);
-		case ContainerGasTransposer.GUI_ID:
-			return new GuiGasTransposer(player.inventory, (TileEntityGasTransposer)tileEntity);
-		case ContainerGasDynamo.GUI_ID:
-			return new GuiGasDynamo(player.inventory, (TileEntityGasDynamo)tileEntity);
+			case ContainerGasFurnace.GUI_ID:
+				return new GuiGasFurnace(player.inventory, (TileEntityGasFurnace) tileEntity);
+			case ContainerGasTransposer.GUI_ID:
+				return new GuiGasTransposer(player.inventory, (TileEntityGasTransposer) tileEntity);
+			case ContainerGasDynamo.GUI_ID:
+				return new GuiGasDynamo(player.inventory, (TileEntityGasDynamo) tileEntity);
 		}
-		
+
 		return null;
 	}
 }

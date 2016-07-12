@@ -9,7 +9,7 @@ public class PipeTypeWood extends PipeType
 	{
 		super(pipeID, name, isSolid, textureName);
 	}
-	
+
 	public int getPressureTolerance()
 	{
 		return GasesFramework.configurations.piping.woodMaterial.pressureTolerance;

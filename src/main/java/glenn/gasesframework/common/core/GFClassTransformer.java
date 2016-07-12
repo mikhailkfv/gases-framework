@@ -63,7 +63,7 @@ import cpw.mods.fml.common.FMLLog;
 public class GFClassTransformer implements IClassTransformer
 {
 	private Map<String, String> c = new HashMap<String, String>();
-	
+
 	{
 		c.put("Block", "aji");
 		c.put("Blocks", "ajn");
@@ -99,80 +99,80 @@ public class GFClassTransformer implements IClassTransformer
 		c.put("ItemInWorldManager", "mx");
 		c.put("EntityPlayerMP", "mw");
 	}
-	
+
 	@Override
 	public byte[] transform(String className, String arg1, byte[] data)
 	{
 		byte[] newData = data;
 
-		if(className.equals(c.get("Entity")))
+		if (className.equals(c.get("Entity")))
 		{
 			FMLLog.fine("[GasesFrameworkCore]Patching obfuscated class: %s(Entity)...", className);
 			newData = patchClassEntity(data, true);
 		}
-		else if(className.equals("net.minecraft.entity.Entity"))
+		else if (className.equals("net.minecraft.entity.Entity"))
 		{
 			FMLLog.fine("[GasesFrameworkCore]Patching class: %s(Entity)...", className);
 			newData = patchClassEntity(data, false);
 		}
-		else if(className.equals(c.get("EntityLivingBase")))
+		else if (className.equals(c.get("EntityLivingBase")))
 		{
 			FMLLog.fine("[GasesFrameworkCore]Patching obfuscated class: %s(EntityLivingBase)...", className);
 			newData = patchClassEntityLivingBase(data, true);
 		}
-		else if(className.equals("net.minecraft.entity.EntityLivingBase"))
+		else if (className.equals("net.minecraft.entity.EntityLivingBase"))
 		{
 			FMLLog.fine("[GasesFrameworkCore]Patching class: %s(EntityLivingBase)...", className);
 			newData = patchClassEntityLivingBase(data, false);
 		}
-		else if(className.equals(c.get("ItemInWorldManager")))
+		else if (className.equals(c.get("ItemInWorldManager")))
 		{
 			FMLLog.fine("[GasesFrameworkCore]Patching obfuscated class: %s(ItemInWorldManager)...", className);
 			newData = patchClassItemInWorldManager(data, true);
 		}
-		else if(className.equals("net.minecraft.server.management.ItemInWorldManager"))
+		else if (className.equals("net.minecraft.server.management.ItemInWorldManager"))
 		{
 			FMLLog.fine("[GasesFrameworkCore]Patching class: %s(ItemInWorldManager)...", className);
 			newData = patchClassItemInWorldManager(data, false);
 		}
 
-		if(newData != data)
+		if (newData != data)
 		{
 			FMLLog.fine("[GasesFrameworkCore]Patch OK!");
 		}
-		
+
 		return newData;
 	}
-	
+
 	public byte[] patchClassEntityLivingBase(byte[] data, boolean obfuscated)
 	{
 		String classEntityLivingBase = obfuscated ? c.get("EntityLivingBase") : "net/minecraft/entity/EntityLivingBase";
 
 		String methodOnEntityUpdate = obfuscated ? "C" : "onEntityUpdate";
 		String methodUpdatePotionEffects = obfuscated ? "aO" : "updatePotionEffects";
-		
+
 		String fieldMotionX = obfuscated ? "v" : "motionX";
 		String fieldMotionZ = obfuscated ? "x" : "motionZ";
 
 		ClassNode classNode = new ClassNode();
 		ClassReader classReader = new ClassReader(data);
 		classReader.accept(classNode, 0);
-		
-		for(int i = 0; i < classNode.methods.size(); i++)
+
+		for (int i = 0; i < classNode.methods.size(); i++)
 		{
 			MethodNode method = classNode.methods.get(i);
-			if(method.name.equals(methodOnEntityUpdate) & method.desc.equals("()V"))
+			if (method.name.equals(methodOnEntityUpdate) & method.desc.equals("()V"))
 			{
 				InsnList newInstructions = new InsnList();
-				for(int j = 0; j < method.instructions.size(); j++)
+				for (int j = 0; j < method.instructions.size(); j++)
 				{
 					AbstractInsnNode instruction = method.instructions.get(j);
 					newInstructions.add(instruction);
-					
-					if(instruction.getOpcode() == INVOKEVIRTUAL)
+
+					if (instruction.getOpcode() == INVOKEVIRTUAL)
 					{
-						MethodInsnNode methodInstruction = (MethodInsnNode)instruction;
-						if(methodInstruction.name.equals(methodUpdatePotionEffects) && methodInstruction.desc.equals("()V"))
+						MethodInsnNode methodInstruction = (MethodInsnNode) instruction;
+						if (methodInstruction.name.equals(methodUpdatePotionEffects) && methodInstruction.desc.equals("()V"))
 						{
 							newInstructions.add(new VarInsnNode(ALOAD, 0));
 							newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classEntityLivingBase, "handleGasEffects", "()V", false));
@@ -182,11 +182,11 @@ public class GFClassTransformer implements IClassTransformer
 				method.instructions = newInstructions;
 			}
 		}
-		
+
 		{
 			classNode.visitMethod(ACC_PROTECTED, "handleGasEffects", "()V", null, null);
 			MethodNode method = classNode.methods.get(classNode.methods.size() - 1);
-			
+
 			LabelNode l0 = new LabelNode();
 			method.instructions.add(l0);
 			method.instructions.add(new LdcInsnNode(0.1D));
@@ -218,14 +218,14 @@ public class GFClassTransformer implements IClassTransformer
 			method.instructions.add(new InsnNode(RETURN));
 			LabelNode l1 = new LabelNode();
 			method.instructions.add(l1);
-			
+
 			method.localVariables.add(new LocalVariableNode("this", "L" + classEntityLivingBase + ";", null, l0, l1, 0));
 			method.localVariables.add(new LocalVariableNode("slowness", "D", null, l0, l1, 1));
-			
+
 			method.maxStack = 5;
 			method.maxLocals = 2;
 		}
-		
+
 		ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
 		classNode.accept(writer);
 		return writer.toByteArray();
@@ -237,7 +237,7 @@ public class GFClassTransformer implements IClassTransformer
 		String classEntity = obfuscated ? c.get("Entity") : "net/minecraft/entity/Entity";
 		String classMaterial = obfuscated ? c.get("Material") : "net/minecraft/block/material/Material";
 		String classWorld = obfuscated ? c.get("World") : "net/minecraft/world/World";
-		
+
 		String interfaceBlockAccess = obfuscated ? c.get("IBlockAccess") : "net/minecraft/world/IBlockAccess";
 
 		String methodIsInsideOfMaterial = obfuscated ? "a" : "isInsideOfMaterial";
@@ -245,29 +245,29 @@ public class GFClassTransformer implements IClassTransformer
 		String methodGetMaterial = obfuscated ? "o" : "getMaterial";
 
 		String fieldWorldObj = obfuscated ? "o" : "worldObj";
-		
+
 		String descriptor = "(L" + classMaterial + ";)Z";
 
 		ClassNode classNode = new ClassNode();
 		ClassReader classReader = new ClassReader(data);
 		classReader.accept(classNode, 0);
 
-		for(int i = 0; i < classNode.methods.size(); i++)
+		for (int i = 0; i < classNode.methods.size(); i++)
 		{
 			MethodNode method = classNode.methods.get(i);
-			if(method.name.equals(methodIsInsideOfMaterial) && method.desc.equals(descriptor))
+			if (method.name.equals(methodIsInsideOfMaterial) && method.desc.equals(descriptor))
 			{
 				InsnList newInstructions = new InsnList();
-				for(int j = 0; j < method.instructions.size(); j++)
+				for (int j = 0; j < method.instructions.size(); j++)
 				{
-					AbstractInsnNode instruction = (AbstractInsnNode)method.instructions.get(j);
+					AbstractInsnNode instruction = (AbstractInsnNode) method.instructions.get(j);
 					newInstructions.add(instruction);
 
-					if(instruction.getOpcode() == ASTORE && ((VarInsnNode)instruction).var == 7)
+					if (instruction.getOpcode() == ASTORE && ((VarInsnNode) instruction).var == 7)
 					{
-						LabelNode l6 = (LabelNode)method.instructions.get(j + 1);
+						LabelNode l6 = (LabelNode) method.instructions.get(j + 1);
 						LabelNode l8 = new LabelNode();
-						
+
 						newInstructions.add(new VarInsnNode(ALOAD, 7));
 						newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classBlock, methodGetMaterial, "()L" + classMaterial + ";", false));
 						newInstructions.add(new FieldInsnNode(GETSTATIC, "glenn/gasesframework/api/MaterialGas", "INSTANCE", "L" + classMaterial + ";"));
@@ -352,29 +352,29 @@ public class GFClassTransformer implements IClassTransformer
 		String classEvent = "cpw/mods/fml/common/eventhandler/Event";
 
 		String methodTryHarvestBlock = obfuscated ? "b" : "tryHarvestBlock";
-		
+
 		String fieldTheWorld = obfuscated ? "a" : "theWorld";
 		String fieldThisPlayerMP = obfuscated ? "b" : "thisPlayerMP";
-		
+
 		String descriptor = "(III)Z";
 
 		ClassNode classNode = new ClassNode();
 		ClassReader classReader = new ClassReader(data);
 		classReader.accept(classNode, 0);
-		
-		for(int i = 0; i < classNode.methods.size(); i++)
+
+		for (int i = 0; i < classNode.methods.size(); i++)
 		{
-			MethodNode method = (MethodNode)classNode.methods.get(i);
-			if(method.name.equals(methodTryHarvestBlock) && method.desc.equals(descriptor))
+			MethodNode method = (MethodNode) classNode.methods.get(i);
+			if (method.name.equals(methodTryHarvestBlock) && method.desc.equals(descriptor))
 			{
 				InsnList newInstructions = new InsnList();
-				for(int j = 0; j < method.instructions.size(); j++)
+				for (int j = 0; j < method.instructions.size(); j++)
 				{
-					AbstractInsnNode instruction = (AbstractInsnNode)method.instructions.get(j);
-					
+					AbstractInsnNode instruction = (AbstractInsnNode) method.instructions.get(j);
+
 					if (instruction instanceof VarInsnNode)
 					{
-						VarInsnNode varInstruction = (VarInsnNode)instruction;
+						VarInsnNode varInstruction = (VarInsnNode) instruction;
 						if (varInstruction.getOpcode() == ILOAD && varInstruction.var == 8)
 						{
 							if (method.instructions.get(j + 1).getOpcode() == IRETURN)
@@ -395,14 +395,14 @@ public class GFClassTransformer implements IClassTransformer
 								newInstructions.add(new VarInsnNode(ILOAD, 7));
 								newInstructions.add(new VarInsnNode(ALOAD, 0));
 								newInstructions.add(new FieldInsnNode(GETFIELD, classItemInWorldManager, fieldThisPlayerMP, "L" + classEntityPlayerMP + ";"));
-								newInstructions.add(new MethodInsnNode(INVOKESPECIAL, classPostBlockBreakEvent, "<init>", "(IIIL" + classWorld +";L" + classBlock + ";IL" + classEntityPlayerMP + ";)V", false));
+								newInstructions.add(new MethodInsnNode(INVOKESPECIAL, classPostBlockBreakEvent, "<init>", "(IIIL" + classWorld + ";L" + classBlock + ";IL" + classEntityPlayerMP + ";)V", false));
 								newInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, classEventBus, "post", "(L" + classEvent + ";)Z", false));
 								newInstructions.add(new InsnNode(POP));
 								newInstructions.add(label);
 							}
 						}
 					}
-					
+
 					newInstructions.add(instruction);
 				}
 

@@ -31,7 +31,7 @@ public class InfinitePumpProvider implements IWailaDataProvider
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
-		TileEntityInfiniteGasPump pump = (TileEntityInfiniteGasPump)accessor.getTileEntity();
+		TileEntityInfiniteGasPump pump = (TileEntityInfiniteGasPump) accessor.getTileEntity();
 		String typeName = I18n.format(pump.getType(accessor.getSide()).getUnlocalizedName() + ".name");
 		currenttip.add(I18n.format("tile.gf_infiniteGasPump.waila.body.side", typeName));
 		return currenttip;

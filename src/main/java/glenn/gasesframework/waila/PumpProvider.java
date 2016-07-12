@@ -32,9 +32,10 @@ public class PumpProvider implements IWailaDataProvider
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
-		TileEntityDirectionalGasPropellor pump = (TileEntityDirectionalGasPropellor)accessor.getTileEntity();
+		TileEntityDirectionalGasPropellor pump = (TileEntityDirectionalGasPropellor) accessor.getTileEntity();
 		String filterString = GasTypeFilterUtil.getFilterString(pump.filter);
-		if (filterString != null) {
+		if (filterString != null)
+		{
 			currenttip.add(filterString);
 		}
 		return currenttip;

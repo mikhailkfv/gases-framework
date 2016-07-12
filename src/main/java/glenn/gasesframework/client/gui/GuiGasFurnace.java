@@ -14,14 +14,16 @@ public class GuiGasFurnace extends GuiContainer
 {
 	private static final ResourceLocation furnaceGuiTextures = new ResourceLocation("gasesframework:textures/gui/container/furnace_gas.png");
 	private TileEntityGasFurnace tileEntity;
-	
+
 	public GuiGasFurnace(InventoryPlayer inventoryPlayer, TileEntityGasFurnace tileEntity)
 	{
 		super(new ContainerGasFurnace(inventoryPlayer, tileEntity));
 		this.tileEntity = tileEntity;
 	}
+
 	/**
-	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
+	 * Draw the foreground layer for the GuiContainer (everything in front of
+	 * the items)
 	 */
 	protected void drawGuiContainerForegroundLayer(int par1, int par2)
 	{
@@ -29,8 +31,10 @@ public class GuiGasFurnace extends GuiContainer
 		this.fontRendererObj.drawString(invName, this.xSize / 2 - this.fontRendererObj.getStringWidth(invName) / 2, 6, 0x404040);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 0x404040);
 	}
+
 	/**
-	 * Draw the background layer for the GuiContainer (everything behind the items)
+	 * Draw the background layer for the GuiContainer (everything behind the
+	 * items)
 	 */
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
 	{
@@ -39,11 +43,13 @@ public class GuiGasFurnace extends GuiContainer
 		int k = (this.width - this.xSize) / 2;
 		int l = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
-		
-		//GL11.glColor4f(1.0F, 1.0F, 1.0F, (this.furnaceInventory.furnaceBurnTime > 0 & this.furnaceInventory.canSmelt()) ? 1.0F : 0.5F);
+
+		// GL11.glColor4f(1.0F, 1.0F, 1.0F,
+		// (this.furnaceInventory.furnaceBurnTime > 0 &
+		// this.furnaceInventory.canSmelt()) ? 1.0F : 0.5F);
 		int i1 = this.tileEntity.getStage();
 		this.drawTexturedModalRect(k + 55, l + 34, 176 + (this.tileEntity.fuelLevel > 0 ? 0 : 18), 31 + i1 * 18, 18, 18);
-		
+
 		i1 = 54 * this.tileEntity.fuelLevel / tileEntity.getMaxFuelStored();
 		this.drawTexturedModalRect(k + 29, l + 70 - i1, 212, 54 - i1, 26, i1);
 

@@ -24,7 +24,8 @@ public class ItemDuctTape extends Item
 	}
 
 	@Override
-	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer) {
+	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
+	{
 		if (!world.isRemote)
 		{
 			if (entityPlayer.isSneaking())
@@ -36,7 +37,8 @@ public class ItemDuctTape extends Item
 	}
 
 	/**
-	 * Returns true if the item can be used on the given entity, e.g. shears on sheep.
+	 * Returns true if the item can be used on the given entity, e.g. shears on
+	 * sheep.
 	 */
 	@Override
 	public boolean itemInteractionForEntity(ItemStack itemStack, EntityPlayer entityPlayer, EntityLivingBase entity)

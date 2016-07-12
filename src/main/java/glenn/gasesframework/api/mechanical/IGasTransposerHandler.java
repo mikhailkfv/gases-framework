@@ -5,5 +5,5 @@ package glenn.gasesframework.api.mechanical;
  */
 public interface IGasTransposerHandler
 {
-	
+
 }

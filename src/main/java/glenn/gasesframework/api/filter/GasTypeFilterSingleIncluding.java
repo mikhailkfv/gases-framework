@@ -8,13 +8,13 @@ import glenn.gasesframework.api.gastype.GasType;
 public class GasTypeFilterSingleIncluding extends GasTypeFilterSingle
 {
 	public static final byte TYPE = 1;
-	
+
 	@Override
 	public byte getType()
 	{
 		return TYPE;
 	}
-	
+
 	public GasTypeFilterSingleIncluding(GasType filterType)
 	{
 		super(filterType);
@@ -31,7 +31,7 @@ public class GasTypeFilterSingleIncluding extends GasTypeFilterSingle
 	{
 		if (other instanceof GasTypeFilterSingleIncluding)
 		{
-			return ((GasTypeFilterSingleIncluding)other).filterType == filterType;
+			return ((GasTypeFilterSingleIncluding) other).filterType == filterType;
 		}
 		else
 		{

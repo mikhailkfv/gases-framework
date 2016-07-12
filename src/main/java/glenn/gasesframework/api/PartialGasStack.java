@@ -29,6 +29,7 @@ public class PartialGasStack
 
 	/**
 	 * Is this gas stack considered empty?
+	 * 
 	 * @return True if the gas stack is considered empty
 	 */
 	public boolean isEmpty()

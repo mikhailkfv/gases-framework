@@ -46,8 +46,7 @@ public class GFBlocks
 				try
 				{
 					GameRegistry.registerBlock((Block) field.get(this), field.getName());
-				}
-				catch (IllegalAccessException e)
+				} catch (IllegalAccessException e)
 				{
 					throw new RuntimeException("Could not register block " + field.getName(), e);
 				}

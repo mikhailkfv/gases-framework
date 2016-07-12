@@ -9,7 +9,7 @@ public abstract class AbstractMessage implements IMessage
 {
 	@Override
 	public abstract void toBytes(ByteBuf buffer);
-	
+
 	@Override
 	public abstract void fromBytes(ByteBuf buffer);
 }

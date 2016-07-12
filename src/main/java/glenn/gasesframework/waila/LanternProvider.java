@@ -30,14 +30,13 @@ public class LanternProvider implements IWailaDataProvider
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
-		BlockLantern lanternBlock = (BlockLantern)accessor.getBlock();
-		if(lanternBlock.type.expires())
+		BlockLantern lanternBlock = (BlockLantern) accessor.getBlock();
+		if (lanternBlock.type.expires())
 		{
 			float percentage = 100.0f * (1.0f - accessor.getMetadata() / 16.0f);
 			currenttip.add(String.format("%.1f%%", percentage));
 		}
-		
-		
+
 		return currenttip;
 	}
 

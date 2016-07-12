@@ -68,29 +68,29 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
- * <b>Gases Framework</b>
+ * <b>Gases Framework</b> <br>
+ * Gases Framework provides support for simplified implementation of gases in
+ * Minecraft. <br>
  * <br>
- * Gases Framework provides support for simplified implementation of gases in Minecraft.
- * <br>
- * <br>
- * This piece of software is covered under the LGPL license. Redistribution and modification of this mod is permitted.
- * It would be nice if you let us know if you do redistribute/modify it: 
+ * This piece of software is covered under the LGPL license. Redistribution and
+ * modification of this mod is permitted. It would be nice if you let us know if
+ * you do redistribute/modify it:
  * http://www.jamieswhiteshirt.com/minecraft/mods/gases/
+ * 
  * @author Glenn
  * @author Trent
- *
  */
-@Mod(modid = GasesFramework.MODID, name = "Gases Framework", version = GasesFramework.VERSION, dependencies="required-after:gasesFrameworkCore", acceptedMinecraftVersions = "[" + GasesFramework.TARGETVERSION + "]")
+@Mod(modid = GasesFramework.MODID, name = "Gases Framework", version = GasesFramework.VERSION, dependencies = "required-after:gasesFrameworkCore", acceptedMinecraftVersions = "[" + GasesFramework.TARGETVERSION + "]")
 public class GasesFramework
 {
 	// The instance of your mod that Forge uses.
 	@Instance(GasesFramework.MODID)
 	public static GasesFramework instance;
-	
+
 	// Says where the client and server 'proxy' code is loaded.
 	@SidedProxy(clientSide = "glenn.gasesframework.client.ClientProxy", serverSide = "glenn.gasesframework.server.ServerProxy")
 	public static CommonProxy proxy;
-	
+
 	public static final String MODID = GFAPI.OWNER;
 	public static final String VERSION = "1.2.3";
 	public static final String TARGETVERSION = GFAPI.TARGETVERSION;
@@ -109,24 +109,12 @@ public class GasesFramework
 	public static final PipeType pipeTypeGlass = new PipeTypeGlass(1, "glass", false, "gasesframework:pipe_glass");
 	public static final PipeType pipeTypeWood = new PipeTypeWood(2, "wood", true, "gasesframework:pipe_wood");
 
-	public static final GasType gasTypeSmoke = new GasType(true, 1, "smoke", 0x3F3F3F9F, 2, -16, Combustibility.NONE).setCreativeTab(creativeTab)
-			.setEffectRate(ExtendedGasEffectsBase.EffectType.BLINDNESS, 4)
-			.setEffectRate(ExtendedGasEffectsBase.EffectType.SUFFOCATION, 4)
-			.setEffectRate(ExtendedGasEffectsBase.EffectType.SLOWNESS, 16);
+	public static final GasType gasTypeSmoke = new GasType(true, 1, "smoke", 0x3F3F3F9F, 2, -16, Combustibility.NONE).setCreativeTab(creativeTab).setEffectRate(ExtendedGasEffectsBase.EffectType.BLINDNESS, 4).setEffectRate(ExtendedGasEffectsBase.EffectType.SUFFOCATION, 4).setEffectRate(ExtendedGasEffectsBase.EffectType.SLOWNESS, 16);
 	public static final GasType gasTypeFire = new GasTypeFire().setCreativeTab(creativeTab);
 
 	public static final LanternType lanternTypeEmpty = new LanternType("empty", 0.0f, "gasesframework:lantern_empty", new ItemKey(), null, 0).setCreativeTab(creativeTab);
 	public static final LanternType lanternTypeGasEmpty = new LanternType("gas_empty", 0.0f, "gasesframework:lantern_gas_empty", new ItemKey(Items.glass_bottle), lanternTypeEmpty, 0).setCreativeTab(creativeTab);
-	public static final LanternType[] lanternTypesGas = new LanternType[] {
-			lanternTypeGasEmpty,
-			new LanternType("gas_1", 1.0f, "gasesframework:lantern_gas_1", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 1),
-			new LanternType("gas_2", 1.0f, "gasesframework:lantern_gas_2", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 2),
-			new LanternType("gas_3", 1.0f, "gasesframework:lantern_gas_3", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 3),
-			new LanternType("gas_4", 1.0f, "gasesframework:lantern_gas_4", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 4),
-			new LanternType("gas_5", 1.0f, "gasesframework:lantern_gas_5", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 5)
-	};
-
-
+	public static final LanternType[] lanternTypesGas = new LanternType[] { lanternTypeGasEmpty, new LanternType("gas_1", 1.0f, "gasesframework:lantern_gas_1", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 1), new LanternType("gas_2", 1.0f, "gasesframework:lantern_gas_2", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 2), new LanternType("gas_3", 1.0f, "gasesframework:lantern_gas_3", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 3), new LanternType("gas_4", 1.0f, "gasesframework:lantern_gas_4", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 4), new LanternType("gas_5", 1.0f, "gasesframework:lantern_gas_5", new ItemKey(Items.glass_bottle), lanternTypeGasEmpty, 5) };
 
 	public static final Implementation implementation = new Implementation();
 	public static final Registry registry = new Registry();
@@ -141,11 +129,11 @@ public class GasesFramework
 		{
 			registry.registerLanternType(lanternType);
 		}
-		
+
 		registry.registerGasType(GFAPI.gasTypeAir.setCreativeTab(creativeTab));
 		registry.registerGasType(gasTypeSmoke);
 		registry.registerGasType(gasTypeFire);
-		
+
 		registry.registerPipeType(pipeTypeIron);
 		registry.registerPipeType(pipeTypeGlass);
 		registry.registerPipeType(pipeTypeWood);
@@ -181,7 +169,7 @@ public class GasesFramework
 		GameRegistry.addShapelessRecipe(new ItemStack(items.ductTape, 2), items.adhesive, Items.string, Items.string);
 		GameRegistry.addRecipe(new ItemStack(items.ductTape, 32), "SSS", "SAS", "SSS", 'S', Items.string, 'A', items.adhesive);
 	}
-	
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
@@ -198,20 +186,21 @@ public class GasesFramework
 		configurations = new GasesFrameworkMainConfigurations(event.getSuggestedConfigurationFile());
 		ConfigGasFurnaceRecipes.load(new File(event.getModConfigurationDirectory().getAbsolutePath() + "/gasesframework_GasFurnaceRecipes.json"));
 		initBlocksAndItems();
-		
+
 		registry.registerIgnitionBlock(Blocks.torch);
 		registry.registerIgnitionBlock(Blocks.fire);
 		registry.registerIgnitionBlock(registry.getGasBlock(gasTypeFire));
-		
+
 		proxy.registerEventHandlers();
 	}
-	
+
 	@EventHandler
 	public void load(FMLInitializationEvent event)
 	{
 		proxy.registerRenderers();
 
-		// Register world generator with massive weight to ensure gas pockets are not popped by other world generators
+		// Register world generator with massive weight to ensure gas pockets
+		// are not popped by other world generators
 		GameRegistry.registerWorldGenerator(worldGenerator, 10000);
 
 		initRecipes();
@@ -229,7 +218,7 @@ public class GasesFramework
 		GameRegistry.registerTileEntity(TileEntityGasTransposer.class, "gasTransposer");
 		GameRegistry.registerTileEntity(TileEntityIronGasDynamo.class, "ironGasDynamo");
 		GameRegistry.registerTileEntity(TileEntityWoodGasDynamo.class, "woodGasDynamo");
-		
+
 		EntityRegistry.registerModEntity(EntityDelayedExplosion.class, "delayedGasExplosion", 127, this, 20, 1, false);
 
 		for (GasType gasType : registry.getRegisteredGasTypes())
@@ -254,47 +243,51 @@ public class GasesFramework
 		registry.registerGasTransposerHandler(new GasBottleTransposerHandler());
 
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
-		
+
 		GasesFrameworkWaila.init();
 	}
-	
+
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event)
 	{
-		for(String s : configurations.gases.ignition.addedBlocks)
+		for (String s : configurations.gases.ignition.addedBlocks)
 		{
 			Block block = Block.getBlockFromName(s);
-			if(block != null) registry.registerIgnitionBlock(block);
+			if (block != null)
+				registry.registerIgnitionBlock(block);
 		}
-		
-		for(String s : configurations.gases.ignition.removedBlocks)
+
+		for (String s : configurations.gases.ignition.removedBlocks)
 		{
-			Item item = (Item)Item.itemRegistry.getObject(s);
-			if(item != null) registry.registerIgnitionItem(item);
+			Item item = (Item) Item.itemRegistry.getObject(s);
+			if (item != null)
+				registry.registerIgnitionItem(item);
 		}
-		
-		for(String s : configurations.gases.ignition.addedItems)
+
+		for (String s : configurations.gases.ignition.addedItems)
 		{
 			Block block = Block.getBlockFromName(s);
-			if(block != null) registry.unregisterIgnitionBlock(block);
+			if (block != null)
+				registry.unregisterIgnitionBlock(block);
 		}
-		
-		for(String s : configurations.gases.ignition.removedItems)
+
+		for (String s : configurations.gases.ignition.removedItems)
 		{
-			Item item = (Item)Item.itemRegistry.getObject(s);
-			if(item != null) registry.unregisterIgnitionItem(item);
+			Item item = (Item) Item.itemRegistry.getObject(s);
+			if (item != null)
+				registry.unregisterIgnitionItem(item);
 		}
-		
+
 		if (configurations.blocks.woodGasFurnace.catchesFire)
 		{
 			Blocks.fire.setFireInfo(blocks.woodGasFurnaceIdle, 5, 5);
 			Blocks.fire.setFireInfo(blocks.woodGasFurnaceActive, 5, 5);
 		}
-		
+
 		if (configurations.blocks.woodGasDynamo.catchesFire)
 		{
 			Blocks.fire.setFireInfo(blocks.woodGasDynamo, 5, 5);
 		}
 	}
-	
+
 }

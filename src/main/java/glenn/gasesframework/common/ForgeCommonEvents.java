@@ -28,17 +28,17 @@ public class ForgeCommonEvents
 	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event)
 	{
-		if(event.entity instanceof EntityLivingBase)
+		if (event.entity instanceof EntityLivingBase)
 		{
-			EntityLivingBase entityLivingBase = (EntityLivingBase)event.entity;
-			if(ExtendedGasEffects.get(entityLivingBase) == null)
+			EntityLivingBase entityLivingBase = (EntityLivingBase) event.entity;
+			if (ExtendedGasEffects.get(entityLivingBase) == null)
 			{
 				ExtendedGasEffects.register(entityLivingBase);
 			}
 
 			if (DuctTapeGag.canGag(entityLivingBase))
 			{
-				if(DuctTapeGag.get(entityLivingBase) == null)
+				if (DuctTapeGag.get(entityLivingBase) == null)
 				{
 					DuctTapeGag.register(entityLivingBase);
 				}
@@ -53,7 +53,7 @@ public class ForgeCommonEvents
 		{
 			if (event.target instanceof EntityLivingBase)
 			{
-				syncExtendedEntityProperties((EntityLivingBase)event.target);
+				syncExtendedEntityProperties((EntityLivingBase) event.target);
 			}
 		}
 	}
@@ -65,7 +65,7 @@ public class ForgeCommonEvents
 		{
 			if (event.entity instanceof EntityLivingBase)
 			{
-				syncExtendedEntityProperties((EntityLivingBase)event.entity);
+				syncExtendedEntityProperties((EntityLivingBase) event.entity);
 			}
 		}
 	}
@@ -87,32 +87,32 @@ public class ForgeCommonEvents
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onLivingUpdate(LivingUpdateEvent event)
 	{
-		ExtendedGasEffects extendedGasEffects = (ExtendedGasEffects)ExtendedGasEffectsBase.get(event.entityLiving);
+		ExtendedGasEffects extendedGasEffects = (ExtendedGasEffects) ExtendedGasEffectsBase.get(event.entityLiving);
 		extendedGasEffects.tick();
 	}
-	
+
 	@SubscribeEvent
 	public void onChunkLoad(ChunkDataEvent.Load event)
 	{
 		GasesFramework.worldGenerator.onChunkLoad(event);
 	}
-	
+
 	@SubscribeEvent
 	public void onChunkSave(ChunkDataEvent.Save event)
 	{
 		GasesFramework.worldGenerator.onChunkSave(event);
 	}
-	
+
 	@SubscribeEvent
 	public void onChunkUnload(ChunkEvent.Unload event)
 	{
 		GasesFramework.worldGenerator.onChunkUnload(event);
 	}
-	
+
 	@SubscribeEvent
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
@@ -127,24 +127,24 @@ public class ForgeCommonEvents
 
 				if (item instanceof IFilterProvider)
 				{
-					IFilterProvider filterProvider = (IFilterProvider)itemstack.getItem();
-					
+					IFilterProvider filterProvider = (IFilterProvider) itemstack.getItem();
+
 					if (block instanceof IGasTypeFilter)
 					{
-						IGasTypeFilter gasFilterBlock = (IGasTypeFilter)block;
+						IGasTypeFilter gasFilterBlock = (IGasTypeFilter) block;
 						GasTypeFilter filter = filterProvider.getFilter(itemstack);
-						
+
 						gasFilterBlock.setFilter(event.world, event.x, event.y, event.z, side, filter);
 					}
 				}
 
-				if(item instanceof ISampler)
+				if (item instanceof ISampler)
 				{
-					ISampler sampler = (ISampler)item;
-					
+					ISampler sampler = (ISampler) item;
+
 					if (block instanceof ISample)
 					{
-						ISample sample = (ISample)block;
+						ISample sample = (ISample) block;
 						sampler.setGasType(itemstack, sample.sampleInteraction(event.world, event.x, event.y, event.z, sampler.getGasType(itemstack), side));
 					}
 				}
@@ -157,7 +157,7 @@ public class ForgeCommonEvents
 	{
 		if (event.entity instanceof EntityLivingBase)
 		{
-			EntityLivingBase entity = (EntityLivingBase)event.entity;
+			EntityLivingBase entity = (EntityLivingBase) event.entity;
 			if (DuctTapeGag.isGagged(entity))
 			{
 				event.setCanceled(true);

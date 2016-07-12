@@ -22,57 +22,60 @@ public class GasTypeFire extends GasType
 		setLightLevel(0.5f);
 		setCohesion(0);
 	}
-	
-    /**
+
+	/**
 	 * Called when a gas block of this type dissipates.
+	 * 
 	 * @param world
 	 * @param x
 	 * @param y
 	 * @param z
 	 */
-    @Override
-    public void onDissipated(World world, int x, int y, int z)
-    {
-    	if(!world.isRemote)
-    	{
-			if(Blocks.fire.canPlaceBlockAt(world, x, y, z))
+	@Override
+	public void onDissipated(World world, int x, int y, int z)
+	{
+		if (!world.isRemote)
+		{
+			if (Blocks.fire.canPlaceBlockAt(world, x, y, z))
 			{
 				world.setBlock(x, y, z, Blocks.fire);
 			}
-			else if(GasesFramework.configurations.gases.smoke.fireSmokeAmount > 0 && world.rand.nextInt(4) == 0)
+			else if (GasesFramework.configurations.gases.smoke.fireSmokeAmount > 0 && world.rand.nextInt(4) == 0)
 			{
 				GasesFramework.implementation.placeGas(world, x, y, z, GasesFramework.gasTypeSmoke, GasesFramework.configurations.gases.smoke.fireSmokeAmount);
 			}
-    	}
-    }
-    
-    /**
-	 * Called randomly on the client when the player is around a gas block of this type.
+		}
+	}
+
+	/**
+	 * Called randomly on the client when the player is around a gas block of
+	 * this type.
+	 * 
 	 * @param world
 	 * @param x
 	 * @param y
 	 * @param z
 	 * @param random
 	 */
-    @Override
+	@Override
 	public void randomDisplayTick(World world, int x, int y, int z, Random random)
 	{
-    	if(random.nextInt(12) == 0)
+		if (random.nextInt(12) == 0)
 		{
-			world.playSound((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), "fire.fire", 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F, false);
+			world.playSound((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), "fire.fire", 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F, false);
 		}
-    	
-    	int volume = GasesFramework.implementation.getGasVolume(world, x, y, z);
-    	double minY = this.getMinY(world, x, y, z, volume);
-    	double maxY = this.getMaxY(world, x, y, z, volume);
-    	
-    	if(random.nextFloat() < maxY - minY)
-    	{
-    		double xd = x + random.nextDouble();
-    		double yd = y + minY + random.nextDouble() * (maxY - minY);
-    		double zd = z + random.nextDouble();
-    		
-    		world.spawnParticle("largesmoke", xd, yd, zd, 0.0D, 0.0D, 0.0D);
-    	}
+
+		int volume = GasesFramework.implementation.getGasVolume(world, x, y, z);
+		double minY = this.getMinY(world, x, y, z, volume);
+		double maxY = this.getMaxY(world, x, y, z, volume);
+
+		if (random.nextFloat() < maxY - minY)
+		{
+			double xd = x + random.nextDouble();
+			double yd = y + minY + random.nextDouble() * (maxY - minY);
+			double zd = z + random.nextDouble();
+
+			world.spawnParticle("largesmoke", xd, yd, zd, 0.0D, 0.0D, 0.0D);
+		}
 	}
 }

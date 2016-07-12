@@ -23,8 +23,8 @@ public class MessageDuctTapeGag extends AbstractSerialMessage
 
 			if (entity instanceof EntityLivingBase)
 			{
-				EntityLivingBase entityLivingBase = (EntityLivingBase)entity;
-				if(message.gagged)
+				EntityLivingBase entityLivingBase = (EntityLivingBase) entity;
+				if (message.gagged)
 				{
 					DuctTapeGag.gag(entityLivingBase);
 				}
@@ -48,5 +48,6 @@ public class MessageDuctTapeGag extends AbstractSerialMessage
 	}
 
 	public MessageDuctTapeGag()
-	{}
+	{
+	}
 }

@@ -9,13 +9,19 @@ public class SimpleTransposerBiHandler implements IGasTransposerExtractHandler, 
 	private final ItemStack extractable;
 	private final GasType gasType;
 	private final int time;
-	
+
 	/**
 	 * Create a simple two-way gas transposer recipe.
-	 * @param insertable - The item gas can be inserted into.
-	 * @param extractable - The item gas can be extracted from.
-	 * @param gasType - The gas type that can be inserted into {@link #insertable} and extracted from {@link #extractable}.
-	 * @param time - The time it takes to insert or extract.
+	 * 
+	 * @param insertable
+	 *            - The item gas can be inserted into.
+	 * @param extractable
+	 *            - The item gas can be extracted from.
+	 * @param gasType
+	 *            - The gas type that can be inserted into {@link #insertable}
+	 *            and extracted from {@link #extractable}.
+	 * @param time
+	 *            - The time it takes to insert or extract.
 	 */
 	public SimpleTransposerBiHandler(ItemStack insertable, ItemStack extractable, GasType gasType, int time)
 	{
@@ -24,7 +30,7 @@ public class SimpleTransposerBiHandler implements IGasTransposerExtractHandler, 
 		this.gasType = gasType;
 		this.time = time;
 	}
-	
+
 	@Override
 	public boolean isValidInsertionInput(ItemStack itemstack)
 	{
@@ -52,7 +58,7 @@ public class SimpleTransposerBiHandler implements IGasTransposerExtractHandler, 
 	@Override
 	public ItemStack getInsertionOutputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
-		if(outputStack == null)
+		if (outputStack == null)
 		{
 			return extractable.copy();
 		}
@@ -74,11 +80,11 @@ public class SimpleTransposerBiHandler implements IGasTransposerExtractHandler, 
 	{
 		return extractable.isItemEqual(itemstack);
 	}
-	
+
 	@Override
 	public GasType getExtractionOutputGasType(ItemStack inputStack)
 	{
-		if(extractable.stackSize <= inputStack.stackSize)
+		if (extractable.stackSize <= inputStack.stackSize)
 		{
 			return gasType;
 		}
@@ -103,7 +109,7 @@ public class SimpleTransposerBiHandler implements IGasTransposerExtractHandler, 
 	@Override
 	public ItemStack getExtractionOutputStack(ItemStack inputStack, ItemStack outputStack, GasType gasType)
 	{
-		if(outputStack == null)
+		if (outputStack == null)
 		{
 			return insertable.copy();
 		}

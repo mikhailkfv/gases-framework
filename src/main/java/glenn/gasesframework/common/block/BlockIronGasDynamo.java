@@ -11,7 +11,7 @@ public class BlockIronGasDynamo extends BlockGasDynamo
 	{
 		super(Material.iron);
 	}
-	
+
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata)
 	{

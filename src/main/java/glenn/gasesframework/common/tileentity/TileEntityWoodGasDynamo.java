@@ -12,20 +12,14 @@ public class TileEntityWoodGasDynamo extends TileEntityGasDynamo
 {
 	public TileEntityWoodGasDynamo()
 	{
-		super(
-			GasesFramework.configurations.blocks.woodGasDynamo.maxEnergy,
-			GasesFramework.configurations.blocks.woodGasDynamo.maxEnergyTransfer,
-			GasesFramework.configurations.blocks.woodGasDynamo.maxFuel,
-			GasesFramework.configurations.blocks.woodGasDynamo.fuelPerTick,
-			GasesFramework.configurations.blocks.woodGasDynamo.energyPerFuel
-		);
+		super(GasesFramework.configurations.blocks.woodGasDynamo.maxEnergy, GasesFramework.configurations.blocks.woodGasDynamo.maxEnergyTransfer, GasesFramework.configurations.blocks.woodGasDynamo.maxFuel, GasesFramework.configurations.blocks.woodGasDynamo.fuelPerTick, GasesFramework.configurations.blocks.woodGasDynamo.energyPerFuel);
 	}
 
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		
+
 		if (GasesFramework.configurations.blocks.woodGasFurnace.catchesFire)
 		{
 			if (!worldObj.isRemote && isBurning() && worldObj.rand.nextInt(200) == 0)

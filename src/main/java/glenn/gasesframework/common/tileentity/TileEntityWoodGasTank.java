@@ -11,7 +11,7 @@ public class TileEntityWoodGasTank extends TileEntityGasTank
 	{
 		super(GasesFramework.configurations.blocks.woodGasTank.storageMultiplier);
 	}
-	
+
 	@Override
 	protected boolean canOverincrement(GasType gasType)
 	{
@@ -35,7 +35,7 @@ public class TileEntityWoodGasTank extends TileEntityGasTank
 			return true;
 		}
 	}
-	
+
 	@Override
 	protected boolean overincrement(GasType gasType)
 	{
@@ -45,16 +45,13 @@ public class TileEntityWoodGasTank extends TileEntityGasTank
 			{
 				for (ForgeDirection direction : ForgeDirectionUtil.shuffledList(worldObj.rand))
 				{
-					if (GasesFramework.implementation.tryFillWithGas(worldObj,
-							worldObj.rand, xCoord + direction.offsetX,
-							yCoord + direction.offsetY,
-							zCoord + direction.offsetZ, gasType))
+					if (GasesFramework.implementation.tryFillWithGas(worldObj, worldObj.rand, xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ, gasType))
 					{
 						return true;
 					}
 				}
 			}
-			
+
 			return false;
 		}
 		else

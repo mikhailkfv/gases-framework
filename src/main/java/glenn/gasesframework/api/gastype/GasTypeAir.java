@@ -16,11 +16,12 @@ public class GasTypeAir extends GasType
 		return false;
 	}
 
-    @Override
+	@Override
 	public void onBreathed(EntityLivingBase entity)
-	{}
-    
-    @Override
+	{
+	}
+
+	@Override
 	public boolean canBeDestroyedBy(int thisVolume, GasType type, int otherVolume)
 	{
 		return true;

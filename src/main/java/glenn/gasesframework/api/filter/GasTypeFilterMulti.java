@@ -15,7 +15,7 @@ import net.minecraft.nbt.NBTTagCompound;
 public abstract class GasTypeFilterMulti extends GasTypeFilter
 {
 	protected final Set<GasType> filterTypes;
-	
+
 	public GasTypeFilterMulti(GasType[] filterTypes)
 	{
 		Set<GasType> mutableFilterTypes = Collections.newSetFromMap(new IdentityHashMap<GasType, Boolean>());
@@ -23,12 +23,14 @@ public abstract class GasTypeFilterMulti extends GasTypeFilter
 		{
 			mutableFilterTypes.add(filterTypes[i]);
 		}
-		
+
 		this.filterTypes = Collections.unmodifiableSet(mutableFilterTypes);
 	}
 
 	/**
-	 * Get an immutable set of gas types used by this filter, be it excluding or including.
+	 * Get an immutable set of gas types used by this filter, be it excluding or
+	 * including.
+	 * 
 	 * @return An immutable set of gas types used by this filter
 	 */
 	public Set<GasType> getFilterTypes()
@@ -51,7 +53,9 @@ public abstract class GasTypeFilterMulti extends GasTypeFilter
 
 	/**
 	 * Read any kind of multi gas type filter from NBT.
-	 * @param tagCompound The tag compound
+	 * 
+	 * @param tagCompound
+	 *            The tag compound
 	 * @return The gas type filter, or null if the tag compound is invalid
 	 */
 	public static GasTypeFilterMulti readFromNBT(NBTTagCompound tagCompound)
@@ -73,10 +77,10 @@ public abstract class GasTypeFilterMulti extends GasTypeFilter
 			{
 				switch (tagCompound.getByte("type"))
 				{
-				case GasTypeFilterMultiIncluding.TYPE:
-					return new GasTypeFilterMultiIncluding(filterTypes);
-				case GasTypeFilterMultiExcluding.TYPE:
-					return new GasTypeFilterMultiExcluding(filterTypes);
+					case GasTypeFilterMultiIncluding.TYPE:
+						return new GasTypeFilterMultiIncluding(filterTypes);
+					case GasTypeFilterMultiExcluding.TYPE:
+						return new GasTypeFilterMultiExcluding(filterTypes);
 				}
 			}
 		}

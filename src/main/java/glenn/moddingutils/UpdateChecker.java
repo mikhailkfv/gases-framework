@@ -47,7 +47,7 @@ public class UpdateChecker implements Runnable
 		public String modVersion = "";
 		public String URL = "";
 	}
-	
+
 	/**
 	 * A Gson struct for locally stored message view counts.
 	 */
@@ -56,39 +56,41 @@ public class UpdateChecker implements Runnable
 		public int id = -1;
 		public int timesToShow = 1;
 		public int timesShown = 0;
-		
+
 		public MessageCounter(int id, int timesToShow)
 		{
 			this.id = id;
 			this.timesToShow = timesToShow;
 		}
-		
+
 		public boolean shouldAlwaysShow()
 		{
 			return timesToShow == -1;
 		}
-		
+
 		public boolean shouldShow()
 		{
 			return shouldAlwaysShow() || timesShown < timesToShow;
 		}
 	}
-	
+
 	private final Gson gson = new Gson();
 	private final LinkedList<VersionMessage> relevantMessages = new LinkedList<VersionMessage>();
 	private File messageCounterFile;
 	private ArrayList<MessageCounter> counters;
 	private boolean requestValid = false;
-	
+
 	private final String urlString;
 	private final String fullModName;
 	private final String modID;
 	private final String modVersion;
 	private final String minecraftVersion;
-	
+
 	/**
-	 * Create a new UpdateChecker. Will asynchronously check for updates on the server and display them to the player when they open a world.
-	 * This must be registered on the Minecraft Forge EVENT_BUS.
+	 * Create a new UpdateChecker. Will asynchronously check for updates on the
+	 * server and display them to the player when they open a world. This must
+	 * be registered on the Minecraft Forge EVENT_BUS.
+	 * 
 	 * @param url
 	 * @param fullModName
 	 * @param modID
@@ -102,119 +104,119 @@ public class UpdateChecker implements Runnable
 		this.modID = modID;
 		this.modVersion = modVersion;
 		this.minecraftVersion = minecraftVersion;
-		
+
 		Thread async = new Thread(this);
 		async.start();
 	}
-	
+
 	/** Fires when a player joins a world. */
 	@SubscribeEvent
 	public void onEntityJoinedWorld(EntityJoinWorldEvent event)
 	{
-		if(requestValid && event.world.isRemote && event.entity instanceof EntityPlayer)
+		if (requestValid && event.world.isRemote && event.entity instanceof EntityPlayer)
 		{
-			EntityPlayer player = (EntityPlayer)event.entity;
-			
+			EntityPlayer player = (EntityPlayer) event.entity;
+
 			LinkedList<IChatComponent> messageQueue = new LinkedList<IChatComponent>();
-			for(VersionMessage message : relevantMessages)
+			for (VersionMessage message : relevantMessages)
 			{
 				printMessage(message, messageQueue);
 			}
-			
-			for(IChatComponent component : messageQueue)
+
+			for (IChatComponent component : messageQueue)
 			{
 				player.addChatMessage(component);
 			}
 			messageQueue.clear();
-			
+
 			try
 			{
 				writeMessageCounterFile();
-			}
-			catch (IOException e)
+			} catch (IOException e)
 			{
-				
+
 			}
 		}
 	}
-	
+
 	private File createMetaDirectory() throws FileNotFoundException
 	{
 		File metaDirectory = new File(Minecraft.getMinecraft().mcDataDir.getPath() + "/config/" + fullModName);
-		if(!metaDirectory.exists())
+		if (!metaDirectory.exists())
 		{
 			metaDirectory.mkdirs();
 		}
-		
+
 		File readMeFile = new File(metaDirectory.getPath() + "/readMe.txt");
-		if(readMeFile.exists())
+		if (readMeFile.exists())
 		{
 			readMeFile.delete();
 		}
 		PrintWriter writer = new PrintWriter(readMeFile);
-		writer.print(String.format("This is a folder used by %1$s, a Minecraft mod you have installed.%n" +
-				"This folder, or the contents of this folder, should not be removed or altered as long as %1$s is installed.%n" +
-				"The folder is only used as a small local data store to save data between sessions.%n" +
-				"To disable the use of this folder, disable the update checker in the configurations of %1$s", fullModName));
+		writer.print(String.format("This is a folder used by %1$s, a Minecraft mod you have installed.%n" + "This folder, or the contents of this folder, should not be removed or altered as long as %1$s is installed.%n" + "The folder is only used as a small local data store to save data between sessions.%n" + "To disable the use of this folder, disable the update checker in the configurations of %1$s", fullModName));
 		writer.close();
-		
+
 		return metaDirectory;
 	}
-	
+
 	private ArrayList<MessageCounter> readMessageCounterFile() throws FileNotFoundException, IOException
 	{
 		ArrayList<MessageCounter> result = null;
-		if(messageCounterFile.exists())
+		if (messageCounterFile.exists())
 		{
 			FileReader reader = new FileReader(messageCounterFile);
-			result = gson.fromJson(reader, new TypeToken<ArrayList<MessageCounter>>(){}.getType());
+			result = gson.fromJson(reader, new TypeToken<ArrayList<MessageCounter>>()
+			{
+			}.getType());
 			reader.close();
-			
-			if(result == null)
+
+			if (result == null)
 			{
 				result = new ArrayList<MessageCounter>();
 			}
 		}
-		
-		if(result == null)
+
+		if (result == null)
 		{
 			result = new ArrayList<MessageCounter>();
 		}
-		
+
 		return result;
 	}
-	
+
 	private void writeMessageCounterFile() throws IOException
 	{
-		if(messageCounterFile.exists())
+		if (messageCounterFile.exists())
 		{
 			messageCounterFile.createNewFile();
 		}
-		
+
 		FileWriter writer = new FileWriter(messageCounterFile);
 		gson.toJson(counters, writer);
 		writer.close();
 	}
-	
+
 	private ArrayList<VersionMessage> getVersionMessages(URL url) throws IOException
 	{
-		HttpsURLConnection httpsConnection = (HttpsURLConnection)url.openConnection();
-		
+		HttpsURLConnection httpsConnection = (HttpsURLConnection) url.openConnection();
+
 		httpsConnection.setReadTimeout(10000);
 		httpsConnection.setRequestMethod("POST");
 		httpsConnection.setRequestProperty("User-Agent", "Minecraft");
 		httpsConnection.setDoOutput(true);
-		
+
 		DataOutputStream out = new DataOutputStream(httpsConnection.getOutputStream());
 		out.writeBytes("modID=" + modID + "&minecraftVersion=" + minecraftVersion + "&modVersion=" + modVersion);
 		out.flush();
 		out.close();
-		
+
 		InputStreamReader in = new InputStreamReader(httpsConnection.getInputStream());
-		ArrayList<VersionMessage> versionMessages = gson.fromJson(in, new TypeToken<ArrayList<VersionMessage>>(){}.getType());
+		ArrayList<VersionMessage> versionMessages = gson.fromJson(in, new TypeToken<ArrayList<VersionMessage>>()
+		{
+		}.getType());
 		in.close();
-		
-		if(versionMessages != null)
+
+		if (versionMessages != null)
 		{
 			return versionMessages;
 		}
@@ -223,15 +225,18 @@ public class UpdateChecker implements Runnable
 			return new ArrayList<VersionMessage>();
 		}
 	}
-	
+
 	private boolean isValid(VersionMessage message)
 	{
-		if(message != null)
+		if (message != null)
 		{
-			if(message.id == -1) return false;
-			if(message.timesToShow == 0) return false;
-			if(!versionInRanges(minecraftVersion, message.minecraftVersions) || !versionInRanges(modVersion, message.modVersions)) return false;
-			
+			if (message.id == -1)
+				return false;
+			if (message.timesToShow == 0)
+				return false;
+			if (!versionInRanges(minecraftVersion, message.minecraftVersions) || !versionInRanges(modVersion, message.modVersions))
+				return false;
+
 			return true;
 		}
 		else
@@ -239,72 +244,73 @@ public class UpdateChecker implements Runnable
 			return false;
 		}
 	}
-	
+
 	/** Processes the version message into a chat message. */
 	private void processVersionMessage(VersionMessage message)
 	{
-		if(isValid(message))
+		if (isValid(message))
 		{
 			MessageCounter counter = null;
-			for(int i = 0; i < counters.size(); i++)
+			for (int i = 0; i < counters.size(); i++)
 			{
 				MessageCounter c = counters.get(i);
-				if(c != null && c.id == message.id)
+				if (c != null && c.id == message.id)
 				{
 					counter = c;
 					break;
 				}
 			}
-			
-			if(counter == null)
+
+			if (counter == null)
 			{
 				counter = new MessageCounter(message.id, message.timesToShow);
 				counters.add(counter);
 			}
-			else if(counter.timesToShow != message.timesToShow)
+			else if (counter.timesToShow != message.timesToShow)
 			{
 				counter.timesToShow = message.timesToShow;
 				counter.timesShown = 0;
 			}
-			
+
 			relevantMessages.add(message);
 		}
 	}
-	
+
 	private void printMessage(VersionMessage message, LinkedList<IChatComponent> messageQueue)
 	{
 		MessageCounter counter = null;
-		for(int i = 0; i < counters.size(); i++)
+		for (int i = 0; i < counters.size(); i++)
 		{
 			MessageCounter c = counters.get(i);
-			if(c != null && c.id == message.id)
+			if (c != null && c.id == message.id)
 			{
 				counter = c;
 				break;
 			}
 		}
-		
-		if(counter != null && counter.shouldShow())
+
+		if (counter != null && counter.shouldShow())
 		{
 			boolean anythingPrinted = false;
-			
-			if(message.displayName != null && message.displayName.length() > 0)
+
+			if (message.displayName != null && message.displayName.length() > 0)
 			{
 				anythingPrinted = true;
 				messageQueue.add(new ChatComponentText(message.displayName).setChatStyle(getImportanceStyle(message.importance).setBold(true)));
 			}
-			
-			if(message.description != null)
+
+			if (message.description != null)
 			{
-				for(String desc : message.description)
+				for (String desc : message.description)
 				{
-					if(desc == null) continue;
+					if (desc == null)
+						continue;
 					anythingPrinted = true;
 					messageQueue.add(new ChatComponentText(desc).setChatStyle(getImportanceStyle(message.importance)));
 				}
 			}
-			
-			if(message.URL != null && message.URL.length() > 0)
+
+			if (message.URL != null && message.URL.length() > 0)
 			{
 				anythingPrinted = true;
 				ChatComponentText component = new ChatComponentText(message.URL);
@@ -313,113 +319,114 @@ public class UpdateChecker implements Runnable
 				style.setChatClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, message.URL));
 				messageQueue.add(component);
 			}
-			
-			if(anythingPrinted)
+
+			if (anythingPrinted)
 			{
 				messageQueue.add(new ChatComponentText(""));
-				
+
 				ChatStyle style = new ChatStyle().setColor(EnumChatFormatting.YELLOW);
 				counter.timesShown++;
-				if(!counter.shouldAlwaysShow())
+				if (!counter.shouldAlwaysShow())
 				{
 					int timesLeft = counter.timesToShow - counter.timesShown;
-					if(timesLeft == 0)
+					if (timesLeft == 0)
 					{
 						messageQueue.add(new ChatComponentText("This message will not be shown again.").setChatStyle(style));
 					}
-					else if(timesLeft == 1)
+					else if (timesLeft == 1)
 					{
 						messageQueue.add(new ChatComponentText("This message will be shown one more time.").setChatStyle(style));
 					}
-					else if(timesLeft > 1)
+					else if (timesLeft > 1)
 					{
 						messageQueue.add(new ChatComponentText("This message will be shown " + timesLeft + " more times.").setChatStyle(style));
 					}
 				}
-				
+
 				messageQueue.add(new ChatComponentText("This update checker can be disabled in the configurations.").setChatStyle(style));
 			}
 		}
 	}
-	
+
 	/** Handles color based on "importance" of the update. */
 	private ChatStyle getImportanceStyle(int importance)
 	{
-		switch(importance)
+		switch (importance)
 		{
-		case 0:
-			return new ChatStyle().setColor(EnumChatFormatting.DARK_GREEN);
-		case 1:
-			return new ChatStyle().setColor(EnumChatFormatting.BLUE);
-		case 2:
-			return new ChatStyle().setColor(EnumChatFormatting.DARK_RED);
+			case 0:
+				return new ChatStyle().setColor(EnumChatFormatting.DARK_GREEN);
+			case 1:
+				return new ChatStyle().setColor(EnumChatFormatting.BLUE);
+			case 2:
+				return new ChatStyle().setColor(EnumChatFormatting.DARK_RED);
 		}
-		
+
 		return new ChatStyle();
 	}
-	
+
 	private boolean versionInRanges(String version, String[] ranges)
 	{
-		if(ranges == null || ranges.length == 0)
+		if (ranges == null || ranges.length == 0)
 		{
 			return true;
 		}
-		
+
 		boolean result = false;
-		
-		for(int i = 0; i < ranges.length; i++)
+
+		for (int i = 0; i < ranges.length; i++)
 		{
 			result ^= versionInRange(version, ranges[i]);
 		}
-		
+
 		return result;
 	}
-	
+
 	private boolean versionInRange(String version, String range)
 	{
-		if(range == null || range.length() == 0) return true;
-		
+		if (range == null || range.length() == 0)
+			return true;
+
 		int iVersion = versionStringToInt(version);
-		
-		if(range.startsWith("<="))
+
+		if (range.startsWith("<="))
 		{
 			return iVersion <= versionStringToInt(range.substring(2));
 		}
-		else if(range.startsWith(">="))
+		else if (range.startsWith(">="))
 		{
 			return iVersion >= versionStringToInt(range.substring(2));
 		}
-		else if(range.startsWith("<"))
+		else if (range.startsWith("<"))
 		{
 			return iVersion < versionStringToInt(range.substring(1));
 		}
-		else if(range.startsWith(">"))
+		else if (range.startsWith(">"))
 		{
 			return iVersion > versionStringToInt(range.substring(1));
 		}
-		
+
 		String[] split = range.split("-");
-		if(split.length == 2)
+		if (split.length == 2)
 		{
 			int iRange1 = versionStringToInt(split[0]);
 			int iRange2 = versionStringToInt(split[1]);
 			return (iVersion <= iRange1 & iVersion >= iRange2) | (iVersion >= iRange1 & iVersion <= iRange2);
 		}
-		
+
 		return iVersion == versionStringToInt(range);
 	}
-	
+
 	private int versionStringToInt(String version)
 	{
 		int versionScore = 0;
 		int multiplier = 1000 * 1000 * 1000;
 		String[] splitVersion = version.split("\\.");
-		
-		for(int i = 0; i < splitVersion.length; i++, multiplier /= 1000)
+
+		for (int i = 0; i < splitVersion.length; i++, multiplier /= 1000)
 		{
 			versionScore += Integer.parseInt(splitVersion[i]) * multiplier;
 		}
-		
+
 		return versionScore;
 	}
 
@@ -432,17 +439,16 @@ public class UpdateChecker implements Runnable
 			messageCounterFile = new File(metaDirectory.getPath() + "/messageCounter.json");
 			counters = readMessageCounterFile();
 			ArrayList<VersionMessage> messages = getVersionMessages(new URL(urlString));
-			
-			for(VersionMessage message : messages)
+
+			for (VersionMessage message : messages)
 			{
 				processVersionMessage(message);
 			}
-			
+
 			writeMessageCounterFile();
-			
+
 			requestValid = true;
-		}
-		catch(Exception e)
+		} catch (Exception e)
 		{
 			FMLLog.warning(fullModName + " failed to check for update messages (" + e.toString() + ")");
 		}

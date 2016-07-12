@@ -38,8 +38,6 @@ public class Registry implements IGFRegistry
 		TileEntityGasFurnace.specialFurnaceRecipes.add(new TileEntityGasFurnace.SpecialFurnaceRecipe(ingredient, result, time));
 	}
 
-
-
 	private final Set<Block> registeredIgnitionBlocks = Collections.newSetFromMap(new IdentityHashMap<Block, Boolean>());
 
 	@Override
@@ -68,8 +66,6 @@ public class Registry implements IGFRegistry
 		return ignitionBlocks;
 	}
 
-
-
 	private final Set<Item> registeredIgnitionItems = Collections.newSetFromMap(new IdentityHashMap<Item, Boolean>());
 
 	@Override
@@ -97,8 +93,6 @@ public class Registry implements IGFRegistry
 		registeredIgnitionItems.toArray(ignitionItems);
 		return ignitionItems;
 	}
-
-
 
 	private final Map<GasType, Set<Reaction>> registeredReactions = new IdentityHashMap<GasType, Set<Reaction>>();
 	private final Map<GasType, Set<GasReaction>> registeredGasReactions = new IdentityHashMap<GasType, Set<GasReaction>>();
@@ -130,17 +124,17 @@ public class Registry implements IGFRegistry
 
 			if (reaction instanceof GasReaction)
 			{
-				registerGasReaction((GasReaction)reaction, gasType);
+				registerGasReaction((GasReaction) reaction, gasType);
 			}
 
 			if (reaction instanceof BlockReaction)
 			{
-				registerBlockReaction((BlockReaction)reaction, gasType);
+				registerBlockReaction((BlockReaction) reaction, gasType);
 			}
 
 			if (reaction instanceof EntityReaction)
 			{
-				registerEntityReaction((EntityReaction)reaction, gasType);
+				registerEntityReaction((EntityReaction) reaction, gasType);
 			}
 		}
 	}
@@ -177,6 +171,7 @@ public class Registry implements IGFRegistry
 		}
 		entityReactions.add(reaction);
 	}
+
 	@Override
 	public boolean isReactionRegistered(Reaction reaction, GasType gasType)
 	{
@@ -241,8 +236,6 @@ public class Registry implements IGFRegistry
 		return new EntityReaction[0];
 	}
 
-
-
 	private final Set<GasType> registeredGasTypes = Collections.newSetFromMap(new IdentityHashMap<GasType, Boolean>());
 	private final GasType[] gasTypesByID = new GasType[256];
 	private final Map<String, GasType> gasTypesByName = new HashMap<String, GasType>();
@@ -272,39 +265,38 @@ public class Registry implements IGFRegistry
 	@Override
 	public void registerGasType(GasType type)
 	{
-		if(isGasTypeRegistered(type))
+		if (isGasTypeRegistered(type))
 		{
 			throw new RuntimeException("Gas type named " + type.name + " was attempted registered while it was already registered.");
 		}
-		else if(getGasTypeByName(type.name) != null)
+		else if (getGasTypeByName(type.name) != null)
 		{
 			throw new RuntimeException("Gas type named " + type.name + " has a name conflict with another gas type.");
 		}
-		else if(getGasTypeByID(type.gasID) != null)
+		else if (getGasTypeByID(type.gasID) != null)
 		{
 			throw new RuntimeException("Gas type named " + type.name + " has an ID conflict with gas type named " + getGasTypeByID(type.gasID).name + ".");
 		}
 
-		if(type != GFAPI.gasTypeAir)
+		if (type != GFAPI.gasTypeAir)
 		{
-			BlockGas gasBlock = (BlockGas)GameRegistry.registerBlock(new BlockGas(type), "gas_" + type.name);
+			BlockGas gasBlock = (BlockGas) GameRegistry.registerBlock(new BlockGas(type), "gas_" + type.name);
 			gasTypeGasBlocks.put(type, gasBlock);
 
-			if(type.combustibility.fireSpreadRate >= 0 | type.combustibility.explosionPower > 0.0F)
+			if (type.combustibility.fireSpreadRate >= 0 | type.combustibility.explosionPower > 0.0F)
 			{
 				Blocks.fire.setFireInfo(gasBlock, 1000, 1000);
 			}
 		}
-		if(type.isIndustrial)
+		if (type.isIndustrial)
 		{
-			BlockGasPipe gasPipeBlock = (BlockGasPipe)GameRegistry.registerBlock(new BlockGasPipe(type), ItemGasPipe.class, "gasPipe_" + type.name);
+			BlockGasPipe gasPipeBlock = (BlockGasPipe) GameRegistry.registerBlock(new BlockGasPipe(type), ItemGasPipe.class, "gasPipe_" + type.name);
 			gasTypeGasPipeBlocks.put(type, gasPipeBlock);
 
 			LanternType lanternType = GasesFramework.lanternTypesGas[type.combustibility.burnRate];
-			if(lanternType != GasesFramework.lanternTypeGasEmpty)
+			if (lanternType != GasesFramework.lanternTypeGasEmpty)
 			{
-				registerLanternInput(lanternType,
-						new ItemKey(GasesFramework.items.gasBottle, type.gasID));
+				registerLanternInput(lanternType, new ItemKey(GasesFramework.items.gasBottle, type.gasID));
 			}
 		}
 
@@ -337,8 +329,6 @@ public class Registry implements IGFRegistry
 		return gasTypeGasPipeBlocks.get(type);
 	}
 
-
-
 	private final Set<LanternType> registeredLanternTypes = Collections.newSetFromMap(new IdentityHashMap<LanternType, Boolean>());
 	private final Map<String, LanternType> lanternTypesByName = new HashMap<String, LanternType>();
 	private final Map<ItemKey, LanternType> lanternRecipes = new HashMap<ItemKey, LanternType>();
@@ -360,16 +350,16 @@ public class Registry implements IGFRegistry
 	@Override
 	public void registerLanternType(LanternType type)
 	{
-		if(isLanternTypeRegistered(type))
+		if (isLanternTypeRegistered(type))
 		{
 			throw new RuntimeException("Lantern type named " + type.name + " was attempted registered while it was already registered.");
 		}
-		else if(getLanternTypeByName(type.name) != null)
+		else if (getLanternTypeByName(type.name) != null)
 		{
 			throw new RuntimeException("Lantern type named " + type.name + " has a name conflict with another lantern type.");
 		}
 
-		BlockLantern lanternBlock = (BlockLantern)GameRegistry.registerBlock(new BlockLantern(type), "lantern_" + type.name);
+		BlockLantern lanternBlock = (BlockLantern) GameRegistry.registerBlock(new BlockLantern(type), "lantern_" + type.name);
 
 		lanternTypeLanternBlocks.put(type, lanternBlock);
 
@@ -403,8 +393,6 @@ public class Registry implements IGFRegistry
 		return lanternTypeLanternBlocks.get(type);
 	}
 
-
-
 	@Override
 	public void registerGasWorldGenType(GasWorldGenType type, String... dimensions)
 	{
@@ -419,8 +407,6 @@ public class Registry implements IGFRegistry
 	{
 		return GasesFramework.worldGenerator.isGasWorldGenTypeRegistered(type, dimension);
 	}
-
-
 
 	private final Set<IGasTransposerHandler> registeredGasTransposerHandlers = Collections.newSetFromMap(new IdentityHashMap<IGasTransposerHandler, Boolean>());
 
@@ -442,8 +428,6 @@ public class Registry implements IGFRegistry
 	{
 		return registeredGasTransposerHandlers.contains(handler);
 	}
-
-
 
 	private final Set<PipeType> registeredPipeTypes = Collections.newSetFromMap(new IdentityHashMap<PipeType, Boolean>());
 	private final PipeType[] pipeTypesByID = new PipeType[16];
@@ -475,14 +459,13 @@ public class Registry implements IGFRegistry
 		{
 			throw new RuntimeException("A pipe type named " + type.name + " was attempted registered while it was already registered.");
 		}
-		else if(getPipeTypeByName(type.name) != null)
+		else if (getPipeTypeByName(type.name) != null)
 		{
 			throw new RuntimeException("Gas type named " + type.name + " has a name conflict with another gas type.");
 		}
 		else if (getPipeTypeByID(type.pipeID) != null)
 		{
-			throw new RuntimeException("Gas type named " + type.name + " has an ID conflict with gas type named " + getPipeTypeByID(
-					type.pipeID).name + ".");
+			throw new RuntimeException("Gas type named " + type.name + " has an ID conflict with gas type named " + getPipeTypeByID(type.pipeID).name + ".");
 		}
 
 		registeredPipeTypes.add(type);

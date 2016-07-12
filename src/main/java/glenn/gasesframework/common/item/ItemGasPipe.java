@@ -12,11 +12,11 @@ public class ItemGasPipe extends ItemBlockWithMetadata
 	{
 		super(block, block);
 	}
-	
+
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack)
 	{
-		PipeType type = ((BlockGasPipe)Block.getBlockFromItem(itemstack.getItem())).getPipeType(itemstack.getItemDamage());
+		PipeType type = ((BlockGasPipe) Block.getBlockFromItem(itemstack.getItem())).getPipeType(itemstack.getItemDamage());
 		return "tile.gf_gasPipe." + type.name;
 	}
 }

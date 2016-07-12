@@ -24,51 +24,52 @@ public class BlockInfiniteGasPump extends Block implements ISample, IGasPropello
 	public IIcon typeIcon;
 	@SideOnly(Side.CLIENT)
 	public IIcon indicatorIcon;
-	
-    public BlockInfiniteGasPump()
-    {
-		super(Material.iron);
-    }
 
-	@SideOnly(Side.CLIENT)
-    @Override
-    public int getRenderType()
-    {
-        return RenderBlockInfiniteGasPump.RENDER_ID;
-    }
-
-	@SideOnly(Side.CLIENT)
-    @Override
-    public void registerBlockIcons(IIconRegister iconRegister)
-    {
-    	super.registerBlockIcons(iconRegister);
-    	typeIcon = iconRegister.registerIcon(this.getTextureName() + "_type");
-    	indicatorIcon = iconRegister.registerIcon(this.getTextureName() + "_indicator");
-    }
-
-    @Override
-	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, ForgeDirection side)
+	public BlockInfiniteGasPump()
 	{
-    	if(!world.isRemote)
-    	{
-			world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "random.click", 0.3F, 0.6F);
-			TileEntityInfiniteGasPump tileEntity = (TileEntityInfiniteGasPump)world.getTileEntity(x, y, z);
-			tileEntity.setType(in, side);
-    	}
-    	
-		return in;
+		super(Material.iron);
 	}
-    
-    @Override
-    public boolean onBlockEventReceived(World world, int x, int y, int z, int eventID, int eventParam)
-    {
-    	TileEntityInfiniteGasPump tileEntity = (TileEntityInfiniteGasPump)world.getTileEntity(x, y, z);
-    	if(tileEntity == null) return false;
-    	return tileEntity.blockEvent(eventID, eventParam);
-    }
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public int getRenderType()
+	{
+		return RenderBlockInfiniteGasPump.RENDER_ID;
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void registerBlockIcons(IIconRegister iconRegister)
+	{
+		super.registerBlockIcons(iconRegister);
+		typeIcon = iconRegister.registerIcon(this.getTextureName() + "_type");
+		indicatorIcon = iconRegister.registerIcon(this.getTextureName() + "_indicator");
+	}
 
 	@Override
-	public TileEntity createNewTileEntity(World world, int p_149915_2_) 
+	public GasType sampleInteraction(World world, int x, int y, int z, GasType in, ForgeDirection side)
+	{
+		if (!world.isRemote)
+		{
+			world.playSoundEffect(x + 0.5D, y + 0.5D, z + 0.5D, "random.click", 0.3F, 0.6F);
+			TileEntityInfiniteGasPump tileEntity = (TileEntityInfiniteGasPump) world.getTileEntity(x, y, z);
+			tileEntity.setType(in, side);
+		}
+
+		return in;
+	}
+
+	@Override
+	public boolean onBlockEventReceived(World world, int x, int y, int z, int eventID, int eventParam)
+	{
+		TileEntityInfiniteGasPump tileEntity = (TileEntityInfiniteGasPump) world.getTileEntity(x, y, z);
+		if (tileEntity == null)
+			return false;
+		return tileEntity.blockEvent(eventID, eventParam);
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World world, int p_149915_2_)
 	{
 		return new TileEntityInfiniteGasPump();
 	}

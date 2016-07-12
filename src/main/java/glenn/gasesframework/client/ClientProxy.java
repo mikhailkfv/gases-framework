@@ -19,7 +19,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class ClientProxy extends CommonProxy
 {
-    public RenderVillagerGag renderVillagerGag;
+	public RenderVillagerGag renderVillagerGag;
 	public RenderPlayerGag renderPlayerGag;
 
 	@Override
@@ -27,7 +27,7 @@ public class ClientProxy extends CommonProxy
 	{
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGasTank.class, new TileEntityTankRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGasDynamo.class, new TileEntityGasDynamoRenderer());
-		
+
 		RenderingRegistry.registerBlockHandler(RenderBlockGas.RENDER_ID, new RenderBlockGas());
 		RenderingRegistry.registerBlockHandler(RenderBlockLantern.RENDER_ID, new RenderBlockLantern());
 		RenderingRegistry.registerBlockHandler(RenderBlockGasPipe.RENDER_ID, new RenderBlockGasPipe());
@@ -38,26 +38,26 @@ public class ClientProxy extends CommonProxy
 		RenderingRegistry.registerEntityRenderingHandler(Entity.class, renderVillagerGag = new RenderVillagerGag());
 		RenderingRegistry.registerEntityRenderingHandler(Entity.class, renderPlayerGag = new RenderPlayerGag());
 	}
-	
+
 	@Override
 	public void registerEventHandlers()
 	{
 		super.registerEventHandlers();
 		MinecraftForge.EVENT_BUS.register(new ForgeClientEvents());
-		
-		if(GasesFramework.configurations.updateChecker.enable)
+
+		if (GasesFramework.configurations.updateChecker.enable)
 		{
 			MinecraftForge.EVENT_BUS.register(new UpdateChecker("https://www.jamieswhiteshirt.com/trackable/gasesFramework.php", "Gases Framework", GasesFramework.MODID, GasesFramework.VERSION, GasesFramework.TARGETVERSION));
 		}
 	}
-	
+
 	@Override
 	public <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> messageHandler, Class<REQ> requestMessageType, int discriminator)
 	{
 		super.registerMessage(messageHandler, requestMessageType, discriminator);
 		GasesFramework.networkWrapper.registerMessage(messageHandler, requestMessageType, discriminator, Side.CLIENT);
 	}
-	
+
 	@Override
 	public EntityPlayer getPlayerEntity(MessageContext ctx)
 	{

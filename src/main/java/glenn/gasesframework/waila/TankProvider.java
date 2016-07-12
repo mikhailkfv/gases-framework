@@ -31,7 +31,7 @@ public class TankProvider implements IWailaDataProvider
 	@Override
 	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config)
 	{
-		TileEntityGasTank tileEntity = (TileEntityGasTank)accessor.getTileEntity();
+		TileEntityGasTank tileEntity = (TileEntityGasTank) accessor.getTileEntity();
 		if (tileEntity.isEmpty())
 		{
 			currenttip.add(I18n.format("tile.gf_gasTank.waila.body.empty"));

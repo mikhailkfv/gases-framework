@@ -18,7 +18,8 @@ public class ItemGasContainer extends Item
 	}
 
 	/**
-	 * returns a list of items with the same ID, but different meta (eg: dye returns 16 items)
+	 * returns a list of items with the same ID, but different meta (eg: dye
+	 * returns 16 items)
 	 */
 	@SideOnly(Side.CLIENT)
 	@Override
@@ -27,7 +28,7 @@ public class ItemGasContainer extends Item
 		GasType[] allTypes = GasesFramework.registry.getRegisteredGasTypes();
 		for (GasType type : allTypes)
 		{
-			if(type.creativeTab == creativeTabs && isValidTypeForItem(type))
+			if (type.creativeTab == creativeTabs && isValidTypeForItem(type))
 			{
 				itemList.add(new ItemStack(item, 1, type.gasID));
 			}

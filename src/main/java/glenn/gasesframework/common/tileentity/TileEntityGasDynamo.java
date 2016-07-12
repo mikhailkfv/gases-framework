@@ -27,9 +27,9 @@ public abstract class TileEntityGasDynamo extends TileEntity implements IEnergyP
 
 	private int fuelLevel;
 	private String invName;
-	
+
 	public boolean isBurning;
-	
+
 	public TileEntityGasDynamo(int maxEnergy, int maxEnergyTransfer, int maxFuelLevel, int fuelPerTick, int energyPerFuel)
 	{
 		this.energyStorage = new EnergyStorage(maxEnergy, maxEnergyTransfer);
@@ -39,7 +39,7 @@ public abstract class TileEntityGasDynamo extends TileEntity implements IEnergyP
 
 		setFuelLevel(0);
 	}
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound)
 	{
@@ -47,14 +47,14 @@ public abstract class TileEntityGasDynamo extends TileEntity implements IEnergyP
 		energyStorage.readFromNBT(tagCompound);
 		fuelLevel = tagCompound.getInteger("fuelLevel");
 
-        if (tagCompound.hasKey("CustomName"))
-        {
-            this.invName = tagCompound.getString("CustomName");
-        }
-		
+		if (tagCompound.hasKey("CustomName"))
+		{
+			this.invName = tagCompound.getString("CustomName");
+		}
+
 		isBurning = fuelLevel > 0;
 	}
-	
+
 	@Override
 	public void writeToNBT(NBTTagCompound tagCompound)
 	{
@@ -62,89 +62,90 @@ public abstract class TileEntityGasDynamo extends TileEntity implements IEnergyP
 		energyStorage.writeToNBT(tagCompound);
 		tagCompound.setInteger("fuelLevel", fuelLevel);
 
-        if (this.hasCustomInventoryName())
-        {
-            tagCompound.setString("CustomName", this.invName);
-        }
+		if (this.hasCustomInventoryName())
+		{
+			tagCompound.setString("CustomName", this.invName);
+		}
 	}
-	
+
 	public void setFuelLevel(int fuelLevel)
 	{
-		if(fuelLevel != this.fuelLevel)
+		if (fuelLevel != this.fuelLevel)
 		{
 			this.fuelLevel = fuelLevel;
 			worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 0, fuelLevel);
 		}
 	}
-	
+
 	private void burnFuel()
 	{
 		int capacity = Math.min(energyStorage.getMaxEnergyStored() - energyStorage.getEnergyStored(), energyStorage.getMaxReceive());
 		int burnableUnits = Math.min(fuelLevel, fuelPerTick);
 		int energyCreated = Math.min(capacity, burnableUnits * energyPerFuel);
-		
+
 		setFuelLevel(fuelLevel - energyCreated / energyPerFuel);
 		energyStorage.modifyEnergyStored(energyCreated);
 	}
-	
+
 	public void updateEntity()
 	{
-		if(worldObj.isRemote) return;
-		
+		if (worldObj.isRemote)
+			return;
+
 		int previousEnergy = energyStorage.getEnergyStored();
 		int previousFuelLevel = fuelLevel;
-		
+
 		burnFuel();
-		
+
 		EnumMap<ForgeDirection, IEnergyReceiver> energyReceivers = new EnumMap<ForgeDirection, IEnergyReceiver>(ForgeDirection.class);
-		for(ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
+		for (ForgeDirection direction : ForgeDirection.VALID_DIRECTIONS)
 		{
 			TileEntity tileEntity = worldObj.getTileEntity(xCoord + direction.offsetX, yCoord + direction.offsetY, zCoord + direction.offsetZ);
-			if(tileEntity != null && tileEntity instanceof IEnergyReceiver)
+			if (tileEntity != null && tileEntity instanceof IEnergyReceiver)
 			{
-				energyReceivers.put(direction, (IEnergyReceiver)tileEntity);
+				energyReceivers.put(direction, (IEnergyReceiver) tileEntity);
 			}
 		}
-		
-		if(!energyReceivers.isEmpty())
+
+		if (!energyReceivers.isEmpty())
 		{
 			int extract = Math.min(energyStorage.getMaxExtract(), energyStorage.getEnergyStored()) / energyReceivers.size();
-		
-			for(Entry<ForgeDirection, IEnergyReceiver> entry : energyReceivers.entrySet())
+
+			for (Entry<ForgeDirection, IEnergyReceiver> entry : energyReceivers.entrySet())
 			{
 				energyStorage.modifyEnergyStored(-entry.getValue().receiveEnergy(entry.getKey(), extract, false));
 			}
 		}
-		
-		if(energyStorage.getEnergyStored() != previousEnergy)
+
+		if (energyStorage.getEnergyStored() != previousEnergy)
 		{
 			worldObj.addBlockEvent(xCoord, yCoord, zCoord, worldObj.getBlock(xCoord, yCoord, zCoord), 1, energyStorage.getEnergyStored());
 		}
 	}
-	
+
 	public boolean blockEvent(int eventID, int eventParam)
 	{
-		switch(eventID)
+		switch (eventID)
 		{
-		case 0:
-			fuelLevel = eventParam;
-			break;
-		case 1:
-			energyStorage.setEnergyStored(eventParam);
-			break;
+			case 0:
+				fuelLevel = eventParam;
+				break;
+			case 1:
+				energyStorage.setEnergyStored(eventParam);
+				break;
 		}
-		
+
 		boolean isBurning = fuelLevel > 1;
-		
-		if(worldObj != null && worldObj.isRemote && isBurning != this.isBurning)
+
+		if (worldObj != null && worldObj.isRemote && isBurning != this.isBurning)
 		{
 			this.isBurning = isBurning;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
-		
+
 		return true;
 	}
-    
+
 	@Override
 	public Packet getDescriptionPacket()
 	{
@@ -152,28 +153,28 @@ public abstract class TileEntityGasDynamo extends TileEntity implements IEnergyP
 		writeToNBT(localNBTTagCompound);
 		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 5, localNBTTagCompound);
 	}
-	
+
 	@Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
-    {
-    	readFromNBT(packet.func_148857_g());
-    }
-	
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
+	{
+		readFromNBT(packet.func_148857_g());
+	}
+
 	public int getFuelStored()
 	{
 		return fuelLevel;
 	}
-	
+
 	public int getMaxFuelStored()
 	{
 		return maxFuelLevel;
 	}
-	
+
 	public boolean isBurning()
 	{
 		return fuelLevel > 0;
 	}
-	
+
 	@Override
 	public boolean canConnectEnergy(ForgeDirection from)
 	{
@@ -199,10 +200,10 @@ public abstract class TileEntityGasDynamo extends TileEntity implements IEnergyP
 	}
 
 	@Override
-    public boolean isUseableByPlayer(EntityPlayer entityPlayer)
-    {
-        return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : entityPlayer.getDistanceSq((double)this.xCoord + 0.5D, (double)this.yCoord + 0.5D, (double)this.zCoord + 0.5D) <= 64.0D;
-    }
+	public boolean isUseableByPlayer(EntityPlayer entityPlayer)
+	{
+		return this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord) != this ? false : entityPlayer.getDistanceSq((double) this.xCoord + 0.5D, (double) this.yCoord + 0.5D, (double) this.zCoord + 0.5D) <= 64.0D;
+	}
 
 	@Override
 	public int getSizeInventory()
@@ -231,19 +232,19 @@ public abstract class TileEntityGasDynamo extends TileEntity implements IEnergyP
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack itemStack)
 	{
-		
+
 	}
 
 	@Override
 	public String getInventoryName()
 	{
-        return this.hasCustomInventoryName() ? this.invName : "container.gasDynamo";
+		return this.hasCustomInventoryName() ? this.invName : "container.gasDynamo";
 	}
 
 	@Override
 	public boolean hasCustomInventoryName()
 	{
-        return this.invName != null && this.invName.length() > 0;
+		return this.invName != null && this.invName.length() > 0;
 	}
 
 	@Override
@@ -255,13 +256,13 @@ public abstract class TileEntityGasDynamo extends TileEntity implements IEnergyP
 	@Override
 	public void openInventory()
 	{
-		
+
 	}
 
 	@Override
 	public void closeInventory()
 	{
-		
+
 	}
 
 	@Override

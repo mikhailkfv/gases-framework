@@ -8,13 +8,13 @@ import glenn.gasesframework.api.gastype.GasType;
 public class GasTypeFilterMultiIncluding extends GasTypeFilterMulti
 {
 	public static final byte TYPE = 3;
-	
+
 	@Override
 	public byte getType()
 	{
 		return TYPE;
 	}
-	
+
 	public GasTypeFilterMultiIncluding(GasType[] filterTypes)
 	{
 		super(filterTypes);

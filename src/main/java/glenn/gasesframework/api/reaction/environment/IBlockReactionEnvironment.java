@@ -6,24 +6,28 @@ public interface IBlockReactionEnvironment extends IReactionEnvironment
 {
 	/**
 	 * Get B.
+	 * 
 	 * @return
 	 */
 	Block getB();
 
 	/**
 	 * Get the metadata of B.
+	 * 
 	 * @return
 	 */
 	int getBMetadata();
 
 	/**
 	 * Set B.
+	 * 
 	 * @param b
 	 */
 	void setB(Block b);
 
 	/**
 	 * Set B and its metadata.
+	 * 
 	 * @param b
 	 * @param metadata
 	 */
@@ -36,6 +40,7 @@ public interface IBlockReactionEnvironment extends IReactionEnvironment
 
 	/**
 	 * Get the block hardness of B.
+	 * 
 	 * @return
 	 */
 	float getBHardness();

@@ -6,20 +6,20 @@ import net.minecraft.block.material.Material;
 public class MaterialGas extends Material
 {
 	public static final Material INSTANCE = new MaterialGas(MapColor.airColor);
-	
+
 	protected MaterialGas(MapColor mapColor)
 	{
 		super(mapColor);
 		this.setReplaceable();
 		this.setNoPushMobility();
 	}
-	
+
 	@Override
 	public boolean isSolid()
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Returns if this material is considered solid or not
 	 */
@@ -28,7 +28,7 @@ public class MaterialGas extends Material
 	{
 		return false;
 	}
-	
+
 	@Override
 	public boolean getCanBlockGrass()
 	{
