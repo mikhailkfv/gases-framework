@@ -36,6 +36,7 @@ public abstract class GasTypeFilterSimple extends GasTypeFilter
 				case GasTypeFilterSingleIncluding.TYPE:
 				case GasTypeFilterSingleExcluding.TYPE:
 					return GasTypeFilterSingle.fromNBTTagCompound(tagCompound);
+				default: return new GasTypeFilterOpen(); // This should only happen if NBT data is corrupt somehow
 			}
 		}
 

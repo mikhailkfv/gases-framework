@@ -1,5 +1,6 @@
 package glenn.gasesframework.api.filter;
 
+import glenn.gasesframework.GasesFramework;
 import glenn.gasesframework.api.GFAPI;
 import glenn.gasesframework.api.gastype.GasType;
 
@@ -81,6 +82,7 @@ public abstract class GasTypeFilterMulti extends GasTypeFilter
 						return new GasTypeFilterMultiIncluding(filterTypes);
 					case GasTypeFilterMultiExcluding.TYPE:
 						return new GasTypeFilterMultiExcluding(filterTypes);
+					default: return new GasTypeFilterMultiIncluding(new GasType[]{GFAPI.gasTypeAir}); // This should only happen if NBT data is corrupt somehow, and freezes the user's gas system.
 				}
 			}
 		}
