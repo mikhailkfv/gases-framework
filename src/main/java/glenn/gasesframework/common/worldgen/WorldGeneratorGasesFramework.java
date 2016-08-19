@@ -395,9 +395,9 @@ public class WorldGeneratorGasesFramework implements IWorldGenerator
 
 	private boolean areChunksAroundChunkLoaded(IChunkProvider chunkGenerator, int x, int z)
 	{
-		for (int x1 = x; x1 < x - 1; x1++)
+		for (int x1 = x - 1; x1 < x + 1; x1++)
 		{
-			for (int z1 = z; z1 < z - 1; z1++)
+			for (int z1 = z - 1; z1 < z + 1; z1++)
 			{
 				if (x1 != x && z1 != z && !chunkGenerator.chunkExists(x1, z1))
 				{
