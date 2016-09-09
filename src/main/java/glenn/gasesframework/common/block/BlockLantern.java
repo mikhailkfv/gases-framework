@@ -99,11 +99,11 @@ public class BlockLantern extends Block implements IGasReceptor
 		ItemKey itemIn = new ItemKey(heldItem);
 
 		LanternType replacementType = GasesFramework.registry.getLanternTypeByInput(itemIn);
+		ItemStack itemStackOut = type.itemOut.itemStack();
 
 		if (replacementType == null)
 		{
 			replacementType = GasesFramework.lanternTypeEmpty;
-			ItemStack itemStackOut = type.itemOut.itemStack();
 			if (!entityPlayer.capabilities.isCreativeMode)
 			{
 				if (itemStackOut != null && !entityPlayer.inventory.addItemStackToInventory(itemStackOut) && !world.isRemote)
@@ -120,6 +120,10 @@ public class BlockLantern extends Block implements IGasReceptor
 				if (!entityPlayer.capabilities.isCreativeMode)
 				{
 					a.stackSize--;
+					if (itemStackOut != null && !entityPlayer.inventory.addItemStackToInventory(itemStackOut) && !world.isRemote)
+					{
+						this.dropBlockAsItem(world, x, y, z, itemStackOut);
+					}
 				}
 			}
 		}
