@@ -103,22 +103,36 @@ public class BlockLantern extends Block implements IGasReceptor
 		if (replacementType == null)
 		{
 			replacementType = GasesFramework.lanternTypeEmpty;
+			ItemStack itemStackOut = type.itemOut.itemStack();
+			if (!entityPlayer.capabilities.isCreativeMode)
+			{
+				if (itemStackOut != null && !entityPlayer.inventory.addItemStackToInventory(itemStackOut) && !world.isRemote)
+				{
+					this.dropBlockAsItem(world, x, y, z, itemStackOut);
+				}
+			}
+		}
+		else
+		{
+			if (world.getBlock(x, y, z) != GasesFramework.registry.getLanternBlock(replacementType))
+			{
+				ItemStack a = entityPlayer.inventory.mainInventory[entityPlayer.inventory.currentItem];
+				if(!entityPlayer.capabilities.isCreativeMode)
+				{
+					a.stackSize--;
+				}
+			}
 		}
 
 		world.setBlock(x, y, z, GasesFramework.registry.getLanternBlock(replacementType));
 
 		if (!entityPlayer.capabilities.isCreativeMode && !itemIn.equals(type.itemOut))
 		{
-			if (heldItem != null && --heldItem.stackSize <= 0)
+			if (heldItem != null && heldItem.stackSize <= 0)
 			{
 				entityPlayer.destroyCurrentEquippedItem();
 			}
 
-			ItemStack itemStackOut = type.itemOut.itemStack();
-			if (itemStackOut != null && !entityPlayer.inventory.addItemStackToInventory(itemStackOut) && !world.isRemote)
-			{
-				this.dropBlockAsItem(world, x, y, z, itemStackOut);
-			}
 		}
 
 		return true;
