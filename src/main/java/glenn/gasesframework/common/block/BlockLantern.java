@@ -126,15 +126,6 @@ public class BlockLantern extends Block implements IGasReceptor
 
 		world.setBlock(x, y, z, GasesFramework.registry.getLanternBlock(replacementType));
 
-		if (!entityPlayer.capabilities.isCreativeMode && !itemIn.equals(type.itemOut))
-		{
-			if (heldItem != null && heldItem.stackSize <= 0)
-			{
-				entityPlayer.destroyCurrentEquippedItem();
-			}
-
-		}
-
 		return true;
 	}
 
