@@ -12,6 +12,8 @@ import glenn.gasesframework.client.render.RenderBlockLantern;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.apache.logging.log4j.core.appender.SyslogAppender;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -106,6 +108,7 @@ public class BlockLantern extends Block implements IGasReceptor
 			replacementType = GasesFramework.lanternTypeEmpty;
 			if (!entityPlayer.capabilities.isCreativeMode)
 			{
+				entityPlayer.destroyCurrentEquippedItem();
 				if (itemStackOut != null && !entityPlayer.inventory.addItemStackToInventory(itemStackOut) && !world.isRemote)
 				{
 					this.dropBlockAsItem(world, x, y, z, itemStackOut);
@@ -120,6 +123,7 @@ public class BlockLantern extends Block implements IGasReceptor
 				if (!entityPlayer.capabilities.isCreativeMode)
 				{
 					a.stackSize--;
+					if(a.stackSize == 0) entityPlayer.destroyCurrentEquippedItem();
 					if (itemStackOut != null && !entityPlayer.inventory.addItemStackToInventory(itemStackOut) && !world.isRemote)
 					{
 						this.dropBlockAsItem(world, x, y, z, itemStackOut);
