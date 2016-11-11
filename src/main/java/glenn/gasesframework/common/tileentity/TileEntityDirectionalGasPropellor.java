@@ -35,7 +35,6 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
 	{
 		this.pumpRate = pumpRate;
 		pumpTime = pumpRate;
-		filter = new GasTypeFilterOpen();
 	}
 
 	@Override
@@ -45,6 +44,10 @@ public abstract class TileEntityDirectionalGasPropellor extends TileEntity
 		pumpTime = tagCompound.getInteger("pumpTime");
 		containedType = GasesFramework.registry.getGasTypeByID(tagCompound.getInteger("containedType"));
 		filter = GasTypeFilterSimple.readFromNBT(tagCompound.getCompoundTag("filter"));
+		if (filter == null)
+		{
+			filter = new GasTypeFilterOpen();
+		}
 	}
 
 	@Override
