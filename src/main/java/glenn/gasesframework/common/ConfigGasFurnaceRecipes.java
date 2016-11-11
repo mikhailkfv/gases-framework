@@ -1,5 +1,6 @@
 package glenn.gasesframework.common;
 
+import com.google.gson.JsonParseException;
 import glenn.gasesframework.GasesFramework;
 import glenn.moddingutils.ItemRepresentation;
 
@@ -28,15 +29,19 @@ public class ConfigGasFurnaceRecipes
 				writer.close();
 			}
 
-			Gson gson = new Gson();
-			ArrayList<CustomGasFurnaceRecipe> recipes = gson.fromJson(new FileReader(file), new TypeToken<ArrayList<CustomGasFurnaceRecipe>>()
+			try
 			{
-			}.getType());
-
-			for (CustomGasFurnaceRecipe recipe : recipes)
+				Gson gson = new Gson();
+				ArrayList<CustomGasFurnaceRecipe> recipes = gson.fromJson(new FileReader(file), new TypeToken<ArrayList<CustomGasFurnaceRecipe>>(){}.getType());
+				for (CustomGasFurnaceRecipe recipe : recipes)
+				{
+					GasesFramework.registry.registerGasFurnaceRecipe(recipe.input.getMatcherItemStack(), recipe.output.getRealItemStack(), recipe.time <= 0 ? 200 : recipe.time, recipe.exp);
+				}
+			} catch (JsonParseException e)
 			{
-				GasesFramework.registry.registerGasFurnaceRecipe(recipe.input.getItemStack(), recipe.output.getItemStack(), recipe.time <= 0 ? 200 : recipe.time, recipe.exp);
+				FMLLog.warning("JSON error in custom gas furnace recipe configuration file (%s)", e.toString());
 			}
+
 		} catch (IOException e)
 		{
 			FMLLog.warning("Could not read custom gas furnace recipe configuration file (%s)", e.toString());
