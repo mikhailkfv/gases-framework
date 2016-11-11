@@ -19,6 +19,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 public abstract class TileEntityGasFurnace extends TileEntity implements ISidedInventory
 {
@@ -38,7 +39,17 @@ public abstract class TileEntityGasFurnace extends TileEntity implements ISidedI
 
 		public boolean is(ItemStack itemStack)
 		{
-			return itemStack.getItem() == ingredient.getItem() & itemStack.getItemDamage() == ingredient.getItemDamage() & itemStack.stackSize >= ingredient.stackSize;
+			if (itemStack.getItem() != ingredient.getItem())
+			{
+				return false;
+			}
+
+			if (itemStack.stackSize < ingredient.stackSize)
+			{
+				return false;
+			}
+
+			return ingredient.getItemDamage() == OreDictionary.WILDCARD_VALUE || itemStack.getItemDamage() == ingredient.getItemDamage();
 		}
 	}
 
