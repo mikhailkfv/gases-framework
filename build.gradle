@@ -21,7 +21,7 @@ plugins {
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.2.3"
+version = "1.7.10-1.2.4"
 group= "glenn.gasesframework" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "gasesFramework"
 

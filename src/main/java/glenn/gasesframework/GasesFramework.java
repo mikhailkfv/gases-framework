@@ -92,7 +92,7 @@ public class GasesFramework
 	public static CommonProxy proxy;
 
 	public static final String MODID = GFAPI.OWNER;
-	public static final String VERSION = "1.2.3";
+	public static final String VERSION = "1.2.4";
 	public static final String TARGETVERSION = GFAPI.TARGETVERSION;
 
 	public static Logger logger;

@@ -1,10 +1,9 @@
-Version 1.2.3 (Bugfix/Patch)
+Version 1.2.4 (Bugfix/Patch)
 
 Changes:
-- Added the cohesion property to dictate how gas behaves when it's 0-density. Higher cohesion means there will be more gas needed before the gas will expand in midair. 
+- Add null handling in all gas propellors.
 
 Bugfixes:
-- Fixed getGasType returning null instead of GasTypeAir.
-- Fixed ignited gas not spreading and disappearing properly.
-- Increased world generation weight to ensure gas pockets were not being popped by other generators.
-- Fix configurations creating error messages for string arrays.
+- Fix lanterns sometimes destroying items if it wasn't being replaced.
+- Fix lanterns to drop items on replace.
+- Fix gas furnace recipes respecting OreDictionary wildcards.
